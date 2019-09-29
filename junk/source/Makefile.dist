@@ -1,2 +1,0 @@
-default:
-	echo "You must run make from the lickvista subdirectory (not source)"
