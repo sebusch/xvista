@@ -1,0 +1,84 @@
+
+<H1><A NAME="SECTION001520000000000000000">
+PROFILE: Compute Surface Brightness Profile by Elliptical
+         Isophote Fitting</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml431#
+<A NAME="6741"><tex2html_anchor_invisible_mark></A>
+<A NAME="6742"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6743#
+<BR>
+
+<P>
+PROFILE computes the radial surface-brightness profile of an object by
+fitting it with elliptical contours. The center of the object must first be
+calculated with the AXES command.  PROFILE uses this center as the starting
+point for its calculations.  The profile is found by sampling the image
+with a set of circles with radius 1, 2, 3, ... pixels.  The average value
+of the pixels along a circle is the mean surface brightness of that
+contour.  Low order sine and cosine transforms are taken along the contour
+to derive its center, position angle, and ellipticity.  After these are
+found for the entire image in the radius specified, the contours are
+adjusted to more exactly fit the isophotes.  The first iteration usually
+turns the original circles into ellipses with varying position angles and
+eccentricities as a function of major-axis length.
+
+<P>
+A slightly different version of this command written by G. Djorgovski uses
+a slightly modified interpolation scheme, slightly different median
+filtering method for computing derivatives, and the inclusion of sky
+subtraction in the photometry.  These features may be enabled by using the
+GPROF keyword, or may be selectively enabled by using the SKY and PSEUDO
+keywords.
+
+<P>
+High-accuracy sinc interpolation is used to find the values of the pixels
+along the inner 15 contours.  This number (15) can be modified with the
+NFINE= keyword. Outside of this, either a lower accuracy (but faster)
+interpolation can be used, or an even faster bilinear interpolation scheme.
+The kind of iteration used is set by the ITER keyword; the first number
+specifies the number of iterations using bilinear interpolation, and the
+second the number of iterations using a lower accuracy sinc interpolation.
+The keywords N=n or RMAX sets the number of contours to be computed, to be
+n with the N=n keyword, or to the value in the variable RMAX (set by
+command RMARK) if the RMAX keyword is specified.
+
+<P>
+The result of the profile calculation is stored in a common block for later
+use.  Print the contents of this block with PRINT, or save it in a disk file
+with SAVE.  The results are also written into the specified spectrum.  Use
+PLOT to show that spectrum.
+
+<P>
+The option FOUR turns on calculations of the profile which have the terms
+cos(4*theta) and sin(4*theta), where theta is the position angle in the
+calculation.  Normally these are turned off for speed.
+
+<P>
+Position angles are calculated assuming that the position angle of the
+'top' of the image (as seen on the TV) is 0.  This can be changed with the
+PA keyword.  Use PA ;SPMlt; 0 to indicate that the image has been reversed
+right-left (the 'normal' arrangement for an image is north at top, east at
+left).
+
+<P>
+The INT keyword allows interactive control of the iterations.  The user may
+change the step size from 1.0 to some fraction, and also solve for contour
+centers before the next iteration. Full output from each iteration can be
+shown on the terminal if the keyword TTY is specified.
+
+<P>
+The output of this program can be redirected.
+
+<P>
+<#6772#>Example:<#6772#>
+<BR>
+<tex2html_image_mark>#example6773#
+<BR>
+
+<P>
+See Also: ANNULUS, SECTOR, RECON, EGAL, TVPROF, CLPROF, CPROF, 
+          SAVE, GET, SNUC
+
+<P>

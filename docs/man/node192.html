@@ -1,0 +1,43 @@
+
+<H1><A NAME="SECTION0015160000000000000000">
+EMARK: Interactively Specify Ellipse Parameters for 
+        Photometry with EMAG</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml450#
+<BR>
+<tex2html_image_mark>#command7063#
+<BR>
+
+<P>
+EMARK enables the user to mark with the cursor the radius at which the
+ellipse parameters to be used by the routine EMAG are to be taken. The
+image must be displayed, and the PROFILE common block loaded, in order for
+EMARK to work. It is advisable to have displayed the elliptical isophotes
+with TVPROF prior to running EMARK.
+
+<P>
+EMARK will prompt the user to move the cursor to the position (along the
+major axis) of the ellipse whose shape and orientation is the one desired
+for use in EMAG photometry. The user then strikes the key ;SPMquot;P;SPMquot;. A cross will
+be displayed at this point, and the user will be given the option of
+choosing another position. Once the user is satisfied with the position
+chosen, EMARK will compute the distance of this point from the ellipse
+center. This distance is then loaded into the VISTA variable ERAD.
+
+<P>
+When EMAG is run with ERAD as a keyword, values of the PROFILE common block
+near the radius specified by EMARK are averaged in order to obtain the
+position angles, ellipticities, and centers of the elliptical apertures
+used by EMAG.
+
+<P>
+Following the marking of the radius defining ERAD, EMARK asks the user if
+it is desired to mark the maximum radius for photometry. If so, the user is
+again prompted to move the cursor to this position and strike the key ;SPMquot;P;SPMquot;;
+again the distance from the center is computed, and loaded into the VISTA
+variable RMAX.
+
+<P>
+See Also: RMARK, EMAG
+
+<P>

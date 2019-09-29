@@ -1,0 +1,2096 @@
+#include "Config.h"
+C===============================================================================
+C===============================================================================
+C       These are the Lick Mongo PostScript Fortran drivers routines.
+C       They are known to compile on both Unix and VMS system.
+C       These routines are to be accompanied by several PostScript macros
+C       which are stored separately in the .../lick/postscript directory, also
+C       known as MONGODIR in logical names and environment variables.
+C       These routines CANNOT be hooked into a naked Tonry MONGO; Lick Mongo was
+C       significantly bulldozed to allow these to work.
+C-------------------------------------------------------------------------------
+C       The bulk of these routines were written by Richard Pogge, now at
+C       University of Ohio, Columbus, Astronomy Department.  The really nice
+C       labelling routine which acts like the original Tonry MONGO routines
+C       was written by Richard Stover.
+C-------------------------------------------------------------------------------
+C       Please take note of the fact that there is some dichotomy of
+C       philosophy here regarding writing the PS output file.  Some routines
+C       use PSWRITE, and others simply write directly to luPS.  Writing
+C       directly is certainly more efficient, and this is important for
+C       some operations.  We do not claim that the current usage of the one
+C       or the other makes any good sense.  But do take note that anything
+C       that does write to either should check to see that there is a PS
+C       file open already (IPSOPEN must be .True.) and if not, it should
+C       invoke PSOPEN().
+C-------------------------------------------------------------------------------
+C   PostScript Device Drivers for Lick Mongo
+C
+C   Graphics Primitives:
+C      PSLAND       Initialize Device for Landscape Mode Plot (default)
+C      PSPORT       Initialize Device for Portrait Mode Plot
+C      PSERASE      Erase the graphics area
+C      PSLINE       Draw a line between two points
+C      PSRELOC      Move graphics pointer to a given point, do not draw a line
+C      PSDRAW       Draw to the given point
+C      PSLTYPE      Set the Line Style (solid or dashed)
+C      PSLWID       Set the Line Width (multiples of 0.5pt)
+C      PSDOT        Draw a dot of the given style type at the current point
+C      PSFNAME      Load a PostScript Font
+C      PSFILE       Set name of output PostScript file
+C      PSCHAR       Draw character string at current point, justified
+C                   vertically and horizontally by user supplied format codes.
+C                   The string is assumed to be single font, single size.
+C      PSLABEL      Full Blown Label drawing (multifont, sub/superscript)
+C      PSBOX        Draw a closed box.
+C      PSPOLYLINE   Draw a polyline given an array of points.
+C      PSCLIP       Turns PostScript auto-clipping on or off.
+C
+C   File I/O Primitives:
+C      PSOPEN       Open an ASCII file to contain PostScript Commands.
+C      PSCLOSE      Finish the current PostScript plot and close the ASCII
+C                   text file.
+C      PSWRITE      Write a PostScript command into the current ASCII text file
+C
+C   PSPARAMS Common Block
+C       psfmode         0=No PS fonts, 1=some PS fonts, 2=only PS fonts
+C       NPSPATH         0 initially, counts number of points in current path
+C       IPSROTA         True if Landscape, False if Portrait
+C       IPSDOT          Has PSDOT been called for this plot?
+C       IPSCHAR         Has PSCHAR been called for this plot?
+C       IPSLABEL        Has PSxxxx been called for this plot?
+C       IPSBOX          Has PSBOX been called for this plot?
+C       IPSCLIP         Is a clipping region set?
+C       ipsopen         Is there a PS file open now?
+C       PSCOMM          string to hold PostScript Command (to save space)
+C===============================================================================
+C===============================================================================
+	subroutine POBS(psport)()
+c       Setup Lick Mongo to create a Portrait  Style plot in PostScript
+c       This is a compatibility routine which should not be documented.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       Executable Code
+	call PMGO(psplot)(.false.,char(92),'letter')
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine POBS(psland)()
+c       Setup Lick Mongo to create a Landscape Style plot in PostScript
+c       This is a compatibility routine which should not be documented.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       Executable Code
+	call PMGO(psplot)(.true.,char(92),'letter')
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine POBS(psfile)(name)
+C       Allow setting of an explicit name for PostScript output from Lick Mongo
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+C       External Variable
+c                       Name of the PostScript output file requested by user
+	character*(*)   name
+C       External Function
+	integer         PMGO(lenc)
+C       Common Block
+	integer         psfnset
+	character       psfilename*(MXPATH)
+	common  /psfilename/    psfnset, psfilename
+C       Executable Code
+	psfnset = PMGO(lenc)(name)
+	psfilename = name(1:psfnset)
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PMGO(epsplot)(landscape,name,sptray)
+c       wrapper routine added to make EPS output possible
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+C       External Variables
+c                       does the user want this plot to be Landscape-Style?
+	logical         landscape
+c                       the name of the output PostScript file
+c                       if (name .eq. ' ') a scratch file will be created
+c                       if (name .eq. '-') PS is sent to STDOUT
+c                       if (name .eq. '\ ') backward compatibilty with psfile()
+	character*(*)   name
+c                       a standard paper tray
+	character*(*)   sptray
+C       Executable Code
+	ioeps = .true.
+	call PTUV(psetup)(landscape,name,sptray)
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PMGO(psplot)(landscape,name,sptray)
+c       wrapper routine added to make EPS output possible
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+C       External Variables
+c                       does the user want this plot to be Landscape-Style?
+	logical         landscape
+c                       the name of the output PostScript file
+c                       if (name .eq. ' ') a scratch file will be created
+c                       if (name .eq. '-') PS is sent to STDOUT
+c                       if (name .eq. '\ ') backward compatibilty with psfile()
+	character*(*)   name
+c                       a standard paper tray
+	character*(*)   sptray
+C       Executable Code
+	ioeps = .false.
+	call PTUV(psetup)(landscape,name,sptray)
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(psetup)(landscape,name,sptray)
+C   Lick Mongo PostScript Drivers
+C   Setup Mongo to create a plot in PostScript
+C   ---------------------------------------
+C   Author:  Rick Pogge   1988 August 9
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C   Modification History:
+C   Modified to write directly to the postscript file 10/17/88 [RJS]
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+	include 'MONGOLUN.inc'
+	include 'papersiz.inc'
+C       External Variables
+c                       does the user want this plot to be Landscape-Style?
+	logical         landscape
+c                       the name of the output PostScript file
+c                       if (name .eq. ' ') a scratch file will be created
+c                       if (name .eq. '-') PS is sent to STDOUT
+c                       if (name .eq. '\ ') backward compatibilty with psfile()
+	character*(*)   name
+c                       a standard paper tray
+	character*(*)   sptray
+C       Internal Variables
+	integer         nptray, i, j
+	character*16    lcsptray
+C       External Function
+	integer         PMGO(lenc)
+C       Common Block
+c                       if < 0 :  We want to write PS to STDOUT
+c                       if = 0 :  We want to open a new scratch file & print
+c                       if > 0 :  We want to write PS to psfilename
+	integer         psfnset
+c                       this contains the filename we are writing to
+	character       psfilename*(MXPATH)
+	common  /psfilename/    psfnset, psfilename
+C       Data
+	include 'paperdat.inc'
+	data    psfnset         /0/
+	data    psfilename      /' '/
+C       Executable Code
+	call PMGO(device)(PostScript)
+	call PTUV(initcommon)
+C       Only for PS devices is this variable .True. by default.
+	autolweight = .true.
+c       See the MONGOPAR file for more explanation of these character settings.
+c       Default character size is 15 pt.
+c       Height of a capital letter in most 15 pt. fonts is 11 pt.
+c       Assume that interline spacing of a 15 pt. font is 15 pt.
+	cheight = 15.0
+c       Width of an "M" in 12pt Times Roman Font is about 13 pt.
+c       9 pt. seems to be an average width, but maybe this should be bigger.
+c       (Ideally, Lick Mongo should go look at the .afm files to get the
+c       real font metrics.  This would be really easy, since the format of
+c       the .afm files is trivial.  Anybody out there wanna do it?)
+	cwidth =  9.
+c       COFF needs to be zero for the PostScript Driver
+	coff = 0.
+	expand = 1.
+	angle = 0.
+	cosang = 1.
+	sinang = 0.
+c       Default line width is 0.5 pt
+	lweight = 0.5
+c       Default point size is 10 pt. in diameter.
+	pdef = 5.
+c       Treat as a "terminal" (i.e., do not create a .VEC file), although
+c       it will fill a file called xxx.ps
+	termout = .true.
+	xyswapped = .false.
+c       Paper tray determination
+	i = PMGO(lenc)(sptray)
+c       if (i .eq. 0) then
+c           lcsptray = 'letter'
+c           i = 6
+c       else
+	    lcsptray = sptray
+	    call PTUV(lower)(lcsptray)
+c       endif
+c       search thru the list of known papertrays
+	do 10 nptray=KNOWNTRAYS,1,-1
+	  if (i .eq. PMGO(lenc)(trayname(nptray))) then
+	      pstray = trayname(nptray)
+	      call PTUV(lower)(pstray)
+	      if (pstray .eq. lcsptray) goto 11
+	  endif
+10      continue
+11      continue
+c       Printer Parameters
+c       A PostScript device uses modified points (72 pt/inch) as its base
+c       unit, independent of actual device resolution in dpi.
+	xpin = AptPERinch
+	ypin = AptPERinch
+c       we always default the bounding box to fill the entire page
+	lx1 = 0
+	ly1 = 0
+C       Initialize the PSPARAMS common block variables
+#       ifdef NoXOR
+	ipsrota = (trayland(nptray) .or.  landscape) .and.
+     &  (  .not.  (trayland(nptray) .and. landscape))
+#       else /* NoXOR */
+	ipsrota = trayland(nptray) .xor. landscape
+#       endif /* NoXOR */
+c       The bounding box can be reset by a call to setphysical BEFORE any
+c       graphic output commands are given.
+	ipsland = landscape
+	if (landscape) then
+	    lx2 = ypin*SpSIZ(SpLONG,traysps(nptray))/umPERinch
+	    ly2 = xpin*SpSIZ(SpSHRT,traysps(nptray))/umPERinch
+	else
+	    lx2 = xpin*SpSIZ(SpSHRT,traysps(nptray))/umPERinch
+	    ly2 = ypin*SpSIZ(SpLONG,traysps(nptray))/umPERinch
+	endif
+C       Set default clipping region to:
+C       Lft: 1.5in (108 pt)
+C       Rht: 1.0in (72 pt)
+C       Bot: 1.5in (108 pt)
+C       Top: 1.0in (72 pt)
+	gx1 = lx1 + AptPERinch * 1.5
+	gx2 = lx2 - AptPERinch * 1
+	gy1 = ly1 + AptPERinch * 1.5
+	gy2 = ly2 - AptPERinch * 1
+C       Set up the file name as desired
+	if (name .eq. '-') then
+c           we will write the PS to STDOUT
+	    psfnset = -1
+	    psfilename = name
+	elseif (name .eq. char(92)) then
+c           this is for backwards compatibility with the original routines
+c           psland(), psport(), psfile()
+	    if (psfilename .eq. '-') psfnset = -1
+	else
+	    psfnset = PMGO(lenc)(name)
+	    psfilename = name(1:psfnset)
+	endif
+c       Do not open the file yet, give the user a chance to call setphysical()
+c       This is ok, because every single ps routine tests for file open.
+	return
+	end
+C===============================================================================
+C===============================================================================
+	logical function PTUV(psopen)()
+C   Lick Mongo PostScript Drivers
+C   Open an ASCII text file to contain PostScript Commands and write the
+C   preamble and prologue.
+C   File will use logical unit luPS
+C   Arguments:  (none)
+C ---------------------------------------
+C   Author:  Rick Pogge   1988 August 9
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C   Modification History:
+C      1988 Aug 10 - fixed incorrect landscape mode setup [RWP]
+C      1988 Aug 13 - tightened up PostScript initializations [RWP]
+C ---------------------------------------
+C  NOTE:  Lick Mongo plots presently conform to the Encapsulated PostScript
+C         Specification Version 2.0 in all but one respect.
+C         We are still using "initclip" pending a semi-major rewrite.
+C         This means that Lick Mongo PostScript plots can be incorporated
+C         into most other documents.  This is not yet true for Arbortext TeX
+C         because those folks do not really import Encapsulated PostScript.
+C         To use it there it is necessary to isolate the Lick Mongo PS within
+C         "gsave"/"grestore"  and to disable the "showpage" command.
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGOLUN.inc'
+C       Internal Variables
+	integer         ierr
+	integer         length
+	character*40    userdate
+C       External Function
+	integer         PMGO(lenc)
+C       Common Block
+	integer         psfnset
+	character       psfile*(MXPATH)
+	common  /psfilename/    psfnset, psfile
+c                       these are the clipping limits
+	real            oclpgx1, oclpgx2, oclpgy1, oclpgy2
+	common  /opsclip/       oclpgx1, oclpgx2, oclpgy1, oclpgy2
+C
+C       Data Statements
+	data    userdate        /' '/
+c       DATA for PSPARAMS common block variables
+	data    PSFMODE /1/,            NPSPATH         /0/
+	data    IPSROTA /.True./,       IPSDOT          /.False./
+	data    IPSCHAR /.False./,      IPSLABEL        /.False./
+	data    IPSBOX  /.False./,      IPSCLIP         /.False./
+	data    IPSOPEN /.False./,      ipsland         /.False./
+C       Executable Code
+c       Close down unit luPS in case it might be open
+	if (ipsopen .and. luPS .eq. LUPSOUT) close(luPS)
+
+c       Initialize these PSPARAMS common block variables on each plot
+	npspath = 0
+	ipsdot = .false.
+	ipschar = .false.
+	ipslabel = .false.
+	ipsbox = .false.
+	ipsclip = .false.
+	ipsopen = .true.
+	oclpgx1 = -1
+	oclpgx2 = -1
+	oclpgy1 = -1
+	oclpgy2 = -1
+	pscomm = ' '
+
+	ierr = 0
+	PTUV(psopen) = .false.
+
+c       Get a file name with time tag and extension ".ps"
+	if (psfnset .eq. 0) then
+	    call PTUV(mtmpfile)(psfile,'ps')
+	    length = PMGO(lenc)(psfile)
+	else
+	    length = psfnset
+	endif
+
+c       Open the file
+	if (psfile .eq. '-') then
+	    luPS = STDOUT
+	else
+	    luPS = LUPSOUT
+	    open(unit=luPS,file=psfile(1:length),status=StatNew,
+     &      iostat=ierr CarriageControlList )
+	endif
+	if (ierr .ne. 0) then
+	    write(STDERR,*) ' Error Opening PostScript File'
+c           write(STDERR,*) 'Reason: IOSTAT = ', ierr
+	    PTUV(psopen) = .false.
+	    return
+	else
+	    PTUV(psopen) = .true.
+	endif
+
+c       The first lines of the file must follow the structuring conventions
+c       for PostScript files described in Appendix C of
+c       'PostScript Language Reference Manual' (the "Red Book")
+c       Adobe Systems Incorporated, 1985.
+c       Do not change these unless absolutely required by your local
+c       PostScript device interpreter.
+
+c       Specify bounding box with "%%BoundingBox:"
+c       This is placed in the header for conformance with Encapsulated PS.
+c       note that if this document is to be included into another document
+c       the bounding box will have to be correct.  In all honesty, it would
+c       be very hard for Lick Mongo to keep track of where the actual bounding
+c       box boundaries are.  In fact, in the future if the coordinate
+c       transformations are properly implemented, it will be impossible for
+c       Lick Mongo to keep track of the BB.
+c       It is universally admitted that the only way to be sure you have the
+c       BB right, is to print out the page and measure the location of the
+c       graphics.  Any other "solution" can be made to fail.
+c       For this reason, Lick Mongo simply specifies the entire page.
+c-------
+	if (ioeps) then
+c       this is not strictly true, but the code is close enough
+	write(luPS,ALINE)   '%!PS-Adobe-2.0 EPSF-2.0'
+	else
+c       this is not strictly true, but the code is close enough
+	write(luPS,ALINE)   '%!PS-Adobe-2.0'
+	endif
+	write(luPS,ALINE)   '%%Title:  A really cool plot'
+	call PTUV(muserid)(userdate)
+	length = PMGO(lenc)(userdate)
+	userdate(length+1:) = ' '
+	write(luPS,ALINE)   '%%For:  '//userdate
+	write(luPS,ALINE)   '%%Creator:  Lick Mongo 1991 (proto Touva)'
+	call PTUV(mdatim)(userdate)
+	write(luPS,ALINE)   '%%CreationDate:  '//userdate(:24)
+	write(luPS,ALINE)   '%%Pages: 1'
+	if (ipsrota .and. .not. ioeps) then
+	write(luPS,'(a,4i6)') '%%BoundingBox: ', ly1, lx1, ly2, lx2
+	else
+	write(luPS,'(a,4i6)') '%%BoundingBox: ', lx1, ly1, lx2, ly2
+	endif
+	if (ipsland) then
+	if (.not. ioeps) then
+c       ghostview applies this information incorrectly if EPSF
+	write(luPS,ALINE)   '%%Orientation:  Landscape'
+	else
+	write(luPS,ALINE)   '%%Orientation:  Portrait'
+	endif
+	endif
+	write(luPS,ALINE)   '%%DocumentFonts: (atend)'
+	write(luPS,ALINE)   '%%EndComments'
+	write(luPS,ALINE)   '%%BeginProlog'
+cccccc  write(luPS,ALINE) '/TouvaDict 200 dict def TouvaDict begin'
+c       Bind definitions for lineto and moveto
+	write(luPS,ALINE)
+     &  '/L {lineto} bind def /M {moveto} bind def'
+c       setup two default colors 0=white and 1=black
+	call PTUV(psmakecolor)(0,1.,1.,1.)
+	call PTUV(psmakecolor)(1,0.,0.,0.)
+c       finish prologue
+cccccc  write(luPS,ALINE) 'end'
+	write(luPS,ALINE) '%%EndProlog'
+c-------
+	write(luPS,ALINE) '%%BeginSetup'
+	ierr = PMGO(lenc)(pstray)
+	write(STDERR,*) 'using paper size ', pstray
+	if (ierr .gt. 4 .and. pstray(ierr-3:ierr) .ne. 'tray') then
+	    length = ierr+4
+	    pstray(ierr+1:length) = 'tray'
+	else
+	    length = 0
+	endif
+c       we check to see if requested paper is available and try to use it
+	if (length .gt. 0 .and. pstray .ne. 'lettertray') then
+	write(luPS,ALINE) '%%BeginPaperSize: '//pstray(1:ierr)
+	write(luPS,ALINE) '/ustray false def'
+	write(luPS,ALINE) 'statusdict begin'
+	write(luPS,ALINE) '  /'//pstray(1:length)//' where { %if'
+	write(luPS,ALINE) '    pop {'//pstray(1:length)//'} stopped not'
+	write(luPS,ALINE) '  }{ %else'
+	write(luPS,ALINE) '    false'
+	write(luPS,ALINE) '  } ifelse'
+	write(luPS,ALINE) '  /ustray exch store'
+	write(luPS,ALINE) 'end'
+	write(luPS,ALINE) '%%EndPaperSize'
+	endif
+c-------These graphics state operators are placed after all the papertray diddle
+c       Write out default plot parameters that are not
+c       already default on PostScript devices.
+c       gray level: black (0)  [machine default]
+c       write(luPS,ALINE) ' 0 setgray'
+c       line width: 0.5 pt
+	write(luPS,ALINE) ' 0.5 setlinewidth'
+c       line cap: round
+	write(luPS,ALINE) ' 1 setlinecap'
+c       line joint: round
+	write(luPS,ALINE) ' 1 setlinejoin'
+c       line style: solid      [machine default]
+c       write(luPS,ALINE) ' [] 0 setdash'
+c       miter limit: 10        [machine default]
+c       write(luPS,ALINE) ' 10 setmiterlimit'
+c       Set default font (15pt Helvetica)
+	write(luPS,ALINE)
+     &  ' /Helvetica findfont 15 scalefont setfont'
+	write(luPS,ALINE) '%%EndSetup'
+c-------Lick Mongo plots are always single pages, so far...
+	write(luPS,ALINE) '%%Page: 1 1'
+c       write(luPS,ALINE) '%%PageMedia:  ' and what else???
+	write(luPS,ALINE) '%%BeginPageSetup'
+#define AUTOSCALE
+#ifdef  AUTOSCALE
+c-------If the desired papertray was not available, scale to fit letter size.
+	if (length .gt. 0 .and. pstray(1:ierr) .ne. 'letter' .and.
+     &  .not. ioeps) then
+	    write(luPS,ALINE) 'ustray not { %if'
+c           What should we really do here?
+c           Ask the PS interpreter just how much room there is and
+c           scale the graphic uniformly so that it fits.
+c           But for the moment we simply assume a US letter printer.
+	    if (ipsland) then
+		write(luPS,'(a,i6,a,i6)') '792 ', lx2, ' div 612 ', ly2
+	    else
+		write(luPS,'(a,i6,a,i6)') '612 ', lx2, ' div 792 ', ly2
+	    endif
+	    write(luPS,ALINE) 'div 2 copy gt {exch} if pop dup scale'
+	    write(luPS,ALINE) '} if'
+	endif
+#endif  /* AUTOSCALE */
+c-------The portrait/landscape rotation must be made after the prolog.
+c       If it is done in the prolog, it will confuse programs treating this
+c       as Encapsulated PostScript when they are including this plot within
+c       another document.
+	/*
+	 * Originally, Steve Allen tried a really tricky thing here.
+	 * The idea was that only the printer can really know
+	 * whether its default coordinate system is landscape or portrait.
+	 *
+	 * Adobe would have us all buy TranScript and put
+	 * that information into printer configuration files.
+	 * Then TranScript could look for the DSC comment %%Orientation
+	 * and add in what little bit of extra rotate/translate code
+	 * was necessary for the particular printer being used.
+	 *
+	 * However, Lick doesn't use TranScript to drive its printers; PCs
+	 * and Macs as a rule don't use TranScript.  So for those reasons
+	 * you really do want to have the orientation code in the PostScript
+	 * file so that the naked bits do the right thing when printed.
+	 *
+	 * The code below actually asks the printer to tell whether its
+	 * default coordinate system is Landscape or Portrait.  It then
+	 * uses that result as part of the PostScript program to determine
+	 * whether or not rotation is needed.
+	 *
+	 * Unfortunately, this has bad effects when the PostScript is
+	 * desired as Encapsulated PostScript.  Use of such Lick Mongo output
+	 * included in typesetting applications like TeX and in layout
+	 * tools like Xfig results in unpredictable behavior.  The
+	 * encapsulation can make the Lick Mongo-generated PS believe that
+	 * it should rotate itself the opposite way from which the
+	 * preview or layout program was expecting.
+	 *
+	 * The right solution here is to create a new set of keywords for
+	 * PostScript as generated by Lick Mongo called "epsland" and
+	 * "epsport" which do not try these rotation tricks.
+	 * It's time to get to work on this idea.
+	 */
+	if (ioeps) then
+	write(luPS,ALINE) '% This file was created as EPS '//
+     &  'for inclusion into other graphics.'
+	write(luPS,ALINE) '% Change the next line to "true" '//
+     &  'if this is to be printed directly.'
+	write(luPS,ALINE) 'false'
+	else
+	write(luPS,ALINE) '% This file was created as PS '//
+     &  'for transmission directly to a printer.'
+	write(luPS,ALINE) '% Change the next line to "false" if this '//
+     &  'is to be included into other graphics.'
+	write(luPS,ALINE) 'true'
+	endif
+	write(luPS,ALINE) '{'
+	if (ipsland) then
+	write(luPS,ALINE) '  /TuvLand true def'
+	else
+	write(luPS,ALINE) '  /TuvLand false def'
+	endif
+c       Let PostScript determine if we need to rotate
+	write(luPS,ALINE) '   clippath pathbbox gt'
+	write(luPS,ALINE) '   TuvLand xor'
+#       ifdef NakedNeWS
+c       we do not wanna rotate if this is a NeWS Server
+	write(luPS,ALINE) '   systemdict /setprintermatch known not and'
+#       endif /* NakedNeWS */
+#       ifdef SeaScape
+c       This was the original rotate code: produces "seascape" not "landscape"
+	write(luPS,'(a,i6,a)')
+     &  '   {0 ', lx2, ' translate -90 rotate} if pop pop'
+#       else /* SeaScape */
+c       This rotate is in accord with the more common convention for "landscape"
+	write(luPS,'(a,i6,a)')
+     &  '   {', ly2, ' 0 translate 90 rotate} if pop pop'
+#       endif /* SeaScape */
+	write(luPS,ALINE) '} if'
+	write(luPS,ALINE) '%%EndPageSetup'
+c-------OK, now we can start issueing normal plotting commands safely
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(psclose)(pserr)
+C
+C   Lick Mongo PostScript Drivers
+C
+C   Finish the current PostScript plot and close the ASCII text file.
+C
+C   Writes the command to print the page, and the trailer information
+C
+C   Arguments:
+C
+C      PSERR (output, logical): Returns .TRUE. if an error occurred,
+C                               .FALSE. otherwise
+C
+C ---------------------------------------
+C
+C   Author:  Rick Pogge   1988 August 9
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGOLUN.inc'
+	include 'MONGOFIL.inc'
+C       External Variables
+	logical         pserr
+C       Internal Variables
+	integer         ierr
+	character*128   string
+C       External Function
+	integer         PMGO(lenc)
+C       Common Block
+c               common block to carry open filename
+	integer         psfnset
+	character       psfile*(MXPATH)
+	common  /psfilename/    psfnset, psfile
+C       Executable Code
+	ierr = 0
+	pserr = .false.
+
+c       Stroke out any currently active paths
+	if (npspath .ne. 0) write(luPS,ALINE) ' stroke'
+
+c       Spit out the page and clear the device.
+	write(luPS,ALINE) ' showpage'
+
+c       watch this space...
+c
+c       put "%%Trailer" here.
+c       Specify any external fonts which must be loaded with
+c       "%%DocumentFonts:"
+	write(luPS,ALINE) '%%Trailer'
+	write(luPS,ALINE) '%%DocumentFonts: Helvetica'
+
+c       Close the file opened as unit luPS
+	if (luPS .eq. LUPSOUT) close(luPS,iostat=ierr)
+#ifdef  unix
+	if (luPS .eq. STDOUT) call flush(STDOUT)
+#endif  /* unix */
+	ipsopen = .False.
+	if (ierr .ne. 0) then
+	    write(STDERR,*) ' Error Closing PostScript File'
+c           write(STDERR,*) ' Reason: IOSTAT=', ierr
+	    pserr = .true.
+	    return
+	endif
+
+	if (psfnset .ne. 0) then
+c           if psfile was set, we do not queue the file for printing.
+	    psfnset = 0
+	    psfile = ' '
+	else
+c           send the file off to be printed
+#ifdef      unix
+	    string = MONGOPS(1: PMGO(lenc)(MONGOPS))//'PSprint "'//
+     &      psfile(1: PMGO(lenc)(psfile))//'"'
+#ifdef      units_missing
+	    write(STDERR,*)
+     &      ' A bug in Fortran prevents automatic printing.'
+	    write(STDERR,*)
+     &      ' The PostScript file is named ', psfile
+#else       /* units_missing */
+c           WARNING:  use of the system() call from a process which has a very
+c           large amount of memory can be dangerous, because the child process
+c           created by system tries to grab just as much memory as its parent.
+c           It is recommended that when Lick Mongo is used from inside large VM
+c           programs that the system() routine be replaced by one which does
+c           not have this adverse effect.  This is done at Lick Observatory.
+c           See the makefile in the lick/source/sysdep/unixbsd directory.
+	    call system(string)
+#endif      /* units_missing */
+#endif      /* unix */
+#ifdef      VMS
+	    call PTUV(vmscmd)(
+     &      'submit mongodir:mongops/noprint/param=('//
+     &      psfile(1: PMGO(lenc)(psfile))//')',40+ PMGO(lenc)(psfile))
+#endif      /* VMS */
+	endif
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(psreloc)(rx1,ry1)
+C
+C   PSRELOC
+C
+C   Lick Mongo PostScript Drivers
+C
+C   Changes current point to (RX1,RY1).
+C
+C   Arguments:
+C
+C      RX1, RY1  (input, real): device coordinates of new location
+C
+C   NOTE:  PostScript limits paths to a maximum length of 1500 points.
+C          Thus, the line stroking must issue a "stroke" followed by a
+C          "newpath" for every 1500 pairs of points.
+C
+C          To avoid the limits, paths will be stroked every MAXPATH coordinate
+C          pairs.  The variable NPSPATH serves as the point counter for the
+C          current path.
+C ---------------------------------------
+C   Author:  Rick Pogge   1988 August 11
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C   Modified to write directly to the postscript file 10/17/88 [RJS]
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+	include 'MONGOLUN.inc'
+C       Parameter
+	integer         MAXPATH
+	parameter       (MAXPATH = 1400)
+C       External Variables
+	real            rx1, ry1
+C       External Function
+	logical         PTUV(psopen)
+C       Executable Code
+	if (.not. ipsopen) ipsopen = PTUV(psopen)()
+
+c       If this is the first pass through the current active path, make
+c       sure PostScript knows this.
+	if (npspath .eq. 0) then
+	    call PTUV(pswrite)('newpath')
+c
+c       Check to see if the active path is full.  If it is, "stroke" the
+c       existing path, begin a "newpath", and reset the point counter.
+c       THEN  move the graphics pointer.
+	elseif ( npspath .ge. MAXPATH) then
+	    call PTUV(pswrite)('stroke newpath')
+	    npspath = 0
+	endif
+
+	if (rx1 .ne. PSXP .or. ry1 .ne. PSYP .or. npspath .eq. 0) then
+	    write (luPS,'(2(f8.2,1x),a)') rx1, ry1, 'M'
+c           increment the point counter and set current point for MONGO
+	    xp = rx1
+	    yp = ry1
+	    PSXP = XP
+	    PSYP = YP
+	    npspath = 1 + npspath
+	endif
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(psdraw)(rx1,ry1)
+C
+C   PSDRAW
+C
+C   Lick Mongo PostScript Drivers
+C
+C   Draw line from current point to (RX1,RY1)
+C
+C   Arguments:
+C
+C      RX1, RY1  (input, real): device coordinates of target location
+C
+C   NOTE:  PostScript limits paths to a maximum length of 1500 points.
+C          Thus, the line stroking must issue a "stroke" followed by a
+C          "newpath" for every 1500 pairs of points.
+C
+C          To avoid the limits, paths will be stroked every MAXPATH coordinate
+C          pairs.  The variable NPSPATH serves as the point counter for the
+C          current path.
+C ---------------------------------------
+C   Author:  Rick Pogge   1988 August 11
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C   Modified to write directly to the postscript file 10/17/88 [RJS]
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+	include 'MONGOLUN.inc'
+C       Parameter
+	integer         MAXPATH
+	parameter       (MAXPATH = 1400)
+C       External Variables
+	real            rx1, ry1
+C       External Function
+	logical         PTUV(psopen)
+C       Executable Code
+	if (.not. ipsopen) ipsopen = PTUV(psopen)()
+c       Check to see if there is an active path.  If not, assume the
+c       user wants to draw the line from (0,0) to the specified point
+	if (npspath .eq. 0) then
+	    call PTUV(pswrite)('newpath 0 0 M')
+	    write (luPS,'(2(f8.2,1x),a)') rx1, ry1, 'L'
+	    npspath = 2 + npspath
+	    xp = rx1
+	    yp = ry1
+	    PSXP = XP
+	    PSYP = YP
+	    return
+	endif
+c       Otherwise, put this lineto into the currently active path.  Since
+c       we have left an overhead of 100 points, we can safely do this
+	WRITE (luPS,'(2(F8.2,1X),A)') RX1, RY1, 'L'
+
+	NPSPATH = 1 + NPSPATH
+	XP = RX1
+	YP = RY1
+	PSXP = XP
+	PSYP = YP
+c       See if we have hit the path limit.  If so, "stroke" the current path,
+c       and start a new active path in which the last point of the old one
+c       is the first point of the new one.
+	if ( npspath .ge. MAXPATH) then
+	    call PTUV(pswrite)('stroke newpath')
+	    write (luPS,'(2(f8.2,1x),a)') rx1, ry1, 'M'
+	    npspath = 1
+	endif
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(psline)(rx1,ry1,rx2,ry2)
+C
+C   PSLINE
+C
+C   Lick Mongo PostScript Drivers
+C
+C   Draws a line from (RX1,RY1) to (RX2,RY2) in device coords on
+C   a PostScript device
+C
+C   Arguments:
+C
+C      RX1, RY1  (input, real): device coordinates of starting point
+C
+C      RX2, RY2  (input, real): device coordinates of ending point
+C
+C
+C   Author:  Rick Pogge   1988 August 9
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C      completely re-written 1988 August 11
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+C       External Variables
+	real            rx1, ry1, rx2, ry2
+C       Executable Code
+
+C       Line drawing, and bookkeeping for the active path is done by
+C       calling PSRELOC and PSDRAW
+	call PTUV(psreloc)(rx1,ry1)
+	call PTUV(psdraw)(rx2,ry2)
+
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(pschar)(XJ,IYJ,NCHAR,CBUF)
+C
+C   PSCHAR
+C
+C   Lick Mongo PostScript Drivers
+C
+C   Draws string CBUF centered on current point
+C
+C   Arguments:
+C
+C      IXJ (input, integer): Horizontal Justification Code (see below)
+C
+C      IYJ (input, integer): Vertical Justification Code (see below)
+C
+C      NCHAR (input, integer):  number of characters in CBUF
+C
+C      CBUF (input, character): character string to write
+C
+C   Uses Lick Custom Macro "putlabel"
+C
+C   Justification Codes:
+C
+C      XJ      Meaning
+C     ---------------------
+C      -n     left justify (n=1 is for exactly on beginning of string)
+C       0   center justify
+C       n    right justify (n=1 is for exactly on end of string)
+C     ---------------------
+C       n = multiple of half-width of string
+C
+C      IYJ            Meaning
+C     --------------------------------
+C      -2       justify on bottomline
+C      -1       justify on baseline
+C       0       justify on centerline
+C       1       justify on capline
+C       2       justify on topline
+C     --------------------------------
+C
+C   NOTE:  Assumes that user is writing a string in a single font and size
+C
+C ---------------------------------------
+C
+C   Author:  Rick Pogge   1988 August 11
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modified to allow essentially free horizontal justification  8/12/88 [RWP]
+C   Modified to write directly to the postscript file 10/17/88 [RJS]
+C
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+	include 'MONGOFIL.inc'
+	include 'MONGOLUN.inc'
+C       External Variables
+	integer         nchar
+	real            xj
+	integer         iyj
+	character*(*)   cbuf
+C       Internal Variables
+	character*256   lineout
+	integer         nout
+C       External Function
+c       logical         PTUV(psopen)
+	integer         PMGO(lenc)
+C       Executable Code
+	if (xp .lt. lx1 .or. xp .gt. lx2 .or.
+     &      yp .lt. ly1 .or. yp .gt. ly2) return
+	call PTUV(psclip)(.false.)
+c       anytime a request for an actual change in clipping occurs, we stroke
+	if ( npspath .gt. 0) then
+c           Stroke out the active path.
+	    call PTUV(pswrite)('stroke')
+	    npspath = 0
+	endif
+C       If this is the first pass through PSCHAR, download the necessary
+C       PostScript macro
+	if (.not. IPSCHAR) then
+	    IPSCHAR = .True.
+c           call PTUV(PSWRITE)('% single font putlabel macro')
+#ifdef      VMS
+c           Why in blazes VMS Fortran doesn't do this right we'll never know.
+	    pscomm = MONGOPS
+	    pscomm( PMGO(lenc)(MONGOPS)+1:) = 'simputlabel.ps'
+#else       /* VMS */
+	    pscomm = MONGOPS(1: PMGO(lenc)(MONGOPS))//'simputlabel.ps'
+#endif      /* VMS */
+	    call PTUV(readps)(pscomm)
+	endif
+c       The current point is (XP,YP).
+c       The "putlabel" syntax is:
+c           xp yp ixj iyj angle expand (string) putlabel
+c       Handle any occurrances of the characters '\ ', ')', and '('
+	call PTUV(ProcessPSText)(cbuf(1:nchar),lineout,nout)
+	write(luPS,'(2(F8.2,1X),f8.4,(I3,1X),2(F8.2,1X),3(A),1X,A)')
+     &  XP, YP,  XJ, IYJ,  ANGLE,  EXPAND,
+     &  '(', lineout(1:nout), ')',  'putlabel'
+	RETURN
+	END
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(PSLTYPE)(ILT)
+C   Lick Mongo PostScript Drivers
+C
+C   Defines the line style
+C
+C   Arguments:
+C      ILT (input, integer): Line Style Code, ILT = [0,6]
+C
+C   Issues a PostScript "setdash" command to define the line drawing
+C   mode
+C
+C   Code        Line Type        setdash syntax
+C ________________________________________________________
+C
+C    0          Solid                   [] 0 setdash
+C    1          Dotted                  [1 3] 0 setdash
+C    2          Short Dash              [4 4] 2 setdash
+C    3          Long Dash               [8 8] 4 setdash
+C    4          Dot - Short Dash        [4 3 1 3] 2 setdash
+C    5          Dot - Long Dash         [8 3 1 3] 4 setdash
+C    6          Short - Long Dash       [8 3 4 3] 4 setdash
+C
+C ---------------------------------------
+C
+C   Author:  Rick Pogge   1988 August 9
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+C       External variable
+	integer         ilt
+C       External Function
+c       logical         PTUV(psopen)
+C       Executable Code
+	if (ilt .eq. ltype) return
+	if ( npspath .gt. 0) then
+c           Stroke out the active path.
+	    call PTUV(pswrite)('stroke')
+	    npspath = 0
+	endif
+c       be sure this applies globally to rest of document
+	call PTUV(psclip)(.false.)
+C       Write appropriate PostScript Command
+	if (ilt .eq. 1) then
+	    call PTUV(pswrite)('[1 3] 0 setdash')
+	elseif (ilt .eq. 2) then
+	    call PTUV(pswrite)('[4 4] 2 setdash')
+	elseif (ilt .eq. 3) then
+	    call PTUV(pswrite)('[8 8] 4 setdash')
+	elseif (ilt .eq. 4) then
+	    call PTUV(pswrite)('[4 3 1 3] 2 setdash')
+	elseif (ilt .eq. 5) then
+	    call PTUV(pswrite)('[8 3 1 3] 4 setdash')
+	elseif (ilt .eq. 6) then
+	    call PTUV(pswrite)('[8 3 4 3] 4 setdash')
+	else
+	    call PTUV(pswrite)('[] 0 setdash')
+	endif
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(PSLWID)(LW)
+C   Lick Mongo PostScript Drivers
+C
+C   Defines the line width (weight)
+C
+C   Arguments:
+C
+C      ILW (input, real   ): Line Weight (line width in printers points)
+C
+C   At present, default line width is 0.5 pt  (see PSOPEN)
+C
+C ---------------------------------------
+C
+C   Author:  Rick Pogge   1988 August 9
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+C       External variable
+	real            lw
+C       Internal Variables
+	real            newlwid
+C       External Function
+c       logical         PTUV(psopen)
+C       Executable Code
+	if (lweight .eq. lw) return
+	if ( npspath .gt. 0) then
+c           Stroke out the active path.
+	    call PTUV(pswrite)('stroke')
+	    npspath = 0
+	endif
+c       be sure this applies globally to rest of document
+	call PTUV(psclip)(.false.)
+c       Write appropriate PostScript Command
+	newlwid = lw
+	if (newlwid .lt. 0.0001) newlwid = 0.5
+	write (PSCOMM,'(f7.3,a)') newlwid, ' setlinewidth'
+	call PTUV(pswrite)(PSCOMM(1:40))
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(PSERASE)
+C   Lick Mongo PostScript Drivers
+C   Erases the PostScript graphics area
+C   Arguments: (none)
+C ---------------------------------------
+C   Author:  Rick Pogge   1988 August 9
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C   Modification History:
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+	include 'MONGOLUN.inc'
+C       Internal Variable
+	integer         savclr
+C       External Function
+c       logical         PTUV(psopen)
+C       Executable Code
+	savclr = mcolor
+c       set current color to the background color
+c       a side effect of this is that psclip is turned off
+	call PTUV(pscolor)(0)
+c       This is not done with "erasepage" so that we conform to Encapsulated PS.
+	write(luPS,'(a)')          'newpath'
+	write(luPS,'(2(i5,1X),A)') lx1, ly1, 'M'
+	write(luPS,'(2(i5,1X),A)') lx2, ly1, 'L'
+	write(luPS,'(2(i5,1X),A)') lx2, ly2, 'L'
+	write(luPS,'(2(i5,1X),A)') lx1, ly2, 'L'
+	write(luPS,'(a)')          'closepath fill'
+c       set back to whatever the original foreground color was
+	call PTUV(pscolor)(savclr)
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(psdot)(nvert, ptype)
+C   Lick Mongo PostScript Drivers
+C
+C   Draw a polygonal dot of the specified style at current point
+C
+C   Arguments:
+C
+C      NVERT (input, integer): Number of vertices of the dot polygon
+C
+C      PTYPE (input, integer): Point style:  0 = open
+C                                            1 = skeletal
+C                                            2 = stellated
+C                                            3 = filled
+C ---------------------------------------
+C   Author:  Rick Pogge   1988 August 8
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C   Modified to write directly to the postscript file 10/17/88 [RJS]
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+	include 'MONGOFIL.inc'
+	include 'MONGOLUN.inc'
+C       Parameter
+	character*(*)   FMT90
+	parameter       (FMT90 = '(1X,A,1X,F8.2,1X,F8.2,1X,F8.2,1X,A)')
+C          To avoid the limits, paths will be stroked every MAXPATH coordinate
+	integer         MAXPATH
+	parameter       (MAXPATH = 1400)
+C       External Variables
+	integer         nvert
+	integer         ptype
+C       External Functions
+c       logical         PTUV(psopen)
+	integer         PMGO(lenc)
+C       Executable Code
+c       Don't even try to plot this point if it's beyond physical limits
+	if (xp .gt. lx2 .or. xp .lt. lx1 .or.
+     &      yp .gt. ly2 .or. yp .lt. ly1      ) return
+c       We can do this early, because the dodot procedure does not depend
+c       on the current graphics state.
+	call PTUV(psclip)(.true.)
+
+c       If this is the first pass through PSDOT, download the DoDot macro
+	if (.not. IPSDOT) then
+	    IPSDOT = .True.
+c           call PTUV(pswrite)('% DoDot Macro')
+#           ifdef VMS
+c           Why in blazes VMS Fortran doesn't do this right we'll never know.
+	    pscomm = MONGOPS
+	    pscomm( PMGO(lenc)(MONGOPS)+1:) = 'dodot.ps'
+#           else /* VMS */
+	    pscomm = MONGOPS(1: PMGO(lenc)(MONGOPS))//'dodot.ps'
+#           endif /* VMS */
+	    call PTUV(readps)(pscomm)
+	endif
+
+	if (nvert .lt. 2 .or. expand .le. 0) then
+c           draw a single dot with diameter of current linewidth
+#ifdef      DOT_VERBOSE
+c           This is guaranteed to draw a round dot even with a buggy PS
+c           interpreter (i.e, Freedom of the Press, yeecccchhh!), but
+c           it is *VERY* verbose and rather slow.  For Lars Hernquist, who
+c           often draws 2 million of these, it is simply unacceptable.
+	    write(luPS,FMT90)
+     &      'gsave newpath', xp, yp, lweight*0.5,
+     &      '0 360 arc fill grestore'
+#else       /* DOT_VERBOSE */
+	    if (npspath .eq. 0) then
+		write(luPS,ALINE) 'newpath'
+	    elseif (npspath .ge. MAXPATH) then
+		write(luPS,ALINE) 'stroke newpath'
+		npspath = 0
+	    endif
+c           This will work right for any PS interpreter which recognizes that
+c           zero length lines with round endcaps (1 setlinecap) should be
+c           drawn as dots.
+	    write(luPS,'(1x,f8.2,1x,f8.2,1x,a)') xp, yp, 'DoPt'
+	    npspath = npspath + 2
+#endif      /* DOT_VERBOSE */
+	elseif (nvert .ge. 17) then
+c           If the user wants more vertices than 16, we might as well draw a
+c           circle, and fill it as appropriate
+	    if (ptype .eq. 0 .or. ptype .eq. 2 ) then
+		write(luPS,FMT90) 'gsave newpath', xp, yp,
+     &          expand*5., '0 360 arc stroke grestore'
+	    else
+		write(luPS,FMT90)
+     &          'gsave newpath', xp, yp, expand*5.,
+     &          '0 360 arc fill grestore'
+	    endif
+	else
+c           the DoDot macro (Lick Custom) has the following syntax:
+c           XP YP ANGLE NVERT PTYPE EXPAND DoDot
+c           ANGLE and EXPAND are the values in the MONGOPAR common block
+	    write(luPS,100) xp,yp,angle,nvert,ptype,expand,'DoDot'
+100         format(1x,f8.2,1x,f8.2,1x,f8.2,1x,i3,1x,i2,1x,f8.2,1x,a)
+	endif
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PMGO(PSFNAME)(fontnum,FONTNAME)
+C       This is now a stub routine for calling psfename
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+C       External Variables
+	integer         fontnum
+	character*(*)   fontname
+C       Executable Code
+	call PMGO(psfename)(fontnum, fontname, ' ')
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PMGO(PSFENAME)(fontnum,FONTNAME,encoding)
+C   Lick Mongo PostScript Drivers
+C
+C   Load the desired internal font table at default 15pt size for MONGO
+C
+C   Arguments:
+C       FONTNUM (input, integer): 0 corresponds to Mongo 'Roman/Normal' font
+C                                 1 corresponds to Mongo 'Greek/Symbol' font
+C                                 2 corresponds to Mongo 'Script/Gothic' font
+C                                 3 corresponds to Mongo 'Tiny/Typewriter' font
+C
+C       FONTNAME (input, character): Name of the PostScript font.
+C               The user must give a font known to the printer, or else!
+C
+C       encoding (input, character): Name of an encoding vector.
+C               If the PS interpreter know of the exitence of this
+C               encoding vector, it will use it.  Otherwise, no change.
+C ---------------------------------------
+C
+C   Author:  Rick Pogge   1988 August 8
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C   Modified to write directly to the postscript file 10/17/88 [RJS]
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+C       Parameters
+	include 'MONGOPAR.inc'
+	include 'MONGOFIL.inc'
+	include 'MONGOLUN.inc'
+	integer         PFMIN, PFMAX
+	parameter       (PFMIN = 0, PFMAX = 5)
+	character*(*)   AS
+	parameter       (AS = '(100a)')
+C       External Variables
+	integer         fontnum
+	character*(*)   fontname
+	character*(*)   encoding
+C       Internal Variables
+	character*20    stovername(PFMIN:PFMAX)
+C       External Function
+	integer         PMGO(lenc)
+	logical         PTUV(psopen)
+C       Data Statement
+	data    stovername  /'/MongoNormalFont',
+     &                       '/MongoGreekFont' ,
+     &                       '/MongoScriptFont',
+     &                       '/MongoTinyFont'  ,
+     &                       '/MongoItalicFont',
+     &                       '/MongoOtherFont' /
+C       Executable Code
+	if (.not. ipsopen) ipsopen = PTUV(psopen)()
+c       Set the Pogge style label font
+	if (fontnum .eq. PFMIN) then
+c           If this is the first pass through PSCHAR, download the necessary
+c           PostScript macro
+	    IF (.not. IPSCHAR) THEN
+		IPSCHAR = .True.
+c               call PTUV(PSWRITE)('% single font putlabel macro')
+#               ifdef VMS
+c               Why in blazes VMS Fortran doesn't do this right we'll never know.
+		pscomm = MONGOPS
+		pscomm( PMGO(lenc)(MONGOPS)+1:) = 'simputlabel.ps'
+#               else /* VMS */
+		pscomm = MONGOPS(1: PMGO(lenc)(MONGOPS))//
+     &          'simputlabel.ps'
+#               endif /* VMS */
+		call PTUV(readps)(pscomm)
+	    endif
+c           Write command to download font at 15pt
+	    write(luPS,'(a,a)')
+     &      fontname(1: PMGO(lenc)(fontname)), ' findfont'
+	    write(luPS,'(a)') '15 scalefont setfont'
+	endif
+
+c       Set the Stover style label font
+	if (PFMIN .le. fontnum .and. fontnum .le. PFMAX) then
+c           If this is the first pass through PSLABEL,
+c           write out the necessary PostScript macro
+	    if (.not. IPSLABEL) then
+		IPSLABEL = .True.
+#               ifdef VMS
+c               Why in blazes VMS Fortran doesn't do this right we'll never know.
+		pscomm = MONGOPS
+		pscomm( PMGO(lenc)(MONGOPS)+1:) = 'mongolabel.ps'
+#               else /* VMS */
+		pscomm = MONGOPS(1: PMGO(lenc)(MONGOPS))//
+     &          'mongolabel.ps'
+#               endif /* VMS */
+		call PTUV(readps)(pscomm)
+	    endif
+	    if (encoding .ne. ' ') then
+c               try to create a new version of this font with desired encoding
+		write(lups,'(a,a,a)') '/',encoding,'Encoding where'
+		write(lups,ALINE) '{pop'
+		write(lups,'(a,a)') fontname, ' findfont'
+		write(lups,ALINE)   'dup length dict begin'
+		write(lups,ALINE)
+     &          '    {1 index /FID ne {def} {pop pop} ifelse} forall'
+		write(lups,AS) '    /Encoding ',
+     &          encoding(1:PMGO(lenc)(encoding)),'Encoding def'
+		write(lups,ALINE)   '    currentdict'
+		write(lups,ALINE)   'end'
+		write(lups,AS) fontname,'-',encoding,
+     &          ' exch definefont pop'
+		write(luPS,AS) stovername(fontnum),
+     &          fontname(1:PMGO(lenc)(fontname)),'-',encoding,' def'
+		write(luPS,AS) '}{'
+		write(luPS,AS) stovername(fontnum),
+     &          fontname(1:PMGO(lenc)(fontname)),' def'
+		write(luPS,AS) '} ifelse'
+	    else
+c               set the definition so that stover fonts use it
+		write(luPS,'(a,a,a)') stovername(fontnum),
+     &          fontname(1:PMGO(lenc)(fontname)),' def'
+	    endif
+	endif
+	return
+	end
+C===============================================================================
+C===============================================================================
+#ifdef  PSBOX
+	subroutine PTUV(PSBOX)(RX1,RY1,RX2,RY2)
+C   Lick Mongo PostScript Drivers
+C
+C   Draw a closed box
+C
+C   Arguments:
+C
+C      RX1, RY1 (input, real):  device coordinates of the lower left-hand
+C                             corner of the box.
+C
+C      RX2, RY2 (input, real):  device coordinates of the upper right-hand
+C                             corner of the box.
+C
+C ---------------------------------------
+C
+C   Author:  Rick Pogge   1988 August 8
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C   Modified to write directly to the postscript file 10/17/88 [RJS]
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGOLUN.inc'
+C       External Variables
+	real            RX1, RY1, RX2, RY2
+C       External Function
+	integer         PMGO(lenc)
+	logical         PTUV(psopen)
+C       Executable Code
+	if (.not. ipsopen) ipsopen = PTUV(psopen)()
+c       If the first pass, load DoBox macro
+	if (.not. IPSBOX) then
+	    ipsbox = .True.
+c           call PTUV(pswrite)('% custom DoBox macro')
+	    call PTUV(pswrite)('/DoBox { /y2 exch def /x2 exch def')
+	    call PTUV(pswrite)('/y1 exch def /x1 exch def')
+	    call PTUV(pswrite)('gsave newpath x1 y1 M')
+	    call PTUV(pswrite)('x2 y1 L')
+	    call PTUV(pswrite)('x2 y2 L')
+	    call PTUV(pswrite)('x1 y2 L')
+	    call PTUV(pswrite)('closepath stroke grestore} def')
+	endif
+C
+C       DoBox Syntax:
+C
+C      x1 y1 x2 y2 DoBox
+C
+	write (luPS,100) RX1, RY1, RX2, RY2, 'DoBox'
+100     FORMAT(1X,4(F8.2,1X),A)
+	RETURN
+	END
+#endif  /* PSBOX */
+C===============================================================================
+C===============================================================================
+#ifdef  PSPOLY
+	subroutine PTUV(PSPOLYLINE)( XA, YA, NPTS )
+C   Lick Mongo PostScript Drivers
+C
+C   Draws a polyline starting on first point of arrays passed
+C
+C   Arguments:
+C
+C      XA (input, real array): Array of X points
+C
+C      YA (input, real array): Array of corresponding Y points
+C
+C      NPTS (input, integer):  number of points in XA and YA arrays.
+C
+C ---------------------------------------
+C   Calls PostScript primitives PSRELOC and PSDRAW
+C ---------------------------------------
+C
+C   Author:  Rick Pogge   1988 August 11
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+C       External Variables
+	integer         npts
+	real            xa(npts), ya(npts)
+C       Internal Variables
+	integer         i
+C       External Function
+	logical         PTUV(psopen)
+C       Executable Code
+	if (.not. ipsopen) ipsopen = PTUV(psopen)()
+c       Draw out polyline
+	call PTUV(PSRELOC)(XA(1),YA(1))
+	do 10 i = 2, npts
+	    call PTUV(psdraw)(xa(i),ya(i))
+10      continue
+	return
+	end
+#endif  /* PSPOLY */
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(psclip)(clip)
+C   Lick Mongo PostScript Drivers
+C
+C   Turns PostScript auto-clipping on or off.
+C
+C   Arguments:
+C
+C      CLIP (input, logical):  .TRUE. to turn on auto-clipping
+C                              .FALSE. to turn off auto-clipping
+C ---------------------------------------
+C   Author:  Rick Pogge   1988 August 13
+C            Lick Observatory
+C
+C   Modified to write directly to the postscript file 10/17/88 [RJS]
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGOLUN.inc'
+C       Parameter
+	character*(*)   CLPFMT
+	parameter       (CLPFMT = '(2(f9.2,1X),A)')
+C       External Variables
+	logical         clip
+C       Internal Variables
+	logical         changed
+C       Common Block
+c                       these are the clipping limits
+	real            oclpgx1, oclpgx2, oclpgy1, oclpgy2
+	common  /opsclip/       oclpgx1, oclpgx2, oclpgy1, oclpgy2
+C       External Function
+	logical         PTUV(psopen)
+C       SAVEd Variables
+C       Executable Code
+	if (.not. ipsopen) ipsopen = PTUV(psopen)()
+c       herein lies a real problem.
+c       Encapsulated PostScript requires the "initclip" command not be used.
+c       However, the drawing of points (the psdot subroutine and DoDot macro)
+c       require the use of PostScript clipping regions.  The problem is that
+c       use of the "clip" command always makes a smaller and smaller drawing
+c       regions unless a "gsave" is done before the clip and a "restore"
+c       afterwards.  This will require that clipping is only turned on for
+c       the briefest interval around a psdot call, because any global settings
+c       of color, width, etc. done while in the "gsave" will be lost with
+c       the "grestore".  We do not want this.  But we really do not want to
+c       issue a "gsave ... clip ... DoDot grestore" for every DoDot.
+c       Even if we define a PS command to be "gsave ... clip", that is a
+c       lot of overhead for the PS interpreter that we do not want.
+c       If there are many DoDots, it would be nice to issue one "gsave ... clip"
+c       at the beginning, and one "grestore" at the end.  Oh well....
+	if (.not. ipsopen) ipsopen = PTUV(psopen)()
+	changed = (gx1 .ne. oclpgx1)
+     &       .or. (gx2 .ne. oclpgx2)
+     &       .or. (gy1 .ne. oclpgy1)
+     &       .or. (gy2 .ne. oclpgy2)
+	if (IPSCLIP .and. (changed .or. .not. CLIP)) then
+c           clipping has been on, and we need to turn it off.
+c           anytime a request for an actual change in clipping occurs, we stroke
+	    if ( npspath .gt. 0) then
+c               Stroke out the active path.
+		call PTUV(pswrite)('stroke')
+		npspath = 0
+	    endif
+	    write(luPS,'(a)') 'grestore'
+	endif
+	if (CLIP .and. (changed .or. .not. IPSCLIP)) then
+c           anytime a request for an actual change in clipping occurs, we stroke
+	    if ( npspath .gt. 0) then
+c               Stroke out the active path.
+		call PTUV(pswrite)('stroke')
+		npspath = 0
+	    endif
+c           Establish a clipping path for auto-clipping
+	    oclpgx1 = gx1
+	    oclpgx2 = gx2
+	    oclpgy1 = gy1
+	    oclpgy2 = gy2
+c           Define a newpath which will be the new active clipping path
+	    write(luPS,ALINE)  'gsave newpath'
+	    write(luPS,CLPFMT) gx1, gy1, 'M'
+	    write(luPS,CLPFMT) gx2, gy1, 'L'
+	    write(luPS,CLPFMT) gx2, gy2, 'L'
+	    write(luPS,CLPFMT) gx1, gy2, 'L'
+	    write(luPS,ALINE)  'closepath clip'
+	endif
+	ipsclip = clip
+	return
+	end
+C===============================================================================
+C===============================================================================
+C
+C   File I/O Primitives
+C
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(PSWRITE)(PSCMD)
+C
+C   PSWRITE
+C
+C   Lick Mongo PostScript Drivers
+C
+C   Write a PostScript Command into the currently open ASCII text file.
+C
+C   Arguments:
+C
+C      PSCMD (input, char): Character string containing a valid PostScript
+C                           command.
+C
+C ---------------------------------------
+C
+C   Author:  Rick Pogge   1988 August 8
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C
+C   Modification History:
+C
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyright (c) 1988 Richard W. Pogge
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+C       External Variables
+	character*(*)   pscmd
+C       External Function
+	integer         PMGO(lenc)
+C       Executable Code
+c       Write command line to ASCII file
+	write (luPS,'(1X,A)') pscmd(1: PMGO(lenc)(pscmd))
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(pscolor)(index)
+c       tell postscript to draw henceforth in color given by index
+c       note that there are not yet any predefined colors for PS
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGOLUN.inc'
+C       External Variables
+c                       the index of the color we want to use for drawing
+	integer         index
+C       Internal Variable
+	integer         indx
+C       External Function
+c       logical         PTUV(psopen)
+C       Common Block
+c                       has this color been defined yet?
+	character*1     clrdef(0:255)
+	common  /coldef/        clrdef
+C       Data
+	data    clrdef  /'y', 'y', 254 * ' '/
+C       Executable Code
+	if (clrdef(index) .eq. 'y') then
+	    indx = index
+	else
+	    indx = 1
+	endif
+	if ( npspath .gt. 0) then
+c           Stroke out the active path.
+	    call PTUV(pswrite)('stroke')
+	    npspath = 0
+	endif
+c       need to turn off clipping so that this applies globally
+	call PTUV(psclip)(.false.)
+c       issue the command to change the graphics state
+	write(luPS,'(a,i3.3)') 'CLR', indx
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(psmakecolor)(index,r,g,b)
+c       change the color values associated with a given color index
+c       note that there are not yet any predefined colors for PS
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGOLUN.inc'
+C       External Variables
+c                       the index of the color we want to change
+	integer         index
+c                       the red, green, and blue values for the new color
+c                       these should be in the range [0,1]
+	real            r, g, b
+C       Internal Variable
+#ifdef  ORIGCLR
+	real            gray
+#endif  /* ORIGCLR */
+C       External Function
+	logical         PTUV(psopen)
+C       Common Block
+c                       has this color been defined yet?
+	character*1     clrdef(0:255)
+	common  /coldef/        clrdef
+C       Executable Code
+	if (.not. ipsopen) ipsopen = PTUV(psopen)()
+	if ( npspath .gt. 0) then
+	    call PTUV(pswrite)('stroke')
+	    npspath = 0
+	endif
+	write(luPS,'(a,i3.3,a,3f6.3,a)') '/CLR', index,
+     &  ' {', r, g, b, ' setrgbcolor} bind def'
+	clrdef(index) = 'y'
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(pslabel)(nchar,cbuf,xjust,yjust)
+C   Lick Mongo PostScript Drivers
+C
+C   Draws string CBUF centered on current point
+C
+C   Arguments:
+C
+C      NCHAR (input, integer):  number of characters in CBUF
+C
+C      CBUF (input, character): character string to write
+C
+C      XJUST (input, real): justification code horizontally
+C
+C       YJUST (input, integer): justification code vertically
+C
+C   Justification Codes:
+C
+C      XJ      Meaning
+C     ---------------------
+C      -n     left justify (n=1 is for exactly on beginning of string)
+C       0   center justify
+C       n    right justify (n=1 is for exactly on end of string)
+C     ---------------------
+C       n = multiple of half-width of string
+C
+C      IYJ            Meaning
+C     --------------------------------
+C      -2       justify on bottomline
+C      -1       justify on baseline
+C       0       justify on centerline
+C       1       justify on capline
+C       2       justify on topline
+C     --------------------------------
+C   Uses Lick Custom Macro "MongoPutlabel"
+C
+C   Author:  Richard Stover  1988 August 24
+C            patterned after code written by
+C            Rick Pogge   1988 August 11
+C            Lick Observatory
+C            University of California
+C            Santa Cruz, CA  95064
+C-------------------------------------------------------------------------------
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGODEV.inc'
+	include 'MONGOFIL.inc'
+C       External Variables
+	integer         nchar
+	real            xjust
+	integer         yjust
+	character*(*)   cbuf
+C       Internal Variables
+	character*256   lineout,pslabelcmnd
+	integer         nout
+#ifdef  VMS
+	integer         no
+#endif  /* VMS */
+C       External Functions
+c       logical         PTUV(psopen)
+	integer         PMGO(lenc)
+C       Executable Code
+	if (xp .lt. lx1 .or. xp .gt. lx2 .or.
+     &      yp .lt. ly1 .or. yp .gt. ly2) return
+c       We may call this early because the mongolabel procedure is not
+c       a part of the graphics state.
+	call PTUV(psclip)(.false.)
+c       if there is an open path, close it
+	if ( npspath .gt. 0) then
+c           Stroke out the active path.
+	    call PTUV(pswrite)('stroke')
+	    npspath = 0
+	endif
+C       If this is the first pass through PSLABEL, write out the necessary
+C       PostScript macro
+	if (.not. ipslabel) then
+	    ipslabel = .true.
+#ifdef      VMS
+C           Why in blazes VMS Fortran doesn't do this right we'll never know.
+	    pscomm = MONGOPS
+	    pscomm( PMGO(lenc)(MONGOPS)+1:) = 'mongolabel.ps'
+#else       /* VMS */
+	    pscomm = MONGOPS(1: PMGO(lenc)(MONGOPS))//'mongolabel.ps'
+#endif      /* VMS */
+	    call PTUV(readps)(pscomm)
+	endif
+
+	call PTUV(ProcessPSText)(cbuf(1:nchar),lineout,nout)
+#ifdef  VMS
+c       write the string in 3 pieces for VMS systems with 132 char limit
+	if (nout .gt. 60) then
+c           write the first part of the string
+	    pslabelcmnd = ' '
+	    write(pslabelcmnd,'(3(f6.1,1x),i3,1x,2(f9.2,1x))')
+     &      xp, yp, xjust, yjust, angle, 15.*expand
+	    no = PMGO(lenc)(pslabelcmnd)
+	    call PTUV(pswrite)(pslabelcmnd(1:no))
+c           write the second part of the string
+	    call PTUV(pswrite)('('//lineout(1:nout)//')')
+c           write the third part of the string
+	    call PTUV(pswrite)('MongoPutlabel')
+	elseif (nout .gt. 0) then
+#else   /* VMS */
+	if (nout .gt. 0) then
+#endif  /* VMS */
+	    pslabelcmnd = ' '
+	    write(pslabelcmnd,'(3(f6.1,1x),i3,1x,2(f9.2,1x),a,a,a)')
+     &      xp, yp, xjust, yjust, angle, 15.*expand,
+     &      '(', lineout(1:nout), ') MongoPutlabel'
+	    nout = PMGO(lenc)(pslabelcmnd)
+	    call PTUV(pswrite)(pslabelcmnd(1:nout))
+	endif
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(ProcessPSText)(linein,lineout,nout)
+c       Process a Mongo label string for output to a PostScript
+c       printer.  This means placing a \ in front of the following
+c       characters: \().
+c       Also, as a hack to help Mongo labeling, we change the
+c       sequence \g* to \\g\\264 which produces a multiplication sign.
+c       Also, detect the end of string sequence \e or \\e
+c       and do not send any characters after that.
+c
+c       Input   = linein        Input character string
+c       Output  = lineout       Processed character string
+c                 nout          Number of characters in lineout
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOLUN.inc'
+C       External Variables
+	character*(*)   linein,lineout
+	integer         nout
+C       Internal Variables
+	integer         cin, cout, toolong, times, ll
+	character       c
+C       External Function
+#ifdef  CHAR_NOT_CHAR
+	character*1     char
+#endif  /* CHAR_NOT_CHAR */
+C       Executable Code
+	cout = 0
+	toolong = 0
+	times = 0
+C       See if the string contains the Mongo end of string /e or /E
+	ll = max(index(linein,char(92)//'e'),
+     &           index(linein,char(92)//'E'))
+	if (ll .gt. 0) then
+	    ll = ll - 1
+	else
+	    ll = len(linein)
+	endif
+
+C       Check each input character
+	do 100 cin = 1,ll
+
+	  c = linein(cin:cin)
+	  if(c .eq. char(92) .or. c .eq. '(' .or. c .eq. ')') then
+C             If we can fit it into the output then do it.
+C             Otherwise count the number of missing characters.
+	      if (cout .lt. len(lineout)-1) then
+		  cout = cout + 1
+		  lineout(cout:cout) = char(92)
+	      else
+		  c = ' '
+		  toolong = toolong + 2
+	      endif
+	      if (c .eq. char(92)) then
+		  if (times .eq. 0) then
+		      times = 1
+		  else
+		      times = 0
+		  endif
+	      endif
+	  else
+	      if ((c .eq. 'g') .and. (times .eq. 1)) then
+		  times = 2
+	      elseif ((c .eq. '*') .and. (times .eq. 2)) then
+		  if (cout .lt. len(lineout)-3) then
+		      cout = cout + 1
+		      lineout(cout:cout+2) = char(92)//'26'
+		      cout = cout + 2
+		      c = '4'
+		      times = 0
+		  else
+		      toolong = toolong + 4
+		  endif
+	      else
+		  times = 0
+	      endif
+	  endif
+	  if (cout .lt. len(lineout)) then
+	      cout = cout + 1
+	      lineout(cout:cout) = c
+	  else
+	      toolong = toolong + 1
+	  endif
+100     continue
+	if (toolong .gt. 0) then
+	    write(STDERR,*)
+     &      ' String',toolong,' characters too long to process'
+	endif
+	nout = cout
+	return
+	end
+C===============================================================================
+C===============================================================================
+	subroutine PTUV(readps)(psinfile)
+c       Read the named postscript file and send it to the printer file
+c       while stripping out comments.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOLUN.inc'
+C       External Variable
+c                       Name of file containing postscript programs.
+	character*(*)   psinfile
+C       Internal Variables
+	integer         ios
+	integer         nchar
+	character*128   line
+C       External Function
+	integer         PMGO(lenc)
+C       Executable Code
+	open(LUPSIN,file=psinfile,status='old' ReadOnly
+     &  ,form='formatted',iostat=ios)
+	if(ios .ne. 0) then
+	    write(STDERR,'(a,a)') ' Cannot open file: ',
+     &      psinfile(1: PMGO(lenc)(psinfile))
+	    return
+	endif
+200     continue
+	line = ' '
+	read(LUPSIN,ALINE,end=500,err=500) line
+#ifdef  NO_PS_COMMENTS
+	nchar = PMGO(lenc)(line)
+#else   /* NO_PS_COMMENTS */
+	call PTUV(stripcomment)(line,nchar)
+#endif  /* NO_PS_COMMENTS */
+	if(nchar .gt. 0) call PTUV(pswrite)(line(1:nchar))
+	goto 200
+500     continue
+	close(LUPSIN,iostat=ios)
+	return
+	end
+C===============================================================================
+C===============================================================================
+#ifndef NO_PS_COMMENTS
+	subroutine PTUV(stripcomment)(line,nchar)
+c       Delete comments - Return postion of last non-blank character.
+c       Note that we assume a comment starts with a percent character (%).
+c       We DO NOT check to see if the % character is in a text string.
+c       Any text strings should use the octal code \045 instead of %.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+C       External Variables
+	character*(*)   line
+	integer         nchar
+C       Internal Variables
+	integer         lastc
+	character       c
+C       Executable Code
+	nchar = len(line)
+c       Check for blank line or comment line
+	if ((line(1:1) .eq. '%') .or. (line .eq. ' ')) then
+	    nchar = 0
+	    return
+	endif
+	lastc = 0
+c       Start from end of line and search for comment.
+100     continue
+	c = line(nchar:nchar)
+	if (c .eq. '%') goto 300
+c       Check for last non blank character in the line.
+	if ((c .ne. ' ') .and. (c .ne. ' ') .and. (lastc .eq. 0)) then
+	    lastc = nchar
+	endif
+	nchar = nchar - 1
+	if (nchar .gt. 0) goto 100
+c       No comment found.  Return the postion of the last non-blank character.
+	nchar = lastc
+	return
+c       Found comment character - now find last non-blank character
+c       in front of the comment.
+300     continue
+	nchar = nchar - 1
+	c = line(nchar:nchar)
+c       Check for last non blank character in the line
+	if ((c .ne. ' ') .and. (c .ne. ' ')) then
+	    return
+	endif
+	if (nchar .gt. 1) goto 300
+	nchar = 0
+	return
+	end
+#endif  /* NO_PS_COMMENTS */
+C===============================================================================

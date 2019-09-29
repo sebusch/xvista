@@ -1,0 +1,2287 @@
+\chapter{Image Display, Plotting, and Interaction}
+\begin{rawhtml}
+<!-- linkto display.html -->
+\end{rawhtml}
+
+%
+% Help block for HISTOGRAM moved here from Chapter 11
+% Added TEXT help pages
+% All commands checked for keyword lists and functionality against
+% the most current source code
+%
+% rwp/osu 1998Aug10
+%
+
+VISTA provides a number of commands for the graphical display of data.
+These include image display programs like TV, and a range of plotting
+programs:
+\begin{itemize} 
+  \item[TV\hfill]{Load and image into the display}
+  \item[IMPOST\hfill]{Make a PostScript hardcopy of an image}
+  \item[TVRPLOT\hfill]{Make a Radial Intensity Plot of an object on the 
+       TV Display}
+  \item[TVBOX\hfill]{Overlay a VISTA box on the image display.}
+  \item[TVPLOT \hfill]{Draw stuff like lines, boxes, text, and so on onto the 
+       TV display}
+  \item[PLOT\hfill]{Plot a row, column or spectrum}
+  \item[RPLOT\hfill]{Make a radial intensity plot of an object in an image}
+  \item[CONTOUR\hfill]{Make a contour plot of an image.}
+  \item[PLOT3D\hfill]{Make a 3-d perspective (mesh) plot}
+  \item[OVERLAY\hfill]{Draw contours over a greyscale image (PostScript)}
+  \item[HISTOGRAM\hfill]{Display a Histogram of Image Pixel Values}
+  \item[TEXT\hfill]{Embed Permanent Text on an Image}
+\end{itemize} 
+Each of these is described in separate help files below.  VISTA makes use
+of native X11 graphics, the LickMongo plotting package, and PostScript for
+all of its graphics.
+
+\section{Introduction to the X11 Image Display}
+\index{Display!X11 Image Display Window}
+\index{Display!Overview}
+\index{Display!Interactive commands}
+\index{Display!X11 Resource Variables}
+\index{Display!Marking pixels}
+\index{Display!Scroll color map}
+\index{Display!Zooming and panning}
+\index{Color map!Defined}
+\begin{rawhtml}
+<!-- linkto x11.html -->
+\end{rawhtml}
+
+VISTA provides a set of basic image display and interaction commands for
+X11 windows.  The following commands setup and communicate with the display
+window.  For more information see their individual help files.
+\begin{itemize} 
+  \item[TV\hfill]{Load and image into the display}
+  \item[COLOR\hfill]{Reload the color map or define a new one.}
+  \item[ITV\hfill]{Synchronize procedures and display interaction, mark
+       features.}
+  \item[TVBOX\hfill]{Overlay a VISTA box on the image display.}
+  \item[TVPLOT \hfill]{Draw stuff like lines, boxes, text, and so on onto the 
+       TV display}
+\end{itemize} 
+A number of other commands (e.g., MARKSTAR) will also interact with the
+display for specific purposes, such as measuring image profiles.
+
+The first time the TV command is given, VISTA opens an Image Display
+window on the console, and loads a color map as well as displaying the
+image. A "Zoom" window is also opened that shows a magnified section of
+the image under the current cursor location (a kind of "magnifying
+glass").
+ 
+Once an image has been displayed, the Display window will accept
+interaction asynchronously of commands in the VISTA command window,
+provided that a wait for input, or any other I/O is not pending.  To
+interact with the image, simply move the mouse onto the display window.
+The current pixel location of the cursor will be displayed in a frame at
+the base of the image display along with the pixel intensity.  The arrow
+keys are used for find control (one pixel at a time) of the cursor
+position.
+ 
+The following mouse buttons and keyboard keys are active while the mouse
+is located on the image display:
+ 
+\begin{center}
+{\bf Mouse Buttons}\\
+\begin{tabular}{ll}
+\hline
+Button & Function\\
+\hline
+LEFT  &ZOOM IN, centered on the cursor\\
+MIDDLE&ZOOM OUT, centered on the cursor\\
+RIGHT &PAN, move the pixel under the cursor to the center\\
+\hline
+\end{tabular}
+\end{center}
+ 
+\begin{center}
+{\bf Keyboard Commands}\\
+\begin{tabular}{cl}
+\hline
+Key & Function\\
+\hline
+ R &RESTORE image to the original zoom/pan\\
+ + &BLINK Forwards through the last 4 images.\\
+ - &BLINK Backwards through the last 4 images.\\
+ P &Find the PEAK pixel near the cursor \& jump the cursor there\\
+ V &Find the LOWEST pixel ("Valley") near the cursor \& jump the cursor there\\
+ \# &"Power Zoom" zoom at the cursor to the maximum zoom factor\\
+ H &Toggle between small and full-screen cross-hairs\\
+ F &FREEZE/UNFREEZE the Zoom window.\\
+0-9&Mark the pixel coordinates and store in VISTA\\
+   &variables Rn and Cn, where "n" is the number key hit\\
+ ] &Clear boxes and stuff off the image display\\
+\hline
+\end{tabular}
+\end{center}
+
+Other commands may use additional keys, but this set is always available.
+
+The ITV command is still useful in procedures for making VISTA wait for
+pixels to marked on the screen.  If ITV or any other VISTA routine is
+waiting for screen input, the the INPUT status light is lit (which
+otherwise says ASYNC).  ITV can also be used to print out pixel values in
+the VISTA window or for marking up features on the display with boxes or
+circles.
+
+When VISTA is CPU bound (busy doing an intensive calculation), the display
+will be put into a wait state before any interactive commands to the
+display or ``damage'' from other windows can be serviced.  A note for
+programmers: CPU intensive routines should have the LOOPDISP call inserted
+into them to permit occasional servicing of display window events.  See the
+VISTA Programmer's Guide for details.
+
+\noindent{\bf Color Bar Adjustment:}
+
+If you place the mouse on the color bar, these commands are available
+to adjust the contrast of the image:
+\begin{itemize}
+  \item[LOW CONTRAST]{Hold down the LEFT Mouse button, drag the left
+       end of the color bar.}
+
+  \item[HIGH CONTRAST]{Hold down the RIGHT Mouse button, drag the right
+       end of the color bar.}
+
+  \item[ROLL COLOR MAP]{Hold the MIDDLE Mouse button, "roll" the
+       color bar left or right.}
+\end{itemize} 
+The position of the mouse cursor displays the range of intensities
+represented by that color.
+ 
+Pressing the R key while the mouse is on the color bar restores the
+original color map (undoing any change of the contrast or "roll" changes
+made with the mouse buttons).
+ 
+\noindent{\bf X-Windows Resources:}
+ 
+The properties of the TV display window are defined by Resource variables
+that can be customized by making appropriate entries in your .Xdefaults
+file.  The resource variables are of the form:
+\begin{verbatim}
+   xvista.variable:        value
+\end{verbatim}
+where "xvista" is the resource name.
+
+\begin{center}
+{\bf Vista Display Resource Variables}\\
+\begin{tabular}{lll}
+\hline
+Resource & Description & Default \\
+\hline
+xvista.maxwidth   & Max width of displayed images      &1024 \\
+xvista.maxheight  & Max height of displayed images     & 865 \\
+xvista.resize     & Auto-resize the window on display  &   1 \\
+                  & of large images up to the max size.&\\
+                  & 1=auto-resize [default]            &\\
+                  & 0=no auto-resize                   &\\
+xvista.autozoomout& Automatically zoom out images larger& 0\\
+                  & than the max size so that the whole &\\
+                  & image is visible.                   &\\
+                  & 0 = no zoom out [default]           &\\
+                  & 1 = auto zoom out                   &\\
+xvista.zoomsample & Selects the de-zoom algorithm        &1 \\
+                  & 1 = fast pixel-sampling [default]   &\\
+                  & 0 = slower pixel-binning            &\\
+\hline
+\end{tabular}
+\end{center}
+ 
+The following are recommended values to place in your .Xdefaults file:
+\begin{verbatim}
+   xvista.maxwidth:        800
+   xvista.maxheight:       800
+   xvista.resize:            0
+   xvista.autozoomout:       1
+   xvista.zoomsample         1
+\end{verbatim}
+These will keep the TV window from obscuring too much of the screen, and
+enable the fastest auto zoom mode.
+ 
+Note that for changes to the .Xdefaults file to take effect, you either
+have to log out and log back in again (brute force), or load the changes to
+your .Xdefaults file with the Unix "xrdb -load" command.
+ 
+\section{TV: Display an Image}
+\index{Television!Load image in}
+\index{Image!Display in TV}
+\index{Blink comparison!Loading the images}
+\index{Television!Loading color map}
+\begin{rawhtml}
+<!-- linkto tv.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: }TV buf {[span]} {[zero]} {[L=span]} {[Z=zero]} 
+       {[BOX=n]} {[CF=xxx]} {[NOERASE]} {[BW]}\hfill]{}
+  \item[{[CLIP]} {[FLIP]} {[OLD]} {[NCOLOR=]}\hfill]{}
+  \item[buf]{is the image to be displayed,}
+  \item[span or L=]{set the span level for the color map,}
+  \item[zero or Z=]{set the zero level,}
+  \item[OLD]{use zero and span levels from previous display}
+  \item[BOX=n]{displays the part of the image in box 'n',}
+  \item[CF]{specifies the color map,}
+  \item[NOERASE]{prevents the TV from erasing the previous image
+       when displaying a new one (used for blinking),}
+  \item[BW]{displays the image in black and white.}
+  \item[CLIP]{prevents roll-over of the color map.}
+  \item[FLIP]{display origin in lower left rather than upper left}
+  \item[NCOLOR=]{limit the number of colors displayed (X11)}
+\end{itemize}
+
+For more general TV help, type HELP X11.
+
+TV displays the image in 'buf' on the X11 image display.  Only those pixels
+with data numbers between Z and Z+L are displayed.  Data values greater
+than the maximum are all shown as one color, although the interactive
+cursor will still be able to display the data associated with the "clipped"
+pixels.
+ 
+If no intensity scaling is given on the command line, TV will assume Z=0
+and L=3 times the image mean intensity.  If the mean has not been
+calculated, TV will do a quick calculation using every 9th pixel.  A peak
+intensity of 4x the mean is a reasonable values to use for many
+astronomical images with a large dynamic range.  It is not so good,
+however, for viewing flat fields, skies, or dark images that have a narrow
+range of data values.  In the latter case, you should specify the display
+levels explicitly on the command line.
+ 
+BOX=n tells TV to only display that part of the image within box 'n'
+(see BOX command).
+ 
+OLD tells TV to use the same display limits as the previous image.
+ 
+CF=filename loads the color map ("look-up table") used to translate
+pixel values into colors.  'BW' loads a black and white color map.  Once
+the map is loaded, it remains in effect until changed by either the
+COLOR or subsequent TV commands.
+ 
+The basic set of color maps is:
+\begin{itemize}
+  \item[CF=BW\hfill]{black and white}
+  \item[CF=IBW\hfill]{inverse black and white}
+  \item[CF=RAIN\hfill]{the color distribution in a rainbow}
+  \item[CF=WRMB\hfill]{thought by many to be the most useful}
+\end{itemize}
+More are available, see the COLOR command for specifics.
+
+The NCOLOR= keyword can be used to limit the number of colors displayed in
+X windows.  By default, 256 colors are displayed.  A limited color map is
+useful when VISTA is being run at the same time as other color-hungry
+applications (e.g., SAOimage, or web browsers like Netscape).  If VISTA
+asks for too many colors, the X server can refuse to open the image
+display.  An alternative is to shut down the unneeded applications when
+running VISTA.
+
+The TV display uses a 4-place "ring buffer" to hold the 4 most recently
+displayed images in memory.  You can page through these images using the
+$+$ and $-$ keys when the mouse is on the TV display window.  Blinking may
+be accomplished by displaying two images sequentially, and then using the
+$+/-$ keys to blink between them.
+ 
+If the blink buffers are getting filled with a confusing mix of images, the
+CLEAR IMAGES command may be used to clean them out (except for the
+currently displayed image) and allow you to start over again.
+ 
+The default image coordinates are as follows:
+\begin{verbatim} 
+  (SC,SR)
+        +-------------+
+        |             |
+     |  |             |
+     |  |             |
+     R  |             |
+     |  |             |
+     V  |             |
+        |             |
+        +-------------+
+            ---C-->   (EC,ER)
+\end{verbatim}
+
+The origin is at the upper left-hand corner, with columns increasing to the
+left and rows increasing from top to bottom.  This is the "natural" order
+in which to directly map images from memory onto the display, and allows us
+to display images as fast as possible without remapping.
+ 
+The FLIP keyword is provided to invert the rows axis so as to increase
+vertically from bottom to top, i.e., in ``Cartesian'' coordinate order.
+This will give you an orientation that is more ``natural'' from the user's
+point of view, but which incurs some performance penalty.
+ 
+The properties of the display (size, whether or not to auto-dezoom, etc.)
+can be customized using X resources variables set in the user's .Xdefaults
+file.  See HELP X11 for an overview.
+ 
+Whenever an image is in the display, a set of basic cursor keys are
+available to provide simple interactive capabilities.  See HELP X11 for
+details.
+ 
+\noindent{Examples:}
+\begin{enumerate}
+  \item{
+\begin{itemize}
+  \item[MN 1\hfill]{}
+  \item[TV 1 CF=RAIN\hfill]{loads image 1 into the display, setting the
+       span to be 4 times the image mean.}
+\end{itemize}
+}
+  \item{
+\begin{itemize}
+  \item[TV 3 100. 30.0\hfill]{loads image 3 into the display, setting the
+       span to be 100 and the zero to be 30.}
+\end{itemize}
+}
+  \item{
+\begin{itemize}
+  \item[TV 3 L=100. Z=30.\hfill]{does the same thing as example 2.}
+\end{itemize}
+}
+  \item{
+\begin{itemize}
+  \item[TV 3 BOX=1\hfill]{Displays that part of the image
+       which is in box 1.}
+\end{itemize}
+}
+\end{enumerate}
+
+\section{ITV: Interact with the Image on the TV}
+\index{Television!Interacting with image in}
+\index{Pixel!Examining value}
+\begin{rawhtml}
+<!-- linkto itv.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: }ITV\hfill]{}
+\end{itemize}
+
+ITV enables you to interactively examine an image displayed on the video
+display.  The mouse buttons and several keyboard keys are activated to
+perform functions when pressed:
+
+\begin{center}
+{\bf Mouse Buttons}\\
+\begin{tabular}{ll}
+\hline
+Button & Function\\
+\hline
+LEFT  &ZOOM IN, centered on the cursor\\
+MIDDLE&ZOOM OUT, centered on the cursor\\
+RIGHT &PAN, move the pixel under the cursor to the center\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+{\bf Keyboard Commands}\\
+\begin{tabular}{cl}
+\hline
+Key & Function\\
+\hline
+ E &EXIT ITV and return to VISTA (or resume procedure)\\
+ R &RESTORE image to the original zoom/pan\\
+ + &BLINK Forwards through the last 4 images.\\
+ - &BLINK Backwards through the last 4 images.\\
+ P &Find the PEAK pixel near the cursor \& jump the cursor there\\
+ V &Find the LOWEST pixel ("Valley") near the cursor \& \\
+   &jump the cursor there\\
+ \# &"Power Zoom" zoom at the cursor to the maximum zoom factor\\
+ H &Toggle between small and full-screen cross-hairs\\
+ F &FREEZE/UNFREEZE the Zoom window.\\
+0-9&Mark the pixel coordinates and store in VISTA\\
+   &variables Rn and Cn, where "n" is the number key hit\\
+ D &Print selected pixel row, column, and value.\\
+   &Load variables R and C with the location.\\
+ ] &Clear boxes and stuff off the image display\\
+\hline
+\end{tabular}
+\end{center}
+
+The D key also loads the coordinates of the most recently selected pixel
+into VISTA variables R and C; the 0--9 keys load Rn and Cn, where n is the
+key struck.  If the image had to be compressed to fit in the display window
+(auto or manual dezoom), the main display will not show every pixel,
+although the magnifying glass window will, so choose the pixel in that
+window.
+
+You also have control of the color map (upper \& lower contrast drag and
+color-map roll), see the X11 help page for details.
+
+The ITV command is very useful in procedures for letting you use the D or
+0--9 keys to extract position information from the image of interest needed
+elsewhere within the procedure.  Recall that variables (or any arithmetic
+expression) may be used in place of a number in words of the form
+word=value.  Here is an example of a procedure which draws a contour map of
+a section of an image located by the cursor.  It draws at most a 51x51 box,
+but will draw a smaller section of an image if the cursor is placed near
+the edge of the frame.
+
+\begin{verbatim}
+   ASK 'DISPLAY WHICH IMAGE >> ' BUF        ! Get number of image
+   MN $BUF; TV $BUF                         ! Display the image
+   SROW=SR[BUF] SCOL=SC[BUF]                ! Note start row/col
+   EROW=SR[BUF]+NR[BUF]-1                   ! Note end row
+   ECOL=SC[BUF]+NC[BUF]-1                   ! Note end column
+   PRINTF 'PLACE CURSOR ON CENTER OF THE REGION TO MAP'
+   PRINTF 'THEN HIT THE D KEY, FOLLOWED BY E'
+   ITV                                      ! Define center R and C
+   NRSHOW=51 NCSHOW=51 DEL=IFIX[NRSHOW/2]   ! Default size
+   LOROW=R-DEL HIROW=R+DEL                  ! Limits to box
+   LOCOL=C+DEL HICOL=C+DEL
+   IF LOROW<SROW                            ! Edge adjustment
+      LOROW=SROW
+   END_IF
+   IF HIROW>EROW
+      HIROW=EROW
+   END_IF
+   IF LOCOL<SCOL
+      LOCOL=SCOL
+   END_IF
+   IF HICOL>ECOL
+      HICOL=ECOL
+   END_IF
+   NRBOX=HIROW-LOROW+1 NCBOX=HICOL-LOCOL+1  ! Size of box
+   BOX 1 SR=LOROW SC=LOCOL NR=NRBOX NC=NCBOX
+   CONTOUR $BUF BOX=1
+   END
+\end{verbatim}
+
+\section{COLOR: Load a Color Map into the Image Display}
+\index{TV!Loading color map}
+\index{Color map!Loading}
+\index{Color map!Make new map}
+\begin{rawhtml}
+<!-- linkto color.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: }COLOR {[CF=filename]} {[BW]} {[INV]}\hfill]{}
+  \item[CF=]{loads an already-defined map into the AED,}
+  \item[BW]{loads a black and white map, and}
+  \item[INV]{inverts the ordering of the map.}
+\end{itemize}
+
+COLOR is used to load a new color look-up table from a file, or to create a
+new color map.  Color maps (look-up tables) are used to translating pixel
+data values into displayed colors.  The new look-up table will be loaded
+into the display without needing to reloading the image.
+
+To load a black and white map, type 
+\begin{itemize}
+  \item{COLOR BW}
+\end{itemize}
+To invert the order of the colors, type
+\begin{itemize}
+  \item{COLOR INV}
+\end{itemize}
+
+Color maps are assumed to be in the color directory. (Type PRINT
+DIRECTORIES to display the directories).  Many color maps are available
+with the default VISTA distribution.  Get a directory listing of the color
+directory to see the names of the distribution color maps.  You can specify
+color files that are in specific directories with the usual manner.  For
+example:
+\begin{itemize}
+  \item[COLOR CF=WRMB\hfill]{looks for WRMB.CLR in the color directory}
+  \item[COLOR CF=WRMB.XXX\hfill]{looks for WRMB.XXX in the color directory}
+  \item[COLOR CF=./WRMB\hfill]{looks for ./WRMB.CLR}
+\end{itemize}
+
+A color map is a list of length 256, each entry of which holds three
+numbers for the mapping to Red, Green, and Blue, respectively.  These
+entries, or 'levels', run from 0-255 for each color.  The 256 entries in
+the table give the proportions of each of these colors to use to display
+each of the 256 intervals of intensity (8-bits).  COLOR defines these
+numbers, either by loading them from a pre-determined list, or by creating
+a new list.
+
+If you wish to create a new list, type the command 'COLOR' with no
+arguments.  The program will ask you to define the proportions of red,
+green, and blue intensity to use for each of the entries in the color map.
+The entries are numbered from 0 to 255.  The proportions of each color are
+linear functions of entry number.  You define a starting entry number and
+value, and an ending entry number and value. You may chain several linear
+segments together to produce various effects in the color map.  You must
+define all 256 entries in the map.  Typing in color maps by hand is tricky
+and tedious, and not advised for most users.
+
+The last thing the COLOR program will ask you is to specify the color of
+the label and tick marks.
+
+As an example of defining a color map, consider the black and white map.
+For each level of intensity, the proportions of red, green, and blue are
+equal.  We want increasing brightness to correspond to higher intensity, so
+each color should have zero intensity at the bottom of the map, and full
+intensity (255) at the top of the map.  The sequence of responses for
+defining this color map would be:
+\begin{verbatim}
+   COLOR(begins the sequence)
+   Red: starting level 0 enter initial value:   0
+   Go to level                                255
+   with intensity                             255
+   Green: starting level 0 enter initial value: 0
+   Go to level                                255
+   with intensity                             255
+   Blue: starting level 0 enter initial value:  0
+   Go to level                                255
+   with intensity                             255
+   Define label intensities: Red:             200
+                             Green:           230
+                             Blue:             50
+   Save color file:                        Y or N
+\end{verbatim}
+
+In this example, all three colors have zero intensity at the bottom level
+of the color file, and full intensity at the top level.  The label color is
+green with slightly less red, with a tinge of blue.
+
+\section{TVBOX: Draw a Box on the Image Display}
+\index{Box!Display boundaries on TV}
+\index{Television!Display box on}
+\begin{rawhtml}
+<!-- linkto tvbox.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: } TVBOX {[BOX=b]} {[SIZE=s PIX=r,c]}\hfill]{}
+  \item[BOX=b]{tells the program to show the bounds
+       of box 'b' on the television.}
+  \item[SIZE=s PIX=r,c]{draws a box of size 's' centered at row 
+       'r' and column 'c'}
+\end{itemize}
+
+TVBOX is used to show the boundaries of a box on the television.  You can
+show a box defined in the command BOX, or show a region centered on a given
+point.  You must specify EITHER the box number with BOX=, or the size AND
+the location with SIZE= and PIX=.
+
+There must be an image already in the TV for this command to work. The
+displayed box will be clipped at the edge of the image if the box extends
+over the bounds of the image.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[TVBOX BOX=3\hfill]{display the boundaries of box 3
+       on the television.}
+  \item[TVBOX SIZE=51 PIX=123,234\hfill]{display a box of size 51
+       pixels, centered at row 123 and column 234.}
+\end{itemize}
+
+\section{TVPLOT: Draw Text and Graphics on the Image Display}
+\index{Display!Marking image with graphics and text}
+\begin{rawhtml}
+<!-- linkto tvplot.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: }TVPLOT {[with keywords below as needed]}\hfill]{}
+  \item[P=(r,c)]{         Enter a position (use twice as needed)}
+  \item[L=l]{             Enter line length}
+  \item[C=(r,c)]{         Enter center (row, column)}
+  \item[TEXT=s]{          Plot text in quotes or string variable}
+  \item[BOX=n]{           Plot image subsection box number n}
+  \item[BOX]{             Plot boxes other than predefined image boxes}
+  \item[W=w]{             Enter width of box}
+  \item[H=h]{             Enter height of box}
+  \item[CROSS]{           Plot cross}
+  \item[CIRC=rad]{        Plot a circle}
+  \item[COMPASS=rad]{     Plot a compass}
+  \item[TICKS]{           Put ticks marks on line}
+  \item[SCALE=s]{         Use pixel scale for all lengths}
+  \item[PA=f]{            Position angle}
+  \item[OFF=d]{           Offset of graphics from center}
+\end{itemize}
+
+TVPLOT is used to markup, label, annotate, or otherwise deface the image
+display.  It has loads of options and clever use of defaults, so you don't
+have to say everything.  The origin of the plots is from a predefined
+center loaded by the AXES command or is given by the C= keyword.
+
+In simple use TVPLOT will draw lines.  Use just L=l, or just P= for the
+default center, or two P=(r,c) endpoints to ignore the default origin.  Use
+SCALE if you mean arcseconds for L and not pixels, PA to rotate, or OFF to
+give an offset in whatever direction the X axis is for any PA
+specification.  TICKS will give nice scale marks on the line.
+
+Show the image subsection boxes (see BOX) with BOX=n.  You can also make up
+any boxes just for plotting by giving the BOX keyword.  This tells TVPLOT
+to think about BOX plotting instead of lines.  Use W and H with the default
+center or C= keyword, two P= keywords to give opposite corners, P and C
+together for corners, any of L, W, or H by themselves for square boxes, and
+so on.  Use PA, OFF, SCALE to help out.
+
+Other symetrical plots.  Here you have CROSS, CIRC=r, COMPASS=r, all of
+which follow the AXES, C=, or P= centers. Use PA, OFF, SCALE here, too.
+
+Now you can make any label you want with the TEXT option -- except you can't
+rotate it with PA (sorry -- it uses system fonts that I didn't want to muck
+with).  Use P=, or C= to position it -- where you give where you want the
+center of the string to be.  Right now VISTA has a little trouble with
+multiword strings enterred directly on the TVPLOT command line, but they
+work fine if you load them first with the STRING command.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[AXES 1 BOX=7\hfill]{Find the center of the object within
+       the BOX 7 subsection of image 1.}
+  \item[TVPLOT BOX=7\hfill]{Plot this same box on the TV.}
+  \item[TVPLOT CIRC=10\hfill]{Draw a 10-pixel radius circle around it.}
+  \item[TVPLOT CROSS\hfill]{Mark it with a cross.}
+  \item[TVPLOT COMPASS=20\hfill]{a really cool map compass}
+  \item[STRING BIGDEAL  'This is the object in BOX 7']{}
+  \item[TVPLOT TEXT=BIGDEAL\hfill]{Label the stupid thing.}
+\end{itemize}
+
+O.K. so now you want real vector graphics.
+\begin{itemize}
+  \item[TVPLOT P=(101,237)\hfill]{This will draw a line from where ever
+       the center is to row=101, col=237.}
+  \item[TVPLOT P=(r1,c1) P=(r2,c2)\hfill]{OK, this is your standard line
+       between any two points.}
+  \item[TVPLOT BOX P=(r1,c1) P=(r2,c2)\hfill]{Makes a box instead of a line.}
+  \item[TVPLOT TEXT=BIGDEAL P=(r,c)\hfill]{Stick a label anywhere.}
+\end{itemize}
+Use procedures to make a neat grid at a funny angle.
+\begin{verbatim}
+   YDIM=25 
+   XDIM=15 
+   FUNNY=37 
+   STEP=5
+   DO Y=-YDIM,YDIM,STEP
+      TVPLOT P=(-XDIM,Y) P=(XDIM,Y) PA=FUNNY
+   END_DO
+   DO X=-XDIM,XDIM,STEP
+      TVPLOT P=(X,-YDIM) P=(X,YDIM) PA=FUNNY
+   END_DO
+\end{verbatim}
+
+\section{IMPOST: Make a PostScript Hardcopy of an Image}
+\index{Image!Hardcopy display}
+\begin{rawhtml}
+<!-- linkto impost.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: } IMPOST imbuf {[BOX=b]} {[Z=zero]} {[L=span]} {[CLIP]} 
+       {[POSITIVE]} {[TITLE]}\hfill]{}
+  \item[{[HIST=xxx]} {[LAND]} {[FOUR]} {[AXES]} {[COMMENT]} {[COMMENT=xxx]}
+        {[FILE=xxx]} {[OUT=xxx]}]{}
+  \item[{[SCALE=s]} {[CEN=r,c]} {[FLIP]} {[BAR=xxx]} {[NOBAR]} {[WIND=w,h]} 
+        {[ORIGIN=x,y]} {[PAGE=L,S]}]{}
+  \item[{[COPIES=n]} {[LARGE]} {[INFO]} {[INT]} {[MACRO=]}]{}
+  \item[imbuf]{The buffer containing the image to be printed.}
+  \item[BOX=b]{Only print the region within the given box.}
+  \item[Z=zero ]{Zero point of the intensity mapping.}
+  \item[L=span ]{Span of the intensity mapping.  }
+  \item[CLIP]{Prevent roll-over of the intensity mapping.}
+  \item[POSITIVE ]{Print the image intensities as White-on-Black.
+                   The default mapping is Black-on-White.}
+  \item[TITLE ]{Write the OBJECT name on the print (from the header).}
+  \item[HIST ]{Map image intensities using flat histogram equalization.}
+  \item[HIST=xxx]{Map image intensities using other histogram scalings
+                  Options: (FLAT,SQRT,LOG).  "HIST" = "HIST=FLAT"}
+  \item[LAND ]{Output will appear in LANDSCAPE mode}
+  \item[FOUR ]{Use a 4 bit (16 level) gray scale rather than the
+               default 8 bit (256 level) gray scale.}
+  \item[AXES ]{Draw coordinates axes around the image.}
+  \item[COMMENT='xxx']{Add a comment line to the print.  Comments may be
+                       up to 64 characters long. }
+  \item[COMMENT ]{Prompt the user interactively for the comment line.}
+  \item[FILE=psfile]{Direct the output into a file named "psfile".}
+  \item[OUT=psfile]{(same as FILE=psfile)}
+  \item[SCALE=s ]{specify the pixel scale in units/pixel.}
+  \item[CEN=(r,c)]{specify the image fiducial center in pixels for
+                  scaled coordinate axes (see SCALE=).}
+  \item[FLIP ]{flips image in rows (bottom-to-top raster order).}
+  \item[BAR='xxx' ]{Label the gray scale intensity bar with the string
+                    given.  Default bar label is "Intensity"}
+  \item[NOBAR ]{Do not draw a gray scale intensity bar on the print.}
+  \item[INFO ]{Write in a line of auxiliary info on the print.}
+  \item[INT  ]{Puts user into interactive Mongo mode for labelling.}
+  \item[MACRO=macrofile]{ Executes Mongo macro file macrofile after drawing}
+  \item[Advanced Page Control\hfill]{}
+  \item[COPIES=n ]{Specify the number of copies to print if more than 1.}
+  \item[WIND=(w,h)]{Specify the maximum size in inches of the window in 
+                    which IMPOST will try to print the image.}
+  \item[LARGE ]{Alternative to WIND=, will make the window as large as 
+                possible for the given paper size and orientation.}
+  \item[ORIGIN=(x,y)]{Specify the origin of the plotting window in inches 
+                      from the lower left-hand corner of the paper.}
+  \item[PAGE=(L,S) ]{specify the physical size of the paper in inches.
+                     "L" = long dimension, "S" = short dimension.}
+\end{itemize}
+
+IMPOST makes a hardcopy print of an image in PostScript format.  It
+is designed to be used just like the TV command, with very similar
+keywords. You can include extra information on the picture with the
+TITLE, AXES, COMMENT, INFO and related keywords.  These are discussed
+below.
+ 
+IMPOST creates a PostScript file on disk.  This file will be located in the
+current directory (either where you started VISTA or under Unix versions of
+VISTA, the last directory you CD'd to).  By default this file will take the
+name "image.ps".  You can specify your own name for the file by using the
+FILE= or OUT= keywords.  Currently, this file is not automatically printed.
+From outside of VISTA (or from a spawned subprocess or C-shell), submit
+this to your printer as you would submit any other PostScript file (e.g.,:
+"lpr image.ps" on a Unix system, or "\$ print/queue=pslaser image.ps" on a
+VMS system).
+
+Multiple copies can be made using the COPIES=n keyword.  The POSITIVE
+keyword makes white images on a black background; the default is to make
+black images on a white background.
+
+Output from IMPOST, if prepared with care, is of the highest quality.
+IMPOST generated prints made on good quality paper or special "stat" paper
+have been accepted for publication without re-photography required.
+
+\noindent{Intensity Scaling}
+
+IMPOST produces a hardcopy of an image by representing pixel intensities as
+an 8-bit halftone gray scale.  The optional keyword "FOUR" will use a 4-bit
+(16-level) gray scale instead.  Although an 8-bit gray scale has 256 levels
+from white to black, on standard 300 dpi laser printers, only 32 levels are
+distinguishable.  The output is a PostScript file which may be sent to any
+standard PostScript hardcopy device.
+
+
+The simplest intensity scaling is through use of the Z= and L= keywords
+like in the TV command.  These set the zero point (Z=ZERO) and intensity
+span (L=SPAN) of a "linear" mapping from the actual image intensity in each
+pixel, IMG(r,c), to a displayed gray scale value between 0 and 255,
+INTENS(r,c), following the formula:
+\begin{itemize}
+  \item{          INTENS(r,c) = {[IMG(r,c) - ZERO]}*(255/SPAN)}
+\end{itemize}
+With the FOUR option, the scale factor is 15 instead of 255, and
+INTENS(r,c) will take values from 0 to 15.
+
+In this simple linear mapping, pixels with IMG(r,c) <= ZERO will set
+INTENS(r,c)=0 (white) and pixels with IMG(r,c)=ZERO+SPAN will set
+INTENS(r,c)=255 (black).  If the CLIP keyword is used, then all values of
+IMG > ZERO+SPAN are set black, otherwise, the color scale "wraps" and above
+IMG=ZERO+SPAN, INTENS starts again at 0.  This continues modulo (255/SPAN)
+until all pixel intensity values are mapped.
+
+The default mapping is an inverse (or "negative") scale, where the image is
+drawn as black against a white background.  If the optional keyword
+POSITIVE is given, then the intensities are mapped in a more "normal" or
+"positive" scale in which the image is displayed as white against a black
+background, though the results with most laser printers is less than
+optimal.
+
+The second scaling option is to map image intensities into an 8-bit gray
+scale using the distribution of pixel intensities in the image to provide a
+scaling in which all gray levels are equally present.  Such a scaling is
+called a "Histogram Equalization", and is used to bring up faint features
+without sacrificing more high-intensity features in the same image.  This
+is done using the HIST keyword.  Histogram equalization is a common
+technique in image processing, most notably it is used for making the
+high-contrast images that came from the Voyager and Viking space probes.
+Note that a simple one-to-one mapping of pixel intensities and gray level
+is lost, and such mapping should be used with caution.
+
+If the Z= and L= keywords are used with HIST, then Z= is taken to be the
+lowest intensity value to be considered, and L= tells hist to ignore all
+intensities above Z+L when determining the histogram mapping.  The CLIP
+keyword is implicit with any histogram scaling option -- no rollover is
+permitted.
+
+Additional histogram scaling options are available via the HIST=LOG and
+HIST=SQRT keywords.  HIST=LOG will map intensities by equalizing over
+logarithmic intervals.  This is useful when there is a very large range of
+intensities in the image, and you wish to emphasize the brighter regions
+without washing out fainter features.  The HIST=SQRT option will map
+intensities by equalizing over square-root intervals.  This represents a
+middle ground between the "FLAT" histogram mapping described above (which
+enhances fainter regions) and the "LOG" histogram mapping.
+
+Some experimentation to determine the best option to use will undoubtably
+be required.  Images which are mostly background sky will usually not
+benefit from any form of histogram equalization, while images of extended
+objects in which the frame is more-or-less filled with "object" will
+usually benefit.  By setting the zero point (Z=) to be above the image sky
+level, you can have the advantages of the histogram equalization scalings
+while still showing surrounding objects.
+
+\noindent{Labeling the Output}
+
+By default, IMPOST will only draw a box around the image and display a bar
+with the gray scale intensity range (0-255 or 0-15) in a box below the
+image.  You can add axes and labels using a variety of keywords provided.
+\begin{itemize}
+  \item[TITLE]{puts the object name of the image (stored in the header in
+          the OBJECT FITS card).  The title appears above the upper
+          left-hand corner of the image in large type.  Standard 
+          Mongo escape sequences can be used to print special characters
+          (like a greek alpha), or super- and sub-scripts.}
+  \item[COMMENT]{appends a line of text below the image title in a slightly
+          smaller font.  Comments may be specified on the command line
+          by using the COMMENT='comment string' keyword.  You may also
+          have IMPOST prompt the terminal for the comment by using
+          the COMMENT keyword without an ='s sign.  Comments may be 
+          single or multiple words up to 64 characters long.  Note that
+          Mongo special characters may also be used, in addition to 
+          super- and sub-scripts, but the extra escape sequence characters
+          count against the 64 maximum.}
+  \item[AXES]{In its simplest form, AXES will draw coordinate axes around
+          the image and label the axes in pixel units.  Using the
+          SCALE= and/or CEN= keywords (see below) will allow you
+          to scale the axes in arcseconds.}
+  \item[SCALE= ]{Sets the pixel scale in arcseconds/pixel for the AXES 
+          keyword (above).  When used with AXES, the center of
+          the image is taken to be the origin (0,0), and the axes
+          are labeled accordingly.  To set a particular pixel to be
+          the center, use the CEN= keyword.}
+  \item[CEN=]{Sets the origin of the image to be the (r,c) location given.
+          Two (2) arguments must be given, and need not lie inside the
+          region actually plotted (useful if you wish to show a zoom of
+          a region in a larger image while still preserving the original
+          coordinate system).  If CEN is not used with SCALE, then the
+          center of the region displayed is assumed to be the origin.
+          (r,c) may be fractional pixel locations (say the centroid of
+          a galaxy or planetary nebula central star).}
+  \item[NOBAR]{Tells IMPOST not to draw in the gray intensity scale bar
+          on the image. }
+  \item[BAR=]{By default, IMPOST will label the gray intensity scale
+          bar with the word "Intensity", but you may set it to 
+          anything you like with the BAR= keyword.  For example,
+          BAR='Log H\\ga Flux' will label the intensity bar as
+          indicating the logarithm of the H-alpha flux.  Any valid
+          Mongo special character escape sequence (including 
+          super- and sub-scripts is allowed).}
+  \item[INFO]{Puts a line of auxiliary information across the bottom of
+          the print.  This provides a hardcopy of the parameters
+          that went into the picture (zero point, span, clipping, etc).}
+  \item[INT]{Puts the user into interactive Mongo after drawing image. The
+          limits are the row and column limits. Here you can do your
+          own labelling, overlays of contours, etc.}
+  \item[MACRO=file]{Executes the Mongo macro file after drawing image. Like
+          INT but uses predefined Mongo macro.}
+  \item[FLIP]{This keyword "flips" the image orientation in the window
+          vertically (about rows) so that the origin of the image is
+          in the lower left-hand corner of the page rather than the
+          upper left-hand corner as is default for VISTA.  This is
+          the orientation used by IRAF and STSDAS.}
+\end{itemize}
+
+\noindent{Advanced Page Control}
+
+A number of optional keywords are provided which affect the physical size
+of the image as it appears on the page, its orientation, the number of
+copies printed etc.  These options may be used if IMPOST prints are
+intended for use in papers or dissertations, where precise specification of
+margins and the location and orientation of the image on the page are
+essential.  These keywords are described below:
+
+\begin{itemize}
+  \item[LAND]{This keyword will cause the print to be oriented with the
+         horizontal axis aligned with the long side of the paper 
+         (so-called "landscape" mode).  By default, IMPOST prints are 
+         made in "portrait" mode.}
+  \item[COPIES=n]{If more than one copy is desired, then set the COPIES keyword.
+         This option is very economical of processing time, as the
+         printer only has to "draw" the image once and then knock off
+         as many copies as required.  This is far more efficient than 
+         printing the same file N-times.}
+  \item[WIND=(w,h)]{This keyword specifies the maximum possible size of the
+         plotting window, in inches.  The window is the largest
+         region in which IMPOST will try to fit the image.
+         By default, the plotting window is:
+             Portrait (default):  6" x 6"
+               Landscape (LAND):  8" x 5"
+         Dimensions are specified as "width","height" in units of inches.
+         These dimensions must be smaller than the paper dimensions 
+         (see PAGE keyword).}
+  \item[LARGE]{An alternative to WIND= is the "LARGE" keyword.  Will attempt
+         to make the window as large as possible on the page, leaving only
+         a 0.25-inch margin around the edge.  LARGE is equivalent to
+            ORIGIN=0.25,0.25  WIND=8.0,10.5  PAGE=11.0,8.5}
+  \item[ORIGIN=(dh,dv)]{Specifies the origin of the plotting window
+         in inches measured from the lower left-hand corner of the 
+         paper.  DH is the horizontal offset, and DV is the vertical
+         offset.  By default, IMPOST tries to center the plotting 
+         window on the page, and adds a 30pt "binding margin" to 
+         Portrait mode prints.  ORIGIN overrides this binding margin.}
+  \item[PAGE=(lng,sh)]{This keyword specifies the physical size of the paper in
+         inches.  "lng" = long dimension, "sh" = short dimension.
+         Note that which is horizontal or vertical depends on
+         whether or not the LAND keyword was used.  For example, 
+         PAGE=(11,8.5) is equivalent to the IMPOST default, and
+         corresponds to the dimensions of standard U.S. letter
+         paper.  PAGE should only be used if you have non-standard 
+         sized paper in your local PostScript printer and do not
+         wish to change the hardcoded values in the IMPOST fortran
+         code itself.  European VISTA users should have their
+         local custodians hardwire IMPOST to the appropriate local
+         paper size.}
+\end{itemize}
+
+\noindent{Advanced Notes:}
+
+IMPOST uses the LickMongo PostScript drivers to make the axes and labels.
+As such, while PostScript instructions generated by this program may be
+used to produce the image hardcopy on any PostScript device via an
+appropriate server, they do not fully conform to to the "Encapsulated
+PostScript" structuring conventions described in the 'PostScript Language
+Program Design' Manual (Adobe Systems Incorporated 1988), or following the
+Version 2.0 EPS Specifications (Adobe Systems Inc. January 1989).  In
+future releases of LickMongo, this should be corrected (it is an artifact
+of the fact that the LickMongo PostScript drivers were written well before
+the standards were published).  Even so, with minor modifications, it
+should be possible to import images created with IMPOST into other
+encapsulated PostScript files (like those generated by TeX).
+
+Images created with IMPOST have been displayed successfully on the X11/NeWS
+window system, on displayed PostScript devices, and transmitted
+electronically via both email and tcp/ip with no difficulties.
+
+'PostScript' is a registered trademark of Adobe Systems Incorporated.
+
+\noindent{A Note About the Name:}
+
+IMPOST is the command formerly known as POSTIT until 1997 Nov 21, when the
+author (Rick Pogge) was made aware of a letter to his department chairman
+from the law firm of Arnold, White, \& Durkee.  This firm represents the
+Minnesota Mining \& Manufacturing Company (3M) in trademark and other
+intellectual property rights matters.  It seems after coming across a web
+version of the Prospero manual (a VISTA derivative written at OSU that
+incorporates POSTIT because it was written by Rick Pogge), they deemed our
+use of the word POSTIT as an infringment of the trademark of 3M for its
+famous yellow sticky notes, aka Post-It(tm) Notes that might potentially
+confuse people encountering the web version of our help pages.
+
+While we disagree that anyone could possibly confuse the ubquitous yellow
+sticky notes manufactured by 3M with an obscure function embedded within an
+even more obscure advanced astronomical image processing package, the
+current legal climate of excessive litigiousness that serves only to
+trivialize intellectual property rights requires that we change the name.
+
+\section{PLOT: Plot a Row or Column of an Image or Spectrum}
+\index{Image!Row display}
+\index{Image!Column display}
+\index{Spectrum!Plot}
+\begin{rawhtml}
+<!-- linkto plot.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: } PLOT b1 b2 b3 .. {[R=n1,n2]} {[C=n1,n2]}
+       {[RS=r1,r2]} {[CS=c1,c2]}\hfill]{}
+  \item{{[XS=f]} {[XE=f]} {[MIN=f]} {[MAX=f]} {[XMIN=]} {[XMAX=]} 
+        {[YMIN=]} {[YMAX=]}}
+  \item{{[SEMILOG]} {[LOG]} {[R4]} {[NH=nh]} {[NV=nv]} {[OLD]}}
+  \item{{[HIST]} {[POINTS=psty]} {[USER]} {[PIXEL]} {[GRID]} }
+  \item{{[NOLABEL]} {[NOERASE]} {[INFO]} {[PROFILE]} {[MULT=]} }
+  \item{{[INT]} {[MACRO=file]} {[HARD]} {[PORT]} {[PSFILE=file]} {[EPS]} 
+       {[WAIT]} }
+  \item[b1,b2,b3..]{the image buffers which will be plotted (up to 15).}
+  \item[BOX=b]{limits the image 'buf' to box 'b'.}
+  \item[R=n1,n2, C=n1,n2]{plots the selected row(s) or column(s).}
+  \item[RS=r1,r2]{plots sum of selected rows.}
+  \item[CS=c1,c2]{plots sum of selected columns.}
+  \item[XS, XE]{select limits for x-axis of plot (also XMIN \& XMAX).}
+  \item[MIN, MAX]{select limits for y-axis of plot (also YMIN \& YMAX).}
+  \item[SEMILOG]{plots log(y) against x.}
+  \item[LOG]{plots log(y) against log(x).}
+  \item[R4      ]{plot x**0.25 instead of x.}
+  \item[NH=nh, NV=nv ]{number of horizontal and vertical windows
+       for multiple plots in multiple windows}
+  \item[WIND=nx,ny,iw]{sets desired plotting window}
+  \item[OLD]{uses parameters from previous plot.}
+  \item[HIST]{produces a histogram style (step) plot instead of a line plot.}
+  \item[POINTS=psty]{Plot points in the given Mongo style instead of a line
+                     plot.}
+  \item[USER]{uses axis scaling and labels stored in the FITS header.}
+  \item[PIXEL]{force plot in pixels of wavelength calibrated spectra.}
+  \item[GRID]{produces a full plot grid.}
+  \item[NOLABEL]{suppresses all labelling of the plot.}
+  \item[NOERASE]{do not erase the previous plot to allow overlapping
+       plots (see WAIT for hardcopy).}
+  \item[INFO]{puts additional information about the data on the plot.}
+  \item[PROFILE ]{plots results from the PROFILE common block}
+  \item[MULT=n ]{plots the nth galaxy from the internal multiple
+        nucleus common block}
+  \item[INT]{places the user in interactive Mongo after plotting.}
+  \item[MACRO=file ]{executes the Mongo macro file 'file' after plotting.}
+  \item[HARD]{sends the output to the hardcopy device specified by
+       the TERM command.}
+  \item[PORT]{make an portrait mode plot (default: landscape).}
+  \item[WAIT]{keep the hardcopy channel open so subsequent plots will
+              appear on the same image (or PostScript file).}
+  \item[PSFILE=file]{directs PostScript output to the specified file,
+       rather than sending it to the printer}
+  \item[EPS]{make an Encapsulated PostScript file.}
+\end{itemize}
+
+PLOT produces a plot of a selected rows, columns, or spectra for up to 15
+different images, using the LickMongo plotting package. All the specified
+buffers will come out on the same plot, or each successive specified buffer
+can come out in a series of windows (with the number of horizontal and
+vertical windows specified by the NH= and NV= keywords). If desired, all
+the plots can come out in a single subwindow using the WIND= keyword.
+PLOT also allows the possibility of hardcopy on your hardcopy device
+(as specified by the TERM HARCOPY= command).
+
+The index 'buf' specifies which of the image buffers contains the image for
+plotting a row or column. No 'buf' is needed to plot results from the
+PROFILE or the MULT common block, which contain profiles determined with
+the PROFILE or SNUC command.  The optional index 'box' specifies one of the
+10 available boxes (see BOX command) to be used to select a sub-section of
+an image. Row 'n' is displayed by using the option R=n, column 'n' by using
+the C=n option, and spectrum 'n' by using no option. The RS and CS keywords
+are used to display the sum of the selected rows or columns in an image.
+
+Normally the endpoints of the x- and y-axes are selected in this way: The
+x-axis runs over the entire row, column, or spectrum selected. The minimum
+and maximum y-values define the corresponding limits for the y-axis.
+
+XS and XE override this autoscaling and allow you to set the limits along
+the X-axis.  XS and XE refer to the starting and ending X values in pixels
+(or Angstroms for a spectrum with a wavelength scale determined.)  If the
+USER option is defined, XS and XE are in the user-defined coordinates.
+MIN and MAX override the autoscaling and allow the user to set the limits
+along the Y-axis.
+
+The keyword GRID will produce a coordinate grid on the plot.  This is very
+useful if you are trying to make measurements from a hard copy plot.  The
+keyword INFO will put some additional information onto the plot.
+
+LOG and SEMILOG will produce Log--Log or Log--Linear plots as desired.  The
+R4 keyword will plot $x^1/4$ along the x-axis, particularly useful when
+plotting the output image from PROFILE. NOLABEL prevents the drawing of
+axis labels and the name of the image or spectrum.  Use this with NOERASE
+to overplot several graphs.  The OLD keyword will produce a plot using the
+last used set of parameters.
+
+If multiple window are desired, use the NH= and NV= keywords to set the
+number of windows in the horizontal and vertical directions,
+respectively. The plots of b1, b2, b3 ... will appear in the window
+starting in the upper left and progressing right across the page and then
+down. If limits are specified with MIN and MAX, e.g., all windows will have
+these limits. If no limits are specified, each window will autoscale
+individually.
+
+If you wish all plots to be sent to a subwindow, use the WIND= keyword,
+with three parameters following the normal LickMongo syntax; number of
+windows in the x direction, number of windows in the ydirection, and
+a specification of which window to draw into (e.g. WIND=2,3,5 will
+draw in the upper left window of a 2x3 layout).
+
+HARD will send the plot to the hardcopy device as specified by the TERM
+command (or the default device). If you use the PSFILE=file option,
+PostScript output is sent to the specified file, rather than directly to
+the printer.  The PORT keyword will make a Portrait mode plot (long side of
+the paper vertical), and EPS will make an Encapsulated PostScript file.
+EPS should be used in conjunction with the PSFILE= keyword to create the
+EPS file.
+
+The MACRO=file keyword can be used to execute the Mongo macro file 'file'
+after each plot is made.  This provides a way to add additional annotation
+or data to a plot (especially for preparation of figures for papers or
+talks).
+
+INT is an alternative to MACRO= that invokes an interactive LickMongo shell
+allowing users to enter plot annotations and other commands interactively.
+Note that if this is done on a screen plot you need to use the WRITE ALL
+... command in LickMongo to save the macro, then when you make a hardcopy
+you can use the MACRO= keyword to execute the LickMongo commands.)  If
+MACRO= and INT are both specified, the macro file will be executed before
+the user is put into the interactive LickMongo shell.
+
+USER will scale and label the axes according to the user-defined
+coordinates instead of pixels.  This is done using the CRVALn, CRPIXn,
+CDELTm, CTYPEn and BUNIT cards in the image (or spectrum) FITS header.  The
+conversion between user coordinates and pixels is given by:
+\begin{itemize}
+  \item{X = CRVAL1 + CDELT1 * FLOAT(COL - CRPIX1)}
+\end{itemize}
+for Columns, or
+\begin{itemize}
+  \item{X = CRVAL2 + CDELT2 * FLOAT(ROW - CRPIX2)}
+\end{itemize}
+for Rows, where
+\begin{itemize}
+  \item[]{CRPIXn = INTEGER equal to the starting pixel of a Column (n=1)
+         or a Row (n=2) in an image.  For spectra, CRPIX1=1 typically.}
+  \item[]{CRVALn = REAL value of user coordinates at pixel=CRPIXn.  For
+         spectra, CRVAL1 = the starting wavelength (of pixel=1 typically).}
+  \item[]{CDELTn = REAL value scaling factor between rows (n=2) or columns
+         (n=1) and user coordinates.  For spectra, CDELT1 = linear dispersion.}
+\end{itemize}
+
+The X-axis label is taken from the CTYPEn card, which is a CHARACTER string
+surrounded by single quote (') marks.  The Y-axis label is taken from the
+BUNIT card, which is a CHARACTER string surrounded by single quote (')
+marks containing the appropriate units for the "Intensity" units of the
+pixels (e.g. counts/sec or flux).  These header cards may be set using the
+HEDIT command.  If a particular FITS card is not found, appropriate
+defaults are chosen, but be warned: older images and spectra from the Lick
+Data Taking programs do not conform to the FITS standard and may give
+strange results.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[PLOT 1 R=100]{Plots row 100 of image 1.}
+  \item[PLOT 1 RS=100,120 MIN=0. MAX=100.]{  Plots sum of rows 100 to
+       120 of image 1, with Y-axis running from 0. to 100.}
+  \item[PLOT 4 XS=20 XE=45 R=4]{Plots row 4 of image 4,
+       where the X-axis runs over columns 20 through 45.}
+  \item[PLOT 4 OLD SEMILOG]{Plot the old graph (whatever it was)
+       in semi-log format.}
+  \item[PLOT 1]{Plots the spectrum in buffer 1.  No
+       row or column specifers are necessary.}
+  \item[PLOT 4 INT ]{After plotting the spectrum (note that 4
+       must be a spectrum as no row or col was
+       specified!) enter interactive Mongo mode
+       to label and finish the plot.}
+  \item[PLOT 3 R=50 HIST]{Draws a plot of row 50 in image 3.
+       The plot is d}one in histogram style.
+  \item[PLOT 3 MIN=0.0 MAX=1000. HIST]{Does the same as example
+       8, but sets the Y-axis to run from 0.0 to 1000.0.}
+  \item[PLOT 2 R=50 HARD USER]{Plots R=50 of image 2 on the Imagen laser
+       printer and scales and labels the axes with
+       the user coordinate info stored in the FITS header of image 2.}
+\end{itemize}
+
+\section{RPLOT: Radial Intensity Plot of an Object in an Image}
+\begin{rawhtml}
+<!-- linkto rplot.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: } RPLOT imbuf {[RAD=r{[,c]}]} {[CEN=r0,c0]} 
+       {[SCALE=s]} {[HARD]}\hfill]{}
+  \item{{[MIN=ymin]} {[MAX=ymax]} {[COLOR=c]} {[NOERASE]} {[LOG]}}
+  \item[imbuf]{Specify the image buffer.  If no image buffer
+       is given, the currently displayed image is assumed.}
+  \item[RAD=r{[,c]}]{ Set the radius of the box in pixels in both rows 
+        and columns.  A second argument sets a rectangular 
+        box with the radius in Rows and Columns separately 
+        defined.  (Default: RAD=5)}
+  \item[CEN=r0,c0]{ Define the central pixel for the radial intensity
+       plot.}
+  \item[SCALE=s]{Define the pixel scale in Arcsec/Pixel for the plot
+       (does not apply to the RAD= keyword values)}
+  \item[HARD]{Make a hardcopy of the radial intensity plot }
+  \item[MIN=, MAX=]{ Sets y-axis limits for plot}
+  \item[COLOR=]{ Set the color to be used for the plot}
+  \item[NOERASE]{ Do not erase between plots}
+  \item[LOG]{ Plot intensities on a logarithmic scale}
+\end{itemize}
+
+This program makes a simple radial intensity plot of a section of an image.
+If the object is a star, it shows a mean point-spread function profile.  An
+interactive version that works off the TV display is available via the
+TVRPLOT command.
+
+The radial intensity plot is formed by finding the radius to all points
+within a given box around the specified location and plotting intensity
+versus radius.  Each point making up the plot is from a single pixel; no
+interpolation is done.  The effect is to produce an azimuthally wrapped
+(not averaged) plot of intensity.  For example, if doing RPLOT on the image
+of a star, if that star is round, then a fairly clean radial point-spread
+function profile, will be plotted.  If the star is elliptical (due to bad
+guiding or focus), the radial brightness profile will be a fuzzy cloud of
+points.
+
+The center of the radial plot may be specified in one of two ways:
+\begin{enumerate}
+  \item{The center is as defined in the AXES common block.  You
+        must have run the AXES command on the image before invoking
+        RPLOT.}
+  \item{The center is specified on the command line using the CEN= keyword.}
+\end{enumerate}
+
+Centers may be integer or fractional pixel values, but the size of the
+search region will be truncated to integer pixel intervals.
+
+The interactive routine, TVRPLOT, allows the user to select the center of
+the radial plot with the interactive display cursor on the currently
+displayed image (see TVRPLOT).  A hardcopy plot may be generated using the
+HARD keyword.
+
+NOERASE suppresses erasing of the plotting window, allowing you to
+superimpose subsequent radial plots on top of each other.  
+
+LOG will plot the logarithm of the intensity as a function of radius.
+
+COLOR=c changes
+the color of the points plotted.  The default color is white (1).  At
+present only the 7 "primary" graphics colors are available:
+
+\begin{center}
+{\bf Color Codes}\\
+\begin{tabular}{cccc}
+\hline
+Code & Color & Code & Color\\
+\hline
+0 & background & 4 & Blue\\    
+1 & foreground & 5 & Yellow\\  
+2 & Red        & 6 & Magenta\\ 
+3 & Green      & 7 & Cyan\\    
+\hline
+\end{tabular}
+\end{center}
+
+Colors may be used in conjunction with NOERASE to overlay two different
+radial profiles, using the colors to distinguish them.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[RPLOT 1 RAD=10 CEN=51,25\hfill]{
+   Makes a radial intensity profile of the image in buffer 1 centered on
+   the pixel at Row=51, Column=25, using all pixels within a 21x21 pixel
+   wide box surrounding the center pixel.}
+  \item[RPLOT 1 RAD=10 CEN=51.5,25.2\hfill]{
+   Same as above, but the center of the plot is now at fractional pixel
+   location (51.5,25.2)}
+  \item[RPLOT\hfill]{
+   Makes a radial intensity plot of the currently displayed image using
+   the center computed by the previous AXES command (AXR and AXC variables).
+   The box is 11x11 pixels (RAD=5) centered on (AXR,AXC).}
+  \item[RPLOT SCALE=0.54 HARD\hfill]{
+   Same as above, but scales the radii plotted to the pixel scale of 0.54
+   arcseconds/pixel, and sends the plot to the hardcopy device.  The size
+   of the box is still 11x11 pixels.}
+\end{itemize}
+
+\section{TVRPLOT: Radial Intensity Plot of an Object on the Image Display}
+\begin{rawhtml}
+<!-- linkto tvrplot.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: } TVRPLOT {[RAD=r{[,c]}]} {[SCALE=s]} {[MIN=ymin]} 
+       {[MAX=ymax]}\hfill]{}
+  \item[RAD=r{[,c]}]{ Set the radius of the box in pixels in both rows 
+       and columns.  A second argument sets a rectangular 
+       box with the radius in Rows and Columns separately 
+       defined.  (Default: RAD=5)}
+  \item[SCALE=s]{   Define the pixel scale in Arcsec/Pixel for the plot
+       (does not apply to the RAD= keyword values)}
+  \item[MIN=, MAX=]{ Sets y-axis limits for plot}
+  \item[COLOR=]{ Set the color to be used for the plot}
+  \item[NOERASE]{ Do not erase between plots}
+  \item[LOG]{ Plot intensities on a logarithmic scale}
+\end{itemize}
+
+This program makes a simple radial intensity plot of a section of an image.
+If the object is a star, it shows a mean point-spread function profile.  An
+non-interactive version is available via the RPLOT command.
+ 
+The radial intensity plot is formed by finding the radius to all points
+within a given box around the specified location and plotting intensity
+versus radius.  Each point making up the plot is from a single pixel; no
+interpolation is done.  The effect is to produce an azimuthally wrapped
+(not averaged) plot of intensity.  For example, if doing TVRPLOT on the
+image of a star, if that star is round, then a fairly clean radial
+point-spread function profile, will be plotted.  If the star is elliptical
+(due to bad guiding or focus), the radial brightness profile will be a
+fuzzy cloud of points.
+
+The center of the radial plot may be specified in one of two ways:
+\begin{enumerate}
+  \item{"C": The center is the intensity centroid nearest the 
+             cursor, computed using the same algorithm used by MARKSTAR and
+             AUTOMARK.}
+  \item{"X": The center is the pixel where the display cursor
+             is located.  No centroid is computed in this case.}
+\end{enumerate}
+The radius axis on the plot may be scaled to arcseconds using the SCALE=
+keyword.  Note that using SCALE will not affect the size of the search
+radius; this is always expressed in pixel units.
+
+NOERASE suppresses erasing of the plotting window, allowing you to
+superimpose subsequent radial plots on top of each other.  
+
+LOG will plot the logarithm of the intensity as a function of radius.
+
+COLOR=c changes
+the color of the points plotted.  The default color is white (1).  At
+present only the 7 "primary" graphics colors are available:
+
+\begin{center}
+{\bf Color Codes}\\
+\begin{tabular}{cccc}
+\hline
+Code & Color & Code & Color\\
+\hline
+0 & background & 4 & Blue\\    
+1 & foreground & 5 & Yellow\\  
+2 & Red        & 6 & Magenta\\ 
+3 & Green      & 7 & Cyan\\    
+\hline
+\end{tabular}
+\end{center}
+
+Colors may be used in conjunction with NOERASE to overlay two different
+radial profiles, using the colors to distinguish them.
+
+See RPLOT for the non-interactive (batch) version of this program.
+
+\section{CONTOUR: Make Contour Maps Images}
+\index{Plot!contour}
+\begin{rawhtml}
+<!-- linkto contour.html -->
+\end{rawhtml}
+\begin{itemize} 
+  \item[\textbf{Form:} CONTOUR im1 {[im2...]} {[BOX=b]} 
+       {[LEVELS=(L1,L2,...)]} {[LOW=l]} {[RATIO=r]} ]{}
+  \item[{[DIFF=d]} {[FID=l]} {[SCALE=s]} {[USER]} 
+        {[TR=(X0,X1,X2,Y0,Y1,Y2)]} ]{}
+  \item[{[TITLE]} {[DASH]} {[EXACT]} {[NOERASE]} {[NOLABEL]} {[NOAXES]}]{}
+  \item[{[LWEIGHT=w]} {[LTYPE=n1,n2,...]} {[COLOR=c1,c2,...]} {[NV=n]} 
+        {[NH=n]} {[NW=n]} {[SUBMAR=sx,sy]}]{}
+  \item[{[HARD]} {[LAND]} {[FILE=psfile]} {[EPS]} {[NOPRINT]} {[FULL]} ]{}
+  \item[im1 im2 ...]{buffer(s) with the images to be plotted (max of 15)}
+  \item[BOX=b]{plots only the part of the image in box 'b'.}
+  \item[\textbf{Contour Level Control}\hfill]{}
+  \item[LEVELS=]{sets the levels of the plot explicitly.}
+  \item[LOW=l]{gives the lowest contour level.}
+  \item[RATIO=r]{says that contours above the lowest level will increase
+       each time by the given ratio.}
+  \item[DIFF=d]{says that the contours above the lowest level will
+       increase each time by the given difference.}
+  \item[FID=l]{establishes a fiducial contour level for the plot.  The
+       fiducial contour is drawn in a heavier line style.
+       Contours greater than this level are drawn as a lighter
+       continuous line, and those below it are drawn as broken
+       lines.  The default value is 0.0.}
+  \item[\textbf{Contour Plot Scaling Keywords}\hfill]{}
+  \item[SCALE=s]{Sets the image scale to "s" arcseconds/pixel on BOTH axes.}
+  \item[USER]{Scales the contour axes based on the CRPIXn, CRVALn,
+       and CDELTn FITS header cards, and labels the axes using
+       the CTYPEn FITS cards.}
+  \item[TR=()]{specify a general linear transformation matrix to scale
+       the contour map (see below).}
+  \item[\textbf{Contour Style Control}\hfill]{}
+  \item[DASH]{draw contours as broken (dashed) lines.}
+  \item[EXACT]{Uses a slower contour "following" algorithm than the
+       default routine.}
+  \item[LWEIGHT=w]{Sets the thickness of all line segments}
+  \item[LTYPE=n1,n2...]{determines the line type of im1,im2,...}
+  \item[COLOR=c1,c2...]{determines the color of im1,im2,...}
+  \item[\textbf{Plot Title and Output Control}\hfill]{}
+  \item[TITLE]{put object label on plot}
+  \item[NOERASE]{do not erase screen.}
+  \item[NOLABEL ]{do not label axex.}
+  \item[FULL ]{makes contour plot fill up entire page, rather
+       than preserving correct aspect ratio}
+  \item[\textbf{Multiwindow Plots}\hfill]{}
+  \item[NH=h]{Divide the plotting window into H windows horizontally}
+  \item[NV=v]{Divide the plotting window into V windows vertically}
+  \item[NW=n]{Put the contour plot into window N for single images 
+       (mongo order)}
+  \item[SUBMAR=dx,dy]{Change the default spacing (submargins) between windows}
+  \item[\textbf{Hardcopy Output Control}\hfill]{}
+  \item[HARD]{sends output to the default hardcopy device}
+  \item[FILE=psfile]{Send output to the PostScript file named "psfile"}
+  \item[EPS]{Make an Encapsulated PostScript file.}
+  \item[NOPRINT]{do not send hardcopy to the printer (PostScript only).}
+  \item[LAND]{Make the hardcopy in landscape mode (default: portrait)}
+\end{itemize}
+ 
+CONTOUR produces a contour map of an image or set of images either on the
+graphics terminal screen or on a hardcopy device.  Contour levels are user
+specified or suitable defaults are applied.  Options for coordinate
+transformations between the image pixels and real-world coordinates are
+possible via a simple linear transformation matrix defined by the user.  It
+is possible to overlap several images onto a single contour plot by
+specifying multiple image buffers on the command line, or to plot them into
+individual windows on the plot using special windowing keywords.
+ 
+\noindent{Setting Contour Levels:}
+ 
+Contour levels for the plot may specified in one of two ways.  In the
+first, the levels are explicitly set by the LEVELS keyword.  Up to 40
+levels may be specified in this way.  In the second method, the keyword LOW
+is used to set the lowest level of the plot, and the DIFF or RATIO keywords
+are used to set the other levels.  DIFF means that successive contours will
+be separated by the given difference; RATIO means that successive contours
+will be separated by the given ratio.
+ 
+When multiple images are specified on the command line, use of these
+keywords sets the contour levels for ALL of the images.  A technique for
+plotting multiple contours on the screen or in hardcopy plots with
+\textit{different} contouring levels is described under Advanced Techniques
+below.
+
+The FID keyword establishes a "fiducial" contour level for the plot. All
+contours above this fiducial level are plotted as normal, unbroken lines
+and all contours below this level are plotted as broken lines.  The
+fiducial contour itself is plotted with a heavy solid line to distinguish
+it.  The default value is FID=0.0, so that all negative contours will be
+dashed by default following the convention established by radio
+astronomers.
+ 
+If the contour levels are not specified, the program computes its own in
+the following way.  If multiple images are given, the the program computes
+levels for each image \textit{independently}.
+ 
+The lowest contour is the mean of the image in the area being plotted.
+Subsequent contours are spaced 0.5 magnitudes (a factor of 1.583) apart, or
+5 contour levels per decade of intensity.  This turns out to be a useful
+default for a wide variety of astronomical applications. The mean is
+computed using every fifth pixel to save time; for small images with great
+variations in intensity across the image, the fifth-pixel mean will not be
+a good representation of the true mean, and so the default contours may not
+produce a good plot.  Use the MN command to find the true mean and set the
+contours by hand.
+ 
+\noindent{Contour Map Scaling:}
+ 
+By default, CONTOUR will assume nothing about the image pixel scale, and
+plot the axes of the contour map in pixel space, labeling the axes in rows
+and columns with orientation matching the appearance on the color image
+display.
+ 
+The simplest scaling option is to specify the image pixel scale.  The SCALE
+keyword sets the scale of both axes in arcsec/pixel, and sets the origin to
+be the center of the portion of the image being mapped, or to the center
+defined by the CEN keyword.  If SCALE is omitted, the axes are displayed in
+pixel units.  The orientation of the axes is this: the units increase from
+right to left on the bottom of the graph, and from bottom to top along the
+left side.  This will be in the usual astronomical convention if north is
+at the top of the graph and east is at the left.  Use FLIP and/or ROTATE to
+get the image in this orientation.
+ 
+A more sophisticated scaling option is available via the USER keyword. The
+USER keyword sets the scaling and labelling of each axis independently
+using the contents of the FITS header.  The axes are scaled according to:
+\begin{itemize} 
+  \item{X = CRVAL1 + CDELT1*(C-CRPIX1)}
+  \item{Y = CRVAL2 + CDELT2*(R-CRPIX2).}
+\end{itemize} 
+X and Y axis labels are taken from the CTYPE1 and CTYPE2 cards
+respectively.  Any of these FITS cards may be changed (or defined) using
+the FITS or HEDIT commands.
+ 
+The most general coordinate tranformation between the image's pixel grid
+(Cols,Rows) and "world coordinates" (X,Y) may be performed using the "TR="
+option.  This allows the user to specify a general transformation matrix
+which includes possible rotation and shear terms.  The "TR=" keyword
+requires 6 transformation matrix elements, given in the form:
+\begin{itemize} 
+  \item{TR=(X0,X1,X2,Y0,Y1.Y2)}
+\end{itemize}
+where:
+\begin{itemize} 
+  \item{X = X0 + X1*C + X2*R}
+  \item{Y = Y0 + Y1*C + Y2*R}
+\end{itemize}
+are the transformation equations.  X and Y are the "world" coordinates in
+which you want the plot to appear, and C and R are the image Column and Row
+numbers.
+ 
+The default scaling is equivalent to:  "TR=(0.,1.,0.,0.,0.,1.)"
+ 
+The SCALE=s keyword is equivalent to: "TR=(C0,s,0.0,R0,0.0,-s)" where
+(C0,R0) is the image central pixel.
+ 
+The USER keyword is equivalent to:
+"TR=(CRVAL1-CDELT1*CRPIX1,CDELT1,0.0,CRVAL2-CDELT2*CRPIX2,0.0,CDELT2)"
+where the CXXXn are the relevant FITS cards (see USER above).
+ 
+Be advised that this is an option for experts.
+
+\noindent{Contour Formatting Options:}
+
+Below are a number of options for changing the appearance of the contour
+lines themselves, but not affecting the actual contour levels.
+ 
+EXACT tells the program to use a slower contour "following" algorithm
+rather than the default "fast" raster drawing algorithm.  This will result
+in somewhat rougher (though perhaps truer) contours, and it handles dashed
+lines far better.  In noisy cases, use of EXACT is not advised.
+ 
+DASH draws contours for all images given as dashed lines (see LTYPE= below)
+ 
+LWEIGHT=w: Changes the weight (line width) of the contours to W.  For
+Screen plots, W is taken to be a multiple of the default pen width.  For
+PostScript hardcopy plots, W is the width of the graphics pen in units of
+printers points.  Default is 1.0 for screen plots, and 0.5 for hardcopy
+plots.
+ 
+LTYPE=l1,l2,...: Changes the line style (solid, dashed, etc) of the
+contours for a given image.  Multiple arguments are used to set different
+styles for each of the images on the command line (l1 for the first image,
+l2 for the second, etc).  There are 7 line styles available:
+
+\begin{center}
+{\bf Line-Type Codes}\\
+\begin{tabular}{cccc}
+\hline
+LTYPE & Style \\
+\hline
+0 & Solid    \\   
+1 & Dotted     \\       
+2 & Short Dash   \\     
+3 & Long Dash\\
+4 & Dot / Short Dash\\
+5 & Dot / Long Dash\\
+6 & Short Dash / Long Dash\\
+\hline
+\end{tabular}
+\end{center}
+
+COLOR=c1,c1,...: Changes the line color of the contours for a given image,
+by analogy with the LTYPE keyword above.  The default color is white (1).
+At present only the 7 "primary" graphics colors are available:
+
+\begin{center}
+{\bf Color Codes}\\
+\begin{tabular}{cccc}
+\hline
+Code & Color & Code & Color\\
+\hline
+0 & background & 4 & Blue\\    
+1 & foreground & 5 & Yellow\\  
+2 & Red        & 6 & Magenta\\ 
+3 & Green      & 7 & Cyan\\    
+\hline
+\end{tabular}
+\end{center}
+
+\noindent{Contour Plot Axis Formatting Options:}
+ 
+The following keywords allow you to change the format of the axes
+surrounding the contour map.
+ 
+TITLE puts the object title (from the image header) over the contour map.
+This can be changed using either CH or HEDIT to suit your needs.
+ 
+NOLABEL draws the axes with tick marks, but does not label the axes.
+ 
+NOAXES draws the axes, but does not draw ticks or labels (e.g., plain box)
+ 
+NOERASE prevents erasure of the screen before beginning a plot. This may be
+used to superimpose two contour plots for comparison.  NOERASE is ignored
+for hardcopy, but there are comparable tricks for overplotting different
+contours with different levels discussed under Advanced Techniques below.
+ 
+\noindent{Large Size and Multi-Window Contour Plots:}
+ 
+The following command can be used to change the position and size of the
+contour plots on the graphics area.  By default, a single contour axis
+window is drawn, with scaling set so as to draw the largest window on the
+screen (or paper) as possible and still preserve a 1:1 aspect ratio between
+the X and Y axes (e.g., it assumes square image pixels).
+ 
+FULL draws a single plot, but without preserving a 1:1 aspect ratio.  This
+keyword is useful for plotting contours of long-slit spectra, for example.
+ 
+NH=h, NV=v: These two keywords allow the user to divide the plotting area
+in to HxV windows, each of which can take a separate contour plot.  The
+window convention is the same as used in the LickMongo package.  For
+example: "NH=2 NV=2" will divide the screen/paper in to 4 windows, 2x2 on
+the page.
+ 
+NW=n (Single Image Contour Plotting Only): This keyword tells the contour
+program to put the current image into window number N, where windows are
+number in LickMongo fashion running left-to-right, and bottom-to-top
+starting in the lower left-hand corner of the graphics screen/page.  This
+keyword is only acknowledged if ONE image was given on the command line.
+To build up a multi-window plot with NW=, use the NOERASE or NOPRINT
+keywords (for screen \& hardcopy respectively -- see Advanced Techniqes
+below)
+ 
+SUBMAR=sx,sy: By default, the windows specified with NH= and NV= have
+margins of white space between them to accommodate axis labels, numbers,
+titles, etc.  The amount of margin allowed is fixed automatically by the
+LickMongo plotting package, but the user can choose the margins with the
+SUBMAR command.  This works the same as the LickMongo "SUBMARGINS"
+command/subroutine.  SX and SY are scaling factors of the default margin,
+thus SUBMAR=1,1 is the default state.
+ 
+SUBMAR=0,0 will make the windows but together, with no margin between the
+axes.  Thus one can make a continuous grid of windows using this keyword.
+For example, a 2x3 grid of 9 windows with no independent axes would be
+drawn using: "NH=2 NV=3 SUMBAR=0,0 NOLABEL" Where the NOLABEL keyword
+suppresses all axis labels, but draws tick marks.  Ticks could be
+suppressed by invoking "NOAXES" in place of "NOLABEL"
+ 
+When multiple images have been specified on the command line, using the NH=
+and NV= keywords (without NW=) will have the following effects:
+\begin{enumerate} 
+  \item If the number of images equals the number of windows (N=NH*NV),
+   then the first image will go in window 1, the second in window 2, and so
+   forth.  Remember that window 1 is in the lower LEFT corner, not the
+   upper left as with the Mongo WINDOW command.  The NW= keyword is ignored
+   All contours will have the same levels.  To have different levels is a
+   bit tricker, see Advanced Techniques below.
+ 
+  \item If the number of images is less than the number of windows, then a
+  warning to that effect is issued for your information, and the windows
+  are filled up until there are no more images.
+ 
+  \item If there are more images than windows, an error message is issued.
+\end{enumerate}
+ 
+\noindent{Contour Map Hardcopy:}
+ 
+The LickMongo plotting routines support a wide number of hardcopy devices.
+The default hardcopy device for your VISTA installation is indicated at
+startup, and may be changed (as appropriate) using the TERM command.  At
+most installations, this will be a PostScript laser printer (like the Apple
+LaserWriter).
+ 
+HARD instructs the program to draw the contour map on a hardcopy device
+instead of on the graphics screen.  No plot appears on the terminal.  If
+used by itself without either the NOPRINT or FILE= keywords, the hardcopy
+plot will be directed to the default printer upon completion of the plot
+and no "plotting file" will be retained on disk.
+ 
+The following keywords ONLY work when used in conjunction with the HARD
+keyword:
+ 
+LAND creates a hardcopy plot oriented in "Landscape" mode (X-axis along the
+long-axis of the paper).  By default, contour plot hardcopy are given the
+"Portrait" orientation.
+ 
+FILE=psfile: By default, HARD alone creates a scratch plotting file in a
+scratch disk area, and then deletes this file as soon as it is printed.
+Since PostScript files might be useful for embedding contour map figures in
+LaTeX or other wordprocessing program, or to send a contour map to others
+via email, this keyword creates a PostScript file named "psfile" in the
+user's current working directory.  When the plot is completed, if the
+NOPRINT keyword is not given, the PostScript file will be closed and ready
+for printing.  If NOPRINT is given, the PostScript file is not closed.
+ 
+NOPRINT suppresses closing and printing of the hardcopy file.  This allows
+the user to append successive plots the hardcopy file to facilitate
+building up a composite contour map (for example: multiple contour plots,
+with a different contour level set in each window).  NOPRINT is the
+hardcopy equivalent of the NOERASE keyword.
+
+\noindent{Advanced Techniques:}
+ 
+There are two main motivations behind the redesign of CONTOUR.  The first
+is to allow users to overlay 2 or more contour maps on each other in both
+screen and hardcopy mode.  The second is to allow the user to make a
+multi-window plot in which each image is in a separate window.  Limitations
+on the VISTA command-line make it difficult to give each image in the
+keyword list a different set of contour levels.  Thus, when multiple images
+are plotted (either in overlay or multi-window modes), all images are given
+the same contour levels.  To plot images with different contour levels
+requires that CONTOUR be executed multiple times.
+ 
+For screen plots, this is straightforward.  The first contour is plotted
+using the CONTOUR program with only one image specified.  This erases the
+screen and draws the axes and contours.  Then for each subsequent image,
+CONTOUR is called with the NOERASE keyword so the previous contour map is
+not erased from the screen.  If a multi-window plot is being generated, the
+NW= keyword is used to make the next window on the screen.
+ 
+For hardcopy, things are a bit trickier, requiring different actions for
+the first, middle, and last plots.  The first plot is made using the
+keywords HARD NOPRINT FILE=psfile, which opens and initializes the
+PostScript file name "psfile" in the current working directory.  Subsequent
+plots, EXCEPT THE LAST PLOT, are also made using the same HARD NOPRINT
+FILE=psfile keywords.  For the LAST plot, only "HARD FILE=psfile" is
+issued, so that when the last plot is finished, the PostScript file
+"psfile" is closed and now ready to be printed at the user's leisure by
+hand.
+ 
+An example is a 2x3 (HxV) 6-panel contour plot, in which each of the 6
+images uses a different contour scaling.  We want to make a PostScript file
+named "montage.ps" to contain the figure, so we can print it again later
+without having to regenerate it with CONTOUR each time (e.g., for a figure
+for a journal article).  The images are in buffers 1-6.  We want no axis
+labels or ticks, and for there be to be no white space between the plots.
+We also want the images to be oriented on the page so that the 3 vertical
+rows of 2 windows will be along the long-axis of the paper ("Portrait
+mode").  It would go like this:
+
+\begin{verbatim} 
+   CONTOUR 1 NH=2 NV=3 SUBMAR=0,0 HARD NOAXES FILE=montage.ps |
+        LOW=10 DIFF=20 NW=1 NOPRINT
+   CONTOUR 2 NH=2 NV=3 SUBMAR=0,0 HARD NOAXES FILE=montage.ps |
+        LOW=3.5 DIFF=10 NW=2 NOPRINT
+   CONTOUR 3 NH=2 NV=3 SUBMAR=0,0 HARD NOAXES FILE=montage.ps |
+        LOW=1. RATIO=1.5 NW=3 NOPRINT
+   CONTOUR 4 NH=2 NV=3 SUBMAR=0,0 HARD NOAXES FILE=montage.ps |
+        LEVELS=(.01,.02,.03,.05,.07,.1,.2,.3,.5,.7,.9) NW=4 NOPRINT
+   CONTOUR 5 NH=2 NV=3 SUBMAR=0,0 HARD NOAXES FILE=montage.ps |
+        LOW=22 RATIO=1.583 NW=5 NOPRINT
+   CONTOUR 6 NH=2 NV=3 SUBMAR=0,0 HARD NOAXES FILE=montage.ps |
+        LEVELS=(10,20,100,1000,10000) NW=6
+\end{verbatim} 
+Notice that the last invocation of CONTOUR dropped the NOPRINT keyword.
+Also notice that the sequence of CONTOUR calls was uninterrupted.  This
+avoids the possibility that another graphics call will intervene, causing
+VISTA to forget that the file "montage.ps" is already opened and
+initialized.
+ 
+This same sequence of commands, without the "HARD FILE=montage.ps" keyword
+and using NOERASE for "CONTOUR 2 ..." through "CONTOUR 6 ..." will allow
+you to "preview" this hardcopy plot on the screen before making the file.
+ 
+\noindent{Examples:}
+\begin{itemize}
+  \item[CONTOUR 2\hfill]{
+Plots all of image 2.  The contour levels are set in the program.}
+  \item[CONTOUR 2 HARD\hfill]{
+Does the same as example 1, but sends the output to the default
+        hardcopy device}
+  \item[CONTOUR 2 BOX=3\hfill]{
+Does the same as example 1, but plots only the part of the image in
+box 3.}
+  \item[CONTOUR 1 LEVELS=10,20,30,40,50\hfill]{
+An example of setting the levels explicitly.}
+  \item[CONTOUR 1 LOW=10.0 DIFF=20.0\hfill]{
+Plots image 1 with contours at 10, 30, 50, 70, ...}
+  \item[CONTOUR 1 LOW=2 RATIO=2\hfill]{
+Plots image 1 with contours levels of 2, 4, 8, 16, 32, ...}
+  \item[CONTOUR 1 LOW=2. RATIO=2.5 HARD USER\hfill]{
+Plots image 1 with contours spaced at 1 magnitude intervals on the
+default hardcopy device, and scales and labels the axes using the
+FITS header of image 1.}
+  \item[CONTOUR 3 LOW=20. DIFF=10. TITLE\hfill]{
+Plots image 3 with contours at levels of 20, 30, 40, ... , and puts
+the object name at the top.}
+  \item[CONTOUR 1 2 LOW=20. DIFF=10. FID=50. HARD\hfill]{
+        Plots image 1 \& 2 over each other with contours at levels of 20, 30, 
+        40, ..., where the levels below 50 are plotted as dashed lines, 
+        levels above 50 as normal solid lines, and level 50 as a heavier 
+        solid line. The result is sent the default hardcopy device.}
+  \item[CONTOUR 1 2 LEVELS=1000,5000 LTYPE=0,1 \hfill]{
+        Plots images 1 and 2 over each other with contour levels 1000 \& 5000.
+        Image 1 is drawn as a solid line (LTYPE=0), and image 2 as a dotted 
+        line (LTYPE=1).}
+  \item[CONTOUR 1 2 LOW=20. DIFF=10. COLOR=1,2\hfill]{
+Plots images 1 and 2 over each other, with contour levesl 20,30,...
+        Image 1 is plotted as a white line, while images 2 is plotted as
+        a red line (color 2) on a color device, otherwise both appear white.}
+  \item[CONTOUR 1 2 LOW=20. DIFF=10. NH=2 NV=1\hfill]{
+Divides the plotting window in half horizontally, plotting image
+        1 in the first (left-hand) window, and image 2 in the second 
+        (right-hand) window.  Both contours have levels 20,30,...}
+  \item[CONTOUR 1 2 3 4 LOW=10 RATIO=2.5 NH=2 NV=2 HARD SUBMAR=0,0 NOAXES HARD PORT\hfill]{
+Divides the the page in quarters (2 windows horizontal and 2 windows
+        vertical), plotting images 1-4 in separate windows, starting from
+        the lower left-hand window and ending up in the upper right-hand
+        window.  Only the axis box is plotted without ticks or labels, and
+        the margins are set to 0,0, so all windows are joined together.
+        The plot is sent to the hardcopy device as a Portrait mode plot.
+All contour maps have the SAME contour levels: 10,25,62.5,165.25....}
+\end{itemize}
+
+%---------------------------------------------------------------------------
+
+\section{OVERLAY: Draw contours over a Greyscale Image (PostScript)}
+\begin{rawhtml}
+<!-- linkto overlay.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form:} OVERLAY ibuf {[IBOX=b]} {[cbuf]} {[CBOX=b]} {[PROF]} 
+       {[PROF=n]}\hfill]{}
+  \item[{[Z=zero]} {[L=span]} {[CLIP]} {[POSITIVE]} {[NOBIN]}
+        {[LEVELS=(c1,c2,c3,...)]} {[LOW=f]} {[RATIO=f]} {[DIFF=f]}]{}
+  \item[{[NC=n]} {[FID=f]} {[CTHRESH=f]} {[DASH]} {[LTYPE=n]} {[LWEIGHT=f]} 
+        {[COLOR=c]} {[COLOR=r,g,b]}]{}
+  \item[{[EXACT]} {[TITLE]} {[BAR=xxx]} {[COMMENT]} {[COMMENT=xxx]}
+        {[SCALE=s]} {[CEN=r,c]} {[LAND]} {[MACRO=xxx]} {[FILE=xxx]}]{}
+  \item[{[NOAXES]} {[NOBAR]} {[LARGE]} {[INFO]} {[WIND=w,h]} {[ORIGIN=x,y]} 
+        {[PAGE=L,S]} {[COPIES=n]}]{}
+  \item[ibuf ]{the buffer containing the grayscale image}
+  \item[IBOX=]{only consider the pixels of the grayscale image within IBOX}
+  \item[cbuf]{ the buffer containing the contour image}
+  \item[CBOX=]{only consider the pixels of the contour image within CBOX}
+  \item[PROF]{ instead of a contour image, draw the current best fit 
+isophotes in the PROFILE common block}
+  \item[PROF=n]{Only draw every Nth isophote in the PROFILE common block}
+  \item[Keywords controlling the grayscale image appearance:\hfill]{}
+  \item[Z=zero ]{Zero point of the intensity mapping.  Default value is 0.0}
+  \item[L=span]{Span of the intensity mapping.  If none is specified, the 
+                default value will be taken to be 4 times the image mean.}
+  \item[CLIP]{Prevent roll-over of the intensity mapping.  Default is 
+              no clipping.}
+  \item[POSITIVE]{Make the hardcopy White-on-Black background.  Default is 
+                  Black-on-White (conventional photonegative).}
+  \item[NOBIN]{Suppresses autobinning if the image is larger than about
+               512x512 pixels.  Default is autobinning.}
+  \item[Keywords controlling the contour map \hfill]{}
+  \item[LEVELS=(c1,c2,c3,...)]{set the levels explicitly.  Up to 40 contours 
+       may be given on the command line.}
+  \item[LOW=c0]{Lowest contour to be drawn}
+  \item[DIFF=f]{Difference between contour levels (equally spaced contours)}
+  \item[RATIO=f]{Ratio between contours (for log-spaced contours).  RATIO
+                 and DIFF are mutually exclusive}
+  \item[NC=n]{Limit the number of contours drawn using LOW/DIFF or 
+                  LOW/RATIO to N (up to a maximum of 100).}
+  \item[FID=f]{Define a fiducial contour.  Levels above this value are
+                  drawn with the default line type, below are dashed, and
+                  the fiducial contour itself is drawn with a heavier
+                  line weight.  Default fiducial is the zero contour.}
+  \item[CTHRESH=f]{All contours with intensity above this level will be
+                  drawn in reverse color (default: white).  Provides a means
+                  for rudimentary contour "visibility" against saturated
+                  colors on the grayscale.  Default is uniform color.}
+  \item[DASH]{All contours are to be drawn as dashed (not just those below
+              the fiducial level).  Default is solid lines above fiducial.}
+  \item[LTYPE=n ]{Draw contours with LickMongo line type N (see table below)}
+  \item[LWEIGHT=f]{Draw contours with line weight F (Default is 0.5)}
+  \item[COLOR=c]{Draw contours with color C.  Default is black.  A color table 
+                 is given below.}
+  \item[COLOR=r,g,b]{ Draw contours with the RGB color given.  0 <= RGB <= 1.  
+               Allows for arbitrary colors (or shades of gray).}
+  \item[EXACT]{Contours are drawn using a slow contour-following algorithm.
+               Default: fast rastering algorithm.}
+  \item[Keywords affecting the axes of the plot\hfill]{}
+  \item[TITLE  ]{Put a title (in FITS header OBJECT card for the grayscale 
+                 image) on the plot.}
+  \item[BAR=XXX ]{Label the intensity scaling bar with string "xxx" to 
+                  indicate the units. Default label is "Intensity".}
+  \item[COMMENT ]{Print a comment line on the plot.  Comment lines may}
+  \item[COMMENT= ]{be up to 64 characters long. }
+  \item[SCALE=s ]{Pixel scale in units/pixel for the image.  The axis ticks 
+                  will be in these units rather than pixels (default).  
+                  The origin is assumed to be the image center unless the 
+                  CEN=(r,c) keyword is used.}
+  \item[CEN=(r,c) ]{The center of the image in pixels for use with the SCALE=s 
+                  keyword.  Default center is the image array center, unless 
+                  PROF or PROF= was called, then the isophote center is used }
+  \item[MACRO=xxx]{External file with LickMongo commands to be executed 
+                  after the plot is completed.  Provides a facility for 
+                  customizing axes and adding annotation.}
+  \item[LAND ]{Orient the plot in landscape mode.  Default is Portrait.}
+  \item[FILE=xxx]{Direct the PostScript Image into a file named xxx.  By 
+                  default, OVERLAY writes the image into IMAGE.PS in the 
+                  current working directory.}
+  \item[NOAXES ]{Supress plotting of coordinates axes on the image.}
+  \item[NOBAR ]{Supress plotting of the intensity scaling bar}
+  \item[LARGE]{Expand the plot as large as possible for the given paper size
+               while still preserving the 1:1 axis aspect ratio.}
+  \item[INFO]{Write in a line of auxilliary info along the bottom of 
+              the page in small type.}
+  \item[Advanced Output Format Control\hfill]{}
+  \item[WIND=(w,h)]{The maximum possible size of the plotting window in inches.
+                  This defines the largest region that OVERLAY will try to 
+                  fit the image into.  Defaults:\newline
+                         Portrait:  6" x 6"\newline
+                         Landscape: 8" x 5"\newline
+                  Must be smaller than the paper dimensions (see PAGE).}
+  \item[ORIGIN=(x,y)]{origin of the plotting window in inches, measured from 
+                  the lower left-hand corner of the page.  X is horizontal, 
+                  and Y is vertical.  Default centers the window.}
+  \item[PAGE=(L,S)]{physical size of the paper in inches.  "L" = long 
+                  dimension, "S" = short dimension.  Default: (11,8.5)
+                  Used if making a plot for an odd-sized paper printer.}
+  \item[COPIES=n]{Number of copies to print.  Default is 1 copy.  Makes the
+                  generation of multiple 1st generation copies efficient.}
+\end{itemize}
+
+The OVERLAY command creates a PostScript file displaying one image as a
+grayscale map with a contour map of a second image superimposed upon it.
+Contours can be from an image in a VISTA buffer or the output of one of the
+VISTA isophote fitting routines (e.g., PROFILE).  OVERLAY has many
+keywords, most an amalgamation of the basic keywords used by the POSTIT and
+CONTOUR commands.  The PostScript file is written into the user's current
+working directory, named either "image.ps" or the name given by the user
+with the FILE= keyword.  PostScript files generated by OVERLAY conform
+closely to both the general and "encapsulated" PostScript standards, and so
+may be printed on most PostScript laser printers (both monochrome and
+color), or included in documents or other programs that can import
+PostScript image files.  We suggest using a workstation PostScript
+"previewer" program (of which the GhostView program provided public domain
+by the Free Software Foundation is an excellent choice) will save much time
+and wasted paper.
+
+One barrier to making this routine fully general is a lack of a fully
+developed standard for specifying the mapping from pixels to some kind of
+world coordinate system (e.g., RA and Dec) in FITS format images.  To get
+around this problem for the present time, OVERLAY makes some restrictive
+assumptions about the relatives spatial scaling and registration of the two
+images.  For argument, we will call the buffer that contains the image to
+be rendered as a grayscale map as the "gray image", and the buffer with the
+image to be rendered as a contour map as the "contour image".  Eventually,
+the FITS WCS conventions will become common enough to implement them here.
+
+The first assumption is that while the gray and contour images do not have
+to have the same sizes in pixels, they are assumed to map into the exact
+same region in world coordinates.  Thus, given a 300x300 pixel gray image
+that spans 30-arcseconds on a side, if the contour image is 512x512 pixels
+in size, it will be assumed that 512 pixels maps into 30-arcseconds as well
+(or, put another way, will assume that the pixel scale of the contour
+buffer is 300/512 times that of the gray image).
+
+The second assumption is that the two images have the same aspect ratio.
+This is trivial if both images are square (buffer sizes of 300x300 and
+512x512 pixels, respectively, for example).  If they are NOT square, then
+OVERLAY assumes that the gray image will define the box, and that the
+contour image fits snugly into it.  In other words, the contour image is
+not allowed to overflow the gray image.  When there is an argument about
+sizes, the gray image is the reference (and wins by default).
+
+The third assumption is that the two buffers are perfectly aligned (or
+registered) spatially.  Thus if the gray image is a B-band image and the
+contour image is a K-band image, it assumes the stars will line up
+perfectly when the arrays are overlaid.
+
+These assumptions can be controlled by a judicious choice of boxes.  The
+IBOX= keyword specifies the box to use for the gray image, and the CBOX=
+keyword is used for the contour image.  A further trick is to pick one
+image as the fiducial and shift the other image to line up.  For example,
+if overlaying a radio map with a strong nuclear peak on an optical image of
+a galaxy, shift both images so that the centroid falls exactly on the
+center of a pixel.  Remember that the registration of the images by this
+program is assumed to be on an integer grid.
+
+Black contours drawn against a black pixels are not too effective.  To
+provide a first-cut at getting around this problem the user can set the
+CTHRESH= keyword to an intensity value in the contour buffer above which
+the color of the contours is reversed (i.e., drawn as white).  This
+improves the contour "visibility" against a dark background.  At present,
+the LickMongo contour "image model" does not make it easy to compare the
+two images and choose the color dynamically (volunteers?).  All contours
+with value above the indicated threshold are drawn in reverse color, while
+contours below this value are drawn as black.
+
+A further aid to improving visibility is the NC= keyword that is used to
+limit the number of contours drawn when the LOW= and DIFF=/RATIO= keyword
+pairs are used to specify the contour levels.  This suppresses the drawing
+of many high-level contours (e.g., for bright stars when the primary
+contouring object is some faint extended source).  Such contours can crowd
+together, blotting out any underlying features.  At present, the ultimate
+limit is 100 contours.  Restricting the number of contours drawn can also
+reduce the size of the final PostScript file by eliminating unnecessary
+high levels.
+
+\noindent{PROFILE Plotting}
+
+Using OVERLAY with the PROF or PROF=n keywords is the PostScript analog of
+the TVPROF command.  In this case, PROF is used in place of a buffer with a
+contour image (note that PROF and a contour image buffer are mutually
+exclusive).  The profile parameters to be plotted as elliptical isophotes
+are taken from the PROFILE common block, either loaded using one of the
+fitting programs like PROFILE, or loaded from a SAVE'd profile computation
+with the GET command.
+
+The optional argument of the PROF keyword tells OVERLAY to only plot every
+Nth isophote for clarity.  If the CTHRESH= keyword is given, the color of
+the isophote will be reversed if the value of the mean surface brightness
+of that counter is greater than or equal to CTHRESH.  This allows the user
+to plot inner contours that would otherwise get lost against the dark inner
+galaxy as white lines, making them "visible".  A fancier contour visibility
+algorithm will take more time to come up with (volunteers?).
+
+
+\noindent{Axis Plotting}
+
+A number of keywords are provided to allow customization of the plotting
+axes.  These are identical in function to those familiar from the POSTIT
+and CONTOUR commands.  By default, the pixel coordinates of the gray image
+are used.  The SCALE= and CEN= keywords can be used to specify an image
+scale (arcseconds/pixel) and fidicual image center (coordinates in (R,C)
+corresponding to (0,0) in arcseconds), again referenced to the gray image.
+If the PROF keyword is used to overlay best-fit isophotes, the CEN= keyword
+will be overridden by the isophote centers stored in the PROFILE common
+block, if and only if the SCALE= keyword is given.  The NOAXIS keyword will
+suppress plotting of any axes, only drawing a box around the gray image.
+
+A more sophisticated option for customizing the axes, and for adding labels
+or other annotation is the MACRO= keyword that executes LickMongo plotting
+commands stored in an external file.  See the help file for the POSTIT
+command for some details on how this is used.
+
+
+Additional commands are provided for changing the size and orientation of
+the plot on the paper.  These are identical to the keywords given in the
+POSTIT command, and described in detail there.
+
+\noindent{Special Goodies}
+
+Users with access to color PostScript printers can define contours in
+colors, either using the COLOR=n keyword to select a preset color, or
+COLOR=r,g,b to roll your own custom color.  Users without this facility can
+cheat and use the COLOR=r,g,b keyword to make contours a shade of gray
+different then black, enhancing their visibility against a dark background
+(within limits imposed by your printer engine).  The preset colors are as
+follows (same table as CONTOUR):
+
+\begin{center}
+{\bf Color Codes}\\
+\begin{tabular}{cccc}
+\hline
+Code & Color & Code & Color\\
+\hline
+0 & background & 4 & Blue\\    
+1 & foreground & 5 & Yellow\\  
+2 & Red        & 6 & Magenta\\ 
+3 & Green      & 7 & Cyan\\    
+\hline
+\end{tabular}
+\end{center}
+
+RGB colors are specified with 0<=R,G,B<=1, and to make a shade of gray, all
+three color levels are specified the same.  For example, a 50\% gray color
+is COLOR=0.5,0.5,0.5, and 50\% red would be COLOR=0.5,0.,0.
+
+Different line types or line widths may be chosen using the LTYPE= and
+LWEIGHT= keywords.  The default line width is LWEIGHT=0.5, whereas
+LWEIGHT=1.0 is equivalent to the weight of the axes drawn around the
+image box.  The LTYPE code is a standard LickMongo line style code:
+
+\begin{center}
+{\bf Line-Type Codes}\\
+\begin{tabular}{cccc}
+\hline
+LTYPE & Style \\
+\hline
+0 & Solid    \\   
+1 & Dotted     \\       
+2 & Short Dash   \\     
+3 & Long Dash\\
+4 & Dot / Short Dash\\
+5 & Dot / Long Dash\\
+6 & Short Dash / Long Dash\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[OVERLAY 1 2 Z=0. L=100. CLIP LOW=30. RATIO=1.5 SCALE=0.32 FILE=n1068.ps\hfill]{
+   Plots the image in buffer 1 as a grayscale map with values running from
+   0. to 100.0 rendered as white-to-black, and draws on top of that figure
+   the image in buffer 2 as a contour map with contours running from 30.0
+   an spaced geometrically every factor of 1.5 in intensity.  The axes
+   are scaled as 0.32 arcseconds/pixel referenced to buffer 1, with the
+   origin (0,0) assumed to be the center of buffer 1.  The output is
+   directed to a file called n1068.ps in the current working directory
+   for later printing at the user's discretion (there is no autoprinting).}
+  \item[OVERLAY 1 1 Z=0. L=100. CLIP LOW=20. DIFF=20. SCALE=0.32 FILE=graycon.ps\hfill]{
+   This plots the image as a grayscale, with the given Z and L, and then
+   plots on top of this the image intensity contours, starting at 20 and
+   spaced every 20 intensity units.  The scale is 0.32 arcsec/pixel and
+   the origin (0,0) is the image center.  Output is sent to a file
+   called graycon.ps  (old AIPS users will recognize this kind of figure)}
+  \item[OVERLAY 1 PROF=3 Z=0. L=1000. CLIP FILE=isofit.ps\hfill]{
+   The image in buffer 1 is rendered as a grayscale plot between
+   intensities (0:1000), and the current best-fit isophotes stored in
+   the PROFILE common block are superimposed.  For clarity, only every 
+   third isophote is  plotted (including the first and last isophote).
+   The output file is called "isofit.ps".}
+  \item[OVERLAY 1 PROF=3 Z=0. L=1000. CLIP CTHRESH=1000. FILE=isofit.ps\hfill]{}
+  \item[\hfill]{Same as (3) above, but now all best-fit isophotes with a mean
+   surface brightness >= 1000. are plotted as white lines to make
+   them visible against the black image pixels in the center.}
+  \item[OVERLAY 1 IBOX=2 4 CBOX=1 Z=0. L=1000. 
+        CLIP LEVELS=(.1,.2,.3,.5,.7,.9)\hfill]{}
+  \item[SCALE=0.51 CEN=(AXR,AXC) FILE=hacon.ps\hfill]{
+   The parts of buffer 1 within box 2 are rendered as a grayscale map
+   between intensities (0:1000), with the contour levels of the parts
+   of buffer 4 within box 1 are superimposed.  The axes are scaled to 0.51
+   arcseconds/pixel, with the image center given by the results of a recent
+   AXES calculation stored in the AXR and AXC variables (see AXES).}
+  \item[OVERLAY 1 IBOX=2 4 CBOX=1 Z=0. L=1000. 
+        CLIP LEVELS=(.1,.2,.3,.5,.7,.9)\hfill]{}
+  \item[NOAXES MACRO=hacon.mgo FILE=hacon.ps\hfill]{
+   Same as (5) except now no axes are drawn by OVERLAY, and instead the
+   external LickMongo macro file "hacon.mgo" in the current working 
+   directory is used to draw the axes and put on custom labels.  Output
+   is directed to the PostScript file hacon.ps.}
+  \item[OVERLAY 1 PROF=3 Z=0. L=1000. CLIP FILE=isofit.ps COLOR=3\hfill]{}
+  \item[LTYPE=2\hfill]{
+   Same as (3) above, but this user has a color PostScript device, and
+   is plotting the best-fit isophotes as dashed green lines (no accounting
+   for taste).  }
+  \item[OVERLAY 1 PROF=3 Z=0. L=1000. CLIP FILE=isofit.ps 
+        COLOR=.7,.7,.7\hfill]{} 
+  \item[LTYPE=2\hfill]{
+   Having the plot made in (7) thrown back by his co-authors, the user
+   now draws the best-fit isophotes as 70\% gray dashed lines.}
+\end{itemize}
+
+\section{HISTOGRAM: Display a Histogram of Image Pixel Values}
+\begin{rawhtml}
+<!-- linkto histogram.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form:}   HISTOGRAM source {[BOX=b]} {[NOLOG]} {[BIN=n]} {[XMIN=x1]} {[XMAX=x2]}\hfill]{}
+  \item{{[YMIN=y1]} {[YMAX=y2]} {[HARD]} {[WIND=n]} {[BUF=buf]}}
+  \item{{[NOERASE]} {[PORT]}}
+  \item[source\hfill]{   specifies the image.}
+  \item[BOX=b\hfill]{limits the computation to those pixels in box 'b'.}
+  \item[NOLOG\hfill]{displays the number of pixels at each intensity,
+rather than the logarithm.}
+  \item[BIN=n\hfill]{   bins the image values by the specified factor.}
+  \item[XMIN, XMAX\hfill]{  limits the computation to those pixels with values
+between x1 and x2, inclusive.}
+  \item[YMIN, YMAX   \hfill]{   limits the display of the histogram on the Y-axis
+to be from y1 to y2.}
+  \item[HARD\hfill]{sends the plot to the hardcopy device.}
+  \item[WIND=n\hfill]{put the plot in window n of a 2x2 grid}
+  \item[BUF=buf\hfill]{  load the histogram data into image buffer 'buf'}
+  \item[   NOERASE   \hfill]{don't erase screen before plotting.}
+  \item[PORT\hfill]{make hardcopy output in portrait mode (default: landscape)}
+\end{itemize}
+
+This program displays a histogram of an image, plotting the logarithm of
+the number of pixels at each value for the image 'source'.
+
+Use the BIN word to specify how wide the intensity intervals show in the
+plot is to be.  Normally the binning factor is 1, meaning that the plot
+displayed is the logarithm of the number of pixel values at each intensity
+(the image values are converted to integers).  If the bin factor is
+non-zero, the display is the log of the number in larger bins.  For
+example, if the bin was 5, and the minimum value in the image is 0, then
+the plot shows the number of pixels with intensity 0 - 4, 5 - 9, 10 - 14,
+15 - 19, etc. If there is a large range in intensities, the BIN word should
+be used to keep the plot from having so many points that it looks like
+hash. If the number of points in the histogram is larger than 2048, the
+program will increase the bin size to reduce the number of points in the
+plot.
+
+The BOX word limits the calculation to those pixels in the specified box.
+The XMIN and XMAX words limit the calculation to those pixels in the
+specified intensity range.  If XMIN is not given, the lower limit will be
+the minimum pixel value in the image.  If XMAX is not given, the upper
+limit will be the maximum pixel value in the image.
+
+The YMIN and YMAX words, by contrast, limit the DISPLAY of the histogram so
+that the Y-axis runs over the given range.  These words do not change the
+calculation in any way.  If YMIN is not used, the lower limit of the
+display will be the smallest number of pixels in the image that have a
+given value (often this is zero pixels at many intensities).  If YMAX is
+not used, the upper limit of the display will be the largest number of
+pixels which have a certain intensity.
+       
+NOLOG makes the plot show the actual number of pixels at each intensity,
+rather than the logarithm.  When the logarithm is computed in the default
+option, intensities with no pixels are given the value 0, so you cannot
+distinguish an intensity with 1 pixel and an intensity with 0 pixels unless
+you use the NOLOG word.
+
+The NOERASE keyword suppresses the erasure of the screen before plotting.
+Up to 4 histograms may be plotted on a single output page using the WIND=n
+keyword, where n=(1,2,3,4), with windows numbered from left-to-right,
+bottom-to-top in the conventional MONGO order.  Hardcopy is flushed to the
+printer only after WIND=4 is used.  The plot may be printed in portrait
+mode (long axis of the paper vertical) using the PORT keyword.
+
+The histogram for an image may be loaded into an image buffer as a
+"spectrum" (1-D image) for further analysis or storage for use with
+external programs using the BUF=buf keyword.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[HISTOGRAM 4 \hfill]{Shows the histogram for image 4}
+  \item[HISTOGRAM \$Q BOX=3 \hfill]{Shows the histogram for image Q 
+       (where Q is a variable) using only the pixels in box 3}
+  \item[HISTOGRAM 2 XMIN=1000 XMAX=1999 \hfill]{
+       Shows the log of number of pixels with values between 1000 and 1999.}
+  \item[HISTOGRAM 4 NOLOG \hfill]{
+       Shows the number of pixels (not the log) at each value in image 4.}
+  \item[HISTOGRAM 3 HARD\hfill]{
+       computes a histogram for image 3, sending it to hardcopy printer.}
+  \item[HISTOGRAM 2 XMIN=1000 XMAX=1999 BUF=10\hfill]{ same as \#3 above,
+       except that instead of plotting the histogram, it is loaded into image
+       buffer 10 as a spectrum.}
+\end{itemize}
+
+\section{PLOT3D: Make a 3-D Perspective (mesh) Plot}
+\begin{rawhtml}
+<!-- linkto plot3d.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: }PLOT3D image {[BOX=b]} ALT={[alt]} AZ={[az]} 
+   ZFAC={[zfac]}\hfill]{}
+  \item{ZOFF={[zoff]} NOERASE HARD}
+  \item[image]{buffer to be plotted}
+  \item[BOX=b]{only plot the image section within the given box}
+  \item[ALT=]{viewing altitude}
+  \item[AZ=]{viewing azimuth}
+  \item[ZFAC=,ZOFF=]{Z-axis scale factor and offset}
+  \item[SCALE=]{scale factor to apply to ZFAC and ZOFF}
+  \item[NOERASE]{doesn't clear screen first}
+  \item[HARD]{generates hardcopy}
+\end{itemize}
+
+PLOT3D (also THREED or 3D) makes a 3 dimensional perspective plot of the
+specified buffer. The viewing altitude and aziumuth can be specified with
+the ALT= and AZ= terminal; if unspecified, they default to 45 and 225
+degrees, respectively. The vertical scale is done automatically, but can be
+overridden by use of the ZFAC and ZOFF keywords. See the Mongo manual for
+more details. NOERASE prevents erasure of the screen before making the
+plot. HARD generates hardcopy.
+
+The 3-D plots that LickMongo makes can take a long time to draw.  Once the
+plot starts, there is no way to stop it until it is completed.
+Consequently, we suggest that you only use it on small sections of images,
+smaller than 100 x 100 pixels. The BOX= keyword makes it easy to select
+small image sections. If you enter an image larger than 100x100, the
+program will confirm that you really wish to continue before doing so.
+
+Some control over the vertical relief plotted is possible using the ZFAC
+and ZOFF keywords.  These affect how the minimum and maximum data values
+are fit inside the virtual cube being plotted.  By changing these by hand,
+you can enhance or depress the vertical stretch of the plot (ZFAC) and move
+the plot up and down vertically within the plotting window (ZOFF).
+
+If these are too arcane for you, then SCALE can be used instead to tweak
+the defaults computed by the routine from the data values, where SCALE=1 is
+equivalent to accepting the defaults, SCALE$>$1 will increase relief, and
+SCALE$<$1 will depress relief.
+
+
+\section{CLEAR: Clear the Terminal or Image Display}
+\index{Clear screen}
+\index{Terminal!Clear screen}
+\begin{rawhtml}
+<!-- linkto clear.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: } CLEAR {[TEXT]} {[VEC]} {[IMAGES]}\hfill]{}
+\end{itemize}
+
+With no keywork or with the TEXT keyword, this command clears the command
+terminal screen.
+
+With an X11 display window, the VEC keyword will clear the vector (overlay)
+list and redisplay the current images. The IMAGES keyword will clear the
+image list which is accessible with the $+/-$ keys, resetting the list so
+that only the current image in included.
+
+
+\section{TEXT: Embed Permanent Text on an Image}
+\index{Display!Embed permanent text on an image}
+\begin{rawhtml}
+<!-- linkto imtext.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: }TEXT  imbuf {[COL=c ROW=r]} {[X0=x Y0=y]} 
+       {[TEXT=s]}\hfill]{}
+  \item[]{{[SCALE=s]} {[ROT=ang]} {[FILL=f]}}
+  \item[imbuf]{   buffer with the image to be tagged.}
+  \item[X0=,Y0=]{coordinates of the text string (upper left corner of
+       the text box) in pixels (X0 \& Y0 are columsn \& rows, respectively).}
+  \item[TEXT=s]{Text string to embed (can be a string variable)}
+  \item[SCALE=f]{Text scale factor (default=1)}
+  \item[ROT=ang]{Text rotation angle in degrees (default=0)}
+  \item[FILL=]  {Text Fill (default=0=nofill, 1=fill with zeros)}
+\end{itemize}
+
+TEXT is used to add a permanent annotation text to an image by ``poking''
+pixel values to render the text.
+
+The coordinates (X0=, Y0=) give the location in pixels of the upper
+left-hand corner of the text box.  You can compute centering of a string
+using the cell size and the number of characters in the string.  The TEXT=
+keyword is used to give the text string to embed, but if omitted the
+program will prompt for the input string.  The text may include any valid
+ASCII keyboard characters.
+
+Text is embedded on the image as a string of 8x11-pixel ASCII characters by
+changing the data values of the pixels to 32766.  The height of an
+uppercase M is 10 pixels height of a lowercase x is 6 pixels.  Each
+character cell has 1 pixel of white space between it and the surrounding
+characters, and one pixel of white space below for descenders (e.g., on y
+and g).  The size of the text may be scaled larger using the SCALE=
+keyword.
+
+Data pixels under the characters proper are lost, but data between
+character pixels is untouched.  If FILL=1 is given, however, the inter-text
+pixels are set to 0.0 This provides a way of ``boxing and filling'' the
+text so it does not conflict with background data.
+
+The ROT keyword is used to rotate the text, in increments of 90 degrees.
+Since we are using a simple text rendering, odd angles do not work
+satisfactorily.
+
+Note that TEXT makes \textbf{PERMANENT} changes to the data values in the
+image being annoted.   To make only temporary labels (drawn on the image
+display's ``vector'' plane, not by changing image pixels proper), see the
+TVPLOT command.
+

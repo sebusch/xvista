@@ -1,0 +1,37 @@
+
+<H1><A NAME="SECTION00530000000000000000">
+GOTO: Jump to a Specified Place in a Procedure</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml133#
+
+<P>
+<A NAME="1511"><tex2html_anchor_invisible_mark></A>
+<A NAME="1512"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1513#
+<BR>
+GOTO tells VISTA to jump to a line in the procedure buffer beginning with
+``label_name:''.  The label_name can be any alphanumeric string.  You can
+jump out of, but not into, a procedure DO loop or IF block.  In the latter
+cases, VISTA will trigger an error condition and abort the procedure.  The
+jump can be in either direction in the procedure buffer (either before or
+after the GOTO command in the procedure).
+
+<P>
+The jump-point label may be any valid string terminated with a ':' (color)
+immediately following the label.  No other commands can appear following
+the label on the same line.  Note that the ':' is omitted in the GOTO
+statement.
+
+<P>
+<#1518#>Example 1:<#1518#>
+<PRE><tex2html_verbatim_mark>verbatim134#</PRE>
+This jumps forward over the intervening lines to the label ``WHEREVER:''.
+
+<P>
+<#1521#>Example 2:<#1521#>
+<PRE><tex2html_verbatim_mark>verbatim135#</PRE>
+This exectues the lines, then jumps backwards to the label NOWHERE: and
+executes them again.
+
+<P>

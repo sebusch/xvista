@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>SKIP: Mark Selected Lines to Skip in a File</TITLE>
+<META NAME="description" CONTENT="SKIP: Mark Selected Lines to Skip in a File">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00770000000000000000"></A>
+<A NAME="2341"></A>
+<BR>
+SKIP: Mark Selected Lines to Skip in a File
+</H1>
+
+<!-- linkto skip.html -->
+<BR>
+
+<BR>
+
+<P>
+SKIP builds a skip table of lines to be skipped inside the named file.  The
+file must have been previously opened using the OPEN command.  Up to 50
+skip points are available in the table for each opened file.  Each
+individual line skipped counts as one specification and each range of lines
+skipped counts as two specifications.  Whenever a file is OPEN'ed, or
+reOPEN'ed, its skip table is cleared.  REWINDing a file (see the REWIND
+command) does not clear the skip table.  If you just type SKIP
+logical_name without any lines to skip then the table of skipped lines for
+the named file is printed.
+
+<P>
+Lines which are SKIPped in a file can not be read with the READ command or
+by string substitution and are not used by the STAT command.  In
+particular, note that the number of lines in the file as returned by the
+STAT command is the actual number of lines minus any skipped lines.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+See the example under the READ command for one use of the SKIP command.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

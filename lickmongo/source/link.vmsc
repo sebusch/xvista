@@ -1,0 +1,17 @@
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!      This VMS DCL procedure is Copyrighted software.
+$!      The file COPYRIGHT must accompany this file.  See it for details.
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!
+#include "Config.h"
+$!      Link Lick Mongo to make a new executable image.
+$ library mongodir:mongo /extract=touva/log
+#ifdef  _AED512
+$!      Note that the AED subroutine library is also linked here.
+$ link mongo,mongodir:mongo/lib,sys$sysdevice:[graph.aed]aed/lib -
+ /exe=mongodir:mongo.exe
+#else   /* _AED512 */
+$ link mongo,mongodir:mongo/lib /exe=mongodir:mongo.exe
+#endif  /* _AED512 */
+$ delete mongo.obj;*
+$ exit

@@ -1,0 +1,97 @@
+VLINE -16 -9 0 12 16    Vertical font metric information for
+H 2380  <sp>    G Clef (Trebel Clef)    Greek Alphabet and Special Characters
+H 2282  !       Mercury
+H 2283  "       Venus
+H 2284  #       Earth
+H 2285  $       Mars
+H 2286  %       Jupiter
+H 2287  &       Saturn
+H 2288  '       Uranus
+H 2289  (       Neptune
+H 2290  )       Pluto
+MG  42  *       X (times) <--- Must be MG 42, used in Scientific Notation
+H 2291  +       Moon
+H 2292  ,       Comet
+H 2293  -       Star
+H 2294  .       Ascending Node
+H 2295  /       Descending Node
+H 2301  0       Aries
+H 2302  1       Taurus
+H 2303  2       Gemini
+H 2304  3       Cancer
+H 2305  4       Leo
+H 2306  5       Virgo
+H 2307  6       Libra
+H 2308  7       Scorpio
+H 2309  8       Sagittarius
+H 2310  9       Capricornus
+H 2311  :       Aquarius
+H 2312  ;       Pisces
+MG  60  <       Equal or Less (Less than or Equal)
+MG  61  =       Identity (Equal)
+MG  62  >       Equal or More (Greater than or Equal)
+MG  63  ?       Inequality (Not Equal)
+H 2281  @       Sun
+MG  43  A       Plus or Minus
+MG  66  B       Infinity
+MG  44  C       Proportional To
+H 0530  D       Delta
+MG  69  E       Element of
+H 0547  F       Phi
+H 0529  G       Gamma
+H 0908  H       US Highway
+MG  73  I       Parallel
+MG  74  J       Nabla
+MG  75  K       O-cross (Tensor Product)
+H 0537  L       Lambda
+MG  77  M       Up Arrow
+MG  78  N       Down Arrow
+H 2381  O       F Clef (Bass Clef)
+H 0542  P       Pi
+H 0534  Q       Theta
+H 0909  R       Interstate
+H 0544  S       Sigma
+MG  84  T       Perpendicular
+H 0546  U       Upsilon
+MG  86  V       Aangstrom
+H 0550  W       Omega
+H 0540  X       Xi
+H 0549  Y       Psi
+MG  90  Z       h-bar
+MG  91  [       Dagger
+MG  58  \       Integral
+H 2278  ]       Double-Dagger
+MG  47  ^       Divided by
+MG  95  _       Right Arrow
+H 2267  `       Radical
+H 0627  a       alpha
+H 0628  b       bega
+H 0648  c       chi
+H 0630  d       delta
+H 0684  e       epsilon
+H 0686  f       phi
+H 0629  g       gamma
+H 0633  h       eta
+H 0635  i       iota
+H 0683  j       partial derivative
+H 0636  k       kappa
+H 0637  l       lambda
+H 0638  m       mu
+H 0639  n       nu
+H 0641  o       omicron
+H 0642  p       pi
+H 0685  q       theta
+H 0643  r       rho
+H 0644  s       sigma
+H 0645  t       tau
+H 0646  u       upsilon
+H 0687  v       terminal sigma
+H 0650  w       omega
+H 0640  x       xi
+H 0649  y       psi
+H 0632  z       zeta
+MG 123  {       left angle brace (bra)
+MG 124  |       large parallel
+MG 125  }       right angle brace (ket)
+MG 126  ~       left arrow
+MG 127  <del>   <---NOT ACCESSIBLE FROM MONGO

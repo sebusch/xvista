@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ZAP: Non-Interactive Image Median Filter</TITLE>
+<META NAME="description" CONTENT="ZAP: Non-Interactive Image Median Filter">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0012100000000000000000">
+ZAP: Non-Interactive Image Median Filter</A>
+</H1>
+
+<!-- linkto zap.html -->
+<A NAME="4805"></A>
+<A NAME="4806"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+ZAP will edit and/or mask high or low pixels in an image, or perform
+whole-image median filtering.  
+
+<P>
+For each pixel, ZAP computes the mean, median, and standard deviation of
+all of the pixels within a 5x5 box centered on that pixel.  The SIZE
+keyword can be used to change the size and aspect ratio of this box.  Any
+pixels within this box deviate by more than 5-sigma (or f-sigma, using the
+SIG=f keyword) from the median are replaced by the median.  If the MASK
+keyword is given, the pixels are masked rather than replaced.  The 'BOX=n'
+keywords will limit ZAP's attention to that portion of the image within box
+'n'.
+
+<P>
+ZAP will replace <I>all</I> pixels within the current box that exceed the
+rejection threshold for the region centered on a particular pixel.  To only
+ZAP the pixel at the center of the current filtering window, use the
+SURGICAL keyword.
+
+<P>
+If the SIG=0 keyword is given, zap will in effect median smooth the image
+within the window given by the size command, replacing all pixels by the
+median of them and their surroundings.
+
+<P>
+ZAP is a rather drastic command that should be used with great care.  In
+general, ZAP is not a good way to clean an image of cosmic ray events,
+especially if the images of your objects have sharp cores (e.g., under- or
+critically-sample stellar images or emission lines).  In these cases, it is
+best to use the interactive TVZAP to edit the bad pixels in an image if
+there is a small number of these that may be handled interactively.  If
+cosmic rays are a big problem (e.g., like in HST images) and you have
+multiple images (e.g., CRSPLIT observations), you should use the MEDIAN,
+BIGMEDIAN, or PICCRS routines, as appropriate.  If your observing strategy
+(or the source of your images) did not allow use of multiple images for
+statistical cosmic-ray rejection, careful and judicious interactive
+cleaning using TVZAP is suggested over blind zapping using ZAP.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+A related command is TVZAP, which allows you to select which pixels are to
+be zapped interactively using the TV cursor.  LZAP works with a list of
+known bad pixels.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

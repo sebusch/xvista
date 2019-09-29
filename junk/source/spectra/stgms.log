@@ -1,0 +1,4 @@
+Startup Script
+Test: /usr/bin/test
+/home/local/jre
+startup command line: /home/local/STGMS/jre/bin/java -cp /home/local/STGMS/jcert.jar:/home/local/STGMS/jnet.jar:/home/local/STGMS/jsse.jar:/home/local/STGMS/jh11.jar:/home/local/STGMS/appl.jar edu.stsci.gms.ext.ui.GMS

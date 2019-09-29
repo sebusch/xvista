@@ -1,0 +1,50 @@
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!      This VMS DCL procedure is Copyright (c) 1987 Steven L. Allen
+$!      The file COPYRIGHT must accompany this file.  See it for details.
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!
+$!      Install all of Lick Mongo on a system where it has never been before
+$!
+$!      This command script is intended for use on a machine which is devoid
+$!      of any trace of Lick Mongo.  If Lick Mongo already exists and you
+$!      simply want to install a new version, use the MAKE.COM in the
+$!      [.SOURCE] directory.
+$!
+$!      This presumes that all of the code is already in the proper
+$!      directory tree structure.  This file should be in the
+$!      directory known as MONGODIR.  The following diagram shows a typical
+$!      installation of Lick Mongo.  Note that the top level need not be
+$!      [MONGO], since all directory references are relative to MONGODIR.
+$!
+$!      [MONGO]                 Login directory for user Mongo
+$!         |
+$!      [.LICK]                 This is MONGODIR: .COM & all .DAT, .EXE files.
+$!         |
+$!      [.SOURCE]               Parent directory of all the source code.
+$!         |
+$!         +-----------+------------+----------+----------+----------+
+$!         |           |            |          |          |          |
+$!    [.DEVICES]  [.INTERACT]  [.PLOTSUB]  [.RASTER]  [.SYSVMS]  [.FONTUTIL]
+$!
+$!      Device      Command      Code       Hardcopy     VMS      Tools for
+$!      driver      parser       that       batch       System    Building
+$!      code        code         draws      code         Code     Fonts
+$!
+$!      It is best if MONGODIR has already been assigned, but if not,
+$!      assume that we are in it.
+$  if f$trnlnm("mongodir") .eqs. "" then    assign      []      MONGODIR
+$!      Go to MONGODIR anyhow.
+$  set default MONGODIR
+$  library/create mongo
+$!      Compile and link all of the Lick Mongo code.
+$  set default [.source]
+$  @make.com
+$!      Set up logical names for running Lick Mongo.
+$  set default [-]
+$  @mlogname.com
+$!      Run Lick Mongo once to make the fonts.bin file.
+$  run mongo.exe
+expand 2
+box
+end
+$  exit

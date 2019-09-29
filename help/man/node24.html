@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Arithmetic Expressions in VISTA</TITLE>
+<META NAME="description" CONTENT="Arithmetic Expressions in VISTA">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00310000000000000000">
+Arithmetic Expressions in VISTA</A>
+</H1>
+
+<!-- linkto functions.html -->
+
+<P>
+<A NAME="719"></A>
+<A NAME="720"></A>
+
+<P>
+Here we review the syntax of mathematical expressions.  Any user who wishes
+to use VISTA effectively should review this section carefully.
+
+<P>
+Arithmetic expressions come in four types:
+
+<P>
+
+<OL>
+<LI>An explicit numeric value.  Examples are: 3, 3.14159, -59.39, 2.32E-05
+</LI>
+<LI>Variable names.  Variables are created and their values 
+    assigned with the SET command.  Variable names must be 
+    composed of alphanumeric characters.  There can be up to
+    seven characters in the name.  The first character of the
+    variable name should be an alphabetic character.
+</LI>
+<LI>Data file references.  Data file references allow you to
+    use numeric values from a VMS ASCII text file.  Data file
+    references begin with the @ symbol followed by the file
+    name, a period (.), and then the column number.  The
+    column number can itself be either a numeric integer constant
+    or a variable name.  An example is given in the description
+    of the READ command.
+</LI>
+<LI>Constants or variables connected with arithmetic operators
+    or using functions (general arithmetic expressions).
+</LI>
+</OL>
+
+<P>
+The following table lists arithmetic functions supported in VISTA, with
+examples of their use.  ('Binary' means relating two objects - 'unary'
+means applying to one object.)
+
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Symbol</TD>
+<TD ALIGN="LEFT">Function</TD>
+<TD ALIGN="LEFT">Examples</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">+</TD>
+<TD ALIGN="LEFT">binary addition</TD>
+<TD ALIGN="LEFT">B+C</TD>
+<TD ALIGN="LEFT">2+5</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">-</TD>
+<TD ALIGN="LEFT">binary subtraction</TD>
+<TD ALIGN="LEFT">B-C</TD>
+<TD ALIGN="LEFT">2-5</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">*</TD>
+<TD ALIGN="LEFT">binary multiplication</TD>
+<TD ALIGN="LEFT">B*C</TD>
+<TD ALIGN="LEFT">2*5</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">/</TD>
+<TD ALIGN="LEFT">binary division</TD>
+<TD ALIGN="LEFT">B/C</TD>
+<TD ALIGN="LEFT">2-5</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">-</TD>
+<TD ALIGN="LEFT">unary negation</TD>
+<TD ALIGN="LEFT">-B</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">^</TD>
+<TD ALIGN="LEFT">exponentiation</TD>
+<TD ALIGN="LEFT">A00.5</TD>
+<TD ALIGN="LEFT">10^3</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">=</TD>
+<TD ALIGN="LEFT">equate</TD>
+<TD ALIGN="LEFT">A=B</TD>
+<TD ALIGN="LEFT">A=B=3</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+The following logical operators are also supported.
+
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Symbol</TD>
+<TD ALIGN="LEFT">Function</TD>
+<TD ALIGN="LEFT">Examples</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD></TD>
+<TD ALIGN="LEFT">logical greater than</TD>
+<TD ALIGN="LEFT">AB</TD>
+<TD ALIGN="LEFT">A2.5</TD>
+</TR>
+<TR><TD></TD>
+<TD ALIGN="LEFT">logical less than</TD>
+<TD ALIGN="LEFT">AB</TD>
+<TD ALIGN="LEFT">A100</TD>
+</TR>
+<TR><TD ALIGN="CENTER">==</TD>
+<TD ALIGN="LEFT">logical equal to</TD>
+<TD ALIGN="LEFT">A==B</TD>
+<TD ALIGN="LEFT">A==10</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;=</TD>
+<TD ALIGN="LEFT">logical not equal to</TD>
+<TD ALIGN="LEFT">A&nbsp;=B</TD>
+<TD ALIGN="LEFT">A&nbsp;=10</TD>
+</TR>
+<TR><TD ALIGN="CENTER">=</TD>
+<TD ALIGN="LEFT">logical less than or equal to</TD>
+<TD ALIGN="LEFT">A=B</TD>
+<TD ALIGN="LEFT">A=5</TD>
+</TR>
+<TR><TD ALIGN="CENTER">=</TD>
+<TD ALIGN="LEFT">logical greater than or equal to</TD>
+<TD ALIGN="LEFT">A=B</TD>
+<TD ALIGN="LEFT">A=3</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+Logical operators return a value of either 1 (true) or 0 (false).
+
+<P>
+Expressions are evaluated in the same order as they are in FORTRAN.  You
+may change the order of evaluation using parentheses "()".  An example is
+<BR>
+<IMG
+ WIDTH="14" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.png"
+ ALT="\begin{hanging}
+\item{(B+0.53)*10\^{ }(45.6/(A+5))}
+\end{hanging}">
+<BR>
+
+<P>
+VISTA supports a variety of <I>functions</I>.  The argument to the
+function is contained in square brackets.  The following functions are
+currently supported:
+
+<P>
+<B>Arithmetic Functions:</B>
+<BR>
+<IMG
+ WIDTH="6" HEIGHT="4" ALIGN="BOTTOM" BORDER="0"
+ SRC="img43.png"
+ ALT="\begin{example}
+\item[INT{[E]}\hfill]{nearest integer to the expression E}
+\it...
+...
+\item[RAN{[A,B]}\hfill]{returns a random number between A and B}
+\end{example}">
+<BR>
+
+<P>
+<B>Trignonmetric Functions:</B>
+<BR>
+<IMG
+ WIDTH="7" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img44.png"
+ ALT="\begin{example}
+\item[SIN{[E]}\hfill]{sine of E (E in radians)}
+\item[SIND{[E]...
+...adians}
+\item[ARCCOSD{[E]}\hfill]{arccos of E, producing degrees}
+\end{example}">
+<BR>
+
+<P>
+<B>Image Parameters:</B>
+<BR>
+<IMG
+ WIDTH="14" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img45.png"
+ ALT="\begin{example}
+\item[NR{[B]}\hfill]{number of rows of the object in buffer B.}...
+... \item[UT{[B]}\hfill]{universal time of mid-exposure in hours ...}
+\end{example}">
+<BR>
+
+<P>
+<B>Examing/Editing Image Data:</B>
+<BR>
+
+<BR>
+
+<P>
+Functions may be used as arguments of other functions.  Functions can
+contain expressions of arbitrary complexity (so long as the parentheses are
+balanced and there are no extraneous spaces!).
+
+<P>
+<B>IMPORTANT!</B>
+
+<P>
+Variable names or arithmetic expressions may be used ANYWHERE an explicit
+constant may be used in keyword-value expressions. Recall that such an
+expression has an 'option=value' construction. For example, if you wanted
+to plot row 200 of image 4 over columns X to X+50, (where X is some
+variable) you could say
+<BR>
+
+<BR>
+Note that R, XS, and XE are keywords, not variables and the equal sign
+following them is not interpreted as an arithmetic operation.  However,
+since everything following the first = is an arithmetic expression, you
+could save the 'value' of, for instance, XE, by doing the following
+<BR>
+
+<BR>
+The variable XLAST takes on the value of X+50.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

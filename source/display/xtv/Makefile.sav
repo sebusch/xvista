@@ -1,0 +1,61 @@
+MLIB=../../../lib/xtv.$(MACHINE).a
+VMSTREE=/usr/tmp/vista                                                          
+OBJS=zimage.o zimutil.o 
+LOBJS=$(MLIB)(zimage.o) $(MLIB)(zimutil.o) 
+#
+#       Teach make how to do a number of things that certain systems don't know
+.SUFFIXES:
+.SUFFIXES: .out .o .c .e .r .F .f .y .l .s .p .a
+.F.o:
+	$(CPP) $(CPPFLAGS) $*.F $*.$(FPP)
+	$(FC) -c $(FFLAGS) $*.$(FPP)
+	$(RM) -f $*.$(FPP)
+.F.a:
+	$(CPP) $(CPPFLAGS) $< $*.$(FPP)
+	$(FC) -c $(FFLAGS) $*.$(FPP)
+	$(AR) rv $@ $*.o
+	$(RM) -f $*.$(FPP) 
+	rm -f $*.o
+.f.a:
+	$(FC) -c $(FFLAGS) $*.f
+	$(AR) rv $@ $*.o
+	rm -f $*.o
+.F.inc: ; $(CPP) $(CPPFLAGS) $*.F $*.inc
+.c.a:
+	$(CC) -c $(CFLAGS) $*.c
+	$(AR) rv $@ $*.o
+	rm -f $*.o
+
+#       Teach make how to make files for export to a VMS system
+.SUFFIXES: .vmsf .for .inc .vmsc .com
+.vmsf.for: ; cp $*.vmsf $*.for
+.vmsc.com: ; cp $*.vmsc $*.com
+.f.for: ; cp $*.f $*.for
+.F.for: ; $(CPP) $(VMSFLAGS) $*.F $*.for
+#
+datefile::Vista.h $(MLIB) tidy clean
+	date > datefile
+#       Don't let make delete the object library!
+.PRECIOUS: $(MLIB)
+#
+$(MLIB): $(DOOBJS)
+	$(MAR)
+	-$(MRM)
+	-ranlib $(MLIB)
+clean:
+	-rm *.o \#* *.bak
+tidy:
+	-rm Vista.h datefile
+Vista.h:
+	ln -s ../../Vista.$(MACHINE) Vista.h
+#       THE FOLLOWING STUFF MAKES CODE FOR THE VAXen
+xvmscode: Vista.h.xvms $(VMSCODE)
+	-mkdir $(VMSTREE)/source/display
+	cp *.c $(VMSTREE)/source/display
+	cp *.h $(VMSTREE)/source/display
+	cp ../../Vista.xvms $(VMSTREE)/source/display/Vista.h
+	-rm Vista.h xvmscode
+	date >  xvmscode
+Vista.h.xvms:
+	-rm Vista.h
+	ln -s ../../Vista.xvms Vista.h

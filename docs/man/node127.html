@@ -1,0 +1,61 @@
+
+<H1><A NAME="SECTION001270000000000000000">
+CLIP: Replace Pixels Outside an Intensity Range</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml340#
+<A NAME="4714"><tex2html_anchor_invisible_mark></A>
+<A NAME="4715"><tex2html_anchor_invisible_mark></A>
+<A NAME="4716"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command4717#
+<BR>
+
+<P>
+CLIP will search through the 'source' image and replace all pixels with
+intensities above MAX with VMAX and all pixels below MIN with VMIN.  If
+VMIN and VMAX are not specified, they default to zero.
+
+<P>
+If VMIN or VMAX are specified, but no MIN or MAX are not, the routine clips
+at the values given by VMIN or VMAX.  If neither MAX nor VMAX are
+specified, no upper level clipping will be performed.  Similarly, if
+neither MIN nor VMIN is specified, but MAX or VMAX is, no lower level
+clipping will be performed. 
+
+<P>
+If no keywords are given, CLIP will set all negative pixels to
+zero. 
+
+<P>
+You can use the 'BOX=n' keyword to only clip those portions of the image
+within box 'n'.  Multiple boxes can also be specified on the command line
+to clip within more than one region at a time.
+
+<P>
+If the MASK keywords is given, a MASK is created (see the MASK command) of
+the pixels that are being clipped.  The related MASKONLY keyword will
+create a mask <I>without</I> doing the actual clipping.  Masks can also
+be used for clipping with the VMASK=n keyword.  All masked pixels will be
+replaced with the value 'n' in this option. The various MASK options are
+useful with commands such as the SURFACE command that permit the use of
+image masks to tag certain pixels before a surface is fit to an image.
+Note, however, that not all commands recognize masks.
+
+<P>
+If the RAD=r keyword is used, all pixels within r pixels of the selected
+pixels will be clipped to the specified value. If the PHOT=r keyword is
+used, all pixels within r pixels of all the locations on the current VISTA
+photometry list that satisfy the clipping criteria will be clipped to the
+values specified with VMAX= and VMIN=.  This is a way to clip and/or mask
+out stars on an image previously identified with the VISTA stellar
+photometry routines.
+
+<P>
+<#4743#>Examples:<#4743#>
+<BR>
+<tex2html_image_mark>#example4744#
+<BR>
+
+<P>

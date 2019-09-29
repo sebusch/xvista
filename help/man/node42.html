@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>RETURN: Return from a Procedure Subroutine</TITLE>
+<META NAME="description" CONTENT="RETURN: Return from a Procedure Subroutine">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION004100000000000000000">
+RETURN: Return from a Procedure Subroutine</A>
+</H1>
+
+<!-- linkto return.html -->
+
+<P>
+<A NAME="1321"></A>
+<BR>
+
+<BR>
+
+<P>
+This command tells VISTA that the execution of the current sub-procedure is
+complete and to return to any calling procedure or to immediate input mode
+as is appropriate.  This command is intended to allow a return from the
+procedure as a result of an IF test. In cases where no condition testing is
+needed, the final END command in the procedure buffer will tell VISTA that
+the procedure has completed.
+
+<P>
+Examples:
+
+<OL>
+<LI>Here is an example of a conditional exit from a procedure.
+   This procedure may be run with CALL or GO.
+  <PRE>
+     LOOP:
+        ASK 'Enter non-zero to process another image &gt;&gt; ' TEST
+        IF TEST=0
+           RETURN
+        END_IF
+         :
+         :
+     GOTO LOOP:
+</PRE>
+</LI>
+<LI>END may be used as return ONLY if it is the last command in 
+  the file. Thus a procedure like:
+  <PRE>
+     (commands)
+     END
+</PRE>
+  may be executed as a subroutine, but one that looks like:
+  <PRE>
+     IF TEST=0
+        END
+     END_IF
+</PRE>
+  will not work.  Use RETURN instead.
+
+</LI>
+</OL>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

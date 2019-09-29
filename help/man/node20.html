@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>EDIT: Editing the Last Command</TITLE>
+<META NAME="description" CONTENT="EDIT: Editing the Last Command">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00270000000000000000">
+EDIT: Editing the Last Command</A>
+</H1>
+
+<!-- linkto edit.html -->
+
+<P>
+<A NAME="514"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+The EDIT command loads the last command into a temporary file in your
+current directory, and then puts you into the default editor.  On Unix
+systems, the default editor is vi.  If you leave the editor with saving
+changes, the edited command is immediately executed.  If abort the editor
+(exiting without saving changes), the command is not executed. Only the
+first line of the temporary file is read; do NOT use EDIT to create several
+lines, thinking that you are making a procedure.  Procedures are created
+with PEDIT.
+
+<P>
+Do not put more than one command in the temporary file you are editing.  Do
+not chain several commands together with semicolons.
+
+<P>
+For EDIT and other commands which invoke an editor (HEDIT, WEDIT, PEDIT),
+the default is to execute the editor vi. If you wish to change this, you
+can do so by setting the environment variable VISUAL to be the editor that
+you wish to use. For example, to use the emacs editor, execute the
+following statement BEFORE starting up VISTA (e.g., in your .cshrc file):
+<PRE> 
+  setenv VISUAL emacs
+</PRE>
+In many cases, you may have to provide the full path to an editor, for
+example:
+<PRE> 
+  setenv VISUAL /opt/local/bin/emacs
+</PRE>
+in order to be able to execute it from within VISTA.  It is always a good
+idea to verify the full path (using the Unix which command) before setting
+an environment variable.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

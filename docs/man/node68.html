@@ -1,0 +1,44 @@
+
+<H1><A NAME="SECTION006130000000000000000">
+FIXHEAD: Fix FITS Headers</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml229#
+
+<P>
+<A NAME="1992"><tex2html_anchor_invisible_mark></A>
+<A NAME="1993"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1994#
+<BR>
+
+<P>
+FIXHEAD is used to reset or fix FITS headers with various pathologies.
+
+<P>
+ORIGIN and the related RORIGIN and CORIGIN cards are used to reset the FITS
+coordinate system cards (CRVALn, CTYPEn, CRPIXn, CDELTn, and CNPIXn).  This
+is useful if the coordinate cards have been altered by programs (like IRAF
+or STSDAS) in ways that cause problems with various VISTA image
+manipulation programs, especially SHIFT.  FIXHEAD ORIGIN can also be used
+to strip out wavelength calibration information (but you cannot uncalibrate
+a spectrum if it has been, for example, resampled onto a linear wavelength
+scale).  ORIGIN resets the coordinate info along both axes, CORIGIN and
+RORIGIN only reset coordinates along the Columns and Rows axis,
+respectively.
+
+<P>
+BLANK is used to remove any empty (blank) header cards.  While blank cards
+are allowed under the standard FITS definition for headers, they can be a
+nuisance as they eat up available header memory.
+
+<P>
+GROUP removes various header cards related to the ``group'' structure
+of complex FITS files.  Since the current version of VISTA does not
+recognize the group structure, these cards are eating up header memory.
+
+<P>
+WFPC is used to remove header cards in WF/PC1 imaging data.  Again, the
+purpose is to try to free up header memory, especially in old WF/PC1 image
+which have huge image headers.
+<tex2html_endfile>#./chap6.tex#
+<tex2html_file>#./chap7.tex#

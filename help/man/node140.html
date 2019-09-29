@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>DSSCOORD: Compute RA and Dec for Digitized Sky Survey Images</TITLE>
+<META NAME="description" CONTENT="DSSCOORD: Compute RA and Dec for Digitized Sky Survey Images">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0012200000000000000000">
+DSSCOORD: Compute RA and Dec for Digitized Sky Survey Images</A>
+</H1>
+
+<!-- linkto dsscoord.html -->
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+This routine will query the FITS header of an image extracted from the
+Digitized Sky Survey (DSS) CD-ROM set and convert pixel coordinates into
+equatorial coordinates (Right Ascension and Declination) in equinox J2000.0
+
+<P>
+The coefficients of the astrometric plate solutions are stored in a number
+of FITS header keywords.  This program will read the coefficients and solve
+for the equatorial coordinates for any (C,R) location in the image.  To
+work, the image must be unprocessed.  That is, the image cannot be rotated,
+binned, shifted, flipped, or have any of the essential header keywords
+removed (especially the CNPIX1 and CNPIX2 cards).
+
+<P>
+The PHOT keyword gets the star (x,y) pixel coordinates from the currently
+active photometry file, either entered using a program like MARKSTAR, or
+using the GET PHOT=fspec command.  This is the most convenient way to find
+coordinates for a large number of stars on a DSS image.  In general, using
+MARKSTAR RADIUS=1 gives good centroids, as the stellar images on the DSS
+images are slightly under-sampled.
+
+<P>
+Alternatively, (RA,DEC) coordinates may be determined for any location in
+an image (not just for a stellar centroid) using either the P=, V=, or TTY
+keywords.  P=(col,row) returns the RA and DEC for a given column and row
+location (for either fractional or integer pixel locations).  V=n (n=0-9)
+gives the (RA,DEC) for the TV cursor location loaded with one of the number
+keys.  TTY will ask the user to enter the (x,y) coordinate(s) to be
+converted into (RA,DEC).
+
+<P>
+The STANDARD keyword tells DSSCOORD to also printout the computed standard
+coordinates, (xi,eta), in arcseconds of the pixel location(s) of interest.
+These are useful for using the stellar centroids for finding approximate
+astrometric plate solutions for CCD or IR Array Images using stars common
+to your image and the DSS to define an approximate secondary reference
+frame.
+
+<P>
+Coordinates derived from the DSS images are usually good to an arcsecond or
+so, which is to say sufficient for pointing and guide star selection, and
+for approximate astrometric calibration of CCD images to determine the
+pixel scale and field orientation (rotation relative to the cardinal axes).
+At this writing (December 1994), details of the DSS data set are still
+awaiting publication.  Future versions of this help file will elaborate as
+necessary.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

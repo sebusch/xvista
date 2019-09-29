@@ -1,0 +1,120 @@
+%
+%  VISTA Cookbook;  Master File
+%
+%  Began:  1988 August 30
+%
+%
+
+\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+\input thesismacros.pogge
+
+\newenvironment{command}{\begin{center}
+\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+
+\def \comm#1{{\tt #1\/}}
+\def \hitkey#1{$\langle${\tt {#1}}$\rangle$\/ }
+
+\begin{document}
+\pagestyle{manual}
+\singlespace
+
+\pagenumbering{roman}
+
+\clearpage
+\typeout{Title Page}
+
+\pagestyle{empty}
+
+\begin{center}
+
+   University of California\\
+   \vbox to 0.15in {}
+   Lick Observatory Technical Reports\\
+   \vbox to 0.15in {}
+   No. 50\\
+   \vbox to 1.5in {}
+   {\Huge The VISTA Cookbook}\\
+   \vbox to 1.0in {}
+   Richard W. Pogge\\
+   Robert W. Goodrich\\
+   Sylvain Veilleux\\
+   \vbox to 0.25in {}
+   Santa Cruz, California\\
+   \vbox to 0.15in {}
+   August 1988\\
+\end{center}
+
+\vfill
+\eject
+
+%
+
+\singlespace
+\clearpage
+\typeout{Copyright Page}
+\pagestyle{empty}
+
+\vbox to 1.5in {}
+
+\noindent{{\small\rm Copyright~\copyright~1988 by U.C. Regents}}
+
+\vbox to 0.2in {}
+
+\noindent{{\small\rm This document is intended to be used in conjuction with
+the VISTA Image Processing Package distributed free of charge by the Lick
+Observatory, University of California.  Extensive copying of this manual, in
+whole or in part, is allowable only for scholarly purposes, consistent with
+``fair use'' as described in the U.S. Copyright Law.  Copies may be obtained
+from the Publications Office of the Lick Observatory, University of
+California, Santa Cruz, CA 95064.}}
+
+\vbox to 0.2in {}
+
+\noindent{{\small\rm Composed in Times Roman on the Lick Observatory VAX
+11/780 computer using Leslie Lamport's \LaTeX, and printed on an Imagen 8/300
+laser printer.  Figures were composed in PostScript and printed on an Apple
+LaserWriter II-NTX connected to a Sun 4/280.}}
+
+\vfill
+
+\noindent{{\bf On the Cover:\ } CCD image of the Crab Nebula Supernova Remnant
+in the light of the [\sii]~\waves{6716,~6731} emission-lines.  Taken with the
+TI 500$\times$500 CCD and the focal reducing camera on the 1-meter Anna Nickel
+Telescope at Mt. Hamilton.  The image was processed and prepared for display
+by Rick Pogge using VISTA.}
+
+\eject
+
+{\singlespace
+\pagestyle{manual}
+\tableofcontents}
+
+\vfill
+\eject
+
+\input{cook_intro}
+
+\input{cook_tutor}
+
+\input{cook_basic}
+
+\input{cook_2d}
+
+\input{cook_spec}
+
+\input{cook_ham}
+
+\input{cook_dirt}
+
+\appendix
+
+\input{cook_appa}
+
+\input{cook_appb}
+
+\input{cook_appc}
+
+\end{document}
+\end

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>TEMPLATE: Generate an Image from a User-Supplied Profile</TITLE>
+<META NAME="description" CONTENT="TEMPLATE: Generate an Image from a User-Supplied Profile">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001720000000000000000">
+TEMPLATE: Generate an Image from a User-Supplied Profile</A>
+</H1>
+
+<!-- linkto template.html -->
+<A NAME="8250"></A>
+<BR>
+
+<BR>
+
+<P>
+TEMPLATE generates either a Gaussian (GAUSS), exponential disk (EXP),
+Hubble (HUB), or deVaucouleurs (DEV) template from an input profile spectrum
+originally calculated using the CUT or PROFILE command.  The Eccentricity,
+Position Angle of the brightness profile stored in the spectrum, and the
+Position Angle of the Major axis are all stored in a common block and
+generally need not be reloaded using the appropriate keywords.  These
+keywords permit the user to "fine tune" the fit in the event that the
+loaded parameters are not ideal.  The actual nonlinear least squares fit to
+the appropriate brightness law is carried out for spectrum points n1
+through n2 using the FIT= keyword.  This permits, for example, fitting an
+exponential disk to the outer portions of the brightness profile while
+leaving the central (perhaps bulge) component alone.  At this time only one
+surface brightness law at a time can be fit.
+
+<P>
+N.B.The user must have an image with the same characteristics (size, etc.)
+as the template already in the destination buffer.  This image will of
+course be overwritten by the generated template.  The SUB keyword permits
+the subtraction of the generated template from the image already in the
+destination buffer.
+
+<P>
+Example:
+<BR>
+<IMG
+ WIDTH="6" HEIGHT="26" ALIGN="BOTTOM" BORDER="0"
+ SRC="img392.png"
+ ALT="\begin{example}
+\item[TEMPLATE 2 1 FIT=10,19 EXP\hfill]{Generates an exponentia...
+...
+deVaucouleurs profile and subtracts fit from image already in 2}
+\end{example}">
+<BR>
+
+<P>
+See Also: CUT, DEVAUC
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

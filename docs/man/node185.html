@@ -1,0 +1,65 @@
+
+<H1><A NAME="SECTION001590000000000000000">
+SNUC: Surface Photometry of Multiple-Galaxy Systems</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml443#
+<A NAME="6932"><tex2html_anchor_invisible_mark></A>
+<A NAME="6933"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6934#
+<BR>
+
+<P>
+SNUC will extract the individual surface photometry profiles of overlapping
+or interacting galaxies comprising a multiple galaxy system.  Each galaxy
+within the system is assumed to have concentric elliptical isophotes with
+otherwise arbitrary brightness, position angle, and ellipticity
+profiles. The isophotes parameters for all galaxies are solved for
+simultaneously by a nonlinear least-squares algorithm that decomposes the
+multiple system under the assumption that its morphology can be modeled as
+the simple superposition of normal elliptical galaxies.
+
+<P>
+The routine models the image displayed on the TV.  The startup procedure
+for the decomposition is to mark the nuclei and extent of the individual
+galaxies with the cursor.  Mark any nucleus with (1) to fit the specified
+galaxy to the image or <#6960#>[BOX=n]<#6960#> border, or (2) to then go on and mark an
+outer limiting isophote with (0).  Mark with (0) once all galaxies have
+been selected to start the decomposition.  At this time, five galaxies is
+the maximum that can be fit.  If desired, of course, this routine will also
+fit single isolated galaxies.
+
+<P>
+The photometry solution is found iteratively.  NPASS iterations are done
+for a given run (default is 3).  Further iterations for a given setup can
+be run with the OLD keyword.  The EX keyword is used with the OLD keyword
+to delete or add more isophotes to the outer extent of any galaxy used in a
+previous run.  Isophotes are spaced geometrically by the ratio 1+DELT
+(default is 1.25).  Isophote spacing is the same for all galaxies.
+Isophote centers are fixed by default and taken to be the nuclear centroid
+for each galaxy.  Improved estimates of the centroids can be made during
+any pass with the RECEN keyword if the default centroiding is found to be
+inaccurate. Isophote centers can be solved for independently using the
+CENTER keyword; however, this option does not work well at the present.
+Since the decomposition solves for the isophotes by a least squares
+procedure, portions of the image contaminated by stars, defects, faint
+galaxies can be excluded from the fit.  Pixels set identically to 0.0 are
+ignored by the algorithm.  One handy use of this feature is to run a
+solution, reconstruct it (see RENUC), subtract it off, and clip any faint
+objects or features uncovered in the process to 0.0.  The routine also
+generates error estimates for the isophote parameters assuming shot noise
+errors in the pixel values.  For accurate error estimates the level of any
+sky level subtracted from the image must be given with the SKY keyword.
+
+<P>
+Photometry results can be saved and recalled with the SAVE and GET
+commands, or printed with the PRINT command, using the MULT option in
+either of these commands.
+<BR>
+<tex2html_image_mark>#example6961#
+<BR>
+
+<P>
+See Also: RENUC, PROFILE
+
+<P>

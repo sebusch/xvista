@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>FIXHEAD: Fix FITS Headers</TITLE>
+<META NAME="description" CONTENT="FIXHEAD: Fix FITS Headers">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION006130000000000000000">
+FIXHEAD: Fix FITS Headers</A>
+</H1>
+
+<!-- linkto fixhead.html -->
+
+<P>
+<A NAME="1999"></A>
+<A NAME="2000"></A>
+<BR>
+
+<BR>
+
+<P>
+FIXHEAD is used to reset or fix FITS headers with various pathologies.
+
+<P>
+ORIGIN and the related RORIGIN and CORIGIN cards are used to reset the FITS
+coordinate system cards (CRVALn, CTYPEn, CRPIXn, CDELTn, and CNPIXn).  This
+is useful if the coordinate cards have been altered by programs (like IRAF
+or STSDAS) in ways that cause problems with various VISTA image
+manipulation programs, especially SHIFT.  FIXHEAD ORIGIN can also be used
+to strip out wavelength calibration information (but you cannot uncalibrate
+a spectrum if it has been, for example, resampled onto a linear wavelength
+scale).  ORIGIN resets the coordinate info along both axes, CORIGIN and
+RORIGIN only reset coordinates along the Columns and Rows axis,
+respectively.
+
+<P>
+BLANK is used to remove any empty (blank) header cards.  While blank cards
+are allowed under the standard FITS definition for headers, they can be a
+nuisance as they eat up available header memory.
+
+<P>
+GROUP removes various header cards related to the ``group'' structure
+of complex FITS files.  Since the current version of VISTA does not
+recognize the group structure, these cards are eating up header memory.
+
+<P>
+WFPC is used to remove header cards in WF/PC1 imaging data.  Again, the
+purpose is to try to free up header memory, especially in old WF/PC1 image
+which have huge image headers.
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,183 @@
+<html>
+<body bgcolor=eeeeee> 
+<basefont size=4>
+<HEAD><title>VISTA README</title></HEAD>
+<p>
+
+<h3>INTRODUCTION</h3><br>
+
+This comprises the release of xvista, version 5.1; xvista has been previously
+distributed under the name vista or lickvista. The last release before this
+one was version 4.7.
+
+Xvista is an image processing program designed to be used primarily with
+astronomical data. It contains routines for reading, displaying, basic
+image processing, and specialized tasks for the analysis of astronomical
+imaging and spectroscopic data.
+
+Xvista was originally developed by graduate students and staff at the 
+University of California, Santa Cruz. Modifications and additions continue
+to be supplied by several different people. The current version is maintained
+and distributed by Jon Holtzman at the New Mexico State University.
+The code is written primarily in Fortran 77, although there are also some
+C routines.
+
+<h3>CONTENTS OF THIS DISTRIBUTION</h3><br>
+
+This distribution contains all of the xvista source code, and also
+ancillary packages. The plotting routines of xvista use the LickMongo
+plotting package, which was also developed at the University of California,
+Santa Cruz, although it was based on the original Mongo package by John
+Tonry. The distribution also contains the source code for lynx, which is
+a text-based WWW browser which is used to display the xvista help files.
+Lynx was developed at the University of Kansas, and it is included here
+in an unmodified form as a convenience for xvista users; the version of
+lynx included herein will only be unpacked and compiled (automatically)
+if the main xvista Makefile finds that lynx does not already exist on
+your system.  Finally, some of the routines from the DAOPHOT stellar
+photometry package, written by Peter Stetson at the Dominion Astrophysical
+Observatory, are included.
+
+<h3>COPYRIGHT ISSUES</h3><br>
+
+As a result of several packages being included , different portions
+of this distribution have different copyright protections. For the
+main xvista source code, see the files xvista/source/COPYHEADER
+and xvista/source/COPYING. For the LickMongo source code, see the
+files lickmongo/COPYRIGHT.  For the lynx source code, see the files
+lynx2-8/COPYHEADER and lynx2-8/COPYING which will exist if the lynx code
+contained here is compiled.
+
+<h3>WARRANTY and RELIABILITY</h3><br>
+
+xvista is distributed without any type of warranty. See the file WARRANTY
+for additional information.
+
+Vista was an image processing program originally developed at Lick Observatory
+by Richard Stover and Tod Lauer. Since then, it has been significantly
+expanded with contributions from many different people, in particular
+several generations of graduate students at Lick. In recent years, it has
+incorporated code from various outside sources as well, most notably 
+plotting and display code modified from source contributed by John Tonry,
+and an older version of DAOPHOT contributed by Peter Stetson; any
+comments or questions about these routines should be directed to the
+Vista distributors.
+
+  Vista has been used extensively by many people and we feel that it is
+a reliable and useful package. However, VISTA is in no way guaranteed. The
+source code was contributed by several different people; we are indebted
+to all of them.  All questions or comments about the code should be
+directed to the Vista distributors.  None of the authors can be held
+responsible for any of the results obtained with Vista.
+
+<h3>NEW FEATURES IN VERSION 5.0</h3><br>
+
+xvista 5.0 has been significantly reorganized from previous versions.
+It has been modified so it can be compiled and run on a Linux platform
+using the f2c and gcc compilers. In addition, the help files have been
+extensively modified and written in LaTeX, with on-line help available
+through a WWW browser on HTML pages generated from the manual by the program
+latex2html.
+
+Numerous modifications and revisions have been made to various pieces of
+the code to provide additional functionality and to fix existing bugs.
+These changes are too numerous to describe individually. One new feature
+of interest in the ability to display very large images automatically by
+binning or sampling the raw data.
+
+<h3>NEW FEATURES IN VERSION 5.1</h3><br>
+
+Version 5.1 incorporates more changes and bug fixes. In particular,
+the handling of MASKs has been completely redone to allow for dynamic
+allocation of MASKs and consequently, MASKs of different sizes. In addition,
+I have enhanced RD to be able to read (inefficiently) FITS files which
+use image extensions (e.g. the NOAO MOSAIC cameras). Several of the
+spectroscopy routines for line identification and wavelength calibration
+have been enhanced to include graphical output.
+
+
+<h3>BUGS, ETC</h3><br>
+
+  We hope that this version of VISTA is as bug-free as possible, but
+realistically understand that there may still be some problems. We are happy
+to hear from you about any problems you might have either
+with installation or with execution of the program. If there are any
+major problems, we will issue patches or replacement subroutines in the
+near future. Minor revisions will be incorporated into future releases.
+
+  We encourage VISTA users to become VISTA programmers, as we feel that
+the accesibility of VISTA programming is among VISTA's strongest points.
+Accordingly, we have begun to prepare a programmers guide to VISTA. This
+has not yet been completed, but the current version can be found in
+PostScript form, as well as in TeX format, in the directory xvista/doc
+with the name progguide.ps and progguide.tex.  Any comments on this
+document would be most appreciated. It is currently in a stage of 
+development, so we do not guarantee any information in it.
+
+<h3>OBTAINING XVISTA</h3><br>
+
+You can obtain xvista from http://astro.nmsu.edu/~holtz/xvista
+
+<h3>INSTALLATION</h3><br>
+
+Installation should be extremely easy. Instructions are found in the
+file INSTALLATION.
+
+<h3>DISCLAIMERS</h3><br>
+
+<h4>NOTE ABOUT THE VISTA/DAOPHOT INTERFACE</h4><br>
+
+   After some discussion with Peter Stetson, the author of DAOPHOT, I
+wish to clarify some points/concerns about the version of DAOPHOT that
+has been installed within VISTA.
+
+<UL>
+   <LI> the version in VISTA was adapted from Stetson's 1987 version of the
+code.  Subsequently, Peter has made many modifications, which have not
+been incorporated into the VISTA version.
+
+   <LI> some modifications to the DAOPHOT code were required to make the
+interface between DAOPHOT and VISTA, although effort was made to keep
+as much of the original code as possible. 
+  
+   <LI> many new features have been added to the code by Jon Holtzman.
+Generally, these features are turned on by changing the default options.
+Stetson is in no way responsible for these routines.
+</UL>
+
+    Because an older version of the code is being used and also because
+of the modifications that had to be made to provide for the VISTA interface,
+Stetson can NOT be held responsible for any results that come out of
+the VISTA/DAOPHOT program. From extensive use of the code, I feel that
+the routines are reliable, but this cannot be absolutely guaranteed.
+
+    It is possible to use Stetson's up-to-date version of DAOPHOT by
+writing out your images from VISTA and then running the standalone version
+of DAOPHOT. On VMS systems, the data can be directly written in the Caltech 
+data structures format which can be used with DAOPHOT. On UNIX systems,
+the data can be written in FITS format and translated to one of the DAOPHOT
+supported formats (IRAF or MIDAS) using IRAF, MIDAS or another
+translation program. A current version of DAOPHOT can be obtained by
+contacting Stetson directly.
+
+    Any questions about the VISTA/DAOPHOT routines should be addressed
+to the VISTA distributors and not to Stetson. E-mail addresses for
+comments/questions/complaints are:<br>
+
+       holtz@nmsu.edu<br>
+
+    Publications using the VISTA/DAOPHOT routines should give credit to Peter
+(the standard reference is Stetson 1987, PASP 99, 191), but remember, he cannot
+be held responsible for the results. 
+
+<br>
+<h4>NOTE ABOUT THE VISTA/MONGO INTERFACE</h4><br>
+
+     The current version of Vista does NOT depend on having a standalone
+version of MONGO to compile or run. The plotting routines which have
+been incorporated into Vista are based on routines which originated in
+the MONGO package of John Tonry, but which were modified extensively
+by Lick personnel. If anyone desires to have a standalone version of
+MONGO, they should contact Tonry directly (jt@antares.mit.edu).
+
+</body></html>

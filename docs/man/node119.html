@@ -1,0 +1,35 @@
+
+<H1><A NAME="SECTION001150000000000000000">
+AXES: Compute the Centroid of an Object in an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml321#
+<A NAME="4459"><tex2html_anchor_invisible_mark></A>
+<A NAME="4460"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command4461#
+<BR>
+
+<P>
+This command will find the centroid of an object within the specified box
+in the source image, or in the entire image if no box specifier is
+given. The centroid coordinates are loaded into VISTA variables AXR and
+AXC, and are also held in a common block for use by other routines.  If the
+W= keyword is used, the wavelength of the centroid of the spectrum in the
+given interval is loaded into the variable WAVE.
+
+<P>
+The routine uses the highest pixel value on the box perimeter as a
+threshold value for the centroid, unless the SKY word is given, in which
+case the argument of the SKY word is taken as the threshold.  The threshold
+is subtracted from each pixel in the box during the calculation.
+
+<P>
+The output of AXES can be redirected.
+
+<P>
+<#4474#>Examples:<#4474#>
+<BR>
+<tex2html_image_mark>#example4475#
+<BR>
+<tex2html_endfile>#./chap11.tex#
+<tex2html_file>#./chap12.tex#

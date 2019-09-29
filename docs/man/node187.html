@@ -1,0 +1,34 @@
+
+<H1><A NAME="SECTION0015110000000000000000">
+SECTOR: Surface Photometry of Star Clusters or Complex Objects</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml445#
+<A NAME="6991"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6992#
+<BR>
+
+<P>
+SECTOR measures the brightness distribution of a star cluster or any other
+extended object by adding up the flux in a set of circular isophotal rings.
+Errors in brightness in any ring are calculated by dividing the ring into
+eight angular sectors and intercomparing the individual sector results.
+The final profile is saved in the MULT block, and can be saved or gotten
+with the MULT keyword in the SAVE or GET commands, printed in the PRINT
+command, or plotted with the PLOT command.  The object can also be
+reconstructed with the RENUC command.
+
+<P>
+The center should be found first with the AUTOCEN or AXES command.  The C
+keyword can be used to override the default center.  Isophotes increase
+linearly from the center at first, and are spaced by the lin entry with the
+RAD keyword.  When a geometric increment given by the geo entry gives a
+larger spacing, it is used to space the outer isophotes.  The radii used
+are at the radii at which the area of the isophotal rings is evenly
+divided.  Pixels can be excluded from the calculation by setting them to
+zero.
+
+<P>
+See Also: PROFILE, ANNULUS, AXES
+
+<P>

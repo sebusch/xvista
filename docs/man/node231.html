@@ -1,0 +1,83 @@
+
+<H1><A NAME="SECTION001710000000000000000">
+PHOTONS: Add Artificial Stars and/or Noise to an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml508#
+
+<P>
+<A NAME="8217"><tex2html_anchor_invisible_mark></A>
+<A NAME="8218"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command8219#
+<BR>
+
+<P>
+PHOTONS creates artificial stars and/or noise on an already existing
+image. If no image exists, use CREATE to make one. It makes as many stars
+as you want with whatever brightnesses you want. You can specify where to
+put each star, or you can place them randomly on the image, or you can read
+in positions from an external file. You can use a coarse Gaussian to
+represent the PSF with whatever FWHM, or you can give a PSF to the program
+to read from a preexisting disk file. You can use a DAOPHOT style PSF to
+create images, or a PSFLIB file. You can store the information (position
+and counts) about the created stars in a VISTA photometry file.
+
+<P>
+Without preparing an external file, you can either create one star at a
+specified position or one or more stars at random positions. For a
+specified position,use AT=r,c; if this keyword isn't used, positions will
+be random on the frame, unless the STR= keyword is used. Specify the number
+of stars desired using NSTARS=n.The number of counts in each star is
+determined from the COUNTS=c1,c2 keyword. Each star will have a total
+number of counts randomly distributed in the range c1 to c2. If you want a
+star to have a particular number of counts c1, just set c2=c1+1.
+
+<P>
+To make stars from a list on disk, prepare a file with four columns:
+ID,COL(X), ROW(Y), COUNTS.  Any format is OK, as long as there are spaces
+between the numbers. Specify the filename with STR=filename and your stars
+will be made.
+
+<P>
+The PSFs of the stars can be a Gaussian of whatever FWHM you desire, or it
+can be integrated external disk file with a 1-D PSF, or you can use a PSF
+created by the DAOPHOT PSF routine to create stars, or you can specify a
+PSF library file to use. For a Gaussian PSF, use the GAUSS keyword along
+with FW=FWHM to specify the FWHM. For an arbitrary symmetric PSF from a
+disk file, use FILE=file to specify the file name. This file can contain up
+to 1000 numbers with the profile of your desire tabulated. The program
+converts this profile to a pixel scale using the FW= keyword to tell it how
+many pixels corresponds to the NTABLE entries. The file should be a
+formatted disk file written with (Fortran):
+<PRE><tex2html_verbatim_mark>verbatim509#</PRE>
+Note that the ``formatted'' write statement in Fortran makes a file that is
+machine-dependent, and such files are generally not exportable to other
+machine/operating-system architectures.
+
+<P>
+To use a DAOPHOT PSF, use the DAOPSF=file to specify the file name of the
+DAOPHOT .PSF file.
+
+<P>
+For all the file options, the V_DATADIR is the default directory.
+
+<P>
+Unless requested, noise will not be added to the image. To add noise, use
+MEAN=mean and/or RN=rn. MEAN adds a constant value to all pixels in the
+image, then computes noise for each pixel and adds it on. RN will add
+readout noise to the image. Note that mean and rn are to be given in
+counts. To get the correct noise, you also need to specify a gain (with
+GAIN=gain) in units of photons per count. Recall, if MEAN is greater than
+or equal to 0, noise will be added. Consequently if you want to add stars
+to an image more than once, you will add photon noise each time if MEAN
+is ;SPMgt;= 0.  The default values are -1 for mean (no noise added), 0 for RN (no
+noise added), and 1 for GAIN. The most useful technique is to add sets of
+stars with MEAN=-1, and when all stars are finally placed, run PHOTONS with
+MEAN=the desired sky level.
+
+<P>
+To store the information about the created stars (their positions and
+brightnesses) in a VISTA photometry file, use the PHOT keyword. For a new
+file, use the NEW keyword (NEW implies PHOT).
+
+<P>

@@ -1,0 +1,48 @@
+
+<H1><A NAME="SECTION001120000000000000000">
+SKY: Compute the Modal Sky/Background Level in an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml318#
+<A NAME="4343"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command4344#
+<BR>
+
+<P>
+This routine finds the sky background level of an image under the
+assumption that the most common pixel intensity in the image is the level
+of the 'sky' or background.  This is a nonlinear algorithm which is largely
+insensitive to bright objects in the image. The routine calculates the mean
+of the image 'source', and builds a histogram of pixel intensities about
+the mean. The region of the peak value is located in the histogram, and is
+fit with a parabola to find its precise location. This center of the
+parabola is defined to be the sky value, and is loaded into the VISTA
+variable 'SKY' for access by other commands.  The width of the histogram is
+determined by a simple linear interpolation.  The value loaded into the
+VISTA variable 'SKYSIG' is a 1-sigma uncertainty estimate derived from the
+full width half max, and assumes the histogram is Gaussian.
+
+<P>
+The use of a box may be helpful if a large fraction of the image is
+occupied by stars or an extended object, causing the routine to measure a
+sky level systematically higher than the true level.  The box can in this
+case be used to select a region of the image that does not have bright
+objects in it.  The CORNERS keyword tells SKY to find the sky value in the
+four corners of the image.  Each corner area consists of a region whose
+sides are one fourth the dimensions of the full image.  The minimum sky
+value found in the four corners is assumed to be the true sky value.  The
+MAX=c keyword tells SKY to ignore all pixel values greater than 'c'.  This
+is normally not needed unless there are many bright stars in the field.
+
+<P>
+This version of SKY is new to Vista Version 4.2. It was supplied by Tod
+Lauer, and has been tested to be more accurate. The old VISTA SKY routine
+can still be accessed using the command OLDSKY.
+
+<P>
+<#4357#>Examples:<#4357#>
+<BR>
+<tex2html_image_mark>#example4358#
+<BR>
+
+<P>

@@ -1,0 +1,32 @@
+data gd50.dat
+lines 2 1000000
+read {x 1 y 2}
+limits x y
+box
+ctype black
+box
+connect x y
+limits x 16 13
+box
+connect x y
+data gd50.dat
+lines 2 100000
+read {x 1 y 2}
+limits x 16 13
+ctype black
+box
+connect x y
+limits 3000 9000 16 13
+box
+connect x y
+limits x 16 13
+box
+connect x y
+limits LG(x) y
+connect LG(x) y
+help math
+help arithmetic
+limits LG(x) y
+limits (LG(x)) y
+box
+connect (LG(x)) y

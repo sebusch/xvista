@@ -1,0 +1,29 @@
+%
+% Rick Pogge's Custom TeX Macros for Thesis and Paper typesetting
+%
+
+%  Ionization States
+
+\def   \halpha   {H$\alpha$}
+\def   \hbeta    {H$\beta$}
+\def   \hgamma   {H$\gamma$}
+\def   \hi       {{\sc H~i}}
+\def   \hii      {{\sc H~ii}}
+\def   \hei	 {He~{\sc i}}
+\def   \heii	 {He~{\sc ii}}
+\def   \oi       {{\sc O~i}}
+\def   \oii      {{\sc O~ii}}
+\def   \oiii     {{\sc O~iii}}
+\def   \ni       {{\sc N~i}}
+\def   \nii      {{\sc N~ii}}
+\def   \sii      {{\sc S~ii}}
+\def   \feii	 {Fe~{\sc ii}}
+\def   \nev      {Ne~{\sc v}}
+\def   \neiii    {Ne~{\sc iii}}
+
+%  Miscellaneous useful stuff not in PGMAC82
+
+\def   \chisqd  {$\Chi^2$}
+\def   \sflux   {erg~sec$^{\scriptstyle -1}$~cm$^{\scriptstyle
+-2}$~arcsec$^{\scriptstyle -2}$}
+

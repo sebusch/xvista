@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>FITS: Insert/Edit a FITS Header Card</TITLE>
+<META NAME="description" CONTENT="FITS: Insert/Edit a FITS Header Card">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION006100000000000000000">
+FITS: Insert/Edit a FITS Header Card</A>
+</H1>
+
+<!-- linkto fits.html -->
+
+<P>
+<A NAME="1959"></A>
+<A NAME="1960"></A>
+<A NAME="1961"></A>
+<A NAME="1962"></A>
+<BR>
+
+<BR>
+Use one of these forms to insert a new FITS header card into the image
+header, or to change the value of an existing FITS header card.  If you
+specify the optional PROF keyword rather than a buffer number, the new
+header card will be inserted into the internal PROFILE header (see PROFILE
+and SAVE PROF).  The FITS keyword name may be no longer than 8 characters.
+
+<P>
+Except for two special cases, a FITS card already in the header with the
+same name will be replaced.  The two exceptions are CHAR=COMMENT and
+CHAR=HISTORY, which will always add a new COMMENT or HISTORY card,
+respectively, to the header.  
+
+<P>
+The float_value for the FLOAT keyword should be a floating point constant
+or an arithmetic expression.  The integer_value for the INT keyword should
+be an integer constant or an arithmetic expression whose result will be
+rounded to the nearest integer.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

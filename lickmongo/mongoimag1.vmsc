@@ -1,0 +1,26 @@
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!      This VMS DCL procedure is Copyrighted software.
+$!      The file COPYRIGHT must accompany this file.  See it for details.
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!
+$! Imagen Pen Size = 1
+$!              The System Logical Name Table entry MONGO_SCRATCH
+$!              should always point to useable scratch
+$  if f$trnlnm("mongoscr") .eqs. "" then -
+$  assign       MONGO_SCRATCH:                  mongoscr
+$  if f$trnlnm("mongodir") .eqs. "" then -
+$  assign       sys$sysdevice:[MONGO.LICK]      mongodir
+$ set message/noid/nosev/nofac/notext
+$ purge mongoimag.log
+$ assign 'p1' rastfile
+$ assign 'p2' impfile
+$ set prot=(w:rwed) 'f$parse(p1)'
+$!set prot=(w:rwed) 'p1'
+$ on warning then goto delete_me
+$ run mongodir:iraster1
+$ imprint/noflag/DELETE/language=impress  -
+  /document_header=("prerasterization on") impfile
+$ delete_me:
+$ delete 'f$parse(p1)'
+$!IF PLOTS GENERATED TODAY ARE ALL DELETED, THEN MULTIPAGE PLOTS ARE BROKEN
+$ delete/by_owner/noconfirm/nolog/before=today mongoscr:*.vec;*,mongoscr:*.imp;*

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>POLAR: Regrid an Image into Polar Coordinates</TITLE>
+<META NAME="description" CONTENT="POLAR: Regrid an Image into Polar Coordinates">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001570000000000000000">
+POLAR: Regrid an Image into Polar Coordinates</A>
+</H1>
+
+<!-- linkto polar.html -->
+<BR>
+
+<BR>
+
+<P>
+POLAR will transform the image in the `source' buffer from observed
+Cartesian coordinates (x,y) to polar coordinates (r,theta) in the `dest'
+buffer.  The transformation assumes that the object is intrinsically round
+and projected into an ellipse in the sky plane with the given position
+angle, ellipticity (1-b/a) and center.
+
+<P>
+The SINC keyword instructs ROUND to use high-accuracy sinc interpolation
+instead of the default bilinear interpolation algorithm.  
+
+<P>
+The NORM keyword is used to renormalize the pixel intensities (surface
+brightness/pixel) in the transformed image.
+
+<P>
+The R=(rmin,rmax) keyword is used to specify the radial limits of the
+r-axis of the polar deprojection.  By default, if R= is not given the
+r-axis will run from 0 to the maximum semi-major axis of the inscribed
+ellipse.
+
+<P>
+See Also: ROUND
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

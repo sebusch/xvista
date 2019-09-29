@@ -1,0 +1,181 @@
+
+<H1><A NAME="SECTION0014200000000000000000">
+SPINDEX: Measure Equivalent Widths at each Row of an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml412#
+<BR>
+<tex2html_image_mark>#command6151#
+<BR>
+
+<P>
+SPINDEX measures line-strengths indices in a 1-D or a 2-D (long-slit,
+multi-object) image. The input file must contain a list of the wavelength
+intervals needed to measure each index. 
+
+<P>
+As an example, here is a file that would measure some of the spectral
+indices used by S.M. Faber (UCO/Lick Observatory) and J.J. Gonzalez (UNAM)
+for elliptical galaxies or spiral bulges (the Lick Spectral Indices):
+<DIV ALIGN="CENTER">
+The Faber <tex2html_ampersand_mark> Gonzalez Lick Spectral Indices
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">I</TD>
+<TD ALIGN="LEFT">Index band</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">blue continuum</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">red continuum</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">Units</TD>
+<TD ALIGN="LEFT">Name</TD>
+</TR>
+<TR><TD ALIGN="LEFT">01</TD>
+<TD ALIGN="LEFT">4847.875</TD>
+<TD ALIGN="LEFT">4876.625</TD>
+<TD ALIGN="LEFT">4827.875</TD>
+<TD ALIGN="LEFT">4847.875</TD>
+<TD ALIGN="LEFT">4876.625</TD>
+<TD ALIGN="LEFT">4891.625</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">H-beta</TD>
+</TR>
+<TR><TD ALIGN="LEFT">02</TD>
+<TD ALIGN="LEFT">4903.000</TD>
+<TD ALIGN="LEFT">4945.500</TD>
+<TD ALIGN="LEFT">4894.500</TD>
+<TD ALIGN="LEFT">4907.000</TD>
+<TD ALIGN="LEFT">4943.750</TD>
+<TD ALIGN="LEFT">4954.500</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">Fe4930</TD>
+</TR>
+<TR><TD ALIGN="LEFT">03</TD>
+<TD ALIGN="LEFT">4977.750</TD>
+<TD ALIGN="LEFT">5054.000</TD>
+<TD ALIGN="LEFT">4946.500</TD>
+<TD ALIGN="LEFT">4977.750</TD>
+<TD ALIGN="LEFT">5054.000</TD>
+<TD ALIGN="LEFT">5065.250</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">Fe5015</TD>
+</TR>
+<TR><TD ALIGN="LEFT">04</TD>
+<TD ALIGN="LEFT">5245.650</TD>
+<TD ALIGN="LEFT">5285.650</TD>
+<TD ALIGN="LEFT">5233.150</TD>
+<TD ALIGN="LEFT">5248.150</TD>
+<TD ALIGN="LEFT">5285.650</TD>
+<TD ALIGN="LEFT">5318.150</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">Fe5270</TD>
+</TR>
+<TR><TD ALIGN="LEFT">05</TD>
+<TD ALIGN="LEFT">5312.125</TD>
+<TD ALIGN="LEFT">5352.125</TD>
+<TD ALIGN="LEFT">5304.625</TD>
+<TD ALIGN="LEFT">5315.875</TD>
+<TD ALIGN="LEFT">5353.375</TD>
+<TD ALIGN="LEFT">5363.375</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">Fe5335</TD>
+</TR>
+<TR><TD ALIGN="LEFT">06</TD>
+<TD ALIGN="LEFT">5387.500</TD>
+<TD ALIGN="LEFT">5415.000</TD>
+<TD ALIGN="LEFT">5376.250</TD>
+<TD ALIGN="LEFT">5387.500</TD>
+<TD ALIGN="LEFT">5415.000</TD>
+<TD ALIGN="LEFT">5425.000</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">Fe5406</TD>
+</TR>
+<TR><TD ALIGN="LEFT">07</TD>
+<TD ALIGN="LEFT">5160.125</TD>
+<TD ALIGN="LEFT">5192.625</TD>
+<TD ALIGN="LEFT">5142.625</TD>
+<TD ALIGN="LEFT">5161.375</TD>
+<TD ALIGN="LEFT">5191.375</TD>
+<TD ALIGN="LEFT">5206.375</TD>
+<TD ALIGN="LEFT">0</TD>
+<TD ALIGN="LEFT">Mgb</TD>
+</TR>
+<TR><TD ALIGN="LEFT">08</TD>
+<TD ALIGN="LEFT">5069.125</TD>
+<TD ALIGN="LEFT">5134.125</TD>
+<TD ALIGN="LEFT">4895.125</TD>
+<TD ALIGN="LEFT">4957.625</TD>
+<TD ALIGN="LEFT">5301.125</TD>
+<TD ALIGN="LEFT">5366.125</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">Mg1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">09</TD>
+<TD ALIGN="LEFT">5154.125</TD>
+<TD ALIGN="LEFT">5196.625</TD>
+<TD ALIGN="LEFT">4895.125</TD>
+<TD ALIGN="LEFT">4957.625</TD>
+<TD ALIGN="LEFT">5301.125</TD>
+<TD ALIGN="LEFT">5366.125</TD>
+<TD ALIGN="LEFT">1</TD>
+<TD ALIGN="LEFT">Mg2</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">starts</TD>
+<TD ALIGN="LEFT">ends</TD>
+<TD ALIGN="LEFT">starts</TD>
+<TD ALIGN="LEFT">ends</TD>
+<TD ALIGN="LEFT">starts</TD>
+<TD ALIGN="LEFT">ends</TD>
+<TD ALIGN="LEFT">0=Ang</TD>
+<TD ALIGN="LEFT">Name</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+Comment lines are ignored when the file is read and can be placed anywhere.
+The relevant information rest in the first 8 columns of each index entry
+and the order has to be in the example. The continuum intervals are used to
+define a linear pseudo-continuum level. The actual measurement is carried
+integrating the intensity-to-continuum ratio over the Index
+wavelength-interval.  If the units flag is set to 0, the Index will be
+measure in angstroms as an equivalent width. If the units flags is not
+zero, the Index will be a measure (in magnitudes) of the
+intensity-to-continuum ratio :
+<PRE><tex2html_verbatim_mark>verbatim413#</PRE>
+
+<P>
+All wavelength scales (linear, polynomial or logarithmic wavelength, or
+linear in any other units) are accepted. In case of units other than
+angstroms, the list in the input file has to be scaled accordingly.
+
+<P>
+Flexure shifts (in pixels and/or angstroms), velocity shifts (in km/sec or
+redshift), and shifts due to rotation or line-curvature (for long-slit or
+multi-object spectroscopy), can be taken into account in placing the
+intervals on the spectrum with keywords DP=, DLAM=, V=, Z=, and/or ROT=.
+
+<P>
+Some users carry along their reduction an image with an estimation of the
+noise-variance at each pixel. SPINDEX can use this image (VAR=buf keyword)
+to estimate an error for the index. It is important to know that the
+intensity values of the variance buffer are not used as weights for the
+integration of the index, but noise-variances used to estimate the error on
+the index. These are not sigmas, but variances (more like sigma-squared)
+because as must users know, error-propagation in data reduction is simpler
+dealing with variances.
+
+<P>
+The output buffer will have as many rows as the source image and as many
+columns as the number of indices. So dest(r,c) will be the value of the
+c-th index at row r. In case the error where estimated with the VAR=buf
+keyword, the output image will have twice plus one the number of columns
+(indices), saving indices and errors in the format used by command ROWFIT
+to save fit parameters. In this case dest(r,c) will have the c-th index of
+row r, and dest(r,-c) its error.
+
+<P>
+The results can be printed with the TTY keyword or using command 'PRINT
+dest', both accept output redirection to an ASCII file.
+
+<P>

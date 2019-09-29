@@ -1,0 +1,171 @@
+\documentclass[11pt]{report}
+
+\usepackage{makeidx}
+\usepackage{epsf}
+\usepackage{html}
+
+\includeonly{%
+chap1,%
+chap2,%
+chap3,%
+chap4,%
+chap5,%
+chap6,%
+chap7,%
+chap8,%
+chap9,%
+chap10,%
+chap11,%
+chap12,%
+chap13,%
+chap14,%
+chap15,%
+chap16,%
+chap17,%
+chap18,%
+%refs,%
+%index,%
+}
+
+\renewcommand{\[}{\begin{eqnarray}}
+\renewcommand{\]}{\end{eqnarray}}
+
+\renewcommand{\tilde}{\~\space}
+\setcounter{topnumber}{1}
+
+\renewcommand{\floatpagefraction}{0}
+\setcounter{totalnumber}{1}
+
+\newenvironment{hanging}{
+        \begin{list}{}{
+                \labelsep=0pt
+                \labelwidth=0pt
+                \listparindent=0pt
+                \itemindent=-\leftmargini
+                \leftmargin=0.75in
+		\itemsep=0in
+		\parsep=0in
+        }
+}{
+        \end{list}
+}
+
+\newenvironment{references}{
+        \begin{hanging}\raggedright
+}{
+        \end{hanging}
+}
+\newenvironment{url}{
+        \begin{list}{}{
+                \labelsep=0pt
+                \labelwidth=0pt
+                \listparindent=0pt
+                \leftmargin=\leftmargini
+        }\item\tt
+}{
+        \end{list}
+}
+\newenvironment{code}{
+        \begin{list}{}{
+                \labelsep=0pt
+                \labelwidth=0pt
+                \listparindent=0pt
+                \leftmargin=\leftmargini
+        }\item\tt
+}{
+        \end{list}
+}
+%\begin{latexonly}
+\newenvironment{example}{
+	\begin{list}{}{
+		\labelsep=0.25in
+		\labelwidth=2.0in
+		\leftmargin=2.75in
+		\itemindent=0in
+		\itemsep=0in
+		\parsep=0in
+        }
+}{
+	\end{list}
+}
+\newenvironment{command}{
+	\begin{list}{}{
+		\labelsep=0.25in
+		\labelwidth=2in
+		\leftmargin=2.75in
+		\itemindent=0in
+		\itemsep=0in
+        }
+}{
+	\end{list}
+}
+%\end{latexonly}
+\begin{htmlonly}
+\newenvironment{example}{
+        \begin{itemize}}{\end{itemize}
+}
+\newenvironment{command}{
+        \begin{itemize}}{\end{itemize}
+}
+\end{htmlonly}
+
+\newcommand{\note}[1]{\marginpar{\raggedright\scriptsize{#1}}}
+
+\makeindex
+
+\title{\Huge\bf VISTA User's Manual}
+\author{\Large
+Jon Holtzman\\
+New Mexico State University\\
+and\\
+Richard Pogge\\
+The Ohio State University
+}
+\date{\Large July 1998}
+
+\textwidth=7.0in
+\textheight=9.0in
+\hoffset=-1in
+\topmargin=0in
+\headheight=0in
+\headsep=0in
+\parindent=0em
+\parskip=1.5ex
+
+\begin{document}
+
+\setcounter{page}{1}
+\pagenumbering{roman}
+
+\maketitle
+
+\tableofcontents
+%\listoffigures
+%\listoftables
+
+\clearpage
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\include{chap1}
+\include{chap2}
+\include{chap3}
+\include{chap4}
+\include{chap5}
+\include{chap6}
+\include{chap7}
+\include{chap8}
+\include{chap9}
+\include{chap10}
+\include{chap11}
+\include{chap12}
+\include{chap13}
+\include{chap14}
+\include{chap15}
+\include{chap16}
+\include{chap17}
+\include{chap18}
+
+\printindex
+\end{document}

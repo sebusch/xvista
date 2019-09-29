@@ -1,0 +1,37 @@
+[420]mongo@betical:/u/mongo/lick/source/fontutil% make
+/lib/cpp -DX11_exists -I/usr/include -Dalpha -DLANGUAGE_FORTRAN -D__LANGUAGE_FORTRAN__ -Dunix mkmbfont.F mkmbfont.i
+f77 -c -O -u -DX11_exists -I/usr/include mkmbfont.i
+fort: Error: mkmbfont.F, line 4: Declaration of globally visible name conflicts with a previous declaration
+	program mkmbfont
+----------------^
+fort: Warning: mkmbfont.F, line 4: Program may contain only one main entry routine
+	program mkmbfont
+^
+fort: Error: mkmbfont.F, line 76: Declaration of globally visible name conflicts with a previous declaration
+	subroutine onefont(i,lunit)
+-------------------^
+fort: Error: mkmbfont.F, line 167: Declaration of globally visible name conflicts with a previous declaration
+	integer function getherchr(num,npr,left,right,pts)
+-------------------------^
+fort: Error: mkmbfont.F, line 405: Declaration of globally visible name conflicts with a previous declaration
+	integer function getmonchr(ifont,num,npr,left,right,pts)
+-------------------------^
+*** Exit 1
+Stop.
+[421]mongo@betical:/u/mongo/lick/source/fontutil% rm mkmbfont.i
+rm: remove mkmbfont.i? y
+[422]mongo@betical:/u/mongo/lick/source/fontutil% make
+/lib/cpp -DX11_exists -I/usr/include -Dalpha -DLANGUAGE_FORTRAN -D__LANGUAGE_FORTRAN__ -Dunix mkmbfont.F mkmbfont.i
+f77 -c -O -u -DX11_exists -I/usr/include mkmbfont.i
+rm -f mkmbfont.i
+f77 -O -u -DX11_exists -I/usr/include -o mkmbfont mkmbfont.o  ../libmgo.osf1axp.a    -L/usr/lib -lX11 -ldnet_stub
+ld:
+Unresolved:
+__exc_add_pc_range_table
+__exc_remove_pc_range_table
+__exc_add_gp_range
+__exc_remove_gp_range
+fort: Severe: Failed while trying to link.
+*** Exit 1
+Stop.
+[423]mongo@betical:/u/mongo/lick/source/fontutil%

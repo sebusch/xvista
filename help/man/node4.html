@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>VISTA Basics</TITLE>
+<META NAME="description" CONTENT="VISTA Basics">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00130000000000000000">
+VISTA Basics</A>
+</H1>
+
+<!-- linkto basics.html -->
+<A NAME="92"></A>
+<A NAME="93"></A>
+<A NAME="94"></A>
+<A NAME="95"></A>
+<A NAME="96"></A>
+<A NAME="97"></A>
+<A NAME="98"></A>
+
+<P>
+The VISTA program was originally designed to reduce data produced by
+astronomical CCD imagers, but has found use for the analysis of any digital
+imaging array data, including astronomical IR Arrays, Radio Maps, and X-Ray
+images.  Any image array is referred to generically as an ``IMAGE'' in
+VISTA.  An image is a 2-D array of floating-point numbers that represent
+the data value at a given picture-element or ``pixel'' in the image plane.
+The general term for manipulation of these numbers is <I>image
+processing</I>.  VISTA provides the user with a set of interactive commands
+issued either at the keyboard or from a list of commands called a
+<I>procedure script</I> that can be executed like a mini program in
+written in the VISTA interactive command language.  In practice, VISTA can
+be used to process any digital images, not just astronomical images,
+although many of the routines in VISTA are specialized for astronomical
+data analysis (e.g., spectrophotometry or stellar photometry).
+
+<P>
+A digital image, whatever the source, is coded as a a rectangular array of
+'picture elements' or <I>pixels</I>.  Each pixel has both a location and
+a value; it is the array of values that constitutes an image.  The location
+of a pixel is specified by its <I>row</I> and <I>column</I>
+coordinates.  Rows and columns are numbered continuously from some starting
+value, usually zero or one. (Thus an image with 400 rows and 350 columns
+may have the rows numbered from 1 to 399 and the columns numbered from 1 to
+349).  The starting row or column may start at some other value, for
+example, the numbering may run from 100 to 499.  When an image is
+displayed, a convention is adopted for how rows and columns run; generally
+columns increase from left to right, but various packages differ in how
+they display rows.  By default, the VISTA convention is for the origin to
+refer to the displayed <I>upper left</I> corner of the image; you can use
+the FLIP keyword with the TV command to have the origin fall in the lower
+left. Neither way guarantees that your image will appear in ``sky
+orientation''; this depends on the optics in the system and the way that
+the CCD is read out at the telescope.
+
+<P>
+It is convenient to refer to images by a label or name, rather than having
+to refer to each of the pixels individually.  For this reason, the VISTA
+program has several <I>buffers</I> (reserved blocks of memory) for the
+storage of images.  VISTA allows the use of up to one hundred image
+buffers, although the actual number of buffers that may be filled at any
+given time depends on the sizes of the images and the amount of memory
+available on your system.  An image is referred to by the number of the
+buffer that holds it, with buffer numbers running from 1 to 100.
+
+<P>
+Additional information about each image is stored in an associated
+<I>header</I>, also stored in memory.  The header is structured on
+the FITS header format, and contains a table of values describing the
+properties of the image, including the image dimensions and data format,
+observing information, etc.  These are always associated with an image and
+are automatically copied or adjusted if the image itself is copied or
+adjusted.  
+
+<P>
+A <I>spectrum</I> is a one-dimensional array of numbers representing the
+amount of light at each wavelength interval from an astronomical object.  A
+CCD used for spectroscopy does not produce a spectrum directly; rather, it
+records a two-dimensional image of the spread-out light behind the slit and
+grating.  This image is later converted (''mashed'') into a spectrum.
+Spectra are stored in the same buffers that are used for images.  A
+spectrum is an image with one row.
+
+<P>
+Various VISTA programs produce data sets that are neither images nor
+spectra.  The buffers for the storing of these data are not referred to by
+number, usually because there is only one of each type.  These data can be
+saved on the disk (with the SAVE command), retrieved (with GET) or
+displayed (PRINT).
+
+<P>
+A very important feature of VISTA is <I>procedures</I>.  These are lists
+of commands that are executed as a group.  There is a special buffer for
+storing procedures, and they may be saved on the disk for repeated
+use. Various conditional and looping ability is available in procedures,
+allowing repetitive tasks to be easily executed.
+
+<P>
+VISTA also has <I>variables</I>, which are symbolic names for numerical
+values or character strings.  Using variables in procedures greatly expands
+the power of VISTA, by allowing the user to write complex
+programs. However, VISTA is not a fully flexible programming language; it
+does not have full array capabilities (although the image buffers
+themselves can be used as one or two dimensional arrays). The command
+parsing is also not highly sophisticated.
+
+<P>
+VISTA has adopted the Flexible Image Transport System (FITS) format for all
+images (although we can read a variety of related image formats, FITS is
+preferred).  A complete description of the FITS format may be found at the
+FITS Support Office Home Page at the NASA Goddard Space Flight Center
+(<A NAME="tex2html3"
+  HREF="http://fits.gsfc.nasa.gov/">http://fits.gsfc.nasa.gov/</A>).
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ERROR: Execute On Error</TITLE>
+<META NAME="description" CONTENT="ERROR: Execute On Error">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00560000000000000000">
+ERROR: Execute On Error</A>
+</H1>
+
+<!-- linkto error.html -->
+
+<P>
+<A NAME="1587"></A>
+<BR>
+<IMG
+ WIDTH="10" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img105.png"
+ ALT="\begin{command}
+\item[\textbf{Form: } ERROR VISTA\_command\hfill]{}
+\item[VISTA\_command]{is any valid VISTA command.}
+\end{command}">
+<BR>
+ERROR tells VISTA to execute the given VISTA command whenever an execution
+error occurs.  The command can be any VISTA command but is quite often a
+GOTO command.  VISTA_command can not contain multiple commands separated
+by semicolons.
+
+<P>
+
+<OL>
+<LI>
+<PRE>
+  ERROR GOTO WHEREVER
+  Any number of procedure lines...
+  WHEREVER:
+  The next commands to be executed after an error...
+</PRE>
+</LI>
+<LI>
+<PRE>
+  ERROR ERRFLAG=1
+  Sets the VISTA variable ERRFLAG to 1 upon an error.
+</PRE>
+</LI>
+</OL>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

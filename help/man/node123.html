@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ROTATE: Rotate an Image</TITLE>
+<META NAME="description" CONTENT="ROTATE: Rotate an Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001230000000000000000">
+ROTATE: Rotate an Image</A>
+</H1>
+
+<!-- linkto rotate.html -->
+<A NAME="4618"></A>
+<BR>
+
+<BR>
+
+<P>
+This command rotates an image.  The keywords LEFT, RIGHT and UD are used
+for simple rotations.  These operate on the entire image.  The directions
+LEFT or RIGHT or UD refer to the orientation of the image as seen on the
+image display or in a contour map.  Imagine the image drawn or a piece of paper
+for these rotations.  UD is the same as two LEFT or two RIGHT rotations
+done in sequence.  It does NOT produce the a result which can be done with
+FLIP. The keyword TRANSPOSE will transpose the image, i.e. change the
+columns into rows and vice versa; this is equivalent to a ROTATE LEFT plus
+a FLIP ROWS or a FLIP ROWS plus a ROTATE RIGHT.
+
+<P>
+Use PA= to specify an arbitrary rotation in degrees.  PA=0 is vertical as
+seen on the television, with positive rotation angles corresponding to a
+counterclockwise rotation. A box may be specified, in which case the whole
+image will be rotated around the center of the box, then windowed to fit
+into the box.  The box coordinates should be specified in the ROTATED
+coordinate frame, not in the original frame. If no box is specified, a box
+the size and position of the whole image is assumed.  Note that in this
+case some corners may be cut off in the rotated image, while others may be
+filled with zeros. Arbitrary rotations require interpolation to be done on
+the data. The default method is bilinear interpolation, but higher accuracy
+2-D sinc interpolation will be used if the SINC keyword is given.
+
+<P>
+Note that RIGHT and PA=90 (for example) are not equivalent.  The RIGHT
+keyword implies a simple shuffling around of the pixel values, while PA=90
+will actually attempt to interpolate the values.  Another difference lies
+in the way the resulting image is proportioned: PA=90 will result in an
+image with the same number of rows and columns as the original, but RIGHT
+will result in an image with the number of rows and columns reversed.
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

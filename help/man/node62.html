@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>DISPOSE: Clear (Delete) an Image Buffer</TITLE>
+<META NAME="description" CONTENT="DISPOSE: Clear (Delete) an Image Buffer">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00670000000000000000">
+DISPOSE: Clear (Delete) an Image Buffer</A>
+</H1>
+
+<!-- linkto dispose.html -->
+
+<P>
+<A NAME="1884"></A>
+<A NAME="1885"></A>
+<A NAME="1886"></A>
+<A NAME="1887"></A>
+<BR>
+
+<BR>
+This command will delete image buffer number 'buf' and discard its
+contents.  The memory needed to hold an image or spectrum is not
+pre-assigned when the VISTA program is compiled, instead it is allocated
+dynamically by the system when a new image is read in or created.  By
+allocating ``virtual memory'', VISTA can work efficiently by only using as
+much system memory at one time as required.  The DISPOSE command is used to
+free this memory when the image is no longer needed or when VISTA has run
+out of memory for assigning images to other buffers.  If you want to save
+the image, it should be written to disk or tape first with the WD command
+before using DISPOSE.
+
+<P>
+You can delete several image buffers at once by putting their numbers on
+the command line, up to a maximum of 20.  The DISPOSE ALL command will
+clear out the contents of all image buffers, releasing all of the
+dynamically allocated memory.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+VISTA may sometimes respond with the message 'No virtual memory available'
+when trying to load or create an image.  To make room for the new image,
+use DISPOSE to delete an unused image buffer or two.  This frees up more
+memory, allowing you to proceed.
+
+<P>
+If you DISPOSE of images that you will no longer need, the VISTA program
+may run faster, especially if there are many users on the system or if you
+are working with large (&gt;2048x2048 images).
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

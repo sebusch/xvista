@@ -1,0 +1,228 @@
+
+		* * *   READ THIS SENTENCE FIRST!!!   * * *
+
+In order to successfully "make" Lick Mongo, the user installing Lick Mongo
+MUST HAVE "." (current working directory) AS THE *FIRST* ENTRY in the path.
+
+This is because "make" is actually a shell script, not the system utility.
+The shell script "make" will invoke the system utility "make".  The reason
+that this is done is to allow Lick Mongo to recognize what kind of system it
+is on, and reconfigure itself appropriately.
+
+This scheme is not as robust as some other kinds of "super-make"s, but it
+works on most systems.  Possibly when "imake" is found on more systems, Lick
+Mongo will use that.
+
+			* * * IMPORTANT * * *
+
+Lick Mongo has quite a few "hard" links between files in various directories.
+This means that the same file appears in several places.  If you do not
+understand the nature of Unix "links" ("hard" links, not symbolic links) then
+find out about them now before proceeding.  A recursive copy (cp -r) will
+destroy the hard links and make Lick Mongo much more difficult to maintain.
+Lick Mongo should only be copied using "tar" so as to preserve the links.
+
+Note also that most of the Fortran files actually have the C-Preprocessor run
+over them before they are seen by the Fortran compiler.  This is the method by
+which Lick Mongo is able to be portable to so many different systems.
+
+===============================================================================
+	Getting Ready to Rebuild Lick Mongo on a New System
+
+Presumably you already have the instructions for restoring the Lick Mongo
+source code onto your system or you would not be reading this.  These are the
+things that you should know about before proceeding.
+
+Lick Mongo has already been ported to a variety of Unix platforms.  These
+platforms are explicitly listed in the "make" script and in the "Config.xxx"
+files.  In order to install Lick Mongo on one of these systems, only 2 files
+may need to be changed.  The "make" script may need to have the values of a
+few variables slightly altered.  And the "Config.xxx" file, where "xxx"
+represents the kind of machine you have, may need to have a few #define lines
+altered.
+
+makefile and "make" script
+--------------------------
+The "make" script is a poor-man's way of supporting system-independent
+make-ing.  Note well that when you type `make' in the directory tree you are
+executing the script, not the actual make program.  Note also that since the
+system manager (root) typically does not have "." (dot) first in its path,
+root will probably have difficulty building Lick Mongo.  It is recommended
+that a user called "mongo" be created for maintaining Lick Mongo.  And again,
+note that the "make" script must be executable or Lick Mongo will not be able
+to determine what kind of system it is on.  One more thing about the "make"
+script: although it appears in all source directories, it is only one file
+linked into them all.
+
+Config.h:  Config.vax, Config.ISI, Config.sun4, Config.solaris, etc...
+----------------------------------------------------------------------
+All of the subdirectories contain a file `Config.h' after doing the first
+make.  The make script produces a link so that Config.h is whichever
+Config.xxx it thinks is right for the particular machine you are running on.
+This is a C-preprocessor file which determines which devices are active.  The
+code to drive the various different terminals can be compiled or not according
+to this file.  Furthermore, the hardwired default path names for all of Lick
+Mongo's files are defined here.  Also defined here are indicators which allow
+the compiler to step around the irritating little bugs that are found in
+almost every vendor's compiler or operating system.  It is probably a good
+idea to look over the #defines at the end of several of the "Config.xxx" files
+to get familiar with them.
+
+One thing in particular in the Config.xxx files needs attention.  At Lick we
+do not use the original Tonry/Hershey font files by default.  Thus the FONTNEW
+define is set to a file called "fonts.vis".  This file may be supplied with
+Lick Mongo, and it may be byte-swapped and thus useless.  Lick Mongo is still
+able to recreate the original font file, and will try to do so if a working
+font file is not found.  If you prefer the original fonts files, you will want
+to change the definition of FONTNEW to be "fonts.bin".
+
+.o files, .a files, fonts.bin (& other binary font files)
+---------------------------------------------------------
+In the best of worlds, the only one of these you will receive will be
+fonts.bin The object files and archives are useless unless you have the same
+CPU & OS.  The fonts.bin (and any other binary font files) are useless if your
+machine is byte swapped w.r.t. the machine that they came from.  The object
+files and archives can be deleted most easily by typing `make clean'.  The
+font files must be explicitly removed by hand if they are found to have the
+wrong byte order.
+
+===============================================================================
+BUILDING LICK MONGO ON AN OPERATING SYSTEM IT HAS SEEN BEFORE
+
+1)  Go to the .../lickmongo/source directory
+
+2)  Type 
+	% make clean
+    to remove all traces of other systems
+
+3)  Modify the Config.(yourmachinehere) file as needed.  For solaris
+    you change Config.solaris, for sparcs you change Config.sun4, etc.
+
+4)  If building on an system that wants to use some flavor of X windows,
+    you should verify that the make file can find the local X libraries.
+    See "Known Gotchas" below.
+
+5)  If everything is set, type 
+	% make 
+    to build the package.  However, since it spews a lot on some compilers, is
+    to do it in the background and look at an output dump:
+	% make >& make.barf &
+    when it is done, look for fatal errors in the make.barf file.
+
+6)  If it works, great!  If not, find an expert in make and shell scripts.
+    There are copious (though not enough) comments in the makefiles and
+    the make scripts.  See especially the comment at the top of the
+    make script about SystemV-style library support in make.
+
+7)  If your system manager is amenable to these things, then
+
+    a)  Install the Lick Mongo executable in some standard place like
+	/usr/local/bin/mongo -- a symbolic link is enough
+
+    b)  Install the Lick Mongo library in some standard place like
+	/usr/local/lib/libmongo.a -- a symbolic link is enough
+
+    Note that we strongly recommend that these be in a "local" directory.
+    Do not pollute your system directories, it only causes headaches when
+    you do your next system upgrade.
+
+Known Gotchas:
+-------------
+
+One problem is that some system administrators get creative about where they
+choose to install the X11 libraries.  If you are compiling mongo for a
+workstation running X, you will need to check to see if these files are
+accessible.  To do this, go to the lickmongo/source/ directory and
+run the Xwhere test script:
+
+	% Xwhere
+
+If it finds the X libraries in one of the semi-canonical hiding places,
+it will give you a pleasant message like:
+
+	I think the X11 home directory is /usr
+	I found the X libraries:
+	   LickMongo X11-dependent stuff: X11DEV=x11_.o x11.o xgets.o 
+	trackbox.o
+	   LickMongo X11-dependent makefile line: LX11DEV=$(MLIB)(x11_.o)
+        $(MLIB)(x11.o) $(MLIB)(xgets.o) $(MLIB)(trackbox.o)
+	   LickMongo X11 cpp flag: DX11=-DX11_exists -I/usr/include
+	   LickMongo X11 ld flag: X11LIB=-lX11
+	Go for it...
+
+Otherwise, it will complain like this:
+
+	I failed to find the X11 libraries as expected.
+	Please check this script to see if its assumptions about the
+	X library and include directory paths are valid.
+	You will need to modify make accordingly once you figure out
+	what the right stuff to use is.
+
+If you get the latter message, you have to find your local X11 libraries,
+modify the Xwhere script to put in the appropriate search strategy, and
+run Xwhere again until you get success.  Then you have to copy the
+appropriate Xwhere search strategy into the "make" file, do a "make clean"
+and start over again.
+
+Fortran & C compilers are another problem.  If you find you are getting
+bizarre missing module errors from the "ld" program, make sure the
+LD_LIBRARY_PATH is defined correctly so that the necessary libraries are in
+the link path for ld.  
+
+If things are slightly funny with the compiler, it might help to check to see
+if the make file is finding f77 correctly.  In lickmongo/source/ there is a
+scripted named "Fort".  This runs the decision tree in the "make" file that
+tries to determine what OS and compilers you have.  This is most critical for
+Suns.  Run Fort and see what you get, then consult an expert to help you
+unstick things.
+
+===============================================================================
+	Getting the font files straight
+
+1)  Run Lick Mongo and set the expansion to 3.0
+
+2)  Do a "box" command and see if the characters are plotted correctly,
+    or if mongo spews some error messages about missing fonts.whatever
+    files.
+
+3)  If not, delete all the BINARY font files (NOT fonts.dat)
+
+4)  Be sure that the environment variable FONTNEW is .../lickmongo/fonts.bin
+
+4)  Re-run Mongo with expansion other than 1.0 to make a new binary font file
+
+5)  Go into the fontutil directory and make other font files as desired
+    See the README file in ../lickmongo/fontutil for details.
+
+===============================================================================
+	Getting the PostScript plots to print
+
+See the README file in the .../lickmongo/postscript directory.
+
+===============================================================================
+	Taking Lick Mongo to yet another new operating system
+
+It is reasonably straightforward to take Lick Mongo to a new platform.  All
+that is required is to make a "Config.xxx" file appropriate to that system,
+and to add a new entry into the "make" script which will uniquely identify the
+new system.  After this is done, the only thing left is to find the compiler
+and OS quirks of the new system, and make #defines to avoid them.
+
+===============================================================================
+
+The files listed here typically do not need to be modified when Lick Mongo
+is taken to a new system, but are mentioned for completeness.
+
+MONGODEV.F
+----------
+This file is a Fortran include file which defines the device numbers for
+the various terminals.  If you wish to reassign different numbers to
+particular devices, change this file.
+
+MONGOLUN.F
+----------
+This file defines the Fortran logical unit numbers which are used for
+opening the various files needed by Lick Mongo.  If they conflict with units
+used in the Fortran codes on your system, change them.
+
+

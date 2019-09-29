@@ -1,0 +1,40 @@
+
+<H1><A NAME="SECTION008140000000000000000">
+PLOT3D: Make a 3-D Perspective (mesh) Plot</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml281#
+<BR>
+<tex2html_image_mark>#command3350#
+<BR>
+
+<P>
+PLOT3D (also THREED or 3D) makes a 3 dimensional perspective plot of the
+specified buffer. The viewing altitude and aziumuth can be specified with
+the ALT= and AZ= terminal; if unspecified, they default to 45 and 225
+degrees, respectively. The vertical scale is done automatically, but can be
+overridden by use of the ZFAC and ZOFF keywords. See the Mongo manual for
+more details. NOERASE prevents erasure of the screen before making the
+plot. HARD generates hardcopy.
+
+<P>
+The 3-D plots that LickMongo makes can take a long time to draw.  Once the
+plot starts, there is no way to stop it until it is completed.
+Consequently, we suggest that you only use it on small sections of images,
+smaller than 100 x 100 pixels. The BOX= keyword makes it easy to select
+small image sections. If you enter an image larger than 100x100, the
+program will confirm that you really wish to continue before doing so.
+
+<P>
+Some control over the vertical relief plotted is possible using the ZFAC
+and ZOFF keywords.  These affect how the minimum and maximum data values
+are fit inside the virtual cube being plotted.  By changing these by hand,
+you can enhance or depress the vertical stretch of the plot (ZFAC) and move
+the plot up and down vertically within the plotting window (ZOFF).
+
+<P>
+If these are too arcane for you, then SCALE can be used instead to tweak
+the defaults computed by the routine from the data values, where SCALE=1 is
+equivalent to accepting the defaults, SCALE<tex2html_image_mark>#tex2html_wrap_inline3421#1 will increase relief, and
+SCALE<tex2html_image_mark>#tex2html_wrap_inline3423#1 will depress relief.
+
+<P>

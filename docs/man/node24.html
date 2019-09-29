@@ -1,0 +1,210 @@
+
+<H1><A NAME="SECTION00310000000000000000">
+Arithmetic Expressions in VISTA</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml91#
+
+<P>
+<A NAME="712"><tex2html_anchor_invisible_mark></A>
+<A NAME="713"><tex2html_anchor_invisible_mark></A>
+
+<P>
+Here we review the syntax of mathematical expressions.  Any user who wishes
+to use VISTA effectively should review this section carefully.
+
+<P>
+Arithmetic expressions come in four types:
+
+<P>
+
+<OL>
+<LI><#715#>An explicit numeric value.  Examples are: 3, 3.14159, -59.39, 2.32E-05<#715#>
+</LI>
+<LI><#716#>Variable names.  Variables are created and their values 
+    assigned with the SET command.  Variable names must be 
+    composed of alphanumeric characters.  There can be up to
+    seven characters in the name.  The first character of the
+    variable name should be an alphabetic character.<#716#>
+</LI>
+<LI><#717#>Data file references.  Data file references allow you to
+    use numeric values from a VMS ASCII text file.  Data file
+    references begin with the @ symbol followed by the file
+    name, a period (.), and then the column number.  The
+    column number can itself be either a numeric integer constant
+    or a variable name.  An example is given in the description
+    of the READ command.<#717#>
+</LI>
+<LI><#718#>Constants or variables connected with arithmetic operators
+    or using functions (general arithmetic expressions).<#718#>
+</LI>
+</OL>
+
+<P>
+The following table lists arithmetic functions supported in VISTA, with
+examples of their use.  ('Binary' means relating two objects -- 'unary'
+means applying to one object.)
+
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Symbol</TD>
+<TD ALIGN="LEFT">Function</TD>
+<TD ALIGN="LEFT">Examples</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">+</TD>
+<TD ALIGN="LEFT">binary addition</TD>
+<TD ALIGN="LEFT">B+C</TD>
+<TD ALIGN="LEFT">2+5</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">-</TD>
+<TD ALIGN="LEFT">binary subtraction</TD>
+<TD ALIGN="LEFT">B-C</TD>
+<TD ALIGN="LEFT">2-5</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">*</TD>
+<TD ALIGN="LEFT">binary multiplication</TD>
+<TD ALIGN="LEFT">B*C</TD>
+<TD ALIGN="LEFT">2*5</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">/</TD>
+<TD ALIGN="LEFT">binary division</TD>
+<TD ALIGN="LEFT">B/C</TD>
+<TD ALIGN="LEFT">2-5</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">-</TD>
+<TD ALIGN="LEFT">unary negation</TD>
+<TD ALIGN="LEFT">-B</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">^</TD>
+<TD ALIGN="LEFT">exponentiation</TD>
+<TD ALIGN="LEFT">A00.5</TD>
+<TD ALIGN="LEFT">10^3</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">=</TD>
+<TD ALIGN="LEFT">equate</TD>
+<TD ALIGN="LEFT">A=B</TD>
+<TD ALIGN="LEFT">A=B=3</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+The following logical operators are also supported.
+
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Symbol</TD>
+<TD ALIGN="LEFT">Function</TD>
+<TD ALIGN="LEFT">Examples</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER"><tex2html_image_mark>#tex2html_wrap_inline984#</TD>
+<TD ALIGN="LEFT">logical greater than</TD>
+<TD ALIGN="LEFT">A<tex2html_image_mark>#tex2html_wrap_inline986#B</TD>
+<TD ALIGN="LEFT">A<tex2html_image_mark>#tex2html_wrap_inline988#2.5</TD>
+</TR>
+<TR><TD ALIGN="CENTER"><tex2html_image_mark>#tex2html_wrap_inline990#</TD>
+<TD ALIGN="LEFT">logical less than</TD>
+<TD ALIGN="LEFT">A<tex2html_image_mark>#tex2html_wrap_inline992#B</TD>
+<TD ALIGN="LEFT">A<tex2html_image_mark>#tex2html_wrap_inline994#100</TD>
+</TR>
+<TR><TD ALIGN="CENTER">==</TD>
+<TD ALIGN="LEFT">logical equal to</TD>
+<TD ALIGN="LEFT">A==B</TD>
+<TD ALIGN="LEFT">A==10</TD>
+</TR>
+<TR><TD ALIGN="CENTER">~=</TD>
+<TD ALIGN="LEFT">logical not equal to</TD>
+<TD ALIGN="LEFT">A~=B</TD>
+<TD ALIGN="LEFT">A~=10</TD>
+</TR>
+<TR><TD ALIGN="CENTER"><tex2html_image_mark>#tex2html_wrap_inline996#=</TD>
+<TD ALIGN="LEFT">logical less than or equal to</TD>
+<TD ALIGN="LEFT">A<tex2html_image_mark>#tex2html_wrap_inline998#=B</TD>
+<TD ALIGN="LEFT">A<tex2html_image_mark>#tex2html_wrap_inline1000#=5</TD>
+</TR>
+<TR><TD ALIGN="CENTER"><tex2html_image_mark>#tex2html_wrap_inline1002#=</TD>
+<TD ALIGN="LEFT">logical greater than or equal to</TD>
+<TD ALIGN="LEFT">A<tex2html_image_mark>#tex2html_wrap_inline1004#=B</TD>
+<TD ALIGN="LEFT">A<tex2html_image_mark>#tex2html_wrap_inline1006#=3</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+Logical operators return a value of either 1 (true) or 0 (false).
+
+<P>
+Expressions are evaluated in the same order as they are in FORTRAN.  You
+may change the order of evaluation using parentheses ;SPMquot;();SPMquot;.  An example is
+<BR>
+<tex2html_image_mark>#hanging732#
+<BR>
+
+<P>
+VISTA supports a variety of <I>functions</I>.  The argument to the
+function is contained in square brackets.  The following functions are
+currently supported:
+
+<P>
+<B>Arithmetic Functions:</B>
+<BR>
+<tex2html_image_mark>#example737#
+<BR>
+
+<P>
+<B>Trignonmetric Functions:</B>
+<BR>
+<tex2html_image_mark>#example762#
+<BR>
+
+<P>
+<B>Image Parameters:</B>
+<BR>
+<tex2html_image_mark>#example781#
+<BR>
+
+<P>
+<B>Examing/Editing Image Data:</B>
+<BR>
+<tex2html_image_mark>#example802#
+<BR>
+
+<P>
+Functions may be used as arguments of other functions.  Functions can
+contain expressions of arbitrary complexity (so long as the parentheses are
+balanced and there are no extraneous spaces!).
+
+<P>
+<#976#><B>IMPORTANT!</B><#976#>
+
+<P>
+Variable names or arithmetic expressions may be used ANYWHERE an explicit
+constant may be used in keyword-value expressions. Recall that such an
+expression has an 'option=value' construction. For example, if you wanted
+to plot row 200 of image 4 over columns X to X+50, (where X is some
+variable) you could say
+<BR>
+<tex2html_image_mark>#hanging813#
+<BR>
+Note that R, XS, and XE are keywords, not variables and the equal sign
+following them is not interpreted as an arithmetic operation.  However,
+since everything following the first = is an arithmetic expression, you
+could save the 'value' of, for instance, XE, by doing the following
+<BR>
+<tex2html_image_mark>#hanging816#
+<BR>
+The variable XLAST takes on the value of X+50.
+
+<P>

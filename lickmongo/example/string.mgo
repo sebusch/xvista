@@ -1,0 +1,31 @@
+data string.mgo begin here
+rcstring myvar1 lines
+lines &$myvar1
+xc 1
+yc 2
+limits
+box
+strings 3
+pause
+erase
+rcstring myvar2 xlim
+data string.mgo next data
+lines &$myvar1
+xc 1
+yc 2
+xlim &$myvar2
+ylim
+box
+strings 3
+pause
+end     This marks the end of the Lick Mongo command script
+lines: 1 3
+begin here:
+1 2 a
+3 4 b
+5 6 c
+xlim: 10 20
+next data:
+11 12 d
+13 14 e
+15 16 f

@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ALIAS/UNALIAS: Define/Delete Command Aliases</TITLE>
+<META NAME="description" CONTENT="ALIAS/UNALIAS: Define/Delete Command Aliases">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00260000000000000000">
+ALIAS/UNALIAS: Define/Delete Command Aliases</A>
+</H1>
+
+<!-- linkto alias.html -->
+<!-- linkto unalias.html -->
+<A NAME="480"></A>
+<A NAME="481"></A>
+<A NAME="482"></A>
+
+<P>
+<BR>
+<IMG
+ WIDTH="2" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img30.png"
+ ALT="\begin{command}
+\item[\textbf{Form: }ALIAS {[synonym]} {[command]} {[output
+re...
+...ion]}\hfill]{}
+\item[\textbf{Form: }UNALIAS {[synonym]}\hfill]{}
+\end{command}">
+<BR>
+
+<P>
+The ALIAS and UNALIAS commands are used to define and delete synonyms
+(``aliases'') for commands, respectively.  The aliasing mechanism can save
+you typing if you have several commands that have to be used repeatedly.
+
+<P>
+ALIAS (with no arguments) shows a list of synonyms of your terminal.  The
+list can be loaded into a file or sent to the printer with the output
+redirection mechanism.
+
+<P>
+To define an alias, use the full syntax:
+<PRE>
+  ALIAS SYNONYM COMMAND
+</PRE>
+For example:
+<BR>
+<IMG
+ WIDTH="2" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img31.png"
+ ALT="\begin{hanging}
+\item{ALIAS T 'TV 1 1234.0 CF=NEWTHREE'}
+\end{hanging}">
+<BR>
+defines a new command, T, which executes 'TV 1 ...' . As is usual, if the
+command for which you are defining an alias is composed of more than one
+word, the entire command must be enclosed in quotes.
+
+<P>
+If you give only the new alias and no not give the command, the program
+will ask for it.  You can redefine a synonym at any time.
+
+<P>
+To execute the command that you have defined with ALIAS, type the synonym
+just as you would type any other command.  You can add keywords to the
+command at the time of execution by typing them after the synonym.  Using
+the example above, the command
+<BR>
+
+<BR>
+executes TV 1 1234.0 CF=NEWTHREE BOX=1.  The command 'T' goes on the
+history list. 
+
+<P>
+The aliases that you define need not be commands that would actually run;
+they MUST contain a command name and MAY contain keywords, but these are
+the only restrictions.  For example:
+<BR>
+
+<BR>
+is a perfectly valid alias.  Typing H by itself as a command would not
+work, since HISTOGRAM is not a complete command (it needs an image number).
+You can, however, add arguments to an alias exactly the same as with
+commands, hence:
+<BR>
+
+<BR>
+will execute the HISTOGRAM command on image 3.
+
+<P>
+To delete an alias, use the UNALIAS command.  Type UNALIAS followed by the
+name of the synonym that you want to remove from the list.  As an example,
+UNALIAS T will remove the definition of T that was defined above.
+
+<P>
+It is not possible to define a alias that includes other aliases.  For
+example, the sequence
+<PRE>
+  ALIAS A  'TV 1 1234.0 CF=NEWTHREE'
+  ALIAS AA 'A BOX=1'
+</PRE>
+correctly defines the command alias 'A', but AA will be invalid because it
+contains the alias 'A'.
+
+<P>
+Similarly, you cannot define a single alias made up of several commands
+chained together by a semicolon (;).  For example:
+<BR>
+
+<BR>
+is not allowed: <B>one command per alias</B>.
+
+<P>
+You can have aliases defined automatically on startup by putting ALIAS
+commands in the startup procedure.  See the sections FILES and PROCEDURE
+for information about the startup procedure.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

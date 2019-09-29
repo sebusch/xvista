@@ -1,0 +1,58 @@
+
+<H1><A NAME="SECTION001420000000000000000">
+MASH: Extract a Spectrum by Summing (mashing) Rows or Columns</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml386#
+<A NAME="5657"><tex2html_anchor_invisible_mark></A>
+<A NAME="5658"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command5659#
+<BR>
+
+<P>
+MASH adds together rows or columns of an image to produce a spectrum. The
+number of the spectrum comes immediately after MASH on the command
+line. The basic syntax of this command is:
+<PRE><tex2html_verbatim_mark>verbatim387#</PRE>
+SP= selects rows (or columns when COLS is used) that are to be added to
+make the spectrum.  BK selects rows (or columns) which are background.  The
+resulting spectrum is the sum of the spectrum rows (or columns) with the
+background rows (columns) subtracted. You may specify SP and BK more than
+once.
+
+<P>
+It is assumed that the spectrum is aligned with the columns or rows on the
+image -- that each column (or row) contains light of only one wavelength.
+Use SPECTROID if the slit lies along columns or rows, but the spectrum is
+either curved or projected diagonally across the image (as is the case for
+single-order or multi-order cross-dispersed spectrometers, slit
+spectrographs with either large spectra ranges or observations taken with
+severe atmospheric dispersion, or multi-order echelle spectra).  In the
+future, VISTA will be able to handle spectra for which the dispersion is
+not aligned along a row or column (e.g., a CCD tilted with respect to the
+nominal dispersion axis).
+
+<P>
+NORM divides the spectrum by the number of rows (or columns) used to
+produce the spectrum.  COL= (or ROW= if COLS is used) selects the columns
+(or rows) used to make the spectrum.
+
+<P>
+REFLAT selects the background rows (columns) in the image, fitting each
+column (row) of the image with a polynomial.  The image columns (rows) are
+divided by this polynomial to 're-flat' the image.  MASK tells the program
+to ignore masked pixels in the REFLAT procedure.
+
+<P>
+SKY=n saves the sky spectrum (the normalized sum of the background rows or
+columns) in the designated buffer.
+
+<P>
+Examples: The examples below assume that the spectrum runs along rows.  If
+it ran along columns, you would add the COLS keyword and substitute ROW=
+for the COL= keyword
+<BR>
+<tex2html_image_mark>#example5686#
+<BR>
+
+<P>

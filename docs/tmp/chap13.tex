@@ -1,0 +1,219 @@
+\chapter{Fourier Transforms and Complex Arithmetic}
+\begin{rawhtml}
+<!-- linkto fourier.html -->
+\end{rawhtml}
+
+%
+% minor editing & reformatting 
+% checked keywords & function against current sources. 
+% removed entries for unimplemented commands (that JJGG et al. probably
+%  never will get around to - nice ideas, though, but they don't need
+%  entries in the help files)
+% rwp/osu 98Jul27
+%
+
+VISTA provides a limited capability for doing Fourier operations on images.
+VISTA internally can have "Fourier images" which have 2 pixels associated
+with each grid location, one for the real and one for the imaginary
+part. For the VISTA Fourier routines, the data in the spatial domain IS
+ASSUMED TO BE REAL. This assumption allows data in the frequency domain to
+be stored in almost the same size image as the spatial domain data. Because
+the Fourier transform of a real function is hermitian (symmetric real part
+and antisymmetric imaginary part), only the Fourier amplitudes of
+non-negative frequencies are stored to minimize redundancy and space.  The
+Fourier-transformed image has the same size as the input image (except
+padded up to a power of 2), plus 2 extra columns, one each for the real and
+imaginary parts of the Nyquist frequency.
+
+The VISTA Fourier Transform and Complex Arithmetic commands are:
+\begin{itemize}
+  \item[FFT]{Compute a Forward Fast-Fourier Transform}
+  \item[IFFT]{Compute an Inverse FFT}
+  \item[POWERS]{Generate a Power Spectrum (Periodogram Estimate)}
+  \item[CABS]{Absolute Value of a Complex Image}
+  \item[CMUL/CDIV]{Complex Image Multiplication}
+  \item[CMPLX/IMAG/REAL/CONJ]{Complex Image Operators}
+\end{itemize}
+
+The command FFT can be used to generate the direct fourier transform of a
+real image, the result is a complex image. IFFT would do the inverse
+fourier transform from a complex image into a real image. Both
+transformations can be perform in one or two dimensions. Command POWERS can
+be used after FFT to generate the periodogram estimation of the power
+spectrum.  
+
+\section{FFT: Compute a Forward Fast-Fourier Transform}
+\begin{rawhtml}
+<!-- linkto fft.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: FFT  {[dest]} source {[ONEDIM]}\hfill]{}
+  \item[source]{buffer holding the real image to be transformed.}
+  \item[dest]{buffer holding the (complex) Fourier transform. If dest
+       is not specified, 'source' will hold its own transform.}
+  \item[ONEDIM]{perform a 1D direct transform for each row of 'source'
+       rather than the 2D transform of the whole image.}
+\end{itemize}
+
+FFT generates the 1D or 2D direct fourier transform of a real image. If the
+keyword ONEDIM is specified, an independent 1D direct fourier transform
+will be generated for each row of the source image. For one-row images
+(spectra) ONEDIM is the default.
+
+The FFT basic routine works on data arrays whose size is an integer power
+of two. If the number of columns of the original image is not an integer
+power of two, the data is padded with zeros to the next power of two before
+transforming. In the case of 2D transforms, also the rows will be
+zero-padded to the next integer power of two.
+
+No filtering of any kind (like the popular cosine-bell) is applied before
+transforming (the user can create its own filters). It is up to the user to
+manipulate the data before the FFT.
+
+The output image is a complex image, that is to say that the real and
+imaginary parts of each fourier frequency are stored in consecutive
+columns. The number of columns in the transform (output image) is one more
+than the power of two closest, but larger or equal, to the number of
+columns in the original image. In the case of a 2D transform, the number of
+rows is the a power of two closer, but larger equal, to the number of rows
+in the original image. This image size accommodates all of the independent
+fourier frequencies to reconstruct the original image.
+
+BE AWARE that most VISTA commands treat complex images as real images
+(except for commands FFT IFFT POWERS CMPLX CABS CMUL CDIV CONJ), some
+operations on the transform-image can make it loose its meaning as "a
+fourier transform of a real image" (things like rotations, column flips,
+and boxing are particular dangerous). VISTA provides basic complex
+arithmetic (CMUL, CDIV, CABS, etc) that can be safely used in fourier
+images. If you want to make extensive manipulations of fourier transforms,
+it may be safe to separate first the real and imaginary parts (with VISTA
+commands REAL and IMAG), and perform identical operation on both parts
+before recombining them again into a complex image (See command CMPLX).
+
+Convolution and deconvolution in fourier space can be perform with the help
+of complex arithmetic commands CMUL and CDIV. Estimations of the power
+spectrum from fourier images can be made with command POWERS or by
+squaring the modulus of the transform (command CABS).
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[FFT 2 3\hfill]{Perform the 2D direct-fourier-transform of 
+       image in buffer 3 and save the transform image in buffer 2}
+  \item[FFT 5\hfill]{Replace the image in buffer 5 by its fourier transform. 
+       If image 5 has more than one row a 2D transform, 1d otherwise).}
+  \item[FFT 1 ONEDIM\hfill]{Replace each row of buffer 1 by its 1D fourier 
+       transform.}
+\end{itemize}
+
+\section{IFFT: Compute an Inverse FFT}
+\begin{rawhtml}
+<!-- linkto ifft.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: IFFT  {[dest]} source {[ONEDIM]}\hfill]{}
+  \item[source]{buffer holding the fourier transform of a real image.}
+  \item[dest]{will hold the inverse fourier transform of 'source'. If
+       'dest' is not specified, 'source' will be substituted by its
+       transform.}
+  \item[ONEDIM]{perform a 1D inverse transform for each row of 'source'
+       rather than the 2D inverse transform of the whole image.}
+\end{itemize}
+
+IFFT computes an inverse Fourier transform.
+
+\section{POWERS: Generate a Power Spectrum (Periodogram Estimate)}
+\begin{rawhtml}
+<!-- linkto powers.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: POWERS dest source\hfill]{}
+  \item[source]{buffer with the Fourier transform of a real image.}
+  \item[dest]{image buffer to hold the power spectrum}
+\end{itemize}
+
+POWERS generates the periodogram power spectrum estimate from the 1D or 2D
+fourier transform of a real image. The periodogram estimate is just a way
+to normalize the power spectrum such that Parseval's theorem holds
+(i.e. the sum of all the power terms equals the mean squared amplitude of
+the transform).
+
+POWERS only operates on fourier transforms generated with VISTA command
+FFT. If you want to generate the power spectrum from a more general
+complex image (p.e. an image synthesized with command CMPLX) which is
+supposed to be the fourier transform of a real image, use command CABS to
+get the modulus of the transform and multiply it by itself (with MULT not
+CMULT since the modulus of a complex image is real). The periodogram
+estimate and the modulus-squared are basically identical (they may only
+differ in the 0th and Nyquist frequencies).
+
+\section{CABS: Absolute Value of a Complex Image}
+\begin{rawhtml}
+<!-- linkto cabs.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: CABS dest source\hfill]{}
+\end{itemize}
+
+CABS Computes the absolute value of a complex image.
+
+\section{Complex Image Arithmetic and Operators}
+\begin{rawhtml}
+<!-- linkto complex.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[CMUL im1 im2\hfill]{Complex multiplication of images.}
+  \item[CDIV im1 im2\hfill]{Complex division of images.}
+  \item[CABS dest source   \hfill]{Complex Modulus of an image.}
+  \item[IMAG dest source   \hfill]{Extract imaginary part from an image.}
+  \item[REAL dest source   \hfill]{Extract real part from an image.}
+  \item[CMPLX dest im2 im3 \hfill]{Synthesize a complex image}.
+  \item[CONJ dest source   \hfill]{Complex Conjugate of an image.}
+\end{itemize}
+
+\section{CMUL/CDIV: Complex Image Multiplication}
+\begin{rawhtml}
+<!-- linkto cmul.html -->
+<!-- linkto cdiv.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: CMUL dest source\hfill]{}
+  \item[CDIV dest source\hfill]{}
+\end{itemize}
+
+CMUL and CDIV perform complex multiplication and division on complex
+(Fourier) images.
+
+\section{CMPLX/IMAG/REAL/CONJ: Complex Image Operators}
+\begin{rawhtml}
+<!-- linkto cmplx.html -->
+<!-- linkto imag.html -->
+<!-- linkto real.html -->
+<!-- linkto conj.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: CMPLX dest real imag\hfill]{}
+  \item[IMAG dest source\hfill]{}
+  \item[REAL dest source\hfill]{}
+  \item[CONJ dest source\hfill]{}
+\end{itemize}
+
+CMPLX synthesizes a complex image from a real and a imaginary buffers.  
+
+IMAG extracts the imaginary part of a complex image.  
+
+REAL extracts the real part of a complex image.  
+
+CONJ take the complex conjugate of the complex image.
+
+The 'source' buffer does not have to be a complex image for commands IMAG,
+REAL and CONJ to operate. If the 'source' image is not complex, REAL will
+extract the odd columns, IMAG will extract the even rows, and CONJ will
+simply multiply the even columns by -1.
+
+
+
+
+
+
+
+

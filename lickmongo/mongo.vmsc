@@ -1,0 +1,63 @@
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!      This VMS DCL procedure is Copyrighted software.
+$!      The file COPYRIGHT must accompany this file.  See it for details.
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!
+$!              Set up the required logical names and run Lick Mongo.
+$ set message/nofac/noid/notext/nosev
+$!              The System Logical Name Table entry MONGO_SCRATCH
+$!              should always point to useable scratch
+$  if f$trnlnm("mongoscr") .eqs. "" then -
+$  assign       MONGO_SCRATCH:                          mongoscr
+$  if f$trnlnm("mongodir") .eqs. "" then -
+$  assign       sys$user:[MONGO.LICK]              mongodir
+$  if f$trnlnm("mongops") .eqs. "" then -
+$  assign       sys$user:[MONGO.LICK]              mongops
+$!              Only these first 3 logicals are system dependent, so
+$!              it isn't really necessary to check the translation first
+$!              before assigning the rest of the logical names.
+$
+$  if f$trnlnm("fontnew") .eqs. "" then -
+$  assign       mongodir:fonts.bin              fontnew
+$! if f$trnlnm("helpfile") .eqs. "" then -
+$  assign       mongodir:help.dat               helpfile
+$! if f$trnlnm("cmdfile") .eqs. "" then -
+$  assign       mongodir:cmdfile.dat            cmdfile
+$! if f$trnlnm("cmdimag") .eqs. "" then -
+$  assign       mongodir:cmdimag.dat            cmdimag
+$! if f$trnlnm("cmdprxf") .eqs. "" then -
+$  assign       mongodir:cmdprxf.dat            cmdprxf
+$! if f$trnlnm("for005") .eqs. "" then -
+$  assign       sys$command                     for005
+$! if f$trnlnm("for037") .eqs. "" then -
+$  assign  sys$output for037
+$! if f$trnlnm("termname") .nes. "" then goto haveterm
+$  this_term = f$trnlnm("tt")
+$  if f$extract(0,2,this_term) .eqs. "WT" then goto workstation
+$  assign       tt:                             termname
+$  goto have_term
+$  workstation:
+$!!!!!!!!  open/write/share=write       termname        tka0:
+$!      !  if f$trnlnm("tek") .eqs. "" then open/share=write tek tka0:
+$!      !  assign       tek                             termname
+$  assign       tka0:                           termname
+$  have_term:
+$  set message/fac/id/text/sev
+$  write sys$error "     The SETLWEIGHT subroutine now takes a REAL argument."
+$!$  inquire/nop newok -
+$!"You will be running a new version of Lick Mongo unless you type `n':  "
+$!$  if newok .nes. "n" .and. newok .nes. "N" then goto nongo
+$  mongo:
+$  write sys$error "        Welcome to Lick Mongo 90"
+$!$  write sys$error " RuMMble, rUMMble, poP, sQueak, GroaN, snorT "
+$   write sys$error "PostScript plots are now automatically printed on helios"
+$!$  write sys$error -
+$!  "Problems? Bugs? Annoying quirks? Suggestions?--Send mail to Mongo"
+$!  write sys$error -
+$!"LASERPRINTER plots do not depend on your quota, but do depend on scratchdisk"
+$  run mongodir:mongo
+$  exit
+$!$  nongo:
+$!$  write sys$error "Welcome to Lick Mongo 90 (test version)"
+$!$  write sys$error "This is probably buggy, please send reports to Mongo"
+$!$  run mongodir:nongo

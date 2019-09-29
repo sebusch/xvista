@@ -1,0 +1,27 @@
+
+<H1><A NAME="SECTION006120000000000000000">
+HEDIT: Edit FITS Headers</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml228#
+
+<P>
+<A NAME="1984"><tex2html_anchor_invisible_mark></A>
+<A NAME="1985"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1986#
+<BR>
+
+<P>
+VISTA writes the FITS header associated with buffer 'buf' into a temporary
+disk file and then invokes the default editor to edit the file.  When you
+exit the editor the modified version of the FITS header replaces the old
+version.
+
+<P>
+The default editor is vi, although you can specify any other editor by
+setting the environment variable VISUAL before running VISTA to be the name
+of the editor you wish to use (e.g. to use emacs, setenv VISUAL
+/path/to/emacs, where ``/path/to/'' is the full path to the emacs
+executable on your system).
+
+<P>

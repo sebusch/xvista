@@ -1,0 +1,69 @@
+\chapter{Miscellaneous Commands}
+
+%
+% reformatted and fixed up some, and checked against function in the
+% sources.
+% rwp/osu 98Jul26
+%
+
+\section{\$: Execute a Shell Command from VISTA}
+\begin{rawhtml}
+<!-- linkto spawn.html -->
+<!-- linkto shell.html -->
+\end{rawhtml}
+\begin{command}
+  \item[Form: \$ Any valid shell command\hfill]{}
+\end{command}
+
+You may execute most operating system shell commands directly from within
+VISTA by prefixing them with a '\$' sign.  These commands can also be
+included as part of a procedure.
+
+If the command line is '\$' only, you go into command mode and stay there
+until you type 'exit'.  It is dangerous to run large programs while you are
+in this mode.
+
+\section{TIME: Time a Command}
+\begin{rawhtml}
+<!-- linkto time.html -->
+\end{rawhtml}
+\begin{command}
+  \item[Form: TIME cmd\hfill]{}
+\end{command}
+where 'cmd' is any VISTA command.
+
+When you type TIME before any VISTA command, VISTA will start a timer and then
+perform the requested command.  After the command is completed, the timer will
+be stopped and the elapsed and CPU time of the command will be displayed.
+
+\section{CLOCK: Turn on the Internal Clock for Timing Multiple Commands}
+\begin{rawhtml}
+<!-- linkto clock.html -->
+\end{rawhtml}
+\begin{command}
+  \item[Form: CLOCK\hfill]{}
+\end{command}
+ 
+When you enter the CLOCK command, an internal clock is started. When the
+next CLOCK command is issued, you will get a summary of the elapsed clock
+and CPU times between the two CLOCK commands.
+
+\section{BELL: Turn the Prompt Bell ON/OFF or Ring the Bell }
+\begin{rawhtml}
+<!-- linkto bell.html -->
+\end{rawhtml}
+\begin{command}
+  \item[Forms: BELL Y, BELL N, or BELL R\hfill]{}
+\end{command}
+
+The VISTA prompt can be accompanied by a bell, if desired.
+\begin{example}
+  \item[N\hfill]{prevents the bell from ringing}
+  \item[Y\hfill]{restores the bell with the prompt}
+  \item[R\hfill]{rings the bell}
+\end{example}
+When you begin running VISTA, the bell does not ring with the prompt. The
+'BELL R' command is helpful in procedures for signaling the completion of
+some process, or for getting the your attention before occurrences of the
+ASK or STRING commands, which accept input.
+

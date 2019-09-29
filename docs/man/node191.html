@@ -1,0 +1,79 @@
+
+<H1><A NAME="SECTION0015150000000000000000">
+EMAG: Aperture Photometry with Elliptical Apertures</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml449#
+<BR>
+<tex2html_image_mark>#command7037#
+<BR>
+
+<P>
+EMAG performs aperture photometry within concentric elliptical apertures of
+increasing semimajor axis radius but fixed ellipticity and position angle.
+The image is assumed not to have been sky subtracted, but the background
+level of the image is assumed to be contained in the VISTA variable
+SKY. Each pixel then gives a contribution (pixel value - SKY).  The
+aperture radii (i.e. semimajor axes) are incremented by one pixel at a
+time. The resulting aperture total intensities are recorded in the PRF
+common block, replacing the values of the ;SPMquot;elliptical totals;SPMquot; computed by
+PROFILE.
+
+<P>
+EMAG attempts to account for the presence of perturbing stars (or any other
+glitches) on the image of the galaxy as follows: AEDIT is first used to
+mark those pixels which are contaminated; these pixels are given the flag
+value -7777. EMAG will not use any pixel with a value less than zero (note
+therefore the importance of not performing sky subtraction!); instead, it
+will look for that pixel's ;SPMquot;symmetric partner;SPMquot;, i.e. the one reflected
+about the galaxy center. If the partner is not also flagged, it will use
+its intensity level as an approximation for the original, flagged pixel; if
+it is also flagged, however, neither pixel is used by EMAG.
+
+<P>
+The user can explicitly specify the center, position angle, and ellipticity
+of the apertures, if desired, with the CENTER=(row,col), PA=theta, and
+ELL=eps keywords on the command line. It is more common, however, to use
+EMAG following the use of PROFILE. In this case, the ellipse parameters may
+be determined by accessing the PRF common block. (The ellipse centers,
+however, may also be learned from the AX common block, following use of
+AXES.) The radius at which the ellipse parameters are taken from the PRF
+common block is set either directly, via the PROF=p keyword on the command
+line, or by the ERAD keyword, which then gets the radius from the VISTA
+variable ERAD, which has been set by the interactive routine EMARK.
+
+<P>
+The number of apertures for which the computation is performed (or,
+equivalently, the maximum radius for photometry), may be set in one of
+several ways. The command line keyword N=n sets it explicitly.
+Alternatively, the keyword RMAX instructs EMAG to obtain the maximum radius
+from the VISTA variable RMAX, which can be set interactively with the
+routines RMARK or EMARK. If neither N=n nor RMAX are given on the command
+line, EMAG will use the existing maximum radius in the PRF common block
+(provided the latter is loaded.)
+
+<P>
+The command line keyword APPEND instructs EMAG to tack on to the PRF common
+block not only the elliptical totals, but also the PA and ellipticity EMAG
+works with, and surface brightnesses computed along the way. This will only
+work if the radius for photometry determined by the N=n or RMAX keywords is
+greater than the previous radius in the PRF common block.
+
+<P>
+To compute the magnitudes within elliptical apertures with varying
+ellipticity and position angle as computed by PROFILE, see the ELLMAG
+command.
+
+<P>
+At present, the results of an EMAG calculation can be viewed by writing the
+contents of the PROFILE common block using PRINT PROF.
+
+<P>
+<#7057#>Examples:<#7057#>
+<BR>
+<tex2html_image_mark>#example7058#
+<BR>
+
+<P>
+See Also: EMARK, RMARK, ELLMAG
+
+<P>

@@ -1,0 +1,633 @@
+ALL - predefined macro name that refers to the entire command buffer.
+	Typing ALL will execute the contents of the command buffer, and ALL can
+	be used as an argument for LIST, WRITE, and PLAYBACK.
+ANGLE D - sets angle of text or points to D degrees. ANGLE will cause text
+	from LABEL to come out D degrees counter-clockwise from horizontal. It
+	also causes points to be rotated counter-clockwise by D degrees.
+AUTOLWEIGHT N - Causes lineweight of plotted text to be automatically scaled.
+	If N = 0, autolweight is turned off, else it is turned on.
+AXIS A1 A2 ASMALL ABIG AX AY ALEN ILABEL ICLOCK
+	Makes an axis labeled from A1 to A2 at location AX, AY, length ALEN.
+	If ABIG > 0 use that for spacing of large ticks.
+	If ASMALL < 0 make a logarithmic axis, if ASMALL = 0, reset to default.
+	If ASMALL > 0 try to use that for the spacing of small ticks.
+	ILABEL is 0 for no labels, 1 for labels parallel to axis, 2 for labels
+	perpendicular to axis, 3 for parallel labels w/o ticks, 4 for
+	perpendicular labels w/o ticks, 5 for a line w/o ticks or labels.
+	ANGLE determines the angle of the axis.
+	ICLOCK = 1 for clockwise ticks on the axis, 0 for counterclockwise.
+BOX [I J [K L]] - Makes a box labeled according to LIMITS and TICKSIZE.
+	BOX puts axes around the plot region, labeling the lower and left.
+	If arguments I and J are included (default 1 and 2) they are
+	used for the lower and left axes.
+	If arguments K and L are included (default 0 and 0) they are
+	used for the upper and right axes.
+	The valid arguments are:
+		-1: do not plot this side of the box,
+		 0: do not plot any numbers along this axis,
+		 1: plot numbers parallel to the axis,
+		 2: plot numbers perpendicular to the axis,
+		 3: plot numbers parallel without plotting axis or ticks
+		 4: plot numbers perpendicular w/o axis or ticks,
+		 5: plot axis without either ticks or numbers.
+CHDIR PATH - Reset the current working directory to PATH.
+	Only available with Unix.
+COLOR N [R [G B]] - Select color for lines and characters, where N is the index
+	into the current color table for the device.  If R is specified, then
+	color N will be reset to gray level R, where 0<=R<1.  If G and B are
+	specified, then color N will be reset to have red, green, and blue
+	levels between 0 and 1 as specified by R, G, and B, respectively.
+	The color table for a device is initialized when the TERM command is
+	issued.  Color 0 is usually the background color for the device, and
+	color 1 is usually the foreground color for the device.
+	The number of colors available varies from device to device.
+	Devices:
+	       Term          Device             #colors
+		____________________________________________
+		 4      GSI color display       0 <= N < 256
+		 4      AED512                  0 <= N < 256
+		 7      SunView window          0 <= N < 16
+		11      X11 window              0 <= N < 27
+		PS      PostScript              0 <= N < 256
+		____________________________________________
+	N.B.:  This command is still new enough that it may change.
+CONNECT - Connects (x,y) pairs read by X and YCOLUMN with line segments.
+	CONNECT draws line segments connecting the coordinates read by
+	XCOLUMN and YCOLUMN.
+CONTOUR - Makes a contour plot of an image read by the IMAGE command.
+	The contour levels are set using the LEVELS command.
+	This is available on VMS systems only.
+CURSES - Displays the crosshair cursor to enable you to get positions (in world
+	coordinates).  Positions are typed on the screen.  Exit the cursor
+	routine by hitting the <ESC> key.
+	NOTE: CURSES ISSUES A RELOCATE COMMAND TO SET THE CURRENT PLOT POSITION
+	TO THE CURSOR POSITION.  THIS COMMAND IS ENTERED INTO THE COMMAND
+	BUFFER SO IT MAY BE USED BY PLAYBACK.  THE CURSES COMMAND ITSELF IS NOT
+	ENTERED INTO THE COMMAND BUFFER.
+DATA FSPEC [STRING] - Opens the file "FSPEC" for reading data.
+	DATA opens a data file for reading data.  The file is assumed to have
+	numerical data in columns separated by spaces, tabs or commas.  Any
+	column can be read as x or y coordinates by XCOLUMN and YCOLUMN.
+	If the optional argument STRING is given, the data file will be
+	searched for a line with STRING followed by a colon, and the line
+	containing that STRING will become "line 0" of the file.
+	Other data may be read in from the data file using ECOLUMN, PCOLUMN,
+	DXCOLUMN, or DYCOLUMN (see below).  In the case that Lick Mongo has
+	been called as a subroutine from a program, DATA with no arguments
+	specifies that the data for plotting be taken from the data array
+	passed as an argument of the Lick Mongo subroutine call.
+DEFINE XXX - Creates macro "XXX" and enters define mode. DEFINE XXX creates an
+	entry for a macro XXX, and subsequent commands until END are the body
+	of the macro. The prompt changes to D* to indicate the mode. A macro is
+	invoked by its name, and its name can be used as an argument to LIST,
+	WRITE and PLAYBACK. The tokens &1, &2, ..., &9 can be used in the body
+	of the macro, and when a macro is invoked its arguments will be
+	substituted for these tokens.
+DELETE [N1 [N2]] - Removes the commands N1-N2 from the command buffer.
+	DELETE removes commands from the command buffer (numbered according to
+	LIST). If no arguments, the last command is deleted, if one, that
+	command is removed, and if two arguments all commands from one argument
+	to the other are deleted.
+DERIVATIVE [N] - Take the derivative of the data in x and y columns.
+	This command destroys the original contents of these columns.
+	This command should be followed by HISTOGRAM to show the slope between
+	each consecutive pair of original data points.  If N is specified,
+	the derivative will be evaluated at N equally spaced points.
+	This is still experimental.
+DEVICE N - Use TERMINAL instead of this command.
+DOT - Makes a point of the current style at the current location.
+	DOT draws a point at the current location (set by RELOCATE, DRAW, etc)
+	in the style determined by PTYPE. The point's size and rotation are
+	governed by EXPAND and ANGLE.
+DRAW X Y - Draws a line to (x,y) from the last coordinate.
+	DRAW draws a line to (x,y) from the current location (set by RELOCATE,
+	DRAW, etc), and makes (x,y) the current location.
+DXCOLUMN N - Reads vector X-displacements from column N of the current data
+	file.  DXCOLUMN is used only in conjunction with the VFIELD interactive
+	command, and DXCOLUMN must be issued (along with XCOLUMN, YCOLUMN, and
+	DYCOLUMN) BEFORE executing VFIELD.
+DYCOLUMN N - Reads vector Y-displacements from column N of the current data
+	file.  DYCOLUMN is used only in conjunction with the VFIELD interactive
+	command, and DYCOLUMN must be issued (along with XCOLUMN, YCOLUMN, and
+	DXCOLUMN) BEFORE executing VFIELD.
+ECHO [... VARIABLE ...] - Echo the string-substituted command line
+	This is used for debugging contents of string variables of the sort
+	set by the RCSTRING and SET commands.
+ECOLUMN N - Reads the error bar size from column N of the data file.
+	ECOLUMN reads column n from the data file as the magnitudes of the
+	error bar displacements from the corresponding (x,y) coordinates. Note
+	that X and YLOGARITHM do not adjust the error values to logarithmic
+	coordinates.
+EDIT -  Allows editing of the command buffer by your favorite editor.
+	Under VMS this can be slow since it requires SPAWNing.
+END -   Ends DEFINE mode, INSERT mode or exits from the program.
+	In define mode END finishes the macro definition and returns to execute
+	mode. In insert mode END returns to execute mode. In execute mode, END
+	exits from the program altogether (as does ^Z in VMS, ^D in Unix).
+ENUM -  Fill the X column with an array of ascending integers.
+	The numbers run from 1 to the current number of Y points.
+	This is experimental.
+EPSLANDSCAPE [FILE [PAPSIZ]] - Initiates a landscape-mode Encapsulated PS plot.
+	Encapsulated PostScript is suitable for direct inclusion into
+	TeX, LaTeX, xfig, and many other drawing programs.  Editing one line
+	makes the output suitable for transmission directly to a printer.
+	See PSLANDSCAPE for other details.
+EPSPORTRAIT [FILE [PAPSIZ]] - Initiates a portrait-mode Encapsulated PS plot.
+	Encapsulated PostScript is suitable for direct inclusion into
+	TeX, LaTeX, xfig, and many other drawing programs.  Editing one line
+	makes the output suitable for transmission directly to a printer.
+	See PSPORTRAIT for other details.
+ERASE - Erases the graphics screen or initializes a Hardcopy plot.
+	ERASE erases the graphics screen if in TERMINAL mode, or it
+	reinitializes a hardcopy plot (sets the vector count to 0).
+ERRORBAR K - Draws error bars on (x,y) pairs in direction 90(K-1) degrees.
+	ERRORBAR is analogous to POINTS; it draws error bars on all (x,y)
+	points (read by X and YCOLUMN) of length read by ECOLUMN. The argument
+	is 1 to put the bar along the +x direction, 2 for +y, 3 for -x, and 4
+	for -y. Use EXPAND to govern the size of the caps.
+EXPAND E - Expands all characters or points by a factor E.
+	EXPAND expands all characters and points, its default is 1.0.
+	NOTE: With default expansion, characters are sent to the graphics
+	terminal without font translation; in order to get characters of size 1
+	with font translation, use EXPAND 1.0001.
+GRID [N] - Makes a grid at major/all ticks for N = 0/1.
+	Without an argument, GRID makes a grid of dotted lines at all major
+	tick locations within a BOX. With an argument of 0 or 1, GRID makes a
+	grid at major or all ticks of the current line type.
+HALFTONE [MIN MAX] - Halftone plot of an image read by the IMAGE command.
+	You may specify the intensity range for the plot, if not, the program
+	will use the file max and min.
+	    THIS COMMAND CHANGES THE SIZE OF THE PLOT WINDOW (LOCATION).
+	The size of the new plot window depends on the size of the image file.
+	Thus, if you want to draw axes for the plot, relocate and label,
+	superimpose a contour plot, etc., you must do this AFTER calling
+	HALFTONE.
+	 * N.B. At present, this command works for the VT100 and Versatec, and
+	the IMAGEN.  Use the IMLONG command (rather than IMPRINT) for use with
+	the Imagen.  This command is only available on VMS systems.
+HARDCOPY - Causes a stored hardcopy plot to be plotted.
+	After a PSLANDSCAPE, PSPORTRAIT, VERSATEC, VTLONG, PRINTRONIX,
+	IMPRINT, IMLONG or ERASE command all graphical output is stored.
+	HARDCOPY causes the stored vectors to be plotted on the specified
+	device.  Lick Mongo is then ready for another plot on the same device.
+	On a Unix system with PostScript plots, the plot can be directed to
+	any PostScript printer by setting the environment variable PSPRINTER
+	to be the name of the desired printer.
+HELP [COMMAND]- Prints an explanation of "COMMAND".
+	Without an argument, HELP prints a one line description of ALL builtin
+	commands. With an the name of a command as an argument, HELP prints
+	more information on that command.
+HISTOGRAM [N] - Connects <x,y> pairs from XCOLUMN and YCOLUMN as a histogram.
+	A newly added feature is its acceptance of an optional argument which
+	specified which color to use to shade the underside of the histogram.
+	Requesting shading destroys the contents of the DX and DY
+	column, and on X11 devices it also destroys the E column.
+	This histogram shading only occurs on X11 and PostScript devices.
+	The syntax for shading is new and still subject to change.
+ID - Puts an identification label at the upper right corner of a plot.
+	ID puts the name of the current input file, data file, date and time
+	outside the upper right hand corner of the plot region.
+IMAGE FSPEC - Reads an image from file "FSPEC".  VMS systems only.
+	The file format is: floating point numbers, fixed record length,
+	unformatted file.  See the Lick Mongo Manual for details.
+IMLONG - Directs output to an Imagen laserprinter in Portrait mode.
+	The Y axis is along the long edge of the page. See also IMPRINT.
+IMPRINT - Directs output to an Imagen laserprinter in Landscape mode.
+	IMPRINT directs graphical output to the Imagen and sets default values
+	for the plot region location and device physical limits. The X axis is
+	parallel to the long edge of the page. See also IMLONG.
+INPUT FSPEC - Reads plot commands from file "FSPEC" and executes them.
+	INPUT reads plot commands from a file and treats them exactly as if
+	they were typed: commands are executed, or can be inserted or used in
+	macro definitions.  See also the READ command
+INSERT [N] - subsequent commands are inserted before command N in the
+	command buffer.
+	INSERT enters insert mode, indicated by a I* prompt, and subsequent
+	commands are inserted without execution into the command buffer until
+	an END command is encountered. Without an argument, INSERT inserts at
+	the end of the buffer; with an argument, INSERT starts inserting just
+	BEFORE the given location.
+INTEGRAL - Integrate the data in x and y columns.
+	This command destroys the original contents of these columns.
+	This command should be followed by XSPLINE to show the result.
+	The actual function integrated is the cubic spline which is shown by
+	XSPLINE.  This is still experimental.
+LABEL STRING - Writes "STRING" at the last pen coordinate.
+	LABEL writes a string (which starts one space after LABEL and continues
+	to the last non-space character) at the current location (set by
+	RELOCATE, CURSES, etc). The string's size and angle are determined by
+	EXPAND and ANGLE. The character "\" is an escape character and causes
+	the following action.
+	   _____________________________________
+	    \\x - set mode x
+	     \x - set mode x for next char
+	     \r - Roman font
+	     \g - Greek font
+	     \s - script font
+	     \t - tiny font
+	     \i - toggle italics
+	     \u - superscript
+	     \d - subscript
+	     \e - end string (optional)
+	    \\\ - plot a backslash
+	   _____________________________________
+LEVELS [L1 [L2 [...]]] - Sets the contour levels for a contour plot.
+	You may have up to 40 levels.  See the CONTOUR command.  VMS only.
+LIMITS [X1 X2 [Y1 Y2]] - LIMITS sets the world coordinates of the plot region.
+	All coordinates from X and YCOLUMN, RELOCATE, DRAW, etc, are referred
+	to these limits. If LIMITS has no arguments, the data from the most
+	recent XCOLUMN and YCOLUMN are used to set the limits.  If LIMITS has
+	2 arguments, then the limits are set to span X1 in x and X2 in y
+	with the region centered on the X- and YCOLUMN data.
+	See also XLIMITS and YLIMITS.
+LINES L1 [L2] - Limits Lick Mongo to reading lines L1-L2 in the current file.
+	LINES sets the range of lines read from the current data file by
+	the commands: XCOLUMN, YCOLUMN, ECOLUMN, DXCOLUMN, DYCOLUMN, and
+	PCOLUMN.  It is useful to avoid non-data lines like file headers.
+	If L2 is not given, Lick Mongo will start at line L1 and continue
+	until it hits the end of the file.
+LIST [XXX] - Lists the contents of the command buffer.
+	If the argument "XXX" is given, LIST lists the commands of macro XXX.
+	The numbers assigned to commands by LIST are those used by DELETE and
+	INSERT.
+LOCATION GX1 GX2 GY1 GY2 - Sets the physical location of the plot.
+	This command deals with device coordinates--which should be avoided.
+	See the SQUARE and RECT commands, and the MARGINS command.
+	The plot region is a rectangle within the coordinates allowed by the
+	plotting device.  It is made visible with the BOX command.  Note that
+	labels will be outside this region.  Vectors and points are truncated
+	at the bounds of the plot region.  LOCATION specifies (in device
+	coordinates) where the plot region is located.  LOCATION is still the
+	only way to make an arbitrary size and shape plot.  A useful size for
+	PostScript output that does not fill a whole page (e.g., for
+	transparencies) is (144--684, 144--504).
+	____________________________________
+	 * Default sizes:
+	  DEI Retro:   50   610    35   475
+	  PostScript: 108   720   108   540
+	  VERSATEC:   250  2050   130  1580
+	  VTLONG:     150  2150    80  1680
+	  IMPRINT:    450  2850   375  2325
+	  PRINTRONIX:  95   770    65   554
+	  AED:         80   480    80   480
+	____________________________________
+	NOTE: for PostScript devices (see PSxxx below), the units are
+	in printer's points, not in pixels.  72 points = 1 inch.  The plot
+	resolution depends on the device (Apple LaserWriters are 1/300 inch)
+	LOCATION can be used to make an arbitrary size and shape plot.
+LTYPE N - Sets the line type to N.
+	All lines except for points and characters are drawn with line type n,
+	where N refers to lines of the following type:
+	     0 = solid
+	     1 = dot
+	     2 = short dash
+	     3 = long dash
+	     4 = dot - short dash
+	     5 = dot - long dash
+	     6 = short dash - long dash
+LVISIBILITY N - Sets the visibility of the lines on Retros and GraphOns.
+	     0 = on             (draw bright lines)
+	     1 = off            (draw dark lines)
+	     2 = toggle         (draw dark=>bright & bright=>dark)
+	This command will soon change to accommodate modern (1990s) devices.
+LWEIGHT N - Sets the line weight to N.
+	All vectors plotted on hardcopies (e.g., PostScript, Versatec,
+	Imagen, Printronix) are made with a weight of N.  The default
+	line weight is 1.0 (1 pixel wide) on most devices, but with
+	PostScript, the default line weight is 0.5 (1/2 point wide).
+	This command can affect some terminals.  See also AUTOLWEIGHT.
+MARGINS BOT LEFT TOP RIGHT - Allows you to specify the margins around a
+	plot in inches.  You must first have chosen the device and expand
+	that you will be using.  Lick Mongo will attempt to set the plot size
+	such that no labels will intrude into the margins, but it may be
+	necessary to iterate once to get the margins exactly right.
+MAXDIGIT N - Sets the maximum number of digits to be plotted for axis labels.
+	The default for this command is 10, but the number plotting routine
+	ordinarily is able to figure out how many digits are significant, and
+	only plot that many.  If you use TICKSIZE, however, there may be
+	roundoff errors that confuse the number routine.  MAXDIGIT gets around
+	this.
+	  * NOTE: If you want the default, you must EXPLICITLY reset maxdigit
+		  if you have changed it.
+MINMAX - Returns with the max and min values of an image read by the IMAGE
+	command. This may be useful for setting contour levels, or doing a
+	halftone plot.  Only available on VMS systems.
+NOTATION XLO XHI YLO YHI - Sets axis label format (exponential or floating).
+	Defaults are XLO=YLO=1.E-4 and XHI=YHI=1.E5.  All numbers between these
+	limits are written as floating point numbers, and all numbers outside
+	this range are written with an exponent.  Notation allows you to change
+	the limits for plotting exponential values.  If you set XLO=XHI and/or
+	YLO=YHI, all values on that axis will be plotted using exponents.
+PAGE N - After a VERSATEC command, directs output to N pages after 0th PAGE
+	assumes VERSATEC output onto fanfold paper. It sets the physical limits
+	and location so that vectors are offset onto page n after the first
+	one.
+PAUSE [N] - Lick Mongo will pause during the playback.  (For dramatic effect.)
+	If N > 0, Lick Mongo will pause for up to N seconds.
+	If N is not specified or N <= 0, Mongo will wait for a key to be hit.
+	If N < 0, Lick Mongo will not type out "Mongo pause" while it pauses.
+PCOLUMN N - Reads point type data from column N of the current data file.
+	PCOLUMN is analogous to PTYPE, except that when POINTS is executed each
+	(x,y) point is plotted with the corresponding entry in the point
+	column, instead of the same point type for all points. The format is
+	The same as PTYPE, except that the numbers are contracted together. If
+	the entry has a fractional part, it is treated as an expansion factor
+	(no fractional part means default expansion). For example, an an entry
+	of 103.5 in a point column is the same as PTYPE 10 3, EXPAND .5.
+PHYSICAL LX1 LY1 LX2 LY2 - Sets physical limits of plot.
+	The plot region is a rectangle within the coordinates allowed by the
+	plotting device.  PHYSICAL specifies (in device coordinates) the
+	absolute limits of where graphics output can go.  Anything outside of
+	these limits is truncated.  This command is really only useful for
+	plot devices which can change their size, e.g., roll paper Versatec
+	plots or plots on window systems.
+PL3BOX [M N] - Makes a box, like the BOX command, but for use with PLT3D.
+	BOX puts axes around the plot region, labeling the lower and left. If
+	arguments M and N are included (default 1 and 2) they are used as
+	ILABEL arguments for the lower and left axes.  (Kind of cruddy looking)
+PLAYBACK [XXX] - Replay commands in the command buffer or macro "XXX".
+	PLAYBACK XXX executes the macro XXX without storing the commands in the
+	command buffer. With an argument of "all" or no argument, PLAYBACK
+	replays all commands in the command buffer.
+PLT3D ALT AZ ZFAC ZOFF - Makes a surface plot of the image.
+	ALT and AZ determine the viewing angle. They determine the Altitude
+	and the Azimuth of line of sight (in degrees).
+	ZFAC is a multiplying factor, best set around 1/(data maximum).
+	ZOFF sets the origin of the Z axis in data units.
+	If Data(M/2,N/2) = -ZOFF, that point will be roughly in the center of
+	the graphics area. A safe bet for ZOFF is 0.
+	Only available on VMS systems.
+POINTS - Draws points of the current style at the (x,y) of XCOLUMN and YCOLUMN.
+	POINTS makes points of the current style (PTYPE), size (EXPAND), and
+	rotation (ANGLE) at the coordinates read by XCOLUMN and YCOLUMN.
+POLYGON N - Connect the current points as a polygon and fill it with color N.
+	This is a new command and its syntax may be altered.  At the present,
+	it only fills on X11 and PostScript plots.  Other devices just draw
+	the outline of the polygon.  On X11 devices, use of POLYGON will
+	destroy the values in ECOLUMN.
+POSTSCRIPT STRING - emits "STRING" unaltered directly to the output
+	PostScript device.  Not recommended unless you have an intimate
+	knowledge of PostScript and how Lick Mongo generates it.
+PRINTRONIX - Directs output to a Printronix line printer.
+	This command is similar to VERSATEC.
+PSFMODE N - Sets the font mode on a PostScript plot to N.
+	PostScript plots can make use of a wide new range of fonts, but not
+	all of the old symbols are available in the new fonts.
+	    0 = use only stroked Hershey fonts
+	    1 = use PostScript fonts for `Roman', Hershey fonts for all else
+	    2 = use only PostScript fonts
+	A sheet detailing all of the available PostScript font characters
+	is available upon request.
+PSFNAME IFONT NAME [ENCODING]- Change the font used on a PostScript plot.
+	The default fonts used in PSFMODE 2 can be changed to any other font
+	available on the LaserWriter by giving a PostScript font name.
+	For the present, the fonts are reset every time PSLAND or PSPORT are
+	used.  Thus, PSFNAME must be called for each plot.
+	Note that precise spelling and capitalization are required in name.
+	By default Lick Mongo uses the following PostScript fonts for PSFMODE 2.
+	 IFONT | \?  (meaning)      | Default PostScript font NAME
+	 ------+--------------------+---------------------------------
+	   0   | \r  (Regular)      | /Helvetica
+	   1   | \g  (Greek/Symbol) | /Symbol
+	   2   | \s  (Script)       | /ZapfChancery-MediumItalic
+	   3   | \t  (Typewriter)   | /Courier
+	   4   | \i  (Italic)       | /Helvetica-Oblique
+	   5   | \o  (Other)        | /ZapfDingbats
+	By using ENCODING, you can select a different PostScript encoding
+	vector for the fonts.  This will usually be set to ISOLatin1,
+	which enables the use of most western European characters--including
+	the "A-ring" character used to denote Aangstroms.  (But surely
+	you all are using the IAU recommended nanometers, right?)
+PSLANDSCAPE [FILE [PAPSIZ]] - Initiates a PostScript plot in landscape mode.
+	Landscape is oriented with the X-axis along the long side of the page.
+	If "FILE" is specified, the output will be placed in that file and
+	will not be queued for printing.  Use HARDCOPY to finish the plot.
+	If "PAPSIZ" is specified, Mongo will use it to select a paper tray.
+PSPORTRAIT [FILE [PAPSIZ]] - Initiates PostScript plot in portrait mode.
+	Portrait is oriented with the Y-axis along the long side of the page.
+	If "FILE" is specified, the output will be placed in that file and
+	will not be queued for printing.  Use HARDCOPY to finish the plot.
+	If "PAPSIZ" is specified, Mongo will use it to select a paper tray.
+PTYPE N S [STRING] - Sets the point type to an N-gon of style S.
+	PTYPE N S causes points to be drawn as N sided polygons of a style S,
+	where S refers to:
+	   0 = open
+	   1 = skeletal (center connected to vertices)
+	   2 = stellated
+	   3 = solid
+	----
+	If S is negative, then N is irrelevant, and Lick Mongo looks for a
+	string at the end of the command line.  When the DOT or POINTS command
+	is used, that text string will be placed at each point.
+	----
+	If N is negative, then it will be interpreted as a decimal ASCII code,
+	and S will be used as the number of the font (see PSFNAME).  When the
+	DOT or POINTS command is used, ASCII character N in font S will be
+	placed at each point.
+PUTLABEL L STRING - Writes label "STRING" at the current location justified
+	according to code L.
+	PUTLABEL writes a label at the current location with rotation and size
+	specified by ANGLE and EXPAND (exactly like LABEL). The label is
+	oriented with respect to the current location according to the argument
+	L which can be 1 - 9 for:
+			  right  center  left  justified
+			 ---------------------
+	label above         7      8      9
+	      centered      4      5      6
+	      below         1      2      3
+			 ---------------------
+QUARTER N - Use WINDOW instead.
+	In VERSATEC or PRINTRONIX mode, sets the plot region to quarter N
+	of the page.  QUARTER sets the plot region to one quarter of a
+	Versatec or Printronix page, where N = 0, 1, 2, or 3 for upper left,
+	right, lower left and right areas.
+RCSTRING STRINGVAR RESOURCE - Find RESOURCE: in datafile and read STRINGVAR
+	THIS COMMAND IS COMPLETELY EXPERIMENTAL--SYNTAX MAY CHANGE.
+	Lick Mongo searches the open datafile for RESOURCE followed by a colon.
+	That line after the colon is stored in a Mongo macro called STRINGVAR.
+	After STRINGVAR is defined, it can be invoked by prepending "&$" to
+	the string name.  E.g., if STRINGVAR is "YOW", then any occurrance
+	of &$YOW will be replaced with the line read from the open datafile.
+	See also the SET command.
+RDSTRING STRINGVAR LINE# - Read a line of the open datafile into a string.
+	THIS COMMAND IS LIKELY TO BE REMOVED FROM EXISTENCE.  SEE RCSTRING.
+	Reads line LINE# into macro STRINGVAR.
+	See RCSTRING for more details using the value of the string.
+READ FSPEC - Read macro in file "FSPEC" into command buffer.
+	READ does not execute the macro, but simply reads it into the command
+	buffer, from whence it may be edited, and/or executed with PLAYBACK.
+RECT   - Like BOX but forces aspect ratio of world coordinates to be true.
+	RECT gives precedence to the device limits, and expands the user
+	coordinate limits as necessary to achieve a 1:1 aspect ratio.
+	This means that WINDOW plots with SUBMARGINS 0 0 will be adjacent.
+RELOCATE X Y - Sets the current coordinates to (X,Y).
+	RELOCATE sets the current location to (X,Y) without drawing a line.
+RESET - Resets all the setable variables back to their defaults.
+REVERSE N - if N > 0 reverses the background xcolor to color 1. If N < 0,
+	reverses the background back to the original color 0.
+RLABEL STRING - Plots "STRING" at the RIGHT of the current plot, in a
+	similar fashion to YLABEL.
+RLIMITS RMIN RMAX - Limits the longest and shortest vectors in a field.
+	Vectors with SQRT(DX**2 + DY**2) outside these limits will not appear.
+SET STRINGVAR ANY TEXT - Sets a string variable to contain ANY TEXT
+	THIS COMMAND IS COMPLETELY EXPERIMENTAL--SYNTAX MAY CHANGE.
+	SET permits any string variable to be set to any value.
+	This is a shortcut rather than using RCSTRING from an external file.
+SHOW - Shows current limits and location.
+	SHOW lists the values of some the variables, including current location
+	and plot region limits in world and device coordinates, the value of the
+	expansion and angle variables, the line type and weight, and the
+	physical limits.
+SKIPCHARS N - Allows Lick Mongo to ignore the first N characters in a line.
+	This means that there may be non-numeric stuff at the beginning of a
+	line and Lick Mongo will simply skip past it before reading data.
+	N.B.--Tabs count as 1 (One) character.
+SOFTPHYSICAL xmin xmax ymin ymax [xfac yfac rfac tfac] - same as physical
+	but without resetting the hardware itself. xfac, etc., if given,
+	alter the amount of room Lick Mongo leaves for labels on each edge of
+	the plot.
+STRINGS N [M] - Read the strings found in the column N and plot them at X & Y
+	This command is extremely new, experimental, and may still change.
+	It works like POINTS, using the positions read by X and YCOLUMN,
+	but it plots the string found in column N instead of geometric figures.
+	An optional argument M will be used as in the PUTLABEL command to
+	adjust the position of the label.
+SQUARE - Like BOX but forces aspect ratio of world coordinates to be true.
+	SQUARE gives precedence to the user limits set with LIMITS, and shrinks
+	the graphics region as necessary to achieve a 1:1 aspect ratio.
+	RECT may be preferable if making use of WINDOW and SUBMARGINS.
+SUBMARGINS X Y - Allows control of the margins around plot windows made
+	with the WINDOW command.  Not using SUBMARGINS is equivalent to
+	SUBMARGINS 1. 1. , which leaves the margins as they always have been.
+	SUBMARGINS 0. 0. makes the margins around the windows zero size in
+	both x and y.  This allows plot windows to be adjacent to each other.
+	SUBMARGINS must be used before the WINDOW command.
+TCONTOUR - Like CONTOUR except uses the MPGCONT contour following algorithm.
+	This will produce better results on a pen plotter and if a non-solid
+	line type is in use.  Only on VMS systems.
+TERMINAL N - Directs output to a graphics terminal with device code N.
+	TERMINAL directs graphical output to the graphics terminal and sets
+	default values for the plot region location and device physical limits.
+	An optional argument is used to specify a particular device.
+	Devices:
+		 N           Device
+		________________________________________
+		 1      DEI Retrographics 640 (VT100)
+		 2      DEC VT125
+		 3      Tektronix 4010
+		 4      GSI color display               (Lick ISI machine)
+		 4      AED512                          (defunct)
+		 5      HP 2648a
+		 6      Imagen emulating Tektronix 4010 (CRUNCH)
+		 7      ISI Optimum V workstation       (ISI windows)
+		 7      MicroVAX workstation (UIS)      (uVMS V4.5+)
+		 7      SunView window                  (SunView or NeWS)
+		 8      Visual 603                      (brain-dead, try 3)
+		 9      Epson dot-matrix printer        (Lick ISI machine)
+		10      xterm Tektronix emulation       (X10 or X11)
+		11      X11 (now in beta test, please try and comment on it)
+		12      uVAX/VMS Tektronix pseudo-term
+		13      GraphOn 200 series
+		14      GraphOn 140
+		________________________________________
+	A second optional argument specifies the device name, e.g.,
+	`TTA0:' on a VMS system, `/dev/ttyh1' on a Unix system, or
+	`-display eos:0 -geometry 640x480+0-0' for an X11 window.
+TICKSIZE SMALLX BIGX SMALLY BIGY - Sets tick intervals for BOX.
+	SMALLX refers to the interval between small tick marks on the x axis,
+	BIGX refers to the interval between large ticks, etc.
+	If BIG is 0, the axis routine will supply its own intervals according
+	to the label limits.
+	If SMALL < 0, the axis will have logarithmic tick spacing with large
+	ticks at each decade and small ones at each integer.
+	When SMALL < 0, BOX assumes that the limits are LOGARITHMS,
+	e.g., -2 and 2 refers to limits of .01 and 100.
+TLABEL STRING - Plots "STRING" at the TOP of the current plot, in a
+	similar fashion to XLABEL.
+UNDEFINE [MACNAME] - Removes the macro named MACNAME from the macro buffer.
+	When invoked with no argument, UNDEFINE lists currently defined macros.
+	This command is new; it may be changed into something like REDEFINE.
+VECTOR X Y DX DY - Plots a vector (arrow).  The tail of the vector is at
+	(X,Y), and the head is at (X+DX,Y+DY).  If VFIELD has previously
+	been used, the vector is scaled in length as the VFIELD was.
+VERSATEC - Directs output to the Versatec on one 8x10 sheet.
+	VERSATEC directs graphical output to the Versatec and sets default
+	values for the plot region location and device physical limits.
+	VERSATEC orients the plot so that x increases along the paper
+	perforation and y out of the machine.  VMS only for the present.
+VFIELD - Plots a vector field as a set of arrows at each (X,Y) position with
+	x displacement DX and y displacement DY.  The lengths of the arrows are
+	determined from the average values of SQRT(DX**2+DY**2),
+	but may be changed with the EXPAND command. (X,Y) positions must first
+	be read in from a file using the XCOLUMN and YCOLUMN commands, vector
+	displacements must be read in from a file with the DXCOLUMN
+	and DYCOLUMN commands.
+VTLONG - Directs rotated output to the Versatec for roll paper.
+	VTLONG directs graphical output to the Versatec and sets default values
+	for the plot region location and device physical limits. VTLONG orients
+	the plot so that x increases into the machine and y increases across
+	the paper. VTLONG allows arbitrarily long plots.
+WINDOW NX NY K - Sets the plot location to a subwindow.
+	WINDOW allows the user to subdivide the plotting area into subwindows,
+	and select which subwindow is "active."  NX is the number of horizontal
+	subwindows and NY is the number of vertical subwindows.  The value of K
+	selects the the active subwindow.  Subwindows are numbered from
+	the lower left corner, increasing left to right, then bottom to top.
+	Thus, K=1 specifies the first subwindow. WINDOW 1 1 1 resets the plot
+	location to be the entire plotting area.   NOTE:  you must do this
+	BEFORE changing the area location (see LOCATION) or the plotting device.
+WRITE XXX FSPEC - Writes macro "XXX" to file "FSPEC".
+	WRITE the commands making up a macro to a file. If the macro name given
+	is "all" the entire command buffer is written to the file.
+WXFRAC [F1 [F2 [F3 [...]]]] - sets the relative sizes of subwindows in X
+	WXFRAC allows alteration of the sizes of subwindows created with WINDOW.
+	Each argument is taken as the relative size of the Nth subwindow in the
+	X direction.  Thus WXFRAC 2 1 followed by WINDOW 2 2 1 would make
+	the leftside windows twice as wide as the rightside windows.
+WYFRAC [F1 [F2 [F3 [...]]]] - sets the relative sizes of subwindows in Y
+	WYFRAC allows alteration of the sizes of subwindows created with WINDOW.
+	Each argument is taken as the relative size of the Nth subwindow in the
+	Y direction.  Thus WYFRAC 2 1 followed by WINDOW 2 2 1 would make
+	the bottom windows twice as wide as the top windows.
+X11GEOMETRY WIDTHxHEIGHT+X+Y set the X11 geometry for opening the window.
+	The argument is a string which has the standard X11 geometry format.
+XCOLUMN N - Reads X-axis data from column N of the current file (see DATA).
+	XCOLUMN reads column N from the data file as the values of the x
+	coordinates of the data points.
+XLABEL string - Writes the label "string" centered under the X axis.
+XLIMITS XMIN [XMAX] - Changes the values of the X axis limits but leaves the
+	Y-axis limits UNCHANGED.
+	Issuing XLIMITS without arguments will automatically set the X axis
+	limits to appropriate values based on the data read in with the
+	last XCOLUMN command.  XLIMITS with one argument will set the range
+	of the world coordinates centered on the data read by XCOLUMN.
+XLOGARITHM [XLMIN] - Takes the logarithm of x values from XCOLUMN.
+	The value of XLMIN is optional.  For 0 or negative numbers,
+	XLMIN is used for the logarithm.  XLMIN defaults to -50.
+XSIXTY [N] - Converts decimal x values to sexagesimal (time or degrees).
+	This must be done AFTER the call to XCOLUMN, and must be done each time
+	you call XCOLUMN. The data for XCOLUMN are expected to be in units of
+	the lowest field (i.e. seconds for degree, min, seconds).  The values
+	will be plotted with N decimal places (default=0).
+XSPLINE - Like connect except that a cubic spline is used.
+	XSPLINE requires that the X data be in increasing order.
+	The spline is based on the natural spline in Numerical Recipes,
+	but is adapted to allow more than one Y value at each X value.
+YCOLUMN N - Reads y data from column N of the current file (see DATA).
+	YCOLUMN reads column N from the data file as the values of the y
+	coordinates of the data points.
+YLABEL string - Writes the label "string" centered left of the Y axis.
+YLIMITS YMIN [YMAX] - Changes the values of the Y axis limits but leaves the X
+	axis limits UNCHANGED.
+	Issuing YLIMITS without arguments will automatically set the Y axis
+	limits to appropriate values based on the data read in with the last
+	YCOLUMN command.  YLIMITS with one argument will set the range
+	of the world coordinates centered on the data read by YCOLUMN.
+YLOGARITHM [YLMIN] - Takes the logarithm of y values from YCOLUMN.
+	The value of YLMIN is optional.  For 0 or negative numbers,
+	YLMIN is used for the logarithm.  YLMIN defaults to -50.
+YSIXTY [N] - Converts decimal y values to sexagesimal (time or degrees).
+	This must be done AFTER the call to YCOLUMN, and must be done each time
+	you call YCOLUMN. The data for YCOLUMN are expected to be in units of
+	the lowest field (i.e. seconds for degree, min, seconds) The values
+	will be plotted with N decimal places (default 0).

@@ -1,0 +1,30 @@
+
+<H1><A NAME="SECTION0014130000000000000000">
+FLUX: Flux Calibrate a Spectrum</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml403#
+<A NAME="5983"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command5984#
+<BR>
+
+<P>
+FLUX applies a standard star flux curve to a spectrum, replacing raw
+counts/sec/Angstrom (output from ALIGN) with fluxes in F-Lambda units
+(ergs/sec/cm<tex2html_image_mark>#tex2html_wrap_inline6277#/Angstrom).  The flux calibration is taken from a standard
+star flux curve computed using the FLUXSTAR command.  
+
+<P>
+FLUX will work on spectra that do not have exactly the same wavelength
+scale as the flux curve by fitting a spline to the flux curve, and then
+applies that spline fit to the spectrum.
+
+<P>
+If your spectrum has exactly the same wavelength scale as the flux curve,
+either because the flux standards were taken with the same spectroscopic
+setup as the star being fluxed, or because the spectra have been made to
+have the same scale with ALIGN, then you may flux calibrate the object
+spectrum simply by multiplying the spectrum by the flux curve with MULTIPLY
+command.
+
+<P>

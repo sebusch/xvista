@@ -1,0 +1,22 @@
+expand 2.
+color 2 1 0 0
+tlabel Windows of Unusual Size
+color 1
+window 1 1 1
+expand 2
+wxfrac 2 0 1
+window 3 3 1
+box
+wyfrac 2 0 1
+window 3 3 3
+box
+wxfrac 1 0 2
+window 3 3 9
+box
+wyfrac 1 0 2
+window 3 3 7
+box
+wxfrac 1 1 1
+wyfrac 1 1 1
+window 3 3 5
+box

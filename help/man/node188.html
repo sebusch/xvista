@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>AEDIT: Edit Values in Selected Image Regions</TITLE>
+<META NAME="description" CONTENT="AEDIT: Edit Values in Selected Image Regions">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0015120000000000000000">
+AEDIT: Edit Values in Selected Image Regions</A>
+</H1>
+
+<!-- linkto aedit.html -->
+<BR>
+
+<BR>
+
+<P>
+AEDIT will set all pixels in given image subregions to a constant value and
+create a VISTA logical MASK of those pixels.  This can be done either
+interactively, through a box number, or through a formatted file containing
+a list of box definitions.  If INT is specified, the user is expected to
+interactively determine on the display a number of regions to be edited.
+INT overrides BOX=n.  
+
+<P>
+If INT is specified and a file name is given on the command line, AEDIT
+will write a list of the boxes it has edited into the specified file.  The
+form is SR ER SC EC; the files are formatted (ASCII) files.  If OLD is
+specified, AEDIT will read the regions to be edited from the specified
+file.  If no file name is given on the command line, the user will be
+prompted for it.  OLD overrides INT.
+
+<P>
+SET=x specifies the flag value to which to set the data (default = -7777).
+If the image is not displayed and INT is specified, this routine will
+display it.  The keyword MASK tells the routine to create the logical mask
+only, and not actually change any pixel values.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

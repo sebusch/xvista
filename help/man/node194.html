@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ELLMAG: Compute Elliptical Magnitudes for PROFILE Ellipses</TITLE>
+<META NAME="description" CONTENT="ELLMAG: Compute Elliptical Magnitudes for PROFILE Ellipses">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0015180000000000000000">
+ELLMAG: Compute Elliptical Magnitudes for PROFILE Ellipses</A>
+</H1>
+
+<!-- linkto ellmag.html -->
+<BR>
+
+<BR>
+
+<P>
+ELLMAG calculates the elliptical magnitude within the elliptical isophote
+fit using the PROFILE command.  It uses the values for the surface
+brightness computed previously by PROFILE.  It recomputes the circular
+totals using CIRCMAG, so that any results appended to the PROFILE results
+with EMAG will have appropriate circular totals all the way out to the
+final radius.
+
+<P>
+This routine differs from EMAG in that the magnitudes within each ellipse
+in the PROFILE common block are computed, correctly taking into account the
+varying position angles and eccentricities.  EMAG, by contrast, computes
+concentric elliptical magnitudes given the parameters for ONE of the
+ellipses in the PROFILE common block.
+
+<P>
+This routine uses the SB results to approximate the elliptical totals
+within increasing semi-major axis radii.  For each increase in radius, the
+routine approximates the additional ellipse area which needs to be taken
+into account for calculating the elliptical totals.  It then multiplies the
+SB value at that radius by this area to get an approximation of the extra
+number of counts to add to the elliptical total.  The routine does take
+into account the possibility of crossing ellipses but, at this time, does
+not yet take into account the possibility of changing position angle.
+
+<P>
+See Also: EMAG, APER, PROFILE
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

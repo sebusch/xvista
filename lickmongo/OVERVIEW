@@ -1,0 +1,111 @@
+
+This describes the layout of the Lick Mongo directory tree.
+
+We recommend that Lick Mongo not be installed by root, because of the
+nature of the auto-configuring makefiles.  It is really best to create a
+user called mongo who will install and maintain the package.  The reason
+for the lickmongo/ subdirectory is in order that the user mongo might
+maintain more than one flavor of mongo at the same time.  It also
+facilitates export of the code, since a tar of lickmongo/ does not carry
+along the ~/.{login,cshrc} etc. files.
+
+
+  ~mongo/   Login directory for user mongo (e.g., /usr/local/mongo/)
+     |
+     |
+     +----------+
+     |          |
+     |         doc/   Documentation (LaTeX & PostScript) lives here
+     |
+ lickmongo/  Executable, fonts, on-line help files, etc. live here
+     |
+     +----------+-----------+-----------+-----------+
+     |          |           |           |           |
+     |          |           |       fonts.big/  fonts.ltl/  Binary Font Tables
+     |          |           |           
+     |          |        example/   Examples from the manual         
+     |          |
+     |      postscript/   PostScript hardcopy macro files
+     |
+  source/  Parent directory of all the source code.
+     |
+     +----------+-----------+---------+---------+---------+---------+
+     |          |           |         |         |         |         |
+ devices/   interact/   plotsub/   raster/   sysunix/  sysvms/   fontutil/
+
+  Device     Command     Code      Hardcopy   Unix      VMS       Tools for
+  driver     parser      that      batch      System    System    building
+  code       code        draws     code       code      Code      Fonts
+				   (VMS)
+
+_______________________________________________________________________________
+
+Be sure that the hard-coded default files and directories have the correct
+path names.  The hard-coded defaults are set using cpp #defines in the
+Config.<your_architecture_here> file.
+
+Even if the hard-coded file were not properly changed before using "make",
+it is still possible to get things going by setting some environment
+variables.  The environment variables are listed here.  If set, they
+supersede the defaults.
+
+	FONTDAT         Human-readable default Lick Mongo font file.
+	FONTNEW         Binary Lick Mongo font file.
+	HELPFILE        Lick Mongo's interactive help file.
+	MONGOSCR        Directory for temporary storage of hardcopy files.
+
+On many types of systems, Lick Mongo will automatically make itself.  This
+is accomplished by going to the ~mongo/lickmongo/source directory, typing
+make clean to delete any binaries that may not be right, and then typing
+make to rebuild Lick Mongo from scratch.
+
+When the make finishes, there will be an executable called
+mongo.<your_architecture_here> in the lickmongo/ directory.  This is the
+executable file, and it is probably a good idea to put a symbolic link into
+/usr/local/bin (or wherever your local executables live) which points at
+the Lick Mongo executable.  Just call it mongo.  (The reason that the name
+includes the architecture is that it is possible to use the same copy of
+the source code to build binaries for several different architectures.)
+
+In order to create the default Lick Mongo font file, cd
+~mongo/lickmongo/source and delete any pre-existing fonts.bin file.  If
+freshly imported, such a file may be byte-swapped.  Then tell Lick Mongo to
+re-create its default fonts 
+% mongo
+ * term 1
+ * expand 1.01
+ * box
+ * end
+Lick Mongo should report that it has created a new font file.  Note that
+this file will be named `fonts.bin'.
+
+However, on a Unix system Lick Mongo normally looks for
+`/mongodir/fonts.vis', which is not the file you just created.  Thus, Lick
+Mongo will still not find the font file unless further action is taken.
+`fonts.vis' can be recreated by using the tools in the
+~mongo/lickmongo/fontutil directory after making `fonts.bin'.  Or, you can
+change the hard-coded defaults to be fonts.bin and re-make everything.  Or,
+the environment variable FONTNEW can be set to `/mongodir/fonts.bin'.
+
+Please note that the dependencies in the Lick Mongo makefiles are not
+complete.  This means that a change made in one of the included files will
+not force a re-make of other files that depend on it.  Especially sensitive
+to this are the MONGO*.inc files, but there are other files which suffer
+likewise.  The only sure way to get a change propagated correctly is to do
+a "make clean".
+
+The tools in fontutil/ are standalone programs which can be run separately.
+Two of these programs print the Lick Mongo font tables for inspection.  The
+"mkmbfont" program can be used to generate `fonts.vis' or your own personal
+font file for Lick Mongo.
+
+Lick Mongo is also able to export itself from a Unix system to a VMS
+system.  See the makefiles and EXPORT.2.VMS for details on how to do this.
+
+-------------------------------------------------------------------------------
+BUGS in the building procedure:
+
+SunOs 3.2 has some really horrible bugs in the way the f77 compiler works.
+We have not decided to diddle with Lick Mongo in order to get around this.
+Sites running SunOs 3.2 should upgrade at least to 3.5 for the sake of
+LickMongo and any users of fortran.

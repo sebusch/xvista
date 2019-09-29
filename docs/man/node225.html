@@ -1,0 +1,35 @@
+
+<H1><A NAME="SECTION0016250000000000000000">
+REGISTER: Compute a Linear Plate Solution Between Several Images</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml493#
+<BR>
+<tex2html_image_mark>#command7797#
+<BR>
+
+<P>
+REGISTER solves for the coefficients of a linear plate transformation given
+the positions of at least 3 stars appearing in all the frames
+concerned. The plate transformation is of the form:
+<PRE><tex2html_verbatim_mark>verbatim494#</PRE>
+The reference frame is taken to be the first frames specified, but shifted
+in rows and columns so that the positions of the reference stars average to
+0; if the NOMEAN keyword is used, then the first frame will be the
+reference frame, with no shift at all ( this should be the default, but
+isn't for historical reasons - this may change someday ...)
+
+<P>
+If the HEADER option is specified, the stellar positions are read from the
+image header in cards(RSTARX1,RSTARY1),(RSTARX2,RSTARY2), (RSTARX3,RSTARY3)
+... up to a maximum of 9 stars.  These cards can be placed in the header
+using the MARKSTAR command specifying a buffer number and the keyword
+REF. If the HEADER option is not used, the program will prompt for two
+files containing the stellar positions in each of two frames. In this case,
+only 2 frames can be done at a time.
+
+<P>
+If the LOAD keyword is specified, then the coefficients of the fits are
+loaded into each header in the cards REF_AX, REF_BX, REF_CX, REF_AY,
+REF_BY, and REF_CY.
+
+<P>

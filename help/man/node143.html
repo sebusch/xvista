@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>BL: Correct an Image for Baseline Subtraction Noise</TITLE>
+<META NAME="description" CONTENT="BL: Correct an Image for Baseline Subtraction Noise">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0012230000000000000000">
+BL: Correct an Image for Baseline Subtraction Noise</A>
+</H1>
+
+<!-- linkto bl.html -->
+<A NAME="5149"></A>
+<A NAME="5150"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+<B>NOTE: This is an old Lick Observatory data-taking system command
+that is no longer valid (unless you have to reduce data taken before
+1990).  It is <I>not</I> the same as overscan subtraction.</B>
+
+<P>
+BL removes the noise introduced through the digital baseline-restoration
+procedure used by the data collection program.  The last column of the CCD,
+called the 'baseline column' is not illuminated during an exposure.  Each
+pixel in this column determines the zero-level for the corresponding row in
+the rest of the chip, which is subtracted from each pixel in that row as
+the image is read off the chip into the data-taking system.  NOTE THAT THIS
+IS THE PROCEDURE IMPLEMENTED AT LICK OBSERVATORY, BUT NOT MOST OTHER
+PLACES!  Lick subtracts a row by row baseline value before storing the
+image at the telescope. If this is not done at your site, you should not
+use the BL command!  Write a procedure to do the appropriate bias and/or
+baseline subtraction using the information supplied by your data taking
+system.
+
+<P>
+The baseline measurement is rather noisy, so when the zero-levels are
+subtracted, significant variations in level from one row to another are
+introduced.  The BL program corrects for this by fitting a straight line by
+least-squares to the values in the baseline column. The original baseline
+measurements are then added back into the image data and the mean baseline
+values evaluated from the linear least-squares fit are subtracted.  The
+best fit baseline is stored in the baseline column, unless the keyword KEEP
+is specified, in which case the original baseline is left in the baseline
+column.
+
+<P>
+The baseline column can sometimes exhibit several jumps in level along its
+length.  BL detects these jumps, fitting a series of linear functions to
+the baseline column between these jumps.  To detect the jumps, thus fitting
+the entire column with more than one linear function, use the JUMP keyword.
+
+<P>
+The BL procedure should be applied to every raw image before analysis or
+processing.
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

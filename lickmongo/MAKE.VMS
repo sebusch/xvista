@@ -1,0 +1,304 @@
+
+			  ----------------------------
+				Lick Mongo 1989
+			   VAX/VMS INSTALLATION GUIDE
+			  ----------------------------
+
+
+S. Allen (Lick Observatory)
+R. Pogge (McDonald Observatory)
+
+1989 August 20
+
+
+IMPORTANT NOTE:
+--------------
+
+  To install Lick Mongo on a VMS machine, we shall assume you have set up the
+directory structure as described in the AAA-README.NOW file.  If this is not
+the case, you will not be able to run the automatic installation routines
+provided with this package.
+
+
+Reading the Lick Mongo Backup Tape (From one VMS system to another)
+-------------------------------------------------------------------
+
+Note that this method of distribution does not allow Lick Mongo to be
+configured for different devices as it can be when it comes from a Unix system.
+If you received Lick Mongo on a VMS backup tape , then
+you will need to use the following steps to dump the tape and create the
+proper directory tree:
+
+   1) create a user (or directory) called [MONGO]  (or [...MONGO]).
+
+   2) load the tape onto the drive and "MOUNT/FOREIGN"
+
+   3) dump the tape using the command (say you have the tape mounted on
+	drive MTA0:)
+
+	 $ BACKUP/REWIND/LOG/NOCRC MTA0:MONGO.BCK [*...]
+
+      You must be in the [MONGO] directory for this step.
+
+   4) BACKUP should be telling you that is is creating files like
+      [MONGO.LICK]AAA-README.NOW, etc.
+
+   5) Dismount the tape and go to the [..MONGO.LICK] directory to
+      begin installation.
+
+
+Installing Lick Mongo
+---------------------
+
+  The installation of Lick Mongo is fully automated, but you will need to
+baby-sit the process, in the event that one of the source code files has been
+corrupted.
+
+  Go to the [MONGO.LICK] directory and run the installation file:
+
+      $ @MAKE.COM
+
+  You *MUST* be in this directory.
+
+  This DCL command procedure will call a of DCL command file called "MAKE.COM"
+which lives in the [MONGO.LICK.SOURCE] directory.  This file, in turn, calls a
+number of other "MAKE.COM" files in the various source-code subdirectories.
+Each piece of source code will be compiled by the VMS fortran compiler, and
+the object code inserted into a master library called "MONGO.OLB" which lives
+in the [MONGO.LICK] directory.
+
+  The last step of the installation will ask you if you wish to recompile the
+"hardcopy code".  This is the code that is used only if you have one or more
+of the following rasterized hardcopy devices available on your system:
+
+      Versatec Electrostatic printers (roll and fan-fold paper)
+      Printronix Line Printer (configured as a spooled device)
+      Image 8/300 Laser Printer (IMPress language device)
+
+Note that PostScript Laser Printers (Apple LaserWriter family, DEC LN0x
+series, etc) are not rasterized devices, and this code is irrelevant to them.
+Answer "Y" if you do need to recompile this code, "N" otherwise.
+
+  If the installation is successful, then you will have a MONGO.EXE file and
+MONGO.OBJ file living in your [MONGO.LICK] directory.  You are now ready to
+rock-n-roll.
+
+
+Lick Mongo Logical Name Assignments
+-----------------------------------
+
+   It is recommended that a system logical name (set at login in sylogin)
+MONGODIR: be defined which points at [mongo.lick]. This logical name
+assignment greatly facilitates the use of Lick Mongo.  MONGO is sufficiently
+popular at the sites it has been installed, and used heavily enough that the
+inclusion into sylogin seems warranted.
+
+   If this is not or cannot be done, then the logical names may set by the
+users, but at a cost of total chaos if things have to change (like the disk
+mongo lives on is changed).  The logical names are listed below, and if set,
+they supersede the defaults which are set in "MLOGNAME.COM"
+
+	FONTDAT         Human-readable default Lick MONGO font file.
+	FONTNEW         Binary Lick MONGO font file.
+	HELPFILE        Lick MONGO's interactive help file.
+	MONGOSCR        Directory for temporary storage of hardcopy files.
+
+It is suggested that all MONGO users include the following line in their
+LOGIN.COM files (or whatever files are executed during normal login):
+
+      $ @MONGODIR:MLOGNAME.COM
+
+   This will define all of the necessary Lick Mongo logical names
+automatically. It serves the additional purpose of making it easy for things
+to be changed by either the local Lick Mongo custodian (or the system manager)
+without causing utter confusion among the users.  We learned the hard way at
+UCSC when we changed things and were then deluged by users who suddenly found
+they could not run Lick Mongo.  Users should not have to set the Lick Mongo
+logicals themselves EXCEPT via the MLOGNAME.COM file which is accessible to all
+users.  Anyway, once you've installed Lick Mongo, get into MLOGNAME.COM and
+modify it so it works correctly for your site.  Despite pleas to the contrary,
+the version you have is for a site that ignores all the stuff about defining
+MONGODIR in sylogin and such.
+
+   When this file is invoked, there is a global symbol "MON*GO" defined so
+that typing MONGO (or MON or MONG) will run the Lick Mongo program directly.
+As stated in the section below, this is the most preferable way to run Lick
+Mongo from the user's point of view.
+
+   From the system manager's point of view, it is best to define some scratch
+space somewhere that is publicly accessible, and pointed at by the MONGOSCR
+logical name.  This space should be swept clean of files very few days to
+prevent getting cluttered up by the ruins of failed plot files.
+
+
+RUNNING Lick Mongo
+------------------
+
+  Users should never run the Lick Mongo program directly, but rather should
+use an intermediary file, [MONGO.LICK]MONGO.COM to run it for them.  This way,
+all of the necessary logical names will be certain to be set, and it is also
+possible to keep all users looking at the same version of Lick Mongo.  Users
+under no circumstances should be allowed to keep and maintain their own
+versions of Lick Mongo.  A central shared version is sufficient.  In addition,
+workstation terminals (like the Console on a VAXstation II) must be treated
+differently than regular terminals, and the MONGO.COM file handles this.  It
+is difficult (but not impossible) for users to do the setup manually, but the
+automatic procedure is preferred.
+
+  You may wish to modify the file [MONGO.LICK]MONGO.COM to change the welcome
+message, or tweak appropriately for your site.  The welcome message gives you
+a chance to keep users abreast of bugs, changes, or other MONGO related
+issues.
+
+
+Font Files
+----------
+
+  For making screen labels (and some kinds of hardcopy labels), Lick Mongo
+maintains a set of files containing binary format font data bases.  These
+fonts are based on the popular Hershey Font families.  Two font files are
+distributed with VMS distributions.  Because all VMS machines have a similar
+architecture, the font files are the same machine-to-machine.  Crossing
+boundaries to Sun computers and the like, the binary format files will be byte
+swapped.  The two basic fonts provided are:
+
+      FONTS.SIM  -  A "simple" font which uses as its base font a san-serif
+		    single-stroke font called "Simplex Roman".  This has the
+		    best general appearance on high and low-resolution screens,
+		    and produces nice hardcopy.  It also includes a full
+		    greek and astronomical symbol font, a serif-Roman (called
+		    a "Duplex Roman") font and a "Tiny" font which is a small
+		    sized "machine" font similar to old pen plotter characters.
+
+      FONTS.BIN  -  The old MONGO binary font file, the base font is a Duplex
+		    Roman font.  Complicated and often ratty in appearance on
+		    high-resolution devices.  There is a greek/symbol font,
+		    a fancy script font, and the "Tiny" font as above.  All
+		    of these fonts carry a high vector overhead (i.e., lots of
+		    commands required to stroke them), and have been replaced
+		    by the "simplex" fonts above.
+
+  The full (basic) set of Hershey fonts is accessible, and in the directory
+[MONGO.LICK.FONTUTIL] there are a series of utilities for "rolling your own"
+font files.  Consult the AAA-README.TXT file in that directory for details.
+
+
+Help File
+---------
+
+  Lick Mongo has an interactive help utility, which gives a brief descriptions
+of the interactive commands and their argument lists.  This file is kept in
+[MONGO.LICK]HELP.DAT.  It is an ASCII text file, and may need to be modified
+to update the list of graphics devices available on your system.  HELP.DAT has
+a special (and rigorous) format in that the first line of an entry must begin
+with the command name and argument list in ALL CAPS.  Each following line must
+begin with a TAB character.  8 spaces is not acceptable.  The MONGO command
+parser which is at the base of Interactive Lick Mongo uses the TAB character
+to distinguish between help file entries and continuation lines.  Silly to be
+sure, but too much work to figure out a new system at present.  Be careful.
+
+   Things you may wish to change in HELP.DAT (note: make a copy into something
+like HELP.ORIG first that contains the full original help file):
+
+      1) Valid terminal devices listed under the TERMINAL command entry.
+
+      2) Remove unavailable or irrelevant commands like all VERSATEC related
+	 commands if there is no Versatec printer on your system
+
+      3) References to COLOR and other device specific commands irrelevant
+	 to your site.
+
+
+PostScript File Printing
+------------------------
+
+  For PostScript hardcopy, Lick Mongo produces an ASCII text file containing a
+standard PostScript page description.  This page description follows very
+carefully the standard structuring conventions, and so should be able to be
+printed on any of a wide number of PostScript printers.  When Lick Mongo is
+instructed to create a PostScript plot, it will open a file called
+MGOxxxxxx.PS in the MONGOSCR directory.  "xxxxxx" is a 6-digit time tag (for
+example: MGO172423.PS is a Lick Mongo PostScript file opened at 17:24:23).
+This file will be filled with the PostScript page description commands in
+ASCII text format.
+
+  When the plot is finished, Lick Mongo will send the MGOxxxxxx.PS file to
+your system's PostScript printer by way of a DCL command file MONGOPS.COM
+which lives in the MONGODIR: directory.  The actual printing command is queued
+up in the system queue for execution, since it involves some housekeeping
+functions to make sure that the MGOxxxxxx.PS files are deleted on completion
+of the printing request.
+
+  The file provided with this installation shows how it works at McDonald
+Observatory.  It will have to be modified appropriately to your site's
+particular setup.  For example, the definition of MONGOSCR is specific to the
+installation at McDonald, and the command used to print the PostScript file
+depends on a local program for file serving to an Apple LaserWriter.
+
+  Lick Mongo makes use of three PostScript macro files for producing
+PostScript plots.  These are in the files:
+
+      DODOT.PS
+      SIMPUTLABEL.PS
+      MONGOLABEL.PS
+
+  They are good examples of fairly complex PostScript language "programs" for
+doing specialized tasks.  They allow Lick Mongo to use the internal computer
+in PostScript printers to do some of the dirty work (and in some, like the
+Apple LaserWriter II-NTX, it's a 68020 processor that's about as fast as your
+typical MicroVAX!).  However, if you break them, all hell will bust loose.
+Set the protection on these files to be:
+
+      $ set file/prot=(o:re,w:re,g:re,s:re) *.PS
+
+to keep them safe and sound after the installation is done with.
+
+
+Rasterized Device Printing
+--------------------------
+
+  Each of the various rasterized devices has a set of files needed to help
+Lick Mongo send those files to the appropriate printer and clean up the mess
+left behind.  Rasterized files work differently than PostScript files as
+described above in that two steps are required.
+
+  For each of the various devices (Versatec, Printronix, and Imagen) Lick
+Mongo creates a device-independent vector file called MGOxxxxx.VEC in the
+MONGOSCR directory.  The "xxxxxx" is a time tag same as in PostScript files.
+This .VEC file is then passed to a program called a "rasterizer" which takes
+the .VEC file and sends device dependent plotting raster commands to the
+printer.
+
+  Thus, three command file are required for each device, one to control the
+device queuing, one to actually control the printing, and the third containing
+the executable (.EXE) of the rasterizing program.
+
+      Device      QUEUE file      DCL Control File   Rasterizer
+    --------------------------------------------------------------
+      Versatec    CMDFILE.DAT      MONGORAST.COM     RASTER.EXE
+      Imagen      CMDIMAG.DAT      MONGOIMAG1.COM    IRASTER2.EXE
+		  CMDIMAG1.DAT     MONGOIMAG2.COM
+      Printronix  CMDPRXF.DAT      PRINTRONX.COM     PRASTER.EXE
+    --------------------------------------------------------------
+
+For the Imagen printer, there are 2 .COM files, depending on whether you want
+to use single or double-sized line widths for the smallest line width drawn.
+
+   If you are so unfortunate (in this day and age of low-cost PostScript
+printers) to own one of these old devices, you should be fine.  Any other
+devices (HP Laser Jets, pen plotters, etc) will require you to write custom
+device drivers.  Look at the code in [MONGO.LICK.SOURCE.DEVICES] for clues as
+to how to go about doing this.
+
+
+Maintaining Lick Mongo
+----------------------
+
+   While the installation is fully automated, point-to-point maintenance,
+sadly, is not.  VMS does not have a sufficiently sophisticated make utility
+like in unix (MMS not withstanding), and so you'll have to proceed by hand. We
+suggest you look at the various .COM files in the source code subdirectories
+for an idea of how to make and install an new command, or to install
+modifications to an old one.
+
+

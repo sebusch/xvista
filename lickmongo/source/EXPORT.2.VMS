@@ -1,0 +1,36 @@
+This is how to export the Lick Mongo source code only to a VMS system.
+There are presently three pre-made VMS configurations:
+
+vmscode         For the now-defunct Lick VAX 11/780 with AED512
+uvmscode        For a microVMS 4.5 to 4.7 system with UIS-style DECwindows
+bvmscode        For a microVMS system with no window support
+
+The makefiles know about the above 3 targets, but it may be necessary to
+change the VMSTREE variable in ALL of the makefiles (sorry about that).
+
+--------------------------------------------------------------------------------
+
+To make a tape of the above-generated code suitable for transport to VMS:
+
+make vmstape
+
+It is useful for transferring code updates from the UNIX machine to VMS.
+It does not transfer the help, data, or font files.
+It writes an ANSI tape labelled MONGO.  The
+contents of the tape can be transferred to the VMS system by
+using the VMS COPY command.  Here's an example.
+    $ set def [MONGO]       ! you must be in the directory above MONGODIR
+    $ mount mtaX: MONGO
+    $ copy/log mtaX:*.*;* *
+    $ @UNPACK.COM           ! unpacks the Lick Mongo directory tree
+Now all of the Lick Mongo source files are in place in
+a subdirectories [.LICK.SOURCE...].  To remake all of Lick Mongo, type
+    $ set def [.LICK.SOURCE]
+    $ @make
+
+This command depends on vmsprep and ansitape being known.  These
+are public domain programs to prepare directory trees for export to
+VMS and to write ANSI tapes.  They are shipped with Lick Mongo in the
+util directory.
+
+--------------------------------------------------------------------------------

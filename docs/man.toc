@@ -1,0 +1,238 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}The VISTA Program}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}A Brief History of VISTA}{1}{section.1.2}
+\contentsline {section}{\numberline {1.3}VISTA Basics}{2}{section.1.3}
+\contentsline {section}{\numberline {1.4}VISTA Command Syntax}{4}{section.1.4}
+\contentsline {section}{\numberline {1.5}VISTA and Disk Files}{6}{section.1.5}
+\contentsline {section}{\numberline {1.6}Running VISTA}{7}{section.1.6}
+\contentsline {section}{\numberline {1.7}HELP: The VISTA Online Help Facility}{7}{section.1.7}
+\contentsline {section}{\numberline {1.8}Useful Commands for the Beginner}{8}{section.1.8}
+\contentsline {section}{\numberline {1.9}QUIT: Stopping VISTA}{9}{section.1.9}
+\contentsline {section}{\numberline {1.10}VISTA News}{9}{section.1.10}
+\contentsline {section}{\numberline {1.11}TERM: Specify or Change the Graphics Terminal Type}{9}{section.1.11}
+\contentsline {chapter}{\numberline {2}Advanced VISTA Command Syntax}{11}{chapter.2}
+\contentsline {section}{\numberline {2.1}Abbreviating VISTA Commands}{11}{section.2.1}
+\contentsline {section}{\numberline {2.2}Output Redirection}{11}{section.2.2}
+\contentsline {section}{\numberline {2.3}HISTORY: Recall the Last Several Commands }{12}{section.2.3}
+\contentsline {section}{\numberline {2.4}\%: Repeating/Editing a Previous Command}{12}{section.2.4}
+\contentsline {section}{\numberline {2.5}Extending Commands Past One Line}{14}{section.2.5}
+\contentsline {section}{\numberline {2.6}ALIAS/UNALIAS: Define/Delete Command Aliases}{14}{section.2.6}
+\contentsline {section}{\numberline {2.7}EDIT: Editing the Last Command}{15}{section.2.7}
+\contentsline {section}{\numberline {2.8}SETDIR: Set the VISTA Default Directories and File Extensions}{16}{section.2.8}
+\contentsline {section}{\numberline {2.9}CD: Change the Current Working Directory}{17}{section.2.9}
+\contentsline {chapter}{\numberline {3}Variables, Arithmetic Expressions, \& Strings}{18}{chapter.3}
+\contentsline {section}{\numberline {3.1}Arithmetic Expressions in VISTA}{18}{section.3.1}
+\contentsline {section}{\numberline {3.2}SET: Define a VISTA Variable and Assign it a Value}{21}{section.3.2}
+\contentsline {section}{\numberline {3.3}TYPE: Evaluate/Print Arithmetic Expressions}{21}{section.3.3}
+\contentsline {section}{\numberline {3.4}ASK: Prompt for Numerical Input at the Keyboard}{22}{section.3.4}
+\contentsline {section}{\numberline {3.5}Using Variables to Specify Buffer Numbers}{22}{section.3.5}
+\contentsline {section}{\numberline {3.6}PRINTF: Formatted Display of Strings and Arithmetic Expressions}{23}{section.3.6}
+\contentsline {section}{\numberline {3.7}STRING: Defining VISTA String Variables}{24}{section.3.7}
+\contentsline {section}{\numberline {3.8}Substituting String Variables into the Command Line}{25}{section.3.8}
+\contentsline {chapter}{\numberline {4}VISTA Command Procedure Scripts}{28}{chapter.4}
+\contentsline {section}{\numberline {4.1}Introduction to Command Procedure Scripts}{28}{section.4.1}
+\contentsline {section}{\numberline {4.2}PEDIT: Edit the Procedure Buffer}{29}{section.4.2}
+\contentsline {section}{\numberline {4.3}STOP: Stop Procedure Execution}{29}{section.4.3}
+\contentsline {section}{\numberline {4.4}END: End Procedure Execution}{30}{section.4.4}
+\contentsline {section}{\numberline {4.5}SHOW: Show the Current Procedure Buffer}{30}{section.4.5}
+\contentsline {section}{\numberline {4.6}WP: Write a Procedure to Disk}{30}{section.4.6}
+\contentsline {section}{\numberline {4.7}RP: Read a Procedure from Disk}{30}{section.4.7}
+\contentsline {section}{\numberline {4.8}GO: Start Procedure Execution}{31}{section.4.8}
+\contentsline {section}{\numberline {4.9}CALL: Call a Procedure as a Subroutine}{31}{section.4.9}
+\contentsline {section}{\numberline {4.10}RETURN: Return from a Procedure Subroutine}{32}{section.4.10}
+\contentsline {section}{\numberline {4.11}PARAMETER: Pass Arguments to a Procedure}{33}{section.4.11}
+\contentsline {section}{\numberline {4.12}VERIFY: Verify (Trace) Procedure Execution}{33}{section.4.12}
+\contentsline {section}{\numberline {4.13}DEF: Define a Procedure}{34}{section.4.13}
+\contentsline {section}{\numberline {4.14}SAME: End Procedure Insertion and Keep Trailing Lines}{34}{section.4.14}
+\contentsline {chapter}{\numberline {5}Flow Control in Procedures}{35}{chapter.5}
+\contentsline {section}{\numberline {5.1}PAUSE: Pause Procedure Execution}{35}{section.5.1}
+\contentsline {section}{\numberline {5.2}CONTINUE: Resume a Paused Procedure}{35}{section.5.2}
+\contentsline {section}{\numberline {5.3}GOTO: Jump to a Specified Place in a Procedure}{35}{section.5.3}
+\contentsline {section}{\numberline {5.4}DO/END\_DO: Using Do-Loops in Procedures}{36}{section.5.4}
+\contentsline {section}{\numberline {5.5}IF, ELSE\_IF, ELSE, END\_IF: Conditional (IF) Flow Control}{37}{section.5.5}
+\contentsline {section}{\numberline {5.6}ERROR: Execute On Error}{39}{section.5.6}
+\contentsline {section}{\numberline {5.7}EOF: Execute On End-Of-File (EOF)}{40}{section.5.7}
+\contentsline {chapter}{\numberline {6}Input and Output of Images and Spectra}{41}{chapter.6}
+\contentsline {section}{\numberline {6.1}RD: Read an Image from a Disk File}{42}{section.6.1}
+\contentsline {section}{\numberline {6.2}WD: Write an Image to a Disk File}{43}{section.6.2}
+\contentsline {section}{\numberline {6.3}SETDIR: Set the VISTA Default Directories and File Extensions}{45}{section.6.3}
+\contentsline {section}{\numberline {6.4}CD: Change the Current Working Directory}{46}{section.6.4}
+\contentsline {section}{\numberline {6.5}COPY: Copy an Image between Buffers}{46}{section.6.5}
+\contentsline {section}{\numberline {6.6}BUFFERS: List the Contents of the Image Buffers}{47}{section.6.6}
+\contentsline {section}{\numberline {6.7}DISPOSE: Clear (Delete) an Image Buffer}{47}{section.6.7}
+\contentsline {section}{\numberline {6.8}CREATE: Create a Blank Image}{48}{section.6.8}
+\contentsline {section}{\numberline {6.9}CHANGE: Change the Object Name of an Image}{49}{section.6.9}
+\contentsline {section}{\numberline {6.10}FITS: Insert/Edit a FITS Header Card}{50}{section.6.10}
+\contentsline {section}{\numberline {6.11}UNFIT: Delete a FITS Header Card}{50}{section.6.11}
+\contentsline {section}{\numberline {6.12}HEDIT: Edit FITS Headers}{50}{section.6.12}
+\contentsline {section}{\numberline {6.13}FIXHEAD: Fix FITS Headers}{51}{section.6.13}
+\contentsline {chapter}{\numberline {7}Getting, Saving, and Printing Non-Image VISTA Data}{52}{chapter.7}
+\contentsline {section}{\numberline {7.1}Non-Image Data Files used by VISTA}{52}{section.7.1}
+\contentsline {section}{\numberline {7.2}GET/SAVE: Get/Save a VISTA Data File}{52}{section.7.2}
+\contentsline {section}{\numberline {7.3}PRINT: Print Data Files, Spectra, or Image Subsections}{53}{section.7.3}
+\contentsline {section}{\numberline {7.4}OPEN: Open an ASCII Text File}{54}{section.7.4}
+\contentsline {section}{\numberline {7.5}CLOSE: Close an Open ASCII Text File}{55}{section.7.5}
+\contentsline {section}{\numberline {7.6}READ: Read the Next Line of an ASCII Text File}{55}{section.7.6}
+\contentsline {section}{\numberline {7.7}SKIP: Mark Selected Lines to Skip in a File}{57}{section.7.7}
+\contentsline {section}{\numberline {7.8}REWIND: Rewind an Open File to the First Line}{57}{section.7.8}
+\contentsline {section}{\numberline {7.9}STAT: Compute Statistics of Data in a File}{58}{section.7.9}
+\contentsline {chapter}{\numberline {8}Image Display, Plotting, and Interaction}{59}{chapter.8}
+\contentsline {section}{\numberline {8.1}Introduction to the X11 Image Display}{59}{section.8.1}
+\contentsline {section}{\numberline {8.2}TV: Display an Image}{62}{section.8.2}
+\contentsline {section}{\numberline {8.3}ITV: Interact with the Image on the TV}{64}{section.8.3}
+\contentsline {section}{\numberline {8.4}COLOR: Load a Color Map into the Image Display}{65}{section.8.4}
+\contentsline {section}{\numberline {8.5}TVBOX: Draw a Box on the Image Display}{67}{section.8.5}
+\contentsline {section}{\numberline {8.6}TVPLOT: Draw Text and Graphics on the Image Display}{67}{section.8.6}
+\contentsline {section}{\numberline {8.7}IMPOST: Make a PostScript Hardcopy of an Image}{69}{section.8.7}
+\contentsline {section}{\numberline {8.8}PLOT: Plot a Row or Column of an Image or Spectrum}{75}{section.8.8}
+\contentsline {section}{\numberline {8.9}RPLOT: Radial Intensity Plot of an Object in an Image}{79}{section.8.9}
+\contentsline {section}{\numberline {8.10}TVRPLOT: Radial Intensity Plot of an Object on the Image Display}{80}{section.8.10}
+\contentsline {section}{\numberline {8.11}CONTOUR: Make Contour Maps Images}{82}{section.8.11}
+\contentsline {section}{\numberline {8.12}OVERLAY: Draw contours over a Greyscale Image (PostScript)}{89}{section.8.12}
+\contentsline {section}{\numberline {8.13}HISTOGRAM: Display a Histogram of Image Pixel Values}{95}{section.8.13}
+\contentsline {section}{\numberline {8.14}PLOT3D: Make a 3-D Perspective (mesh) Plot}{96}{section.8.14}
+\contentsline {section}{\numberline {8.15}CLEAR: Clear the Terminal or Image Display}{97}{section.8.15}
+\contentsline {section}{\numberline {8.16}TEXT: Embed Permanent Text on an Image}{97}{section.8.16}
+\contentsline {chapter}{\numberline {9}Marking Image Subsections or Pixels}{99}{chapter.9}
+\contentsline {section}{\numberline {9.1}Selecting Image Subsections for Computation}{99}{section.9.1}
+\contentsline {section}{\numberline {9.2}BOX: Define a Box or Image Subsection}{99}{section.9.2}
+\contentsline {section}{\numberline {9.3}MASK/UNMASK: Ignore (Mask) Specified Pixels}{100}{section.9.3}
+\contentsline {section}{\numberline {9.4}MASKTOIM: Create an Image Showing Masked Pixels}{101}{section.9.4}
+\contentsline {chapter}{\numberline {10}Image Arithmetic}{103}{chapter.10}
+\contentsline {section}{\numberline {10.1}Introduction to Image Arithmetic}{103}{section.10.1}
+\contentsline {section}{\numberline {10.2}ADD, SUBTRACT, MULTIPLY, and DIVIDE}{103}{section.10.2}
+\contentsline {section}{\numberline {10.3}SQRT: Square Root of an Image}{105}{section.10.3}
+\contentsline {section}{\numberline {10.4}LOG: Base-10 Logarithm of an Image}{105}{section.10.4}
+\contentsline {section}{\numberline {10.5}LN: Natural Logarithm of an Image}{105}{section.10.5}
+\contentsline {section}{\numberline {10.6}EXP: Exponentiate an Image}{105}{section.10.6}
+\contentsline {section}{\numberline {10.7}TAN: Tangent of an Image}{106}{section.10.7}
+\contentsline {section}{\numberline {10.8}ARCTAN: Arctangent of an Image}{106}{section.10.8}
+\contentsline {section}{\numberline {10.9}COS: Cosine of an Image}{106}{section.10.9}
+\contentsline {section}{\numberline {10.10}SIN: Sine of an Image}{106}{section.10.10}
+\contentsline {section}{\numberline {10.11}NINT: Nearest Integer of an Image}{106}{section.10.11}
+\contentsline {section}{\numberline {10.12}ONEOVER: Invert an Image}{106}{section.10.12}
+\contentsline {chapter}{\numberline {11}Basic Image Analysis}{107}{chapter.11}
+\contentsline {section}{\numberline {11.1}MN: Compute the Mean of the Pixel Values}{107}{section.11.1}
+\contentsline {section}{\numberline {11.2}SKY: Compute the Modal Sky/Background Level in an Image}{108}{section.11.2}
+\contentsline {section}{\numberline {11.3}ABX: Analyze Pixel Statistics in an Image}{109}{section.11.3}
+\contentsline {section}{\numberline {11.4}HISTOGRAM: Display a Histogram of Image Pixel Values}{110}{section.11.4}
+\contentsline {section}{\numberline {11.5}AXES: Compute the Centroid of an Object in an Image}{112}{section.11.5}
+\contentsline {chapter}{\numberline {12}Basic Image Processing}{114}{chapter.12}
+\contentsline {section}{\numberline {12.1}MERGE: Merge Overlapping Images or Spectra}{114}{section.12.1}
+\contentsline {section}{\numberline {12.2}WINDOW: Window (Crop) an Image to a Smaller Size}{115}{section.12.2}
+\contentsline {section}{\numberline {12.3}ROTATE: Rotate an Image}{115}{section.12.3}
+\contentsline {section}{\numberline {12.4}FLIP: Change the Orientation of an Image}{116}{section.12.4}
+\contentsline {section}{\numberline {12.5}BIN: Compress (bin) an Image or Spectrum}{117}{section.12.5}
+\contentsline {section}{\numberline {12.6}SHIFT: Shift an Image}{118}{section.12.6}
+\contentsline {section}{\numberline {12.7}CLIP: Replace Pixels Outside an Intensity Range}{119}{section.12.7}
+\contentsline {section}{\numberline {12.8}COLFIX: Fix Deferred Charge Columns in a CCD Image}{120}{section.12.8}
+\contentsline {section}{\numberline {12.9}SMOOTH: Smooth an Image or Spectrum}{121}{section.12.9}
+\contentsline {section}{\numberline {12.10}ZAP: Non-Interactive Image Median Filter}{122}{section.12.10}
+\contentsline {section}{\numberline {12.11}TVZAP: Interactively Remove Pixels by Median Filtering}{123}{section.12.11}
+\contentsline {section}{\numberline {12.12}MEDIAN: Compute Median of Several Images}{124}{section.12.12}
+\contentsline {section}{\numberline {12.13}BIGMEDIAN: Compute Median of a Large Number of FITS Images}{124}{section.12.13}
+\contentsline {section}{\numberline {12.14}PICCRS: Optimally Combine Frames with Outlier Rejection}{125}{section.12.14}
+\contentsline {section}{\numberline {12.15}SURFACE: Fit a Plane or Second-Order Surface to an Image}{127}{section.12.15}
+\contentsline {section}{\numberline {12.16}SPLINE: Replace Image or Spectrum by a Cubic Spline Fit}{129}{section.12.16}
+\contentsline {section}{\numberline {12.17}CROSS: Cross-Correlate Images or Spectra}{130}{section.12.17}
+\contentsline {section}{\numberline {12.18}INTERP: Interpolate Across Rows, Columns, or Masked Pixels}{131}{section.12.18}
+\contentsline {section}{\numberline {12.19}REGISTAR: Register Images Using Field Star Positions}{132}{section.12.19}
+\contentsline {section}{\numberline {12.20}DSSCOORD: Compute RA and Dec for Digitized Sky Survey Images}{134}{section.12.20}
+\contentsline {section}{\numberline {12.21}ATODSIM/ATODFIX: Simulate/Fix WF/PC1 A/D Conversion Errors}{135}{section.12.21}
+\contentsline {section}{\numberline {12.22}LINCOMB: Fit a Linear Combination of Images to an Image}{136}{section.12.22}
+\contentsline {section}{\numberline {12.23}BL: Correct an Image for Baseline Subtraction Noise}{137}{section.12.23}
+\contentsline {chapter}{\numberline {13}Fourier Transforms and Complex Arithmetic}{138}{chapter.13}
+\contentsline {section}{\numberline {13.1}FFT: Compute a Forward Fast-Fourier Transform}{138}{section.13.1}
+\contentsline {section}{\numberline {13.2}IFFT: Compute an Inverse FFT}{139}{section.13.2}
+\contentsline {section}{\numberline {13.3}POWERS: Generate a Power Spectrum (Periodogram Estimate)}{140}{section.13.3}
+\contentsline {section}{\numberline {13.4}CABS: Absolute Value of a Complex Image}{140}{section.13.4}
+\contentsline {section}{\numberline {13.5}Complex Image Arithmetic and Operators}{140}{section.13.5}
+\contentsline {section}{\numberline {13.6}CMUL/CDIV: Complex Image Multiplication}{141}{section.13.6}
+\contentsline {section}{\numberline {13.7}CMPLX/IMAG/REAL/CONJ: Complex Image Operators}{141}{section.13.7}
+\contentsline {chapter}{\numberline {14}Spectroscopy}{142}{chapter.14}
+\contentsline {section}{\numberline {14.1}Introduction to Spectroscopy}{142}{section.14.1}
+\contentsline {section}{\numberline {14.2}MASH: Extract a Spectrum by Summing (mashing) Rows or Columns}{143}{section.14.2}
+\contentsline {section}{\numberline {14.3}SPECTROID: Map the Location of a Spectrum on an Image}{144}{section.14.3}
+\contentsline {section}{\numberline {14.4}EXTRACT: Optimal Spectrum Extraction (Horne's Method)}{147}{section.14.4}
+\contentsline {section}{\numberline {14.5}LINEID: Identify Lines in a Wavelength-Calibration Spectrum}{149}{section.14.5}
+\contentsline {section}{\numberline {14.6}WSCALE: Compute Wavelength Scale from Indentified Lines}{150}{section.14.6}
+\contentsline {section}{\numberline {14.7}COPW: Copy a Wavelength Scale onto a Spectrum}{151}{section.14.7}
+\contentsline {section}{\numberline {14.8}ALIGN: Linearize or Transform a Wavelength-Calibrated Spectrum}{152}{section.14.8}
+\contentsline {section}{\numberline {14.9}SKYLINE: Re-Calibrate Wavelengths Using Night-Sky Lines}{154}{section.14.9}
+\contentsline {section}{\numberline {14.10}EXTINCT: Correct a Spectrum for Atmospheric Extinction}{155}{section.14.10}
+\contentsline {section}{\numberline {14.11}SETUP: Set the Longitude and Latitude for VISTA}{155}{section.14.11}
+\contentsline {section}{\numberline {14.12}FLUXSTAR: Compute Flux Curves from a Standard-Star Spectrum}{156}{section.14.12}
+\contentsline {section}{\numberline {14.13}FLUX: Flux Calibrate a Spectrum}{158}{section.14.13}
+\contentsline {section}{\numberline {14.14}POLY: Fit a Polynomial to a Spectrum}{158}{section.14.14}
+\contentsline {section}{\numberline {14.15}STRETCH: Stretch a Spectrum into a 2-D Image}{159}{section.14.15}
+\contentsline {section}{\numberline {14.16}ISPLINE: Interactively Fit a Spline to a Spectrum}{160}{section.14.16}
+\contentsline {section}{\numberline {14.17}ROWFIT: Fit Each Row of an Image with a Function}{163}{section.14.17}
+\contentsline {section}{\numberline {14.18}FINDSHIFT: Compute Relative Shifts Between Two Spectra}{164}{section.14.18}
+\contentsline {section}{\numberline {14.19}FINDPEAK: Find the Location of a Spectrum along Rows or Columns}{165}{section.14.19}
+\contentsline {section}{\numberline {14.20}SPINDEX: Measure Equivalent Widths at each Row of an Image}{166}{section.14.20}
+\contentsline {section}{\numberline {14.21}FQUO: Fit a Broadening Function to a Fourier Quotient Spectrum}{167}{section.14.21}
+\contentsline {section}{\numberline {14.22}EWAVE: Wavelength Calibrate an Echelle Image}{169}{section.14.22}
+\contentsline {section}{\numberline {14.23}EXTSPEC: Copy an Order of an Echelle Image to a Spectrum}{170}{section.14.23}
+\contentsline {chapter}{\numberline {15}Surface Photometry}{171}{chapter.15}
+\contentsline {section}{\numberline {15.1}CUT: Extract a Brightness Profile Cut along any Position Angle}{171}{section.15.1}
+\contentsline {section}{\numberline {15.2}PROFILE: Compute Surface Brightness Profile by Elliptical Isophote Fitting}{172}{section.15.2}
+\contentsline {section}{\numberline {15.3}ANNULUS: Compute a Radial Profile by Azimuthal Averaging}{174}{section.15.3}
+\contentsline {section}{\numberline {15.4}RECON: Reconstruct an Image from a Surface Photometry Profile}{178}{section.15.4}
+\contentsline {section}{\numberline {15.5}APER: Aperture Photometry of an Extended Object}{179}{section.15.5}
+\contentsline {section}{\numberline {15.6}ROUND: Deproject Spirals or Elliptical Images}{180}{section.15.6}
+\contentsline {section}{\numberline {15.7}POLAR: Regrid an Image into Polar Coordinates}{180}{section.15.7}
+\contentsline {section}{\numberline {15.8}EGAL: Reconstruct a Galaxy from its PROFILE}{181}{section.15.8}
+\contentsline {section}{\numberline {15.9}SNUC: Surface Photometry of Multiple-Galaxy Systems}{182}{section.15.9}
+\contentsline {section}{\numberline {15.10}RENUC: Reconstruct Galaxies from Multiple-Galaxy Photometry}{183}{section.15.10}
+\contentsline {section}{\numberline {15.11}SECTOR: Surface Photometry of Star Clusters or Complex Objects}{184}{section.15.11}
+\contentsline {section}{\numberline {15.12}AEDIT: Edit Values in Selected Image Regions}{184}{section.15.12}
+\contentsline {section}{\numberline {15.13}CLPROF: Clear the Contents of the PROFILE Buffer}{185}{section.15.13}
+\contentsline {section}{\numberline {15.14}CPROF: Correct the Results of a PROFILE Calculation}{185}{section.15.14}
+\contentsline {section}{\numberline {15.15}EMAG: Aperture Photometry with Elliptical Apertures}{186}{section.15.15}
+\contentsline {section}{\numberline {15.16}EMARK: Interactively Specify Ellipse Parameters for Photometry with EMAG}{188}{section.15.16}
+\contentsline {section}{\numberline {15.17}RMARK: Interactively Set Maximum Radius for EMAG}{188}{section.15.17}
+\contentsline {section}{\numberline {15.18}ELLMAG: Compute Elliptical Magnitudes for PROFILE Ellipses}{189}{section.15.18}
+\contentsline {section}{\numberline {15.19}TVPROF: Display PROFILE Results on the Image Display}{189}{section.15.19}
+\contentsline {section}{\numberline {15.20}OPREP: Open a Batch Surface Photometry Preparation File}{190}{section.15.20}
+\contentsline {section}{\numberline {15.21}CLPREP: Close a Batch Surface Photometry Preparation File}{190}{section.15.21}
+\contentsline {section}{\numberline {15.22}RPREP: Read a Record from a Batch Surface Photometry Prep-File}{191}{section.15.22}
+\contentsline {section}{\numberline {15.23}WPREP: Write a Record into a Batch Surface Photometry Prep-File}{191}{section.15.23}
+\contentsline {chapter}{\numberline {16}Stellar Photometry}{192}{chapter.16}
+\contentsline {section}{\numberline {16.1}DAOPHOT: A Stellar Photometry Package}{194}{section.16.1}
+\contentsline {section}{\numberline {16.2}OPTIONS: Daophot OPTIONS Command}{194}{section.16.2}
+\contentsline {section}{\numberline {16.3}FIND: DAOPHOT FIND Command}{195}{section.16.3}
+\contentsline {section}{\numberline {16.4}PHOTOM: DAOPHOT APERTURE PHOTOMETRY Command}{196}{section.16.4}
+\contentsline {section}{\numberline {16.5}GROUP: DAOPHOT GROUP Command}{196}{section.16.5}
+\contentsline {section}{\numberline {16.6}PSF: DAOPHOT PSF Command}{197}{section.16.6}
+\contentsline {section}{\numberline {16.7}PEAK: DAOPHOT PEAK Command}{197}{section.16.7}
+\contentsline {section}{\numberline {16.8}NSTAR: DAOPHOT NSTAR Command}{197}{section.16.8}
+\contentsline {section}{\numberline {16.9}SUBSTAR: DAOPHOT SUBSTAR Command}{198}{section.16.9}
+\contentsline {section}{\numberline {16.10}MONITOR/NOMONITOR: DAOPHOT MONITORING COMMANDS}{198}{section.16.10}
+\contentsline {section}{\numberline {16.11}SORT: Sort Two DAOPHOT Files}{198}{section.16.11}
+\contentsline {section}{\numberline {16.12}OFFSET: Offset Positions in a DAOPHOT File}{198}{section.16.12}
+\contentsline {section}{\numberline {16.13}SELECT: DAOPHOT SELECT Command}{198}{section.16.13}
+\contentsline {section}{\numberline {16.14}APPEND: DAOPHOT APPEND Command}{199}{section.16.14}
+\contentsline {section}{\numberline {16.15}DAOSKY: DAOPHOT SKY Command}{199}{section.16.15}
+\contentsline {section}{\numberline {16.16}DUMP: DAOPHOT DUMP Command}{199}{section.16.16}
+\contentsline {section}{\numberline {16.17}AUTOMARK: Locate Stars Automatically in an Image}{199}{section.16.17}
+\contentsline {section}{\numberline {16.18}MARKSTAR: Locate Stars Interactively in an Image}{201}{section.16.18}
+\contentsline {section}{\numberline {16.19}APERSTAR: Measure Brightnesses by Circular Aperture Photometry}{204}{section.16.19}
+\contentsline {section}{\numberline {16.20}COORDS: Compute Celestial Coordinates for Stars}{205}{section.16.20}
+\contentsline {section}{\numberline {16.21}MODPHOT: Modify Entries in a VISTA Photometry File}{206}{section.16.21}
+\contentsline {section}{\numberline {16.22}SHORTAP: Convert DAOPHOT Aperture Photometry Files to NSTAR Files}{206}{section.16.22}
+\contentsline {section}{\numberline {16.23}COMBINE: Combine Photometry Files using Magnitudes and/or Distances}{206}{section.16.23}
+\contentsline {section}{\numberline {16.24}MAGAVER: Compute Weighted Means of Photometry from COMBINE}{208}{section.16.24}
+\contentsline {section}{\numberline {16.25}REGISTER: Compute a Linear Plate Solution Between Several Images}{208}{section.16.25}
+\contentsline {section}{\numberline {16.26}FITSTAR: Calculate Extinction and Transformation Coefficients}{208}{section.16.26}
+\contentsline {section}{\numberline {16.27}CORRECT: Correct Photometry for Extinction and/or Transformations}{211}{section.16.27}
+\contentsline {section}{\numberline {16.28}DAOFILES: Define Names of DAOPHOT Files for DAOPHOT Commands}{212}{section.16.28}
+\contentsline {section}{\numberline {16.29}AUTOCEN: Find the Center of an Extended Object}{212}{section.16.29}
+\contentsline {chapter}{\numberline {17}Image Simulation}{214}{chapter.17}
+\contentsline {section}{\numberline {17.1}PHOTONS: Add Artificial Stars and/or Noise to an Image}{214}{section.17.1}
+\contentsline {section}{\numberline {17.2}TEMPLATE: Generate an Image from a User-Supplied Profile}{216}{section.17.2}
+\contentsline {section}{\numberline {17.3}DEVAUC: Generate an Image with a DeVaucouleurs Profile}{217}{section.17.3}
+\contentsline {chapter}{\numberline {18}Miscellaneous Commands}{218}{chapter.18}
+\contentsline {section}{\numberline {18.1}\$: Execute a Shell Command from VISTA}{218}{section.18.1}
+\contentsline {section}{\numberline {18.2}TIME: Time a Command}{218}{section.18.2}
+\contentsline {section}{\numberline {18.3}CLOCK: Turn on the Internal Clock for Timing Multiple Commands}{218}{section.18.3}
+\contentsline {section}{\numberline {18.4}BELL: Turn the Prompt Bell ON/OFF or Ring the Bell }{219}{section.18.4}

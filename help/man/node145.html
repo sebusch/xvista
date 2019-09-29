@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>FFT: Compute a Forward Fast-Fourier Transform</TITLE>
+<META NAME="description" CONTENT="FFT: Compute a Forward Fast-Fourier Transform">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001310000000000000000">
+FFT: Compute a Forward Fast-Fourier Transform</A>
+</H1>
+
+<!-- linkto fft.html -->
+<BR>
+
+<BR>
+
+<P>
+FFT generates the 1D or 2D direct fourier transform of a real image. If the
+keyword ONEDIM is specified, an independent 1D direct fourier transform
+will be generated for each row of the source image. For one-row images
+(spectra) ONEDIM is the default.
+
+<P>
+The FFT basic routine works on data arrays whose size is an integer power
+of two. If the number of columns of the original image is not an integer
+power of two, the data is padded with zeros to the next power of two before
+transforming. In the case of 2D transforms, also the rows will be
+zero-padded to the next integer power of two.
+
+<P>
+No filtering of any kind (like the popular cosine-bell) is applied before
+transforming (the user can create its own filters). It is up to the user to
+manipulate the data before the FFT.
+
+<P>
+The output image is a complex image, that is to say that the real and
+imaginary parts of each fourier frequency are stored in consecutive
+columns. The number of columns in the transform (output image) is one more
+than the power of two closest, but larger or equal, to the number of
+columns in the original image. In the case of a 2D transform, the number of
+rows is the a power of two closer, but larger equal, to the number of rows
+in the original image. This image size accommodates all of the independent
+fourier frequencies to reconstruct the original image.
+
+<P>
+BE AWARE that most VISTA commands treat complex images as real images
+(except for commands FFT IFFT POWERS CMPLX CABS CMUL CDIV CONJ), some
+operations on the transform-image can make it loose its meaning as "a
+fourier transform of a real image" (things like rotations, column flips,
+and boxing are particular dangerous). VISTA provides basic complex
+arithmetic (CMUL, CDIV, CABS, etc) that can be safely used in fourier
+images. If you want to make extensive manipulations of fourier transforms,
+it may be safe to separate first the real and imaginary parts (with VISTA
+commands REAL and IMAG), and perform identical operation on both parts
+before recombining them again into a complex image (See command CMPLX).
+
+<P>
+Convolution and deconvolution in fourier space can be perform with the help
+of complex arithmetic commands CMUL and CDIV. Estimations of the power
+spectrum from fourier images can be made with command POWERS or by
+squaring the modulus of the transform (command CABS).
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

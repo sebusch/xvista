@@ -1,0 +1,82 @@
+reset
+color 1
+relocate -0.05 0.95
+putlabel 6 color 0 is black
+color 1
+relocate -0.05 0.9
+putlabel 6 this is color 1
+color 2
+relocate -0.05 0.85
+putlabel 6 this is color 2
+color 3
+relocate -0.05 0.80
+putlabel 6 this is color 3
+color 4
+relocate -0.05 0.75
+putlabel 6 this is color 4
+color 5
+relocate -0.05 0.70
+putlabel 6 this is color 5
+color 6
+relocate -0.05 0.65
+putlabel 6 this is color 6
+color 7
+relocate -0.05 0.60
+putlabel 6 this is color 7
+color 8
+relocate -0.05 0.55
+putlabel 6 this is color 8
+color 9
+relocate -0.05 0.50
+putlabel 6 this is color 9
+color 10
+relocate -0.05 0.45
+putlabel 6 this is color 10
+color 11
+relocate -0.05 0.40
+putlabel 6 this is color 11
+color 12
+relocate -0.05 0.35
+putlabel 6 this is color 12
+color 13
+relocate -0.05 0.30
+putlabel 6 this is color 13
+color 14
+relocate -0.05 0.25
+putlabel 6 this is color 14
+color 15
+relocate -0.05 0.20
+putlabel 6 this is color 15
+color 16
+relocate -0.05 0.15
+putlabel 6 this is color 16
+color 17
+relocate -0.05 0.10
+putlabel 6 this is color 17
+color 18
+relocate -0.05 0.05
+putlabel 6 this is color 18
+color 19
+relocate -0.05 0.00
+putlabel 6 this is color 19
+color 20
+relocate  0.25 0.85
+putlabel 6 this is color 20
+color 21
+relocate  0.25 0.80
+putlabel 6 this is color 21
+color 22
+relocate  0.25 0.75
+putlabel 6 this is color 22
+color 23
+relocate  0.25 0.70
+putlabel 6 this is color 23
+color 24
+relocate  0.25 0.65
+putlabel 6 this is color 24
+color 25
+relocate  0.25 0.60
+putlabel 6 this is color 25
+color 26
+relocate  0.25 0.55
+putlabel 6 this is color 26

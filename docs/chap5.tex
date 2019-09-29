@@ -1,0 +1,355 @@
+\chapter{Flow Control in Procedures}
+
+% minor editing and reformatting
+% used verbatim for most script examples
+% rwp/osu 98Jul26
+
+\section{PAUSE: Pause Procedure Execution}
+\begin{rawhtml}
+<!-- linkto pause.html -->
+\end{rawhtml}
+
+\index{Procedure!Pausing during}
+\index{Pausing!During procedure}
+\index{Control-C!To halt procedure}
+\begin{command}
+\item[\textbf{Form: } PAUSE 'prompt message'\hfill]{}
+\item[ctrl-C\hfill]{}
+\end{command}
+
+When the PAUSE command is encountered in a procedure, VISTA prints the
+prompt 'PAUSE ' followed by the rest of the (optional) prompt which appears
+on the command line.  The execution of the procedure is then stopped.
+While paused, you can enter any commands in the normal immediate mode of
+execution.  To resume the procedure where it paused type the command
+CONTINUE.  You do not need to type a command to permanently halt the
+procedure.  If you give the command GO any previous pause state will be
+canceled, and VISTA will start the program from the beginning.
+
+WARNING: ALWAYS place a PAUSE instruction on its own line in a procedure.
+A procedure which looks like
+\begin{verbatim}
+  command 1
+  command 2; PAUSE; command 3
+  command 4
+\end{verbatim}
+will pause properly, but CONTINUE will start the procedure with 
+command 4, not command 3.
+
+\section{CONTINUE: Resume a Paused Procedure}
+\begin{rawhtml}
+<!-- linkto continue.html -->
+\end{rawhtml}
+
+\begin{command}
+  \item[\textbf{Form: } CONTINUE\hfill]{}
+\end{command}
+Re-starts a procedure stopped by PAUSE. See PAUSE for more
+information. 
+
+\section{GOTO: Jump to a Specified Place in a Procedure}
+\begin{rawhtml}
+<!-- linkto goto.html -->
+\end{rawhtml}
+
+\index{Procedure!Jump to specified line}
+\index{Jump!In procedures}
+\begin{command}
+  \item[\textbf{Form: } GOTO label\_name\hfill]{}
+  \item[label\_name]{is a label defined somewhere else in the procedure.}
+\end{command}
+GOTO tells VISTA to jump to a line in the procedure buffer beginning with
+``label\_name:''.  The label\_name can be any alphanumeric string.  You can
+jump out of, but not into, a procedure DO loop or IF block.  In the latter
+cases, VISTA will trigger an error condition and abort the procedure.  The
+jump can be in either direction in the procedure buffer (either before or
+after the GOTO command in the procedure).
+
+The jump-point label may be any valid string terminated with a ':' (color)
+immediately following the label.  No other commands can appear following
+the label on the same line.  Note that the ':' is omitted in the GOTO
+statement.
+
+\noindent{Example 1:}
+\begin{verbatim}
+   GOTO WHEREVER
+     Any number of procedure lines...
+   WHEREVER:
+   The next commands to be executed...
+\end{verbatim}
+This jumps forward over the intervening lines to the label ``WHEREVER:''.
+
+\noindent{Example 2:}
+\begin{verbatim}
+   NOWHERE:
+     Any number of procedure lines...
+   GOTO NOWHERE
+\end{verbatim}
+This exectues the lines, then jumps backwards to the label NOWHERE: and
+executes them again.
+
+\section{DO/END\_DO: Using Do-Loops in Procedures}
+\begin{rawhtml}
+<!-- linkto do.html -->
+\end{rawhtml}
+
+\index{Procedure!DO loops}
+\index{Procedure!Repeating segments of}
+\begin{command}
+  \item[\textbf{Form: } DO var=N1,N2,{[N3]}\hfill]{}
+  \item[\textbf{Form: } \{any vista commands\}\hfill]{}
+  \item[\textbf{Form: } END\_DO\hfill]{}
+  \item[var]{is a variable name,}
+  \item[N1]{is the initial value of the variable,}
+  \item[N2]{is the final value,}
+  \item[N3]{is the increment by which N1 is adjusted in
+       each pass through the DO loop.}
+\end{command}
+
+The DO/END\_DO commands enable you set set up repeatable groups of commands
+within the procedure buffer.  The VISTA DO-LOOP is very similar to the
+Fortran DO-LOOP.
+
+The variable 'var' is initially set equal to the starting value N1.  When
+the END\_DO statement is encountered the value is changed by an amount
+equal to N3. The value of N3 can be either positive or negative. If N3 is
+positive then the looping terminates when N1 becomes greater than N2. If N3
+is negative then looping terminates when N1 becomes less than N2.  If N3 is
+not specified then it defaults to +1.0 if N2 is greater than N1 or to -1.0
+if N2 is less than N1.
+
+N1, N2, and N3 can all be arithmetic expressions as described in the SET
+command.  The value of 'var' can be changed within the loop without
+affecting the do-loop operation.  However, VISTA will reset 'var' to its
+appropriate loop value at the beginning of each loop.
+
+The underline is required in END\_DO because VISTA requires commands to be
+one word long.  Up to 20 do-loops can be nested.  Do-loops are recognized
+only within procedures. The GOTO command can be used to jump out of a DO
+loop, but VISTA will not permit jumping into one. Further, DO loops must
+contain or be contained completely within any IF blocks.
+
+\noindent{Examples:}
+\begin{enumerate}
+  \item{
+  \begin{verbatim}
+     DO I=1,3
+        Any number of procedure lines.  These lines are executed 3 times.
+     END_DO
+  \end{verbatim}
+}
+  \item{
+  \begin{verbatim}
+     DO Q=1,N
+        Any number of procedure lines.  These lines are executed N times.
+        Here N is a variable that has had its value set by the SET command.
+     END_DO
+  \end{verbatim}
+}
+  \item{
+  \begin{verbatim}
+     DO B=D+I,N-J,-1
+        Any number of procedure lines.  The counter
+        decrements from D+I to N-J.
+     END_DO
+  \end{verbatim}
+}
+\end{enumerate}
+
+\section{IF, ELSE\_IF, ELSE, END\_IF: Conditional (IF) Flow Control}
+\begin{rawhtml}
+<!-- linkto if.html -->
+\end{rawhtml}
+
+\index{Procedure!Conditional branching}
+
+VISTA procedures allow testing of variables and branching based on the
+results of those tests.  This capability greatly expands the usefulness of
+procedures.
+
+The simplest use of IF is to mark a section of a procedure that is executed
+only if come condition is true.  It has the form:
+\begin{verbatim}
+   IF condition
+      Procedure lines (any number) that are executed if the
+      specified condition is met.
+   END_IF
+\end{verbatim}
+
+You can also have two level branching:
+\begin{verbatim}
+   IF condition
+      Procedure lines to be executed if the condition is true.
+   ELSE
+      Procedure lines to be executed if the condition is false.
+   END_IF
+\end{verbatim}
+
+These may be strung together:
+\begin{verbatim}
+   IF condition_1
+      Procedure lines to be executed if condition_1 is true.
+   ELSE_IF condition_2
+      Procedure lines to be executed when condition_1 is
+      false and condition_2 true.
+      ...
+   ELSE_IF condition_N
+      Procedure lines to be executed when all conditions
+      are false except condition_N.
+   ELSE
+      Procedure lines to be executed if and only if
+      all other conditions are false.
+   END_IF
+\end{verbatim}
+
+The conditions tested by the IF and ELSE\_IF statements are really just
+VISTA arithmetic expressions.  An expression is considered to be true if it
+evaluates to be non-zero, and false otherwise.  VISTA arithmetic supports
+various logical operators whose value is either 1 or 0 depending on whether
+the logical test is true or false.  The logical operators are the
+following, where A and B can represent single VISTA variables or algebraic
+expressions.
+\begin{example}
+  \item[IF A$>$B\hfill]{Test A greater than B}
+  \item[IF A$>$=B\hfill]{Test A greater than or equal to B}
+  \item[IF A==B\hfill]{Test A equal to B}
+  \item[IF A~=B\hfill]{Test A not equal to B}
+  \item[IF A$<$=B\hfill]{Test A less than or equal to B}
+  \item[IF A$<$B\hfill]{Test A less than B}
+\end{example}
+
+There are two logical conjunctions \& (and) and | (or) which can be used to
+join several of the above tests. Examples of the conjunctions are below:
+\begin{example}
+  \item[IF (A$>$B)\&(A==C)\hfill]{Test A $>$ B and A = C}
+  \item[IF ((A==B)|(C$<$D))\&(C==B)\hfill]{Test (A = B or C $<$ D) and C = B}
+\end{example}
+
+The syntax of the IF statements is designed to look similar to the
+FORTRAN-77 IF block structures.  Each IF block must begin with an IF
+command and end with the END\_IF command.  An algebraic statement to be
+tested must follow the IF on the same line.  If the relation is true, then
+the procedure commands following the IF command are executed. If the
+relation is false, VISTA looks for any ELSE\_IF tests, any final ELSE
+statement, or jumps to the procedure lines following the END\_IF statement.
+
+The ELSE\_IF command also must have a condition to be tested on the same
+line.  ELSE\_IF's are optional, but permit you to test other conditions and
+execute other blocks of the procedure buffer in the event that the initial
+IF or any preceding ELSE\_IF's are false.  In this way you can allow VISTA
+to 'trickle down' through several tests looking for one that is true.
+
+The ELSE statement is also optional and marks a set of procedure lines for
+VISTA to execute if and only if the initial IF and any following ELSE\_IF's
+all test out false. Basically, the IF, any ELSE\_IF's, or any ELSE
+statements all mark out various blocks of the procedure to be executed
+under different conditions.  After the execution of any block, VISTA
+transfers control to the procedure lines following the END\_IF statement.
+
+IF blocks can be nested within other IF blocks up to 15 levels deep.  IF
+blocks can be jumped out of, but not into, by the GOTO command. IF blocks
+must contain or be contained within DO loops completely. Some examples of
+IF blocks are given below:
+
+\begin{enumerate}
+  \item Simple Single Test:
+  \begin{verbatim}
+    IF X>Y
+       Do these procedure lines if X is greater than Y
+    END_IF
+  \end{verbatim}
+
+  \item IF/ELSE Test:
+  \begin{verbatim}
+    IF (X>Y)&(X<Z)
+       Do these procedure lines if X is greater than Y but less than Z.
+    ELSE
+       Otherwise jump to these procedure lines.
+    END_IF
+  \end{verbatim}
+
+  \item IF/ELSE\_IF Test:
+  \begin{verbatim}
+    IF SKY-LIMIT>BACKGRND
+       Do these procedure lines if IF test true.
+    ELSE_IF BACKGRND==0
+       Do these procedure lines if IF test is false, 
+       but the ELSE_IF condition is true.
+    END_IF
+  \end{verbatim}
+
+  \item Test on 1 or 0 for an expression:
+  \begin{verbatim}
+    IF IMAGE-1
+      Do these procedure lines if IMAGE is not equal
+      to 1 (which would make the expression evaluate to 0)
+    END_IF
+  \end{verbatim}
+
+\end{enumerate}
+
+\section{ERROR: Execute On Error}
+\begin{rawhtml}
+<!-- linkto error.html -->
+\end{rawhtml}
+
+\index{Procedure!Execute on error}
+\begin{command}
+  \item[\textbf{Form: } ERROR  VISTA\_command\hfill]{}
+  \item[VISTA\_command]{is any valid VISTA command.}
+\end{command}
+ERROR tells VISTA to execute the given VISTA command whenever an execution
+error occurs.  The command can be any VISTA command but is quite often a
+GOTO command.  VISTA\_command can not contain multiple commands separated
+by semicolons.
+
+\begin{enumerate}
+  \item{
+\begin{verbatim}
+  ERROR GOTO WHEREVER
+  Any number of procedure lines...
+  WHEREVER:
+  The next commands to be executed after an error...
+\end{verbatim}
+}
+  \item{
+\begin{verbatim}
+  ERROR ERRFLAG=1
+  Sets the VISTA variable ERRFLAG to 1 upon an error.
+\end{verbatim}
+}
+\end{enumerate}
+
+\section{EOF: Execute On End-Of-File (EOF)}
+\begin{rawhtml}
+<!-- linkto eof.html -->
+\end{rawhtml}
+
+\index{Procedure!Execute on end of file}
+\index{ASCII files!Execute on end of file}
+\begin{command}
+  \item[\textbf{Form: } EOF  VISTA\_command\hfill]{}
+  \item[VISTA\_command]{is any valid VISTA command.}
+\end{command}
+EOF tells VISTA to execute the given VISTA command whenever an end of file
+is encountered in an OPEN'ed ASCII data file. See the OPEN and READ
+commands for information on how to use ASCII data files. The command can be
+any VISTA command but is quite often a GOTO command.  VISTA\_command can
+not contain multiple commands separated by semicolons.
+
+\begin{enumerate}
+  \item{
+\begin{verbatim}
+  EOF GOTO WHEREVER
+  Any number of procedure lines...
+  WHEREVER:
+  The next commands to be executed after an end-of-file.
+\end{verbatim}
+}
+  \item{
+\begin{verbatim}
+  EOF EOF_FLAG=1
+  Sets the VISTA variable EOF_FLAG to 1 upon an end-of-file.
+\end{verbatim}
+}
+\end{enumerate}

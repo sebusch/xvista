@@ -1,0 +1,28 @@
+define test
+xcolumn 1
+ycolumn 2
+limits
+box
+connect
+ycolumn 3
+expand 2
+angle 45
+ptype 4 0
+points
+angle 0
+ecolumn 4
+expand 0
+errorbar 2
+errorbar 4
+expand 1
+limits 0 1 0 1
+relocate .1 .1
+label This is a label
+relocate .5 .5
+expand 2
+angle 45
+putlabel 5 This is a centered label
+end
+
+data example.dat
+test

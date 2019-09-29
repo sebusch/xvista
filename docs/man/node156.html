@@ -1,0 +1,104 @@
+
+<H1><A NAME="SECTION001440000000000000000">
+EXTRACT: Optimal Spectrum Extraction (Horne's Method)</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml389#
+<A NAME="5737"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command5738#
+<BR>
+
+<P>
+EXTRACT is an ;SPMquot;optimal extraction;SPMquot; routine for extracting the spectra of
+1-dimensional sources (point-sources) from 2-D spectral images.  It is
+based on the algorithm described by Keith Horne (``An Optimal Extraction
+Algorithm for CCD Spectroscopy'', 1986, PASP, 98, 609).  In brief, each
+pixel in the spectral extraction is weighted according to the fraction of
+the flux which is expected in that pixel assuming a uniform spatial
+profile.  The weighting scheme is optimized to retrieve the maximum
+signal-to-noise without biasing the resulting fluxes. 
+
+<P>
+EXTRACT operates much like MASH, and should result in better
+signal-to-noise in those cases where the noise in the spectrum is dominated
+by the background (either from the sky or from the detector read-out
+noise).  
+
+<P>
+WARNING: It is inappropriate to use EXTRACT for moderate or bright objects
+in which the noise is dominated by the Poisson statistics of the object
+itself.  In such cases the extraction routine may discard so many points
+from the spatial profile fits it does that parts of the spectrum can become
+meaningless.  It is also inappropriate to use EXTRACT for objects whose
+spectra are dominated by bright, unresolved emission lines (as EXTRACT
+might reject them as being ``cosmic rays''), and for extended sources.  For
+bright sources, emission-line objects, and extended sources, use MASH or
+SPECTROID as appropriate.
+
+<P>
+The steps which EXTRACT goes through are as follows:
+
+<OL>
+<LI>The detector characteristics are specified.  These are the readout
+     noise in electrons (which can be changed using the keyword RONOISE=
+     from its default value of 7) and the inverse gain in electrons per DN
+     (using EPERDN= to change this from the default of 2.5).  Usually the
+     user will not wish to change these values, as the defaults are
+     appropriate for the T.I. CCDs at Lick.
+
+<P>
+</LI>
+<LI>The background rows are fitted with polynomials of order ;SPMquot;pord.;SPMquot;
+     (Use the keyword SORDER= to change this from its default value of 2.)
+     The expected uncertainties in this fit are then calculated (using the
+     read-out noise and the gain) and any points more than 4-sigma from the
+     fit are ignored and the fit recalculated.  This fit iteration is
+     performed until no new points are ignored or until 5 iterations have
+     been done.
+
+<P>
+</LI>
+<LI>The object profile is then parameterized and fit with a polynomial
+     of order 2 (unless the PORDER= keyword has been used).  Again, the fit
+     is iterated a maximum of 8 times, using a rejection threshold of
+     4-sigma.
+
+<P>
+</LI>
+<LI>Using the resulting parameterization the weights are calculated for
+     each pixel and the spectrum extracted.  An automatic point rejection
+     is performed at this stage to remove bad pixels on the spectrum rows
+     themselves.  A more conservative 5-sigma rejection level is used and
+     only one point (the one with the largest difference) is removed at
+     each iteration.  A maximum of five iterations is allowed (hence up to
+     five points may be removed at each wavelength).  The resulting
+     spectrum is placed into the specified buffer.
+
+<P>
+</LI>
+<LI>If the SKY= and/or VAR= keywords have been specified then the
+     appropriate buffers are loaded with the requested spectra.  If the SUB
+     keyword has been specified then the fitted background rows are
+     subtracted from the original image.
+</LI>
+</OL>
+
+<P>
+Note that the uncertainties at all stages are estimated using the assumed
+detector characteristics.  When the data are of sufficient quality this
+means that the uncertainties in the fits will be so small that the
+inability of the fit parameterizations (both sky and profile) to accurately
+model the data will be detectable.  The program will then start rejecting
+large numbers of points because the model assumed is not quite appropriate.
+In this case the MASH command should be used, as the data are probably of
+such high signal-to-noise that the optimal extraction routine will not gain
+anything over a simple summation.  The interested user is referred to
+Keith's article for more details.
+
+<P>
+<#5762#>Examples:<#5762#>
+<BR>
+<tex2html_image_mark>#example5763#
+<BR>
+
+<P>

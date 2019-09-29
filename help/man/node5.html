@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>VISTA Command Syntax</TITLE>
+<META NAME="description" CONTENT="VISTA Command Syntax">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00140000000000000000">
+VISTA Command Syntax</A>
+</H1>
+
+<!-- linkto commands.html -->
+<A NAME="113"></A>
+<A NAME="114"></A>
+<A NAME="115"></A>
+<A NAME="116"></A>
+
+<P>
+VISTA works by calling various subroutines from a set of libraries. You
+tell VISTA what to do by entering commands.
+
+<P>
+Commands come in several types.  The simplest commands, such as 'QUIT'
+(which halts VISTA) work on no data and only operate in one way. Commands
+that manipulate images or spectra have an 'object' that the command
+operates on.  You should always specify the object immediately after the
+command.  An example of this is 'ZAP 1' which performs the ZAP operation
+(q.v.) on image number 1. More complicated commands have 'keywords' that
+control their operation.  Keywords allow you to tailor the operation of the
+command to suit your needs. An example of a command with keywords is
+<BR>
+
+<BR>
+Keywords can appear in any order on the command line. The allowed keywords
+for any command can be found by entering the command name followed by a
+'?'; e.g.  BOX ? will list all the allowed keywords for the BOX command.
+
+<P>
+All of the objects and keywords for a command must appear on the same line
+as the command.  The command name ALWAYS comes first.  Several commands may
+be placed on a single line, separated by semicolons.  An example of this
+is:
+<BR>
+
+<BR>
+
+<P>
+Command lines are split by the VISTA parser into individual words.  The
+parsing uses blank spaces to separate words, with the consequence that you
+<B>cannot</B> put blank spaces within a word/keyword. For example, the
+simple arithmetic statement:
+<BR>
+
+<BR>
+will not work if there are any embedded blank spaces. Strings can have
+embedded blank spaces if the entire string in enclosed in single quotation
+(') marks.
+
+<P>
+A command can be extended over more than one line by using the character
+ at the end of the line.  Type HELP EXTEND if you are at a terminal for
+more information about this feature.  This information is also in section 2
+of this manual.
+
+<P>
+Any character can appear on the command line, but characters after the
+first occurrence of ! in a command are ignored.  The ! is the VISTA
+'comment character', providing a way to label individual commands.  Here is
+an example of a command with a comment:
+<BR>
+<IMG
+ WIDTH="6" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.png"
+ ALT="\begin{hanging}
+\item{SUBTRACT 1 CONST=40.3 ! Subtract 40.3 from image 1.}
+\end{hanging}">
+<BR>
+Commenting commands is very handy in procedures. 
+
+<P>
+Buffer numbers always take the form of integer constants.  These are used
+to denote buffers that store the images and spectra.  They must not have a
+decimal point: for example, '1' is an integer constant, while '1.' is not.
+A very important exception to this rule is the '$' construction which
+allows you to use variables to denote objects.  See OBJECT (type HELP
+OBJECT if you are on a terminal) for information.
+
+<P>
+Keywords come in several types:
+
+<OL>
+<LI>REAL CONSTANTS: These are numbers containing a decimal point
+         (e.g., '3.14'), and are used as input to programs that require a
+         numeric value as a parameter.  An example of a command with a real
+         constant in it is
+	 <PRE>
+	   TV 2 1024.0
+</PRE>
+
+<P>
+</LI>
+<LI>WORDS: These are single or multiple words without an
+      '=' sign in them.  Most words turn on or off options in the programs.
+      An example is:
+      <PRE>
+         CONTOUR 1 DASH NOERASE
+</PRE>
+      IMPORTANT: Sometimes you will want to consider several words as a
+      unit.  Multiple words used in this way must be enclosed in single
+      quotes.  An example is the CHANGE command, which changes the name of
+      an image.  If you wanted the new name to be a single word, you could
+      say:
+      <PRE>
+         CHANGE 3 NGC5128
+</PRE>
+      but if the new name has several words in it, you would need quotes,
+      so:
+      <PRE>
+         CHANGE 3 'NGC5128 - through clouds '
+</PRE>
+
+<P>
+</LI>
+<LI>KEYWORD VALUES.  These are combinations of keywords and
+      arithmetic constants, and are used to pass values to VISTA
+      subroutines, where needed.  Keyword values have the form
+      'WORD=value': i.e., a keyword immediately followed by an equal sign,
+      immediately followed by a constant.  The constant can be either
+      explicit or symbolic, for example, these two command lines:
+      <PRE>
+         SHIFT 1 DR=2.3
+         SHIFT 1 DR=INCR
+</PRE>
+      do the same thing, provided INCR has the value 2.3.  You can also use
+      arithmetic expressions following the '=' sign, as in 
+      <PRE>
+         SHIFT 1 DR=INCR+3.2
+</PRE>
+
+<P>
+</LI>
+</OL>
+
+<P>
+VISTA takes the command line, and splits it up into several lists: a list
+of integers, a list of floating-point numbers, and a list of character
+strings.  The programs in VISTA examine these lists to decide what to do.
+
+<P>
+Most commands check the input line to make sure that every word you give is
+something the command knows about.  If you type an unknown command, you
+will receive an error message, and the command that you are trying to
+execute will not run.
+
+<P>
+More information about command syntax can be found in section 2 of this
+manual.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

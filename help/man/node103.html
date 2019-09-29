@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ADD, SUBTRACT, MULTIPLY, and DIVIDE</TITLE>
+<META NAME="description" CONTENT="ADD, SUBTRACT, MULTIPLY, and DIVIDE">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001020000000000000000">
+ADD, SUBTRACT, MULTIPLY, and DIVIDE</A>
+</H1>
+
+<!-- linkto add.html -->
+<!-- linkto subtract.html -->
+<!-- linkto multiply.html -->
+<!-- linkto divide.html -->
+<A NAME="4105"></A>
+<A NAME="4106"></A>
+<A NAME="4107"></A>
+<A NAME="4108"></A>
+<A NAME="4109"></A>
+<A NAME="4110"></A>
+<A NAME="4111"></A>
+<A NAME="4112"></A>
+<BR>
+<IMG
+ WIDTH="11" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img204.png"
+ ALT="\begin{command}
+\item[\textbf{Form:}ADD dest {[other]} {[CONST=c]} {[BOX=B]} {[...
+...ision by the mean of 'other', preserving the
+mean of the source.}
+\end{command}">
+<BR>
+These commands perform all arithmetic between images and spectra.  There
+are three ways to use these commands.
+
+<P>
+<B>Operations between two images or two spectra:</B>
+
+<P>
+In this form, the command word is followed by the numbers of the buffers
+holding the images.  Examples are
+<BR>
+<IMG
+ WIDTH="17" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img205.png"
+ ALT="\begin{example}
+\item[ADD 1 2\hfill]{Add image in buffer 2 to image in buffer 1...
+...ACT 3 4\hfill]{Subtract image in buffer 4 from image in buffer 3.}
+\end{example}">
+<BR>
+Note that the first buffer listed is the one modified by the operation.
+
+<P>
+The FLAT word is used in the DIVIDE command to re-scale the division by the
+mean of the second image, thus preserving the mean of the first buffer.
+This is typically used when dividing raw images by a flat field.
+<B>NOTE:</B> The mean of the second image must have previously been
+calculated by the MN command!
+
+<P>
+<B>Operations between images and constants:</B>
+
+<P>
+In this form, there is only one buffer specification on the command line.
+The word CONST= (or C=) is used to specify the constant to be used.
+<BR>
+
+<BR>
+
+<P>
+<B>Combined image and constant operations:</B>
+
+<P>
+The first two forms of these commands may be combined, thus allowing you to
+simultaneously operate on two images and a constant.
+<BR>
+
+<BR>
+
+<P>
+<B>Remarks:</B>
+
+<P>
+In two-image arithmetic, only those pixels common to the two images are
+changed by the operation.  The size of the destination image is not changed
+by the operation.  The DR= and DC= keywords only apply to two-image
+arithmetic and specify row and column offsets between the two images.  The
+sense of the shift is shown in the following example: dest(C+DC,R+DR) =
+dest(C+DC,R+DR) + other(C,R).
+
+<P>
+BOX limits the operation to those pixels in the destination image which are
+in the specified box.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

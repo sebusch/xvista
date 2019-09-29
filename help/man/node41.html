@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>CALL: Call a Procedure as a Subroutine</TITLE>
+<META NAME="description" CONTENT="CALL: Call a Procedure as a Subroutine">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00490000000000000000">
+CALL: Call a Procedure as a Subroutine</A>
+</H1>
+
+<!-- linkto call.html -->
+
+<P>
+<A NAME="1303"></A>
+<A NAME="1304"></A>
+<A NAME="1305"></A>
+<BR>
+
+<BR>
+
+<P>
+CALL tells VISTA to save the contents of its current procedure buffer, read
+in the desired procedure file, and begin execution at its first line.  The
+CALL command can be executed directly in the immediate input mode, or be
+used inside procedures to call other procedures.  In both cases, at the
+completion of the called procedure, VISTA will return properly to either
+the input mode or calling procedure.  VISTA will support up to 10 levels or
+subroutine calls.  If an error occurs while a called procedure is
+executing, VISTA will unwind and display the complete subroutine stack.
+
+<P>
+A procedure is allowed a maximum length of 2500 lines, and each line is
+allowed a maximum length of 80 characters.  If your procedures or lines
+exceed this maximum, they will be truncated.
+
+<P>
+Parameters can optionally be passed to the procedure.  These can be numeric
+or string parameters.  The parameters are evaluated by the procedure using
+the PARAMETER command.
+
+<P>
+Examples:  Assume the default procedure directory is /vista/procedure
+and the default extension is .pro.
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

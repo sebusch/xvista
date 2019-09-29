@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>PAUSE: Pause Procedure Execution</TITLE>
+<META NAME="description" CONTENT="PAUSE: Pause Procedure Execution">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00510000000000000000">
+PAUSE: Pause Procedure Execution</A>
+</H1>
+
+<!-- linkto pause.html -->
+
+<P>
+<A NAME="1502"></A>
+<A NAME="1503"></A>
+<A NAME="1504"></A>
+<BR>
+
+<BR>
+
+<P>
+When the PAUSE command is encountered in a procedure, VISTA prints the
+prompt 'PAUSE ' followed by the rest of the (optional) prompt which appears
+on the command line.  The execution of the procedure is then stopped.
+While paused, you can enter any commands in the normal immediate mode of
+execution.  To resume the procedure where it paused type the command
+CONTINUE.  You do not need to type a command to permanently halt the
+procedure.  If you give the command GO any previous pause state will be
+canceled, and VISTA will start the program from the beginning.
+
+<P>
+WARNING: ALWAYS place a PAUSE instruction on its own line in a procedure.
+A procedure which looks like
+<PRE>
+  command 1
+  command 2; PAUSE; command 3
+  command 4
+</PRE>
+will pause properly, but CONTINUE will start the procedure with 
+command 4, not command 3.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

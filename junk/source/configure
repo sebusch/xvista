@@ -1,0 +1,1028 @@
+#!/bin/sh 
+#
+# This is the xvista configuration script. It senses what type of machine
+# you are on, and sets appropriate compilation flags. It writes these out
+# along with machine-independent stuff into all of the individual Makefiles.
+# It then sets appropriate compile-time preprocessor flags and outputs these to 
+# the Vista.$MACHINE file, where MACHINE is a string set to a value appropriate # for your architecture. 
+
+# Hopefully, you should not need to edit this file if you are making xvista
+# on a supported platform. Possible exceptions include:
+#  - if the script cannot find the X11 libraries, set the top level X11
+#    directory manually using X11DIR=yourdir around line 60
+#  - if you are not using the default compilers, you may need to make some
+#    changes...
+#
+
+# Here are the default definitions of the variables used within make. 
+# Unassigned variables are set below on a machine by machine basis
+MACHINE=        # A one word identifier of the CPU/OS combination
+INCCPP=/lib/cpp    # C-preprocessor
+CPP=/lib/cpp    # C-preprocessor
+FPP=f           # Filename extension for preprocessed Fortran files
+CPPFLAGS=       # Flags for C-preprocessing Fortran files
+CC=cc           #
+CFLAGS=         # Flags for the C compiler
+FC=f77          # Which Fortran compiler to use
+FFLAGS=         # Flags for the FORTRAN-77 compiler
+LD=f77            # Which linker to use
+LDFLAGS=        # Flags for the linker
+RM=rm
+AR=ar             # Which library archiver to use
+DX11=           # Not exported.
+X11DEV=         # Object modules needed for X11 support (not in a library)
+LX11DEV=        # Object modules in a library needed for X11 support
+X11LIB=         # System libraries to link for X11 support
+OPTFLAG=        # Set Flag for optimization if desired
+BSTATIC=        # options if we need to link statically
+MAR=
+MRM=
+LREADLINE=
+TEST=`which test`
+
+
+# see if there's an X11 library out there
+# this section makes some unwarranted assumptions, but what else is new?
+if $TEST -d /usr/X11; then
+    X11DIR=/usr/X11
+elif $TEST -d /usr/X11R6; then
+    X11DIR=/usr/X11R6
+elif $TEST -d /usr/openwin; then
+    X11DIR=/usr/openwin
+elif $TEST -d /usr/local/openwin; then
+    X11DIR=/usr/local/openwin
+elif $TEST -d /usr/local/X11; then
+    X11DIR=/usr/local/X11
+elif $TEST -d /usr/local/include/X11; then
+    X11DIR=/usr/local
+elif $TEST -d /usr/include/X11; then
+    X11DIR=/usr
+fi
+echo old X11DIR: $X11DIR
+
+
+for dir in /usr/X11 /usr/X11R6 /usr/openwin /usr/local/openwin /usr/local/X11 /usr/ ; do 
+  if $TEST -d $dir/include/X11 && ( $TEST -e $dir/lib/libX11.a || $TEST -e $dir/lib/libX11.so || $TEST -e $dir/lib64/libX11.so)  ; then
+    X11DIR=$dir
+  fi
+done
+echo new X11DIR: $X11DIR
+
+
+#if you have the X11 library/include files under some other directory than
+# above, set the  top level directory in the next line:
+#
+#X11DIR=
+#
+#You will need to have X11 include files in $X11DIR/include/X11,
+#                      X11 library files in $X11DIR/lib
+
+################################
+# verify that the X11 library exists
+xlib=0
+for i in $X11DIR/lib/libX11* ; do
+    if $TEST -f $i ; then
+        xlib=17
+        break
+    fi
+done
+for i in $X11DIR/lib64/libX11* ; do
+    if $TEST -f $i ; then
+        xlib=17
+        break
+    fi
+done
+# take the above assumption about the location of X11 and go for it
+if $TEST \( $xlib -eq 17 \) -a \( -d $X11DIR/include/X11 \) ; then
+ LX11DEV='$(MLIB)(x11_.o) $(MLIB)(x11.o) $(MLIB)(xgets.o) $(MLIB)(trackbox.o)'
+ X11DEV='x11_.o x11.o xgets.o trackbox.o'
+ DX11="-DX11_exists -I$X11DIR/include"
+ if [ $X11DIR = /usr ] ; then
+      X11LIB="-lX11"
+ elif [ `uname -m` = x86_64 ] ; then
+      X11LIB="-L$X11DIR/lib64 -L$X11DIR/lib -lX11"
+ else
+      X11LIB="-L$X11DIR/lib -lX11"
+ fi
+ echo "Using X11 libraries and include files under $X11DIR"
+else
+ echo "configure cannot find the X11 libraries and include files"
+ echo "edit the configure script and put the location of the X11 directory"
+ echo "tree into the X11DIR variable"
+ exit 0
+fi
+
+# OK, now determine the machine type, and set compiler name, flags,
+#   appropriately
+release=unknown
+if $TEST -f /bin/sun && sun ; then
+    # must be on a Sun machine
+    # Try to figure out which of Sun's Fortran compilers is present...
+    if $TEST -d /usr/lang ; then
+	#FC=f77-1.3.1; export FC # possible override to use old version
+	f77vers=`version /usr/lang/f77 | awk '{print $4}'`
+	if [ $f77vers = SC0.0 ] ; then
+	    # -Bstatic is required by a bug in Sun Fortran 1.3
+	    BSTATIC="-Bstatic -lF77 -Bdynamic -lm -lc"
+	fi
+    fi
+fi
+
+#default C compiler is cc, but this can (and is) overridden below for some 
+#machines. This is only used for setting usage of c-preprocessor below;
+#actual compiler used is passed using CC above
+compiler=cc
+
+if $TEST -f /vmlinux -o -f /zImage -o -f /vmlinuz -o -f /boot/vmlinuz -o `uname` = Linux ; then
+    # must be on a Linux box
+    CFLAGS="-O $DX11 -Dlinux -DFORT -DUNIX -I/usr/include/bsd"
+    CPPFLAGS="$DX11 -P"
+    compiler=gcc
+    if [ 0 = 1 ] && [ `uname -m` != x86_64 ] && [ a`which ifort` != "a" ] && $TEST -x `which ifort | awk '{print $1}' ` && $TEST -x `which icc | awk '{print $1}' ` ; then
+      CC=icc
+      FC=ifort
+      LD=ifort
+      CFLAGS="$CFLAGS -O3"
+      compiler=icc
+      FFLAGS="-extend_source -O3"
+    elif [ a`which f95` != "a" ] ; then
+#    if $TEST -x `which f77 | awk '{print $1}' `; then
+      FFLAGS="-O -ffixed-line-length-132 "
+      FC=f95
+      LD=f95
+    elif $TEST -x `which f77 | awk '{print $1}' `; then
+#    if $TEST -x `which f77 | awk '{print $1}' `; then
+      FFLAGS="-O -ffixed-line-length-132 "
+      FC=f77
+      LD=f77
+    elif $TEST -x `which g77 | awk '{print $1}' `; then
+      FFLAGS="-O -ffixed-line-length-132 "
+      FC=g77
+      LD=g77
+    else
+      FFLAGS="-O -Nx400 f2c -f"
+      FC=fort77
+      LD=fort77
+    fi
+    if $TEST -e /etc/redhat-release ; then
+      rhver=`cat /etc/redhat-release | awk '{print $3}' | awk -F. '{print $1}'`
+      echo rhver: $rhver
+#      if [ $(($rhver>6)) -eq 1 ] ; then
+#      if [ $rhver -lt 7 ] ; then
+#        echo 'redhat <7'
+#      else
+        CPP='echo skip cpp'
+        FPP=F
+        FFLAGS="$FFLAGS $DX11 -I."
+        RM='echo skip rm'
+#      fi
+       if [ $rhver = Enterprise ] ; then
+         if [[ `cat /etc/redhat-release | awk '{print $7}'` > 3 ]] ; then
+           CPPFLAGS="$CPPFLAGS -traditional-cpp"
+           FFLAGS="$FFLAGS -I."
+         fi
+         release=enterprise
+       fi
+       if [ `cat /etc/redhat-release | awk '{print $1}'` = Fedora ] ; then
+         if [ `cat /etc/redhat-release | awk '{print $4}'` > 2 ] ; then
+           CPPFLAGS="$CPPFLAGS -traditional-cpp"
+         fi
+         release=fedora
+       fi
+       if [ `cat /etc/redhat-release | awk '{print $1}'` = Scientific ] ; then
+           CPPFLAGS="$CPPFLAGS -traditional-cpp"
+           FFLAGS="$FFLAGS -I."
+           release=scientific
+       fi
+       if [ `cat /etc/redhat-release | awk '{print $1}'` = CentOS ] ; then
+         if [[ `cat /etc/redhat-release | awk '{print $3}'` > 3 ]] ; then
+           CPPFLAGS="$CPPFLAGS -traditional-cpp"
+           FFLAGS="$FFLAGS -I."
+         fi
+         release=centos
+       fi
+    fi
+    if $TEST -e /etc/SuSE-release ; then
+      CPPFLAGS="$CPPFLAGS -traditional-cpp"
+      release=suse
+    fi
+    if $TEST -e /etc/debian_version ; then
+      CPPFLAGS="$CPPFLAGS -traditional-cpp"
+      release=debian
+    fi
+    if $TEST -x /usr/bin/lsb_release && [ `/usr/bin/lsb_release -i -s` = Ubuntu ] ; then
+      CPPFLAGS="$CPPFLAGS -traditional-cpp"
+      release=ubuntu
+    fi
+    if [ `uname -m` = x86_64 ] ; then
+      MACHINE=linux64
+      ln -fs fonts.vis.64bit ../lickmongo/fonts.ltl/fonts.vis
+    else
+      MACHINE=linux
+      ln -fs fonts.vis.32bit ../lickmongo/fonts.ltl/fonts.vis
+    fi
+    DOOBJS='$(LOBJS)'
+    MRM='$(RM) *.o' $*
+elif $TEST -f /usr/bin/uname && $TEST `uname` = Darwin ;  then
+    # must be on a MAC OS box
+    CFLAGS="-O $DX11 -DFORT -DUNIX -I/usr/include/bsd -I/sw/include"
+    if $TEST -e /usr/bin/cpp ; then
+      INCCPP=/usr/bin/cpp
+      CPP=/usr/bin/cpp
+    else
+      INCCPP=/usr/libexec/gcc/darwin/ppc/3.3/cpp
+      CPP=/usr/libexec/gcc/darwin/ppc/3.3/cpp
+    fi
+    FPP=for    
+    CPPFLAGS="$DX11 -traditional -P"    
+    FFLAGS="-O -ffixed-line-length-132 "
+    if $TEST -x `which gfortran | awk '{print $1}' `; then
+      FC=gfortran
+      LD=gfortran
+    else
+      FC=g77
+      LD=g77
+    fi
+    compiler=gcc 
+    MACHINE=macosx 
+    DOOBJS='$(LOBJS)'
+    MRM='$(RM) *.o' $*
+    LDFLAGS=-L/sw/lib
+    BSTATIC="-lgcc"
+    if $TEST -e /usr/lib/libcc_dynamic.a ; then
+      BSTATIC="$BSTATIC -lcc_dynamic"
+    fi
+elif $TEST -f /bin/sparc && sparc ; then
+    # must be on a sparc
+    FFLAGS="$OPTFLAG -e -Nx300"
+    LD=f77
+    SUNIEEE='$(MLIB)(sunieee.o)'
+    # check for Solaris
+    a=`uname -r | awk -F. '{print $1}'`
+    if [ $a = 5 ] ; then
+      CFLAGS="-O $DX11 -Dsun4 -DFORT -DSUN -Dsun -Dbig_endian -DUNIX -Dsolaris"
+      LDFLAGS="-s -v -R$X11DIR/lib -R/opt/SUNWspro/lib"
+      CPP=/usr/ccs/lib/cpp
+      CPPFLAGS="$DX11"
+      MACHINE=solaris
+#      cvers=`which cc | awk -F/ '{print $3}'`
+#      if [ $cvers = SUNWspro ] ; then
+      cvers=`which cc | grep SUNWspro`
+      if [ a$cvers != "a" ] ; then
+        CFLAGS="$CFLAGS -DSUNWspro"
+        compiler=SUNWspro
+      fi
+      DOOBJS='$(LOBJS)'
+    else
+      MACHINE=sun4
+      LDFLAGS="-s -v"
+      CPPFLAGS="$DX11"
+      CFLAGS="-O $DX11 -Dsun4 -DFORT -DSUN -Dsun -Dbig_endian -DUNIX"
+      DOOBJS='$(LOBJS)'
+    fi
+# special for solaris using gcc/g77
+#     CPP='echo skip cpp'
+#     FPP=F
+#     CC=gcc
+#     FC=g77
+#     LD=g77
+#     FFLAGS="-ffixed-line-length-132 $DX11"
+#     RM='echo skip rm'
+# special for solaris using gcc/g77
+
+elif $TEST -f /bin/uname && $TEST `uname` = "AIX" ; then
+    # must be on a IBM AIX system
+    AR=ar; export AR
+    CFLAGS="-O $DX11 -qlanglvl=ansi -DFORT"
+    CPPFLAGS="$DX11 -P -qlanglvl=ansi"
+    FFLAGS="$OPTFLAG -DIBMAIX -qcharlen=1024 -qsource"
+    MACHINE=AIX
+    LD=f77
+    LDFLAGS=-v
+    DOOBJS='$(LOBJS)'
+elif $TEST -f /bin/4d && 4d ; then
+    # must be on a SGI 4d machine
+    CFLAGS="-O $DX11 -DSGI4d -DFORT -I/usr/include/bsd"
+    CPPFLAGS="$DX11"
+    FFLAGS="$OPTFLAG"
+    FPP=i
+    LD=f77
+    MACHINE=4d
+    DOOBJS='$(LOBJS)'
+elif $TEST -f /bin/machine && $TEST `/bin/machine` = mips ; then
+    # presume we're on a DECStation running Ultrix 
+    LD=f77
+    CFLAGS="-O $DX11 -DFORT -DDECMIPS -Dultrix -Dlittle_endian -DUNIX"
+    CPPFLAGS="$DX11 -P"
+    FFLAGS="$DX11 $OPTFLAG -extend_source"
+    FPP=i
+    MACHINE=decsta
+    VMSFLAGS="-P"
+    LDFLAGS="-s -v"
+    DOOBJS='$(LOBJS)'
+elif $TEST -f /bin/machine && $TEST `/bin/machine` = alpha ; then
+    # presume we're on a Alpha running OSF/1
+    CPP=cpp
+    LD=f77
+    CFLAGS="-O $DX11 -DFORT -Dalpha -DLONG_EQ_64_BITS -DOSF1 -Dlittle_endian -DUNIX"
+    CPPFLAGS="$DX11 -P -Dunix -Dalpha -DLANGUAGE_FORTRAN -D__LANGUAGE_FORTRAN__"
+    FFLAGS="$DX11 $OPTFLAG -extend_source -Dalpha "
+    FPP=i
+    MACHINE=osf1axp
+    VMSFLAGS="-P"
+    LDFLAGS="-v"
+    # The following for g77
+    #FFLAGS="$DX11 -ffixed-line-length-132 -Dalpha $OPTFLAG -O3"
+    #CFLAGS="$CFLAGS -DGCC"
+    #CPPFLAGS="$CPPFLAGS -DG77"
+    #FC=g77; export FC
+    #CC=gcc; export CC
+    #LD=g77
+    #FPP=f
+    DOOBJS='$(LOBJS)'
+    MAR='$(AR) r $(MLIB) $?'
+    MRM='$(RM) *.o' $*
+else
+    echo "xvista configure script cannot determine your machine type." ;
+    exit 0
+fi
+if ( $TEST -e /usr/lib/libreadline.a ) && ( $TEST -e /usr/lib/libhistory.a ) && ( $TEST -e /usr/lib/libcurses.a ) ; then
+    LREADLINE="-lreadline -lhistory"
+    if $TEST -e /etc/redhat-release ; then
+#      if [ $rhver -gt 6 ] ; then
+        LREADLINE="-lreadline -lhistory -lcurses"
+#      fi
+    fi
+fi
+if ( $TEST -e /sw/lib/libreadline.a ) && ( $TEST -e /sw/lib/libhistory.a ) ; then
+    LREADLINE="-lreadline -lhistory"
+fi
+
+echo 
+echo "xvista has determined your machine type to be: $MACHINE"
+echo 
+echo "configure will now create all of the Makefiles, as well as the "
+echo "configuration file: Vista.$MACHINE"
+echo 
+
+machine=$MACHINE
+
+rm -f Makefile.$MACHINE
+touch Makefile.$MACHINE
+echo "#    ********* DO NOT EDIT THIS FILE *********" >>Makefile.$MACHINE
+echo "#  It is automatically generated and your changes will not be used! " >>Makefile.$MACHINE
+echo "MACHINE=$MACHINE" >>Makefile.$MACHINE
+echo "CPP=$CPP" >>Makefile.$MACHINE
+echo "INCCPP=$INCCPP" >>Makefile.$MACHINE
+echo "FPP=$FPP" >>Makefile.$MACHINE
+echo "CPPFLAGS=$CPPFLAGS" >>Makefile.$MACHINE
+echo "CC=$CC" >>Makefile.$MACHINE
+echo "CFLAGS=$CFLAGS" >>Makefile.$MACHINE
+echo "FC=$FC" >>Makefile.$MACHINE
+echo "FFLAGS=$FFLAGS" >>Makefile.$MACHINE
+echo "LD=$LD" >>Makefile.$MACHINE
+echo "LDFLAGS=$LDFLAGS" >>Makefile.$MACHINE
+echo "RM=$RM" >>Makefile.$MACHINE
+echo "AR=$AR" >>Makefile.$MACHINE
+echo "DX11=$DX11" >>Makefile.$MACHINE
+echo "X11DEV=$X11DEV" >>Makefile.$MACHINE
+echo "LX11DEV=$LX11DEV" >>Makefile.$MACHINE
+echo "X11LIB=$X11LIB" >>Makefile.$MACHINE
+echo "SUNIEEE=$SUNIEEE" >>Makefile.$MACHINE
+echo "OPTFLAG=$OPTFLAG" >>Makefile.$MACHINE
+echo "BSTATIC=$BSTATIC" >>Makefile.$MACHINE
+echo "DOOBJS=$DOOBJS" >>Makefile.$MACHINE
+echo "MAR=$MAR" >>Makefile.$MACHINE
+echo "MRM=$MRM" >>Makefile.$MACHINE
+echo "LREADLINE=$LREADLINE" >>Makefile.$MACHINE
+
+if ( $TEST -e /usr/local/src/wcstools-3.6.3/libwcs/libwcs.a ) ; then
+  WCSLIB="/usr/local/src/wcstools-3.6.3/libwcs/libwcs.a"
+else
+  WCSLIB=
+fi
+echo "WCSLIB=$WCSLIB" >> Makefile.$MACHINE
+#IRAFLIB="/iraf/iraf/bin.sparc/libimfort.a \
+#/iraf/iraf/bin.sparc/libsys.a \
+#/iraf/iraf/bin.sparc/libvops.a \
+#/iraf/iraf/unix/bin.sparc/libos.a"
+#echo "IRAFLIB=$IRAFLIB" >>Makefile.$MACHINE
+
+ln -s ../lickmongo/source mongosrc
+
+# OK, now make all of the Makefiles using all of these flags, plus the
+#  base Makefiles
+rm -f Makefile
+cat Makefile.$MACHINE Makefile.sav > Makefile
+ln -s ../ vistadisk
+rm -f include/Makefile
+cat Makefile.$MACHINE include/Makefile.sav > include/Makefile
+ln -s ../../ include/vistadisk
+rm -f base/Makefile
+cat Makefile.$MACHINE base/Makefile.sav > base/Makefile
+ln -s ../../ base/vistadisk
+rm -f image/Makefile
+cat Makefile.$MACHINE image/Makefile.sav > image/Makefile
+ln -s ../../ image/vistadisk
+rm -f misc/Makefile
+cat Makefile.$MACHINE misc/Makefile.sav > misc/Makefile
+ln -s ../../ misc/vistadisk
+rm -f parser/Makefile
+cat Makefile.$MACHINE parser/Makefile.sav > parser/Makefile
+ln -s ../../ parser/vistadisk
+rm -f simulate/Makefile
+cat Makefile.$MACHINE simulate/Makefile.sav > simulate/Makefile
+ln -s ../../ simulate/vistadisk
+rm -f spectra/Makefile
+cat Makefile.$MACHINE spectra/Makefile.sav > spectra/Makefile
+ln -s ../../ spectra/vistadisk
+rm -f starphot/Makefile
+cat Makefile.$MACHINE starphot/Makefile.sav > starphot/Makefile
+ln -s ../../ starphot/vistadisk
+rm -f surfphot/Makefile
+cat Makefile.$MACHINE surfphot/Makefile.sav > surfphot/Makefile
+ln -s ../../ surfphot/vistadisk
+rm -f tape/Makefile
+cat Makefile.$MACHINE tape/Makefile.sav > tape/Makefile
+ln -s ../../ tape/vistadisk
+rm -f tape/unix/Makefile
+cat Makefile.$MACHINE tape/unix/Makefile.sav > tape/unix/Makefile
+ln -s ../../../ tape/unix/vistadisk
+rm -f sysdep/unix/Makefile
+cat Makefile.$MACHINE sysdep/unix/Makefile.sav > sysdep/unix/Makefile
+ln -s ../../../ sysdep/unix/vistadisk
+rm -f user/Makefile
+cat Makefile.$MACHINE user/Makefile.sav > user/Makefile
+ln -s ../../ user/vistadisk
+rm -f utility/Makefile
+cat Makefile.$MACHINE utility/Makefile.sav > utility/Makefile
+ln -s ../../ utility/vistadisk
+rm -f display/Makefile
+cat Makefile.$MACHINE display/Makefile.sav > display/Makefile
+ln -s ../../ display/vistadisk
+rm -f display/xtv/Makefile
+cat Makefile.$MACHINE display/xtv/Makefile.sav > display/xtv/Makefile
+ln -s ../../../ display/xtv/vistadisk
+rm -f mongosrc/Makefile
+cat Makefile.$MACHINE mongosrc/Makefile.sav > mongosrc/Makefile
+rm -f mongosrc/plotsub/Makefile
+cat Makefile.$MACHINE mongosrc/plotsub/Makefile.sav > mongosrc/plotsub/Makefile
+ln -s ../MONGODEV.F mongosrc/plotsub/MONGODEV.F
+ln -s ../MONGOFIL.F mongosrc/plotsub/MONGOFIL.F
+ln -s ../MONGOLUN.F mongosrc/plotsub/MONGOLUN.F
+ln -s ../MONGOPAR.F mongosrc/plotsub/MONGOPAR.F
+rm -f mongosrc/devices/Makefile
+cat Makefile.$MACHINE mongosrc/devices/Makefile.sav > mongosrc/devices/Makefile
+ln -s ../MONGODEV.F mongosrc/devices/MONGODEV.F
+ln -s ../MONGOFIL.F mongosrc/devices/MONGOFIL.F
+ln -s ../MONGOLUN.F mongosrc/devices/MONGOLUN.F
+ln -s ../MONGOPAR.F mongosrc/devices/MONGOPAR.F
+rm -f mongosrc/sysunix/Makefile
+cat Makefile.$MACHINE mongosrc/sysunix/Makefile.sav > mongosrc/sysunix/Makefile
+ln -s ../MONGODEV.F mongosrc/sysunix/MONGODEV.F
+ln -s ../MONGOFIL.F mongosrc/sysunix/MONGOFIL.F
+ln -s ../MONGOLUN.F mongosrc/sysunix/MONGOLUN.F
+ln -s ../MONGOPAR.F mongosrc/sysunix/MONGOPAR.F
+rm -f mongosrc/interact/Makefile
+cat Makefile.$MACHINE mongosrc/interact/Makefile.sav > mongosrc/interact/Makefile
+ln -s ../MONGODEV.F mongosrc/interact/MONGODEV.F
+ln -s ../MONGOFIL.F mongosrc/interact/MONGOFIL.F
+ln -s ../MONGOLUN.F mongosrc/interact/MONGOLUN.F
+ln -s ../MONGOPAR.F mongosrc/interact/MONGOPAR.F
+cp ../docs/Makefile.sav ../docs/Makefile
+rm -f ../help/Makefile
+ln -s mongosrc/MONGOLUN.F MONGOLUN.F
+ln -s mongosrc/MONGOPAR.F MONGOPAR.F
+ln -s mongosrc/MONGODEV.F MONGODEV.F
+
+# Check to see whether lynx exists on the machine or not, and modify help
+#  directory makefile to tell it whether lynx needs to be compiled
+#  Use which command on linux machines, otherwise type command
+cat Makefile.$MACHINE > ../help/Makefile
+if [ $machine = linux ] || [ $machine = linux64 ] ; then
+  lvers=`which lynx | awk '{print $1}'`
+  if $TEST -x `which lynx | awk '{print $1}'` && [[ $lvers != "" ]] ; then
+    echo "default: " >> ../help/Makefile
+    echo "	echo lynx already exists on your machine" >> ../help/Makefile
+    lynxver=`which lynx`
+    rm -f ../bin/lynx.$MACHINE
+    echo "	rm -f ../bin/lynx.$MACHINE" >> ../help/Makefile
+    echo "	ln -s $lynxver ../bin/lynx.$MACHINE" >> ../help/Makefile	
+  fi
+#else
+#  if $TEST -x `type lynx | awk '{print $3}' `; then
+#    echo "default: " >> ../help/Makefile
+#    echo "	echo lynx already exists on your machine" >> ../help/Makefile
+#    lynxver=`which lynx`
+#    rm -f ../bin/lynx.$MACHINE
+#    echo "	ln -s $lynxver ../bin/lynx.$MACHINE" >> ../help/Makefile	
+#  fi
+fi
+cat ../help/Makefile.sav >> ../help/Makefile
+
+# OK now create the Vista.$MACHINE configuration file  (which will also be
+#   the LickMongo Config.$MACHINE file
+
+rm -f Vista.$MACHINE
+touch Vista.$MACHINE
+
+# Do integers come with their Most Significant Byte First? */
+if [ $machine = linux ] || [ $machine = linux64 ] || [ $machine = decsta ] || [ $machine = osf1axp ] ; then
+  echo "#undef MSBFirst" >>Vista.$MACHINE
+  DIR=ltl
+else
+  if [ $machine = macosx ] ; then
+    if [ `uname -p` = powerpc ] ; then
+      echo "#define MSBFirst" >>Vista.$MACHINE
+      DIR=big
+    else
+      echo "#undef MSBFirst" >>Vista.$MACHINE
+      DIR=ltl
+    fi
+  else
+    echo "#define MSBFirst" >>Vista.$MACHINE
+    DIR=big
+  fi
+fi
+
+# location of the Vista source tree - note it must have a trailing "/" */
+# for linux, a cd in the makefile changes the PWD variable, but not on
+# other systems
+if [ $machine = linux ] || [ $machine = linux64 ] || [ $machine = macosx ] ; then
+  echo "#define _VISTADIR      '$PWD/../'" >>Vista.$MACHINE
+  # LickMongo fonts tables and help file */
+  echo "#define _FONTBIN       '$PWD/../lickmongo/fonts.$DIR/fonts.vis'" >>Vista.$MACHINE
+  echo "#define _FONTDAT       '$PWD/../lickmongo/fonts.$DIR/fonts.dat'" >>Vista.$MACHINE
+  echo "#define _HELPFILE      '$PWD/../lickmongo/help.dat' " >>Vista.$MACHINE
+ 
+  # LickMongo scratch and PostScript directores:
+  # NOTE: these next 2 must be DIRECTORIES with a trailing "/"  
+  echo "#define _MONGOSCR      '/tmp/'" >>Vista.$MACHINE
+  echo "#define _MONGOPS       '$PWD/../lickmongo/'" >>Vista.$MACHINE
+
+else
+  echo "#define _VISTADIR      '$PWD/'" >>Vista.$MACHINE
+  # LickMongo fonts tables and help file */
+  echo "#define _FONTBIN       '$PWD/lickmongo/fonts.$DIR/fonts.vis'" >>Vista.$MACHINE
+  echo "#define _FONTDAT       '$PWD/lickmongo/fonts.$DIR/fonts.dat'" >>Vista.$MACHINE
+  echo "#define _HELPFILE      '$PWD/lickmongo/help.dat' " >>Vista.$MACHINE
+ 
+  # LickMongo scratch and PostScript directores:
+  # NOTE: these next 2 must be DIRECTORIES with a trailing "/"  
+  echo "#define _MONGOSCR      '/tmp/'" >>Vista.$MACHINE
+  echo "#define _MONGOPS       '$PWD/lickmongo/'" >>Vista.$MACHINE
+
+fi
+
+
+#   Various VISTA switches   */
+echo "#define __MACHINE '$machine'" >>Vista.$MACHINE
+cc -o address address.c
+if [ $machine = osf1axp ] || [ `uname -m` = x86_64 ] || [ `./address` = 8 ] ; then
+  echo "#define ADDRESS long int" >>Vista.$MACHINE
+  echo "#define __64BITADDRESS" >>Vista.$MACHINE
+else
+  echo "#define ADDRESS int" >>Vista.$MACHINE
+  echo "#undef __64BITADDRESS" >>Vista.$MACHINE
+fi
+
+# Operating System and Architecture Flags (note: you need UNIX *AND* LINUX */
+
+echo "#define __UNIX" >>Vista.$MACHINE
+
+if [ $machine = decsta ] ; then
+  echo "#define DECSta" >>Vista.$MACHINE
+  echo "#define __DECSTA" >>Vista.$MACHINE
+elif [ $machine = solaris ] || [ $machine = sun4 ] ; then
+  echo "#define __SUN" >>Vista.$MACHINE
+elif [ $machine = osf1axp ] ; then
+  echo "#define __ALPHA" >>Vista.$MACHINE
+elif [ $machine = linux ] || [ $machine = linux64 ] ; then
+  echo "#define __LINUX" >>Vista.$MACHINE
+fi
+
+# special for solaris using gcc/g77
+# echo "#define GCC" >>Vista.$MACHINE
+# echo "#define G77" >>Vista.$MACHINE
+# echo "#define GFORT" >>Vista.$MACHINE
+# echo "#undef __SUN" >>Vista.$MACHINE
+# echo "#define ADDRESS long int" >>Vista.$MACHINE
+# echo "#define __64BITADDRESS" >>Vista.$MACHINE
+# echo "#define unix" >>Vista.$MACHINE
+#end special
+
+# Do we use GCC and/or G77?
+if [ $machine = linux ] || [ $machine = linux64 ] || [ $machine = macosx ] ; then
+  if [ $CC = gcc ] || [ $CC = cc ] ; then
+    echo "#define GCC" >>Vista.$MACHINE
+  fi
+  if [ $CC = icc ] ; then
+    echo "#define ICC" >>Vista.$MACHINE
+  fi
+  if [ $FC = f77 ] || [ $FC = g77 ] || [ $FC = f95 ] || [ $FC = gfortran ]; then
+    echo "#define GFORT" >>Vista.$MACHINE
+    if [ $FC = f95 ] || [ $FC = gfortran ]; then
+      echo "#define FORT95" >>Vista.$MACHINE
+    fi
+  fi
+  if [ $FC = ifort ] ; then
+    echo "#define IFORT" >>Vista.$MACHINE
+  fi
+fi
+
+# Does this platform/OS/hardware support magtape i/o (9-track)? */
+echo "#undef __TAPESUPPORTED" >>Vista.$MACHINE
+# If tape is supported, use the generic UNIX routines?
+echo "#undef __UNIXTAPE" >>Vista.$MACHINE
+
+# Image Display Device Flags (only X11 currently supported !) */
+echo "#define __X11" >>Vista.$MACHINE
+echo "#undef __SUNVIEW" >>Vista.$MACHINE
+echo "#undef  __AED512" >>Vista.$MACHINE
+echo "#undef  __AED1024" >>Vista.$MACHINE
+echo "#undef  __PER" >>Vista.$MACHINE
+# Allow option of full-screen crosshairs for the X11 image display */
+echo "#define __HAIRS" >>Vista.$MACHINE
+
+# Enable the Vista/DAOPhot package */
+echo "#define __VDAO" >>Vista.$MACHINE
+# Use the new stellar photometry library routines */
+echo "#define __NEWLIB" >>Vista.$MACHINE
+echo "#define __MAXSTR 20000" >>Vista.$MACHINE
+echo "#define __MAXCOL 2048" >>Vista.$MACHINE
+
+# Special image format hooks.  USEIRAF requires the IMFORT libraries */
+echo "#define __USEWFPC" >>Vista.$MACHINE
+echo "#undef __USECRI" >>Vista.$MACHINE
+echo "#undef __HAVEDST" >>Vista.$MACHINE
+echo "#undef __USEIRAF" >>Vista.$MACHINE
+if [ a$WCSLIB != "a" ] ; then
+  echo "#define HAVELIBWCS" >>Vista.$MACHINE
+fi
+
+
+# The behavior of Fortran READ changed with Sun Fortran 1.2            */
+# Notably, a external sequential unformatted READ of a character string*/
+# now returns a blank string if the string is longer than the record   */
+# which is being read.  1989 Sept 25--SLA                              */
+# See base/disk.F for the first recognized example of this behavior.   */
+echo "#undef SunFortran1_2" >>Vista.$MACHINE
+
+# These defines setup some OS/Compiler compatibility hooks
+if ( ( [ $machine = linux ] || [ $machine = linux64 ] ) && [ $FC = fort77 ] ) || ( ([ $machine = sun4 ] || [ $machine = solaris ]) && [ $FC != g77 ] ) ; then
+  echo "#define IMPLICIT_NONE    implicit undefined (a-z)" >>Vista.$MACHINE
+  echo "#undef  VMS_CHAR_INIT" >>Vista.$MACHINE
+  echo "#define f77_CHAR_INIT" >>Vista.$MACHINE
+else
+  echo "#define IMPLICIT_NONE    implicit none" >>Vista.$MACHINE
+  echo "#define  VMS_CHAR_INIT" >>Vista.$MACHINE
+  echo "#undef f77_CHAR_INIT" >>Vista.$MACHINE
+fi
+#if [ $FC = ifort ] || [ $FC = f95 ] ; then
+if [ $FC = ifort ] ; then
+  echo "#undef DOUBLE_BACKSLASH" >>Vista.$MACHINE
+else
+  echo "#define DOUBLE_BACKSLASH" >>Vista.$MACHINE
+fi
+
+echo "#undef Unix_LOG_OPS" >>Vista.$MACHINE
+echo "#undef  VMS_LOG_OPS" >>Vista.$MACHINE
+if [ $machine = decsta ] ; then
+  echo "#define  CHAR_NOT_CHAR" >>Vista.$MACHINE
+else
+  echo "#undef  CHAR_NOT_CHAR" >>Vista.$MACHINE
+fi
+if [ $machine = decsta ]  || [ $machine = osf1axp ] ; then
+  echo "#define __READONLY" >>Vista.$MACHINE
+  echo "#define VMS_IO_STYLE" >>Vista.$MACHINE
+else
+  echo "#undef __READONLY" >>Vista.$MACHINE
+  echo "#undef VMS_IO_STYLE" >>Vista.$MACHINE
+fi
+echo "#undef HAVE_SYS_NERR" >>Vista.$MACHINE
+
+# These are for missing Fortran/C hooks in f2c for linux.  Some of
+# these (Fctime, Fperror, and Fchdir) are defined in the LickMongo
+# package (see mongosrc/sysunix/usleep.c)
+#
+# For other "missing" fortran routines for Linux, see the files
+# source/sysdep/unix/fnonstd.F and fhooks.c 
+
+if [ $machine = linux ] || [ $machine = linux64 ] || [ $machine = macosx ] ; then
+#  if [ $machine = macosx ] ; then
+    echo "#define unix" >>Vista.$MACHINE
+#  fi
+  echo "#define Fdtrig" >>Vista.$MACHINE
+  echo "#undef Fibit" >>Vista.$MACHINE
+  echo "#define Fctime" >>Vista.$MACHINE
+  echo "#define Fdtime" >>Vista.$MACHINE
+  echo "#define Ftime" >>Vista.$MACHINE
+  echo "#define Fperror" >>Vista.$MACHINE
+  echo "#define Fchdir" >>Vista.$MACHINE
+  echo "#define Frand" >>Vista.$MACHINE
+  echo "#define NoXOR" >>Vista.$MACHINE
+fi
+if [ $machine = linux ] || [ $machine = linux64 ] || [ $machine = sun4 ] || [ $machine = solaris ] ; then
+  echo "#define _POSIX_SOURCE" >>Vista.$MACHINE
+fi
+
+#  Do routines in C called from Fortran have trailing underscores?     */
+echo "#define TUS" >>Vista.$MACHINE
+
+# Is the usleep routine (microseconds units) available? */
+if [ $machine = decsta ] ; then
+  echo "#undef usleep_exists" >>Vista.$MACHINE
+else
+  echo "#define usleep_exists" >>Vista.$MACHINE
+fi
+
+# enable the interrupt handler in cases where explicitness is required */
+echo "#define INTERRUPT_HANDLE" >>Vista.$MACHINE
+
+# Phil Pinto added some neat functionality to Button3 in the X11 driver */
+echo "#define XBUTTON3" >>Vista.$MACHINE
+
+# Check to see whether readline exists on the machine
+if ( $TEST -e /usr/lib/libreadline.a ) && ( $TEST -e /usr/lib/libhistory.a ) && ( $TEST -e /usr/lib/libcurses.a ) && ( $TEST -e /usr/include/readline/readline.h ) && ( $TEST -e /usr/include/readline/history.h ) ; then
+  echo "#define __READLINE" >>Vista.$MACHINE
+elif ( $TEST -e /sw/lib/libreadline.a ) && ( $TEST -e /sw/lib/libhistory.a ) && ( $TEST -e /sw/include/readline/readline.h ) && ( $TEST -e /sw/include/readline/history.h ) ; then
+  echo "#define __READLINE" >>Vista.$MACHINE
+else
+  echo "#undef __READLINE" >>Vista.$MACHINE
+fi
+
+#      Define which graphics devices are active on this system
+#      This prevents locally useless code from being compiled
+echo "#define __NDPGREX" >>Vista.$MACHINE
+echo "#define __DR640" >>Vista.$MACHINE
+echo "#undef  __VT125" >>Vista.$MACHINE
+echo "#define __Tk4010" >>Vista.$MACHINE
+echo "#undef  __Gr270" >>Vista.$MACHINE
+echo "#undef  __AED512" >>Vista.$MACHINE
+echo "#undef  __GSI" >>Vista.$MACHINE
+echo "#undef  __HP2648A" >>Vista.$MACHINE
+echo "#undef  __ImTek" >>Vista.$MACHINE
+echo "#undef  __ISIOVW" >>Vista.$MACHINE
+echo "#undef  __uVAXUIS" >>Vista.$MACHINE
+echo "#undef  __SunView" >>Vista.$MACHINE
+echo "#define __Vis603" >>Vista.$MACHINE
+echo "#undef  __ISIEpson" >>Vista.$MACHINE
+echo "#undef  __Selanar" >>Vista.$MACHINE
+echo "#define __xterm" >>Vista.$MACHINE
+# echo "#define __X11"   done above */ >>Vista.$MACHINE
+echo "#undef  __uVAXTek" >>Vista.$MACHINE
+echo "#define __GO2xx" >>Vista.$MACHINE
+echo "#define __GO140" >>Vista.$MACHINE
+echo "#define __PostScript" >>Vista.$MACHINE
+echo "#undef  __VersV80" >>Vista.$MACHINE
+echo "#undef  __Printronix" >>Vista.$MACHINE
+echo "#undef  __Imagen" >>Vista.$MACHINE
+
+# Device numbers for graphics devices
+echo "#ifdef  __DR640" >>Vista.$MACHINE
+echo "#       define  _DR640           1" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __VT125" >>Vista.$MACHINE
+echo "#       define  _VT125           2" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __Tk4010" >>Vista.$MACHINE
+echo "#       define  _Tk4010          3" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __Gr270" >>Vista.$MACHINE
+echo "#       define  _Gr270           4" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __AED512" >>Vista.$MACHINE
+echo "#       define  _AED512          4" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(ISI) && defined(GSI_exists) && defined(__GSI)' >>Vista.$MACHINE
+echo "#       define  _GSI             4" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __HP2648A" >>Vista.$MACHINE
+echo "#       define  _HP2648A         5" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __ImTek" >>Vista.$MACHINE
+echo "#       define  _ImTek           6" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(ISI) && defined(__ISIOVW)' >>Vista.$MACHINE
+echo "#       define  _ISIOVW          7" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(VMS) && defined(__uVAXUIS)' >>Vista.$MACHINE
+echo "#       define  _uVAXUIS         7" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(sun) && defined(__SunView)' >>Vista.$MACHINE
+echo "#       define  _SunView         7" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __Vis603" >>Vista.$MACHINE
+echo "#       define  _Vis603          8" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(Epson_exists) && defined(__ISIEpson)' >>Vista.$MACHINE
+echo "#       define  _ISIEpson        9" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __Selanar" >>Vista.$MACHINE
+echo "#       define  _Selanar        10" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __xterm" >>Vista.$MACHINE
+echo "#       define  _xterm          10" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(X11_exists) && defined(__X11)' >>Vista.$MACHINE
+echo "#       define  _X11            11" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(VMS) && defined(__uVAXTek)' >>Vista.$MACHINE
+echo "#       define  _uVAXTek        12" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __GO2xx" >>Vista.$MACHINE
+echo "#       define  _GO2xx          13" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __GO140" >>Vista.$MACHINE
+echo "#       define  _GO140          14" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo "#ifdef  __PostScript" >>Vista.$MACHINE
+echo "#       define  _PostScript    -17" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(VMS) && (defined(__VersV80) || defined(__Printronix) || defined(__Imagen))' >>Vista.$MACHINE
+echo "#       define  _VECFILE" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(VMS) && defined(__VersV80)' >>Vista.$MACHINE
+echo "#       define  _VersV80        -1" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(VMS) && defined(__Printronix)' >>Vista.$MACHINE
+echo "#       define  _Printronix     -2" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+echo '#if     defined(VMS) && defined(__Imagen)' >>Vista.$MACHINE
+echo "#       define  _Imagen         -3" >>Vista.$MACHINE
+echo "#endif" >>Vista.$MACHINE
+
+#      This is magic code for the prefixes on all function names
+#      Note that these defines must be true for the CPP which is
+#      preprocessing the code.  When code is being generated for a
+#      VMS system we must at this point know what kind of machine is
+#      doing the CPP, and then afterwards turn off that machine's defines.
+#
+#      xMGO routines are publicly documented routines
+#      xTUV routines are internal and undocumented
+#      xOBS routines are obsolete, undocumented, and deprecated
+#      ATUS is used to append a terminal US as needed to call system routines
+
+#if [ $compiler = SUNWspro ] || [ $compiler = gcc ] ; then
+#else
+#fi
+
+echo '#if defined(SUNWspro) || defined(GCC) || defined(ICC)' >>Vista.$MACHINE
+  echo '#   define PASTE(x,y) _PASTE_(x,y)' >>Vista.$MACHINE
+	# Indirection is to allow macro expansions. 
+  echo '#   define _PASTE_(x,y) x ## y' >>Vista.$MACHINE
+  echo "#   define PMGO(s) s" >>Vista.$MACHINE
+  echo "#   define PTUV(s) s" >>Vista.$MACHINE
+  echo "#   define POBS(s) s" >>Vista.$MACHINE
+  echo "#   ifdef TUS" >>Vista.$MACHINE
+  echo "#       define UMGO(s) PASTE(s,_)" >>Vista.$MACHINE
+  echo "#       define UTUV(s) PASTE(s,_)" >>Vista.$MACHINE
+  echo "#       define UOBS(s) PASTE(s,_)" >>Vista.$MACHINE
+  echo "#       define ATUS(s) PASTE(s,_)" >>Vista.$MACHINE
+  echo "#   else  /* TUS */" >>Vista.$MACHINE
+  echo "#       define UMGO(s) s" >>Vista.$MACHINE
+  echo "#       define UTUV(s) s" >>Vista.$MACHINE
+  echo "#       define UOBS(s) s" >>Vista.$MACHINE
+  echo "#       define ATUS(s) s" >>Vista.$MACHINE
+  echo "#   endif /* TUS */" >>Vista.$MACHINE
+echo '#else' >> Vista.$MACHINE
+	#  Alas, this PASTE cannot be made to work when one of the args
+	#  is actually a Cpp token that needs to be expanded.
+  echo "#       define PASTE(x,y) x/**/y" >>Vista.$MACHINE
+  echo "#       define PMGO(s) s" >>Vista.$MACHINE
+#  echo "#       define PTUV(s) tuv/**/s" >>Vista.$MACHINE
+  echo "#       define PTUV(s) s" >>Vista.$MACHINE
+  echo "#       define POBS(s) s" >>Vista.$MACHINE
+  echo "#       ifdef TUS" >>Vista.$MACHINE
+  echo "#           define UMGO(s) s/**/_" >>Vista.$MACHINE
+#  echo "#           define UTUV(s) tuv/**/s/**/_" >>Vista.$MACHINE
+  echo "#           define UTUV(s) s/**/_" >>Vista.$MACHINE
+  echo "#           define UOBS(s) s/**/_" >>Vista.$MACHINE
+  echo "#           define ATUS(s) s/**/_" >>Vista.$MACHINE
+  echo "#       else  /* TUS */" >>Vista.$MACHINE
+  echo "#           define UMGO(s) s" >>Vista.$MACHINE
+#  echo "#           define UTUV(s) tuv/**/s" >>Vista.$MACHINE
+  echo "#           define UTUV(s) s" >>Vista.$MACHINE
+  echo "#           define UOBS(s) s" >>Vista.$MACHINE
+  echo "#           define ATUS(s) s" >>Vista.$MACHINE
+  echo "#       endif /* TUS */" >>Vista.$MACHINE
+echo '#endif' >> Vista.$MACHINE
+
+#      Certain CPP defines must be set while preprocessing the above
+#      but must be unset afterwards.
+
+echo "#ifdef  VMS" >>Vista.$MACHINE
+echo "#   undef  unix" >>Vista.$MACHINE
+echo "#   undef  sun" >>Vista.$MACHINE
+echo "#   undef  sun3" >>Vista.$MACHINE
+echo "#   undef  sun4" >>Vista.$MACHINE
+echo "#   undef  ISI" >>Vista.$MACHINE
+echo "#   undef  sgi" >>Vista.$MACHINE
+echo "#   define VMS_VMEM */" >>Vista.$MACHINE
+echo "#   define VMS_CHAR_INIT" >>Vista.$MACHINE
+echo "#   define VMS_LOG_OPS" >>Vista.$MACHINE
+echo "#endif  /* VMS */" >>Vista.$MACHINE
+
+#      Damn those VMS-style OPEN and CLOSE semantics
+echo "#ifdef VMS_IO_STYLE" >>Vista.$MACHINE
+echo "#   define Shared_ReadOnly ,shared,readonly" >>Vista.$MACHINE
+echo "#   define ReadOnly ,readonly" >>Vista.$MACHINE
+echo "#else  /* VMS_IO_STYLE */" >>Vista.$MACHINE
+echo "#   define Shared_ReadOnly   /* as nothing */" >>Vista.$MACHINE
+echo "#   define ReadOnly          /* as nothing */" >>Vista.$MACHINE
+echo "#endif /* VMS_IO_STYLE */" >>Vista.$MACHINE
+echo "#ifdef VMS" >>Vista.$MACHINE
+echo "#   define CarriageControlList ,carriagecontrol='list'  /* for sanity */" >>Vista.$MACHINE
+echo "#   define StatNew 'NEW'     /* works when files have versions */" >>Vista.$MACHINE
+echo "#else  /* VMS */" >>Vista.$MACHINE
+echo "#   define CarriageControlList          /* as nothing */" >>Vista.$MACHINE
+echo "#   define StatNew 'UNKNOWN'            /* works when files have NO versions */" >>Vista.$MACHINE
+echo "#endif /* VMS */" >>Vista.$MACHINE
+
+# The ANSI committee for FORTRAN 77 should have thought of these */
+echo "#ifdef  f77_CHAR_INIT" >>Vista.$MACHINE
+if [ $release = ubuntu ] ; then
+  echo "#   define NUL_DATA '\\\0'" >>Vista.$MACHINE
+else
+if [ $machine = linux ] || [ $machine = linux64 ] ; then
+  echo "#   define NUL_DATA '\0'" >>Vista.$MACHINE
+else
+  echo "#   define NUL_DATA '\\\0'" >>Vista.$MACHINE
+fi
+fi
+echo "#   define SOH_DATA '\'" >>Vista.$MACHINE
+echo "#   define ETX_DATA '\'" >>Vista.$MACHINE
+echo "#   define TAB_DATA '\t'" >>Vista.$MACHINE
+echo "#   define FF__DATA '\'" >>Vista.$MACHINE
+echo "#   define CR__DATA '\'" >>Vista.$MACHINE
+echo "#   define DLE_DATA '\'" >>Vista.$MACHINE
+echo "#   define NAK_DATA '\'" >>Vista.$MACHINE
+echo "#   define CAN_DATA '\'" >>Vista.$MACHINE
+echo "#   define SUB_DATA '\'" >>Vista.$MACHINE
+echo "#   define ESC_DATA '\'" >>Vista.$MACHINE
+echo "#   define GS__DATA '\'" >>Vista.$MACHINE
+echo "#   define US__DATA '\'" >>Vista.$MACHINE
+echo "#else   /* f77_CHAR_INIT */" >>Vista.$MACHINE
+echo "#ifdef  VMS_CHAR_INIT" >>Vista.$MACHINE
+echo "#   define NUL_DATA 0" >>Vista.$MACHINE
+echo "#   define SOH_DATA 1" >>Vista.$MACHINE
+echo "#   define ETX_DATA 3" >>Vista.$MACHINE
+echo "#   define TAB_DATA 9" >>Vista.$MACHINE
+echo "#   define FF__DATA 12" >>Vista.$MACHINE
+echo "#   define CR__DATA 13" >>Vista.$MACHINE
+echo "#   define DLE_DATA 16" >>Vista.$MACHINE
+echo "#   define NAK_DATA 21" >>Vista.$MACHINE
+echo "#   define CAN_DATA 24" >>Vista.$MACHINE
+echo "#   define SUB_DATA 26" >>Vista.$MACHINE
+echo "#   define ESC_DATA 27" >>Vista.$MACHINE
+echo "#   define GS__DATA 29" >>Vista.$MACHINE
+echo "#   define US__DATA 31" >>Vista.$MACHINE
+echo "#else   /* VMS_CHAR_INIT */" >>Vista.$MACHINE
+echo "#ifdef  F90_CHAR_INIT" >>Vista.$MACHINE
+echo "#   define NUL_DATA O'00'" >>Vista.$MACHINE
+echo "#   define SOH_DATA O'01'" >>Vista.$MACHINE
+echo "#   define ETX_DATA O'03'" >>Vista.$MACHINE
+echo "#   define TAB_DATA O'11'" >>Vista.$MACHINE
+echo "#   define FF__DATA O'14'" >>Vista.$MACHINE
+echo "#   define CR__DATA O'15'" >>Vista.$MACHINE
+echo "#   define DLE_DATA O'20'" >>Vista.$MACHINE
+echo "#   define NAK_DATA O'25'" >>Vista.$MACHINE
+echo "#   define CAN_DATA O'30'" >>Vista.$MACHINE
+echo "#   define SUB_DATA O'32'" >>Vista.$MACHINE
+echo "#   define ESC_DATA O'33'" >>Vista.$MACHINE
+echo "#   define GS__DATA O'35'" >>Vista.$MACHINE
+echo "#   define US__DATA O'37'" >>Vista.$MACHINE
+echo "#else   /* F90_CHAR_INIT */" >>Vista.$MACHINE
+    # The Fortran compiler should croak and die */
+echo "#endif  /* F90_CHAR_INIT */" >>Vista.$MACHINE
+echo "#endif  /* VMS_CHAR_INIT */" >>Vista.$MACHINE
+echo "#endif  /* f77_CHAR_INIT */" >>Vista.$MACHINE
+
+echo "#ifdef DOUBLE_BACKSLASH" >>Vista.$MACHINE
+if [ $machine = solaris ] ; then
+  echo "#define AsciiBackSlash '\\\\\\\' " >>Vista.$MACHINE
+elif [ $machine = osf1axp ] || [ $release = ubuntu ] ; then
+  echo "#define AsciiBackSlash '\\\\\' " >>Vista.$MACHINE
+elif [ $machine = macosx ]  ; then
+  echo "#define AsciiBackSlash '\\\\\\\\\\\\\\\\' " >>Vista.$MACHINE
+else
+  echo "#define AsciiBackSlash '\\\\' " >>Vista.$MACHINE
+fi
+echo "#else  /* DOUBLE_BACKSLASH */" >>Vista.$MACHINE
+echo '#define AsciiBackSlash char(92)' >>Vista.$MACHINE
+echo "#endif /* DOUBLE_BACKSLASH */" >>Vista.$MACHINE
+
+rm -f mongosrc/Config.$MACHINE
+cp Vista.$MACHINE mongosrc/Config.$MACHINE
+
+# Include unsupported (=illegal) code? NO!
+if [ 1 = 1 ] ; then
+  echo "nosupport: " >> Makefile
+else
+  echo "nosupport: " >> Makefile
+  echo "	(cd unsupported; make -k)" >> Makefile
+  rm -f unsupported/Makefile
+  cat Makefile.$MACHINE unsupported/Makefile.sav > unsupported/Makefile
+  echo "#define __UNSUPPORTED" >>Vista.$MACHINE
+fi
+

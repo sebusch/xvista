@@ -1,0 +1,35 @@
+
+<H1><A NAME="SECTION0014140000000000000000">
+POLY: Fit a Polynomial to a Spectrum</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml404#
+<A NAME="5989"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command5990#
+<BR>
+
+<P>
+POLY fits a polynomial to the spectrum in image buffer 'source'.  The order
+of the polynomial is specified by the keyword 'ORD=n', where n=1 is a line,
+n=2 is a quadratic, and so forth.  Here a ``spectrum'' is any 1-D image
+vector (an ``image'' with 1 row and NC columns).
+
+<P>
+As in the SPLINE command the keywords SUB and DIV can be used to tell the
+program to subtract or divide (respectively) the original spectrum by the
+fit.  (Without both of these keywords the spectrum will be replaced by the
+fit.) As in the SURFACE command the keyword LOAD will load VISTA variables
+with the computed polynomial coefficients, so that they are accessible by
+other commands.  The names of the variables loaded are COEFF0, COEFF1, ...,
+COEFFn, where 'n' is again the order of the fit.  The formula using these
+coefficients is
+<PRE><tex2html_verbatim_mark>verbatim405#</PRE>
+where y is the intensity and x is the pixel number.
+
+<P>
+<#6007#>Examples:<#6007#>
+<BR>
+<tex2html_image_mark>#example6008#
+<BR>
+
+<P>

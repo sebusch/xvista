@@ -1,0 +1,16 @@
+psland a.ps
+color 2 .5
+box
+wind 2 2 1
+color 3 .8
+box
+wind 2 2 2
+color 4 .2
+box
+wind 2 2 3
+color 3
+box
+wind 2 2 4
+color 4
+box
+hard

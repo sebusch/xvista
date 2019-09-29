@@ -1,0 +1,42 @@
+
+<H1><A NAME="SECTION0014220000000000000000">
+EWAVE: Wavelength Calibrate an Echelle Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml415#
+<A NAME="6221"><tex2html_anchor_invisible_mark></A>
+<A NAME="6222"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6223#
+<BR>
+
+<P>
+EWAVE will first match emission peaks in an extracted echelle arc spectrum
+(where the row number of the Vista image corresponds to the order number of
+the spectrum in that row, and the column number will be the column from the
+original (raw) image).  For each order, the program looks for peaks and
+attempts to identify them based on an initial estimate of the central
+wavelength of that order.  It assumes that none of the lines are blended.
+After the identifications are made a two-D polynomial is fit using a
+non-linear least square method.  The two coordinates of this polynomial are
+the column number and 1/m where m is the order number.  The default orders
+of the polynomial are 2 for the column number and 1 for the 1/m coordinate.
+It is possible at the moment to fit a 3 x 1 polynomial instead of a 2 x 1
+polynomial using PORD=3 but this generally does not improve the accuracy of
+the fit.  The fit parameters are iterated up to five times.
+
+<P>
+The `XOFF=' keyword is used when the ccd is offset from the nominal pattern
+center (grating rotation = 493830).  It is positive when the ccd is to the
+left of the pattern center.  It is zero by default.  The keyword `REJ=' is
+invoked to allow the routine to converge more rapidly.  A line is rejected
+if the difference between the wavelength of the line and its wavelength
+determined from the polynomial fit is larger than `rej' mA.  It is invoked
+after the second iteration and is 100 mA by default.
+
+<P>
+<#6239#>Examples:<#6239#>
+<BR>
+<tex2html_image_mark>#example6240#
+<BR>
+
+<P>

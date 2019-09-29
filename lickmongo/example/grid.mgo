@@ -1,0 +1,11 @@
+psport grid.ps
+expand 0
+margins 0 0 0 0
+expand 1
+xlimits 0 17
+ylimits 0 22
+tick 1 1 1 1
+grid 0
+relocate 8.5 11
+putlabel 5 this way up
+hard

@@ -1,0 +1,49 @@
+
+<H1><A NAME="SECTION001540000000000000000">
+RECON: Reconstruct an Image from a Surface Photometry Profile</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml438#
+<A NAME="6835"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6836#
+<BR>
+
+<P>
+RECON will reconstruct a smooth idealized image from a surface photometry
+profile of a galaxy, star, or any other centrally condensed object. The
+PROFILE command is used to generate the original profile.  This routine
+uses high resolution interpolation to estimate the intensity of the
+original object at any pixel in the image array.  The reconstructed image
+is faithful to the original brightness, and isophote position angle and
+ellipticity profiles, but has perfectly elliptical isophotes.  In some
+sense then, the reconstructed object looks like the original object, but
+smoothed around a contour.  The reconstructed image can then be compared to
+the original to look for faint and subtle features.
+
+<P>
+The reconstructed image is centered on the same pixel coordinates as the
+original image. This can be adjusted with the CR and CC keywords. The
+reconstruction extends only as far as the surface photometry profile;
+pixels outside of the photometry area are left untouched.
+
+<P>
+Note that the reconstructed object is placed in an image that already
+exists.  Use CREATE to make a new image if one does not exist, or make a
+copy of the original image.
+
+<P>
+The reconstruction is based upon either the most recent surface-brightness
+profile computed using PROFILE, or a previously computed fit saved to disk
+with the SAVE PROF= command, and read back into memory with the GET PROF=
+command.
+
+<P>
+<#6844#>Examples:<#6844#>
+<BR>
+<tex2html_image_mark>#example6845#
+<BR>
+
+<P>
+See Also: PROFILE, SAVE, GET, EGAL
+
+<P>

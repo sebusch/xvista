@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>EWAVE: Wavelength Calibrate an Echelle Image</TITLE>
+<META NAME="description" CONTENT="EWAVE: Wavelength Calibrate an Echelle Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0014220000000000000000">
+EWAVE: Wavelength Calibrate an Echelle Image</A>
+</H1>
+
+<!-- linkto ewave.html -->
+<A NAME="6228"></A>
+<A NAME="6229"></A>
+<BR>
+
+<BR>
+
+<P>
+EWAVE will first match emission peaks in an extracted echelle arc spectrum
+(where the row number of the Vista image corresponds to the order number of
+the spectrum in that row, and the column number will be the column from the
+original (raw) image).  For each order, the program looks for peaks and
+attempts to identify them based on an initial estimate of the central
+wavelength of that order.  It assumes that none of the lines are blended.
+After the identifications are made a two-D polynomial is fit using a
+non-linear least square method.  The two coordinates of this polynomial are
+the column number and 1/m where m is the order number.  The default orders
+of the polynomial are 2 for the column number and 1 for the 1/m coordinate.
+It is possible at the moment to fit a 3 x 1 polynomial instead of a 2 x 1
+polynomial using PORD=3 but this generally does not improve the accuracy of
+the fit.  The fit parameters are iterated up to five times.
+
+<P>
+The `XOFF=' keyword is used when the ccd is offset from the nominal pattern
+center (grating rotation = 493830).  It is positive when the ccd is to the
+left of the pattern center.  It is zero by default.  The keyword `REJ=' is
+invoked to allow the routine to converge more rapidly.  A line is rejected
+if the difference between the wavelength of the line and its wavelength
+determined from the polynomial fit is larger than `rej' mA.  It is invoked
+after the second iteration and is 100 mA by default.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,212 @@
+\chapter{Image Simulation}
+\begin{rawhtml}
+<!-- linkto simimgs.html -->
+\end{rawhtml}
+
+%
+% reformatted and edited
+% moved TEMPLATE here from Chapter 15, since its function is more
+% correctly image simulation
+% did *some* keyword checking, hard to tell if I got everything
+% function-wise.
+% rwp/osu 98Jul26
+
+The VISTA image simulation commands are:
+\begin{itemize}
+  \item[PHOTONS\hfill]{add artificial stars and/or noise to an image}
+  \item[TEMPLATE\hfill]{generate an image from a user-supplied profile}
+  \item[DEVAUC\hfill]{generate an image with a deVaucouleurs profile}
+\end{itemize}
+
+\section{PHOTONS: Add Artificial Stars and/or Noise to an Image}
+\begin{rawhtml}
+<!-- linkto photons.html -->
+\end{rawhtml}
+
+\index{Photometry!Artificial Stars }
+\index{Photometry!Artificial Images}
+\begin{itemize}
+  \item[Form: PHOTONS source [NSTARS=] [AT=r,c] [COUNTS=c1,c2] [MEAN=]\hfill]{}
+  \item{[RN=] [GAIN=] [GAUSS] [FILE=] [FW=] [DAOPSF=]}
+  \item{[PHOT] [NEW] [PSFLIB=] [STR=] [NDIV] [TRUNC]}
+  \item[NSTARS=]{gives the number of stars to make.}
+  \item[AT=R,C]{Put a single star at row R and column C
+       This cannot be used with NSTARS.}
+  \item[STR=file]{specifies a file with the positions and
+       counts of the stars to be added}
+  \item[COUNTS=a,b]{gives ranges in total counts for the
+       stars. If only one number is given, range will be from 0 to that number}
+  \item[MEAN=]{gives the mean level (counts) added to the image to mimic
+       sky. If mean>=0, photon noise will be added properly given counts in
+       each pixel.  Mean=-1 if unspecified. If mean<0 then no photon noise
+       is added to image. }
+  \item[RN=]{ gives the readout noise (electrons) 0 if unspecified. }
+  \item[GAIN=]{gives the conversion between photons and counts.  This is in
+       the units photons per count. Needed to do noise properly.}
+  \item[GAUSS ]{tell program to make images from a sampled Gaussian, with
+       FWHM specified by FW= keyword If not include, PSF profile will be
+       read a a disk file specified by FILE= keyword}
+  \item[FW=]{star FWHM in pixels for Gaussian, or half width for arbitrary
+       PSF (in disk file)}
+  \item[FILE=]{ specifies file with 250 numbers (arr(i),i=1,250)
+       representing 1-D PSF: half-width (no. of pixels per 250 bins) must
+       be specified with FW keyword.  If FILE is specified, GAUSS is
+       ignored}
+  \item[DAOPSF=file]{creates stars with PSF from a DAOPHOT .PSF file}
+  \item[PSFLIB=file]{Specifies PSFLIB library file to use to look up PSF at
+       various pixel centerings. Must be created with PSFLIB command and
+       special image}
+  \item[PHOT]{store the positions and total counts of added
+       stars in a photometry file. }
+  \item[NEW]{creates a new photometry file.  NEW implies PHOT}
+  \item[NDIV]{allows user to change the pixel subdivisions
+       used for the PSF integration over pixels}
+  \item[TRUNC]{Makes PHOTONS integer truncate}
+\end{itemize}
+
+PHOTONS creates artificial stars and/or noise on an already existing
+image. If no image exists, use CREATE to make one. It makes as many stars
+as you want with whatever brightnesses you want. You can specify where to
+put each star, or you can place them randomly on the image, or you can read
+in positions from an external file. You can use a coarse Gaussian to
+represent the PSF with whatever FWHM, or you can give a PSF to the program
+to read from a preexisting disk file. You can use a DAOPHOT style PSF to
+create images, or a PSFLIB file. You can store the information (position
+and counts) about the created stars in a VISTA photometry file.
+
+Without preparing an external file, you can either create one star at a
+specified position or one or more stars at random positions. For a
+specified position,use AT=r,c; if this keyword isn't used, positions will
+be random on the frame, unless the STR= keyword is used. Specify the number
+of stars desired using NSTARS=n.The number of counts in each star is
+determined from the COUNTS=c1,c2 keyword. Each star will have a total
+number of counts randomly distributed in the range c1 to c2. If you want a
+star to have a particular number of counts c1, just set c2=c1+1.
+
+To make stars from a list on disk, prepare a file with four columns:
+ID,COL(X), ROW(Y), COUNTS.  Any format is OK, as long as there are spaces
+between the numbers. Specify the filename with STR=filename and your stars
+will be made.
+
+The PSFs of the stars can be a Gaussian of whatever FWHM you desire, or it
+can be integrated external disk file with a 1-D PSF, or you can use a PSF
+created by the DAOPHOT PSF routine to create stars, or you can specify a
+PSF library file to use. For a Gaussian PSF, use the GAUSS keyword along
+with FW=FWHM to specify the FWHM. For an arbitrary symmetric PSF from a
+disk file, use FILE=file to specify the file name. This file can contain up
+to 1000 numbers with the profile of your desire tabulated. The program
+converts this profile to a pixel scale using the FW= keyword to tell it how
+many pixels corresponds to the NTABLE entries. The file should be a
+formatted disk file written with (Fortran):
+\begin{verbatim}
+  WRITE(*)  NTABLE
+  WRITE(*) (PSF_TABLE(I), I = 1, NTABLE)
+\end{verbatim}
+Note that the ``formatted'' write statement in Fortran makes a file that is
+machine-dependent, and such files are generally not exportable to other
+machine/operating-system architectures.
+
+To use a DAOPHOT PSF, use the DAOPSF=file to specify the file name of the
+DAOPHOT .PSF file.
+
+For all the file options, the V\_DATADIR is the default directory.
+
+Unless requested, noise will not be added to the image. To add noise, use
+MEAN=mean and/or RN=rn. MEAN adds a constant value to all pixels in the
+image, then computes noise for each pixel and adds it on. RN will add
+readout noise to the image. Note that mean and rn are to be given in
+counts. To get the correct noise, you also need to specify a gain (with
+GAIN=gain) in units of photons per count. Recall, if MEAN is greater than
+or equal to 0, noise will be added. Consequently if you want to add stars
+to an image more than once, you will add photon noise each time if MEAN
+is >= 0.  The default values are -1 for mean (no noise added), 0 for RN (no
+noise added), and 1 for GAIN. The most useful technique is to add sets of
+stars with MEAN=-1, and when all stars are finally placed, run PHOTONS with
+MEAN=the desired sky level.
+
+To store the information about the created stars (their positions and
+brightnesses) in a VISTA photometry file, use the PHOT keyword. For a new
+file, use the NEW keyword (NEW implies PHOT).
+
+
+\section{TEMPLATE: Generate an Image from a User-Supplied Profile}
+\begin{rawhtml}
+<!-- linkto template.html -->
+\end{rawhtml}
+\index{Template!Generating model galaxy image}
+\begin{itemize}
+  \item[Form: TEMPLATE dest source {[PA=n]} {[PAM=n]} {[E=n]} {[FIT=n1,n2]}
+       {[SUB]} {[GAUSS]} {[EXP]} {[HUB]} {[DEV]}\hfill]{}
+  \item[dest]{(integer or \$ construct) is an image which already 
+       exists to which the template will be written,}
+  \item[source]{(integer or \$ construct) is the spectrum that
+       contains the profile used to generate the template,}
+  \item[PA=n]{(re)sets the position angle of radial profile
+       extended object,}
+  \item[PAM=n]{(re)sets the position angle of the major axis
+       of the original image,}
+  \item[FIT=n1,n2]{requests the template be generated by fitting
+       the profile spectrum over pixels n1 through n2
+       with the appropriate surface brightness law,}
+  \item[SUB]{requests that the template be subtracted from
+       image already in image buffer specified,}
+  \item[GAUSS]{generates a Gaussian template (point source),}
+  \item[EXP]{generates an exponential disk template (spiral),}
+  \item[HUB]{generates a Hubble template (elliptical),}
+  \item[DEV]{generates a deVaucouleurs template (elliptical).}
+\end{itemize}
+
+TEMPLATE generates either a Gaussian (GAUSS), exponential disk (EXP),
+Hubble (HUB), or deVaucouleurs (DEV) template from an input profile spectrum
+originally calculated using the CUT or PROFILE command.  The Eccentricity,
+Position Angle of the brightness profile stored in the spectrum, and the
+Position Angle of the Major axis are all stored in a common block and
+generally need not be reloaded using the appropriate keywords.  These
+keywords permit the user to "fine tune" the fit in the event that the
+loaded parameters are not ideal.  The actual nonlinear least squares fit to
+the appropriate brightness law is carried out for spectrum points n1
+through n2 using the FIT= keyword.  This permits, for example, fitting an
+exponential disk to the outer portions of the brightness profile while
+leaving the central (perhaps bulge) component alone.  At this time only one
+surface brightness law at a time can be fit.
+
+N.B.The user must have an image with the same characteristics (size, etc.)
+as the template already in the destination buffer.  This image will of
+course be overwritten by the generated template.  The SUB keyword permits
+the subtraction of the generated template from the image already in the
+destination buffer.
+
+\noindent{Example:}
+\begin{itemize}
+  \item[TEMPLATE 2 1 FIT=10,19 EXP\hfill]{Generates an exponential disk
+       template from the profile in spectrum 1 (fit to pixels 10 through
+       19) and writes the image to image buffer 2 (which already exists).}
+
+  \item[TEMPLATE 2 1 FIT=10,19 DEV SUB \hfill]{same as above, but fits
+       deVaucouleurs profile and subtracts fit from image already in 2}
+\end{itemize}
+
+See Also: CUT, DEVAUC
+
+
+\section{DEVAUC: Generate an Image with a DeVaucouleurs Profile}
+\begin{rawhtml}
+<!-- linkto devauc.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: DEVAUC source [REFF=r] [SEFF=s] [X0=x0] [Y0=y0] 
+       [PIX=pix]\hfill]{}
+  \item[source]{gives the image in which to create the simulation}
+  \item[REFF=reff]{specifies the effective radius (arcmin)}
+  \item[SEFF=seff]{specifies the surface brightness at reff (counts/pixel)}
+  \item[X0=]{specifies the column center}
+  \item[Y0=]{specifies the row center}
+  \item[PIX=pix]{specifies the pixel scale ("/pixel)}
+\end{itemize}
+
+DEVAUC will generate an object with a deVaucouleurs profile in buffer
+source. The buffer must have previously been created. The parameters of the
+profile can be specified using the keywords, or else the program will
+prompt the user for them.
+
+See Also:  TEMPLATE

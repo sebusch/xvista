@@ -1,0 +1,34 @@
+
+<H1><A NAME="SECTION001470000000000000000">
+COPW: Copy a Wavelength Scale onto a Spectrum</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml392#
+<A NAME="5819"><tex2html_anchor_invisible_mark></A>
+<A NAME="5820"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command5821#
+<BR>
+
+<P>
+COPW will copy a wavelength calibration from one spectrum to another.  This
+is done to copy the wavelength scale computed with the WSCALE command from
+the comparison spectrum to a program spectrum.  The actual spectral data
+are not changed by this command, only the wavelength calibration parameters
+stored in the image header.  
+
+<P>
+If a second source spectrum is given then the command assumes that you have
+two comparison spectra which bracket the program spectrum in time, and it
+will use the times of observations of the image headers of the three
+spectra to do a linear interpolation of the wavelength parameters of the
+comparisons to the time of the program spectrum.  This procedure can
+sometimes provide an improved wavelength calibration by correcting for the
+effects of instrumental flexure.
+
+<P>
+<#5828#>Examples:<#5828#>
+<BR>
+<tex2html_image_mark>#example5829#
+<BR>
+
+<P>

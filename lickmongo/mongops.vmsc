@@ -1,0 +1,18 @@
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!      This VMS DCL procedure is Copyrighted software.
+$!      The file COPYRIGHT must accompany this file.  See it for details.
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!
+$!              The System Logical Name Table entry MONGO_SCRATCH
+$!              should always point to useable scratch
+$  if f$trnlnm("mongoscr") .eqs. "" then -
+$  assign       MONGO_SCRATCH:                  mongoscr
+$!set message/noid/nosev/nofac/notext
+$ purge/noconfirm psprint.log
+$ set prot=(w:rwed) 'f$parse(p1)'
+$ on warning then goto delete_me
+$ sunps 'p1' helios
+$ delete_me:
+$ delete 'f$parse(p1)'
+$!IF PLOTS GENERATED TODAY ARE ALL DELETED, THEN MULTIPAGE PLOTS ARE BROKEN
+$ delete/by_owner/noconfirm/nolog/before=today mongoscr:*.ps;*

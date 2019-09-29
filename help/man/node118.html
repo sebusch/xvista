@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>HISTOGRAM: Display a Histogram of Image Pixel Values</TITLE>
+<META NAME="description" CONTENT="HISTOGRAM: Display a Histogram of Image Pixel Values">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001140000000000000000">
+HISTOGRAM: Display a Histogram of Image Pixel Values</A>
+</H1>
+
+<!-- linkto histogram.html -->
+<BR>
+
+<BR>
+
+<P>
+This program displays a histogram of an image, plotting the logarithm of
+the number of pixels at each value for the image 'source'.
+
+<P>
+Use the BIN word to specify how wide the intensity intervals show in the
+plot is to be.  Normally the binning factor is 1, meaning that the plot
+displayed is the logarithm of the number of pixel values at each intensity
+(the image values are converted to integers).  If the bin factor is
+non-zero, the display is the log of the number in larger bins.  For
+example, if the bin was 5, and the minimum value in the image is 0, then
+the plot shows the number of pixels with intensity 0 - 4, 5 - 9, 10 - 14,
+15 - 19, etc. If there is a large range in intensities, the BIN word should
+be used to keep the plot from having so many points that it looks like
+hash. If the number of points in the histogram is larger than 2048, the
+program will increase the bin size to reduce the number of points in the
+plot.
+
+<P>
+The BOX word limits the calculation to those pixels in the specified box.
+The XMIN and XMAX words limit the calculation to those pixels in the
+specified intensity range.  If XMIN is not given, the lower limit will be
+the minimum pixel value in the image.  If XMAX is not given, the upper
+limit will be the maximum pixel value in the image.
+
+<P>
+The YMIN and YMAX words, by contrast, limit the DISPLAY of the histogram so
+that the Y-axis runs over the given range.  These words do not change the
+calculation in any way.  If YMIN is not used, the lower limit of the
+display will be the smallest number of pixels in the image that have a
+given value (often this is zero pixels at many intensities).  If YMAX is
+not used, the upper limit of the display will be the largest number of
+pixels which have a certain intensity.
+
+<P>
+NOLOG makes the plot show the actual number of pixels at each intensity,
+rather than the logarithm.  When the logarithm is computed in the default
+option, intensities with no pixels are given the value 0, so you cannot
+distinguish an intensity with 1 pixel and an intensity with 0 pixels unless
+you use the NOLOG word.
+
+<P>
+The NOERASE keyword suppresses the erasure of the screen before plotting.
+Up to 4 histograms may be plotted on a single output page using the WIND=n
+keyword, where n=(1,2,3,4), with windows numbered from left-to-right,
+bottom-to-top in the conventional MONGO order.  Hardcopy is flushed to the
+printer only after WIND=4 is used.  The plot may be printed in portrait
+mode (long axis of the paper vertical) using the PORT keyword.
+
+<P>
+The histogram for an image may be loaded into an image buffer as a
+"spectrum" (1-D image) for further analysis or storage for use with
+external programs using the BUF=buf keyword.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

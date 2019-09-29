@@ -1,0 +1,46 @@
+
+<H1><A NAME="SECTION00600000000000000000">
+Input and Output of Images and Spectra</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml216#
+
+<P>
+VISTA operates on images or spectra stored in internal memory buffers.
+Before you are able to analyze an image or a spectrum, you need to load
+your images into one of the buffers from files on disk.  After an image has
+been loaded into memory, you can copy it to other buffers, or write the
+data to disk.  Below, we will use the word ``image'' to connote both 2-D
+images and 1-D spectra, since functionally a 1-D spectrum is treated as a
+1-D image with only one row of data.
+
+<P>
+NOTE: Version 5.0 of VISTA does not provide any commands for magnetic tape
+handling, as magnetic tape as a random access medium has largely become
+obsolete, having given way to mass disk storage (traditional magnetic
+disks, optical disks, and CD-ROM media) with multi-gigabyte capacity.
+
+<P>
+These two commands are used to read and write images:
+<BR>
+<tex2html_image_mark>#example1712#
+<BR>
+
+<P>
+These commands set the default data directories used by VISTA:
+<BR>
+<tex2html_image_mark>#example1716#
+<BR>
+
+<P>
+These commands are used to work on image buffers:
+<BR>
+<tex2html_image_mark>#example1720#
+<BR>
+
+<P>
+These commands work on the headers of images stored in memory:
+<BR>
+<tex2html_image_mark>#example1727#
+<BR>
+
+<P>

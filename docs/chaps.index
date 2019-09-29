@@ -1,0 +1,18 @@
+ chap1.tex	Introduction
+ chap2.tex	Advanced VISTA Command Syntax
+ chap3.tex	Variables, Arithmetic Expressions, \& Strings
+ chap4.tex	VISTA Command Procedure Scripts
+ chap5.tex	Flow Control in Procedures
+ chap6.tex	Input, Output, and Transfer of Images and Spectra
+ chap7.tex	Getting, Saving, and Printing Data 
+ chap8.tex	Image Display, Plotting, and Interaction
+ chap9.tex	Marking Image Subsections or Pixels
+chap10.tex	Image Arithmetic
+chap11.tex	Basic Image Analysis
+chap12.tex	Basic Image Processing
+chap13.tex	Fourier Transforms and Complex Arithmetic
+chap14.tex	Spectroscopy
+chap15.tex	Surface Photometry
+chap16.tex	Stellar Photometry
+chap17.tex	Image Simulation
+chap18.tex	Miscellaneous Commands

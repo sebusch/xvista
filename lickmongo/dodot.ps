@@ -1,0 +1,65 @@
+% DoDot Macro
+/DoDotDict 20 dict def
+/DoDot {
+DoDotDict begin
+/expand exch def /ptype exch def
+/nvert exch def /rot exch def
+/ydot exch def /xdot exch def
+gsave
+xdot ydot translate
+rot rotate
+% set default point radius
+/orad 5.0 expand mul def
+/dang 360. nvert div def
+/bang -90. dang 0.5 mul add def
+/eang 270. dang 0.5 mul sub def
+/xv orad bang cos mul def
+/yv orad bang sin mul def
+newpath xv yv moveto
+% Open or Filled
+ptype 0 eq ptype 3 eq or {
+    bang dang add dang eang {
+	dup sin exch cos
+	/xv exch orad mul def
+	/yv exch orad mul def
+	xv yv lineto
+    } for
+    closepath
+    ptype 0 eq {stroke} if
+    ptype 3 eq {gsave
+%       0 setgray
+	fill grestore
+    } if
+} if
+% Skeletal
+ptype 1 eq {
+    bang dang add dang eang {
+	dup sin exch cos
+	/xv exch orad mul def
+	/yv exch orad mul def
+	0 0 lineto xv yv moveto
+    } for
+    0 0 lineto stroke
+} if
+% Stellated
+ptype 2 eq {
+    % set stellated inner radius
+    /irad 1.25 expand mul def
+    /hang dang 0.5 mul def
+    bang dang eang {
+	dup hang add dup sin exch cos
+	/xv exch irad mul def
+	/yv exch irad mul def
+	xv yv lineto
+	dang add dup sin exch cos
+	/xv exch orad mul def
+	/yv exch orad mul def
+	xv yv lineto
+    } for
+    stroke
+}if
+grestore end } bind def
+%DoPt macro
+/DoPt {
+1 index 1 index M L
+} bind def

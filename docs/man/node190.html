@@ -1,0 +1,48 @@
+
+<H1><A NAME="SECTION0015140000000000000000">
+CPROF: Correct the Results of a PROFILE Calculation</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml448#
+<BR>
+<tex2html_image_mark>#command7027#
+<BR>
+
+<P>
+CPROF enables the user to inspect the results of a PROFILE calculation in
+graphical form, and to modify them by replacing portions judged to be in
+error by the results of a second order polynomial fit to ;SPMquot;good;SPMquot; regions.
+This often is necessary for spiral galaxies for which the outer contours
+can get confused.
+
+<P>
+The ellipticity, surface brightness, and semi-minor axis values stored in
+the PROFILE common block are first plotted on the display.  Frequently one
+can find regions of spuriously low ellipticity and surface brightness, with
+a corresponding local maximum in the semi-minor axis, known as ;SPMquot;excursions;SPMquot;;
+these represent areas in which the PROFILE iterations have converged
+poorly. If such a region is identified, the user is asked to specify the
+boundaries of regions on either side of the excursion in which the PROFILE
+results are judged to be acceptable; a polynomial is fit to the
+ellipticities, position angles, and surface brightnesses in the latter
+regions. The results of the fit are then used to recompute ellipticities,
+PA's and SB's in the excursion region. The default is to perform a second
+order fit, but fits of other order can be used by giving the ORDER=n
+keyword.
+
+<P>
+The process of plotting the profile parameters, identifying glitches, and
+replacing with fits continues until the user specifies that the profile is
+satisfactory. Another option is to fit only the surface brightnesses in a
+region. This is sometimes desirable when the ellipticity undergoes an
+abrupt, genuine increase; the surface brightness is then spuriously
+enhanced.
+
+<P>
+CPROF is best used when the galaxy image has been displayed, and the
+ellipses overplotted on the image using TVPROF. The success of a CPROF
+calculation is best measured by looking at this display.
+
+<P>
+See Also: PROFILE, TVPROF, CLPROF
+
+<P>

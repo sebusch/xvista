@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>GROUP: DAOPHOT GROUP Command</TITLE>
+<META NAME="description" CONTENT="GROUP: DAOPHOT GROUP Command">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001650000000000000000">
+GROUP: DAOPHOT GROUP Command</A>
+</H1>
+
+<!-- linkto group.html -->
+<BR>
+
+<BR>
+
+<P>
+GROUP splits stars into separate groups for possible use during the
+PSF-fitting procedure. OLDGROUP (or GROUP with option IGROUP=1) splits
+stars just on the basis of the distance to the nearest neighbor, and
+needs a critical separation as input. GROUP
+(with option IGROUP=0) uses brightness information and information about
+the PSF as well, and uses a critical brightness ratio as input.
+
+<P>
+GROUP uses as input an output file from
+the PHOTOMETRY command. The program will prompt for a critical separation or
+critical ratio, or it can be specified with the CRIT= keyword.  The command will
+also prompt for an input aperture photometry file, an output group file,
+and a PSF file (for GROUP IG=0).  Alternatively, these files can
+be specified with the DAOFILES MAG=magfile GRP=grpfile PSF=psffile command.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

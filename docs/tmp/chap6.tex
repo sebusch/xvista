@@ -1,0 +1,770 @@
+\chapter{Input and Output of Images and Spectra}
+\begin{rawhtml}
+<!-- linkto input.html -->
+<!-- linkto output.html -->
+\end{rawhtml}
+
+%
+% keywords and function checked against the current sources
+% added missing help for FIXHEAD
+% moved SETUP to chapter 14 (spectroscopy), as it didn't really belong here
+% and is primarily used for spectral extinction correction (put after
+% the help entry for EXTINCT).
+% moved SETDIR and CD from chapter 7 (they are needed here before there)
+%
+% rwp/osu 1998 Aug 6
+%
+
+VISTA operates on images or spectra stored in internal memory buffers.
+Before you are able to analyze an image or a spectrum, you need to load
+your images into one of the buffers from files on disk.  After an image has
+been loaded into memory, you can copy it to other buffers, or write the
+data to disk.  Below, we will use the word ``image'' to connote both 2-D
+images and 1-D spectra, since functionally a 1-D spectrum is treated as a
+1-D image with only one row of data.
+
+NOTE: Version 5.0 of VISTA does not provide any commands for magnetic tape
+handling, as magnetic tape as a random access medium has largely become
+obsolete, having given way to mass disk storage (traditional magnetic
+disks, optical disks, and CD-ROM media) with multi-gigabyte capacity.
+
+These two commands are used to read and write images:
+\begin{itemize}
+  \item[RD\hfill]{read an image from a disk file}
+  \item[WD\hfill]{write an image to a disk file}
+\end{itemize}
+
+These commands set the default data directories used by VISTA:
+\begin{itemize}
+   \item[SETDIR\hfill]{set the VISTA default directories \& file extensions}
+   \item[CD\hfill]{change the current working directory}
+\end{itemize}
+
+These commands are used to work on image buffers:
+\begin{itemize}
+  \item[COPY\hfill]{copy an image between buffers}
+  \item[BUFFERS\hfill]{list the contents of the image buffers}
+  \item[DISPOSE\hfill]{clear (delete) image buffers}
+  \item[CHANGE\hfill]{renames objects}
+  \item[CREATE\hfill]{create a blank image buffer}
+\end{itemize}
+
+These commands work on the headers of images stored in memory:
+\begin{itemize}
+  \item[FITS\hfill]{insert/edit FITS header cards}
+  \item[UNFIT\hfill]{delete FITS header cards}
+  \item[HEDIT\hfill]{edit FITS headers}
+  \item[FIXHEAD\hfill]{fix FITS headers}
+\end{itemize}
+
+\section{RD: Read an Image from a Disk File}
+\begin{rawhtml}
+<!-- linkto rd.html -->
+\end{rawhtml}
+
+\index{Disk!Read image or spectrum from}
+\index{Image!Read from disk}
+\index{Spectrum!Read from disk}
+\begin{itemize}
+  \item[\textbf{Form: } RD buf filename {[WFPC]} {[DOM]} {[SDAS]}
+       {[SPEC]} {[OLD]} {[HEADONLY]}\hfill]{}
+  \item[buf]{is the buffer in which the image will be stored, and}
+  \item[filename]{(character string) is the name of the diskfile holding
+       the spectrum.}
+  \item[WFPC,DOM,SDAS]{read WFPC format file with appropriate filename}
+  \item[SPEC]{read the image from the spectrum directory, instead of from
+       the image directory (archaic).}
+  \item[OLD]{read old style VISTA images}
+  \item[HEADONLY]{read only the image header, not the image data.}
+\end{itemize}
+This command reads images from the disk into a buffer. Images with only one
+dimension (i.e. spectra) are converted to two-dimensional images when read
+from the disk.
+
+VISTA (starting with v4.2) has adopted the FITS format as the default image
+format for input and output.  FITS images are organized (in their simplest
+form) into header and data records.  The FITS format has the great
+advantage that is it defined independently of your machine type and is a
+nearly universally accepted and well-documented standard for data
+interchange in the astronomical community.  Consequently, it is possible to
+exchange images between different machines and/or operating systems without
+having to use special translation software.  For more information on the
+FITS format, see the FITS Support Office Home Page at the NASA Goddard
+Space Flight Center
+(\htmladdnormallink{http://fits.gsfc.nasa.gov/}{http://fits.gsfc.nasa.gov/}).
+
+If the specified image cannot be found, the program will attempt to find
+a ``gzip''ed version of the file by appending a .gz to the file name. If
+RD finds a file name with a .gz extension, it will copy the file to the
+/tmp directory, uncompress it, read it, and then delete the temporary
+uncompressed verions.
+
+The optional keywords WFPC, DOM, and SDAS may be used to specify that the
+file to be read is a WF/PC team format file (in DEC byte order). If WFPC is
+specified, the names are taken to be filename.IMG and filename.HDR; for
+SDAS, the filenames are filename.HHD and filename.HHH; for DOM, the file is
+specified by a number, W00000n.IMG and W00000n.HDR. If any of these
+extensions are explicitly mentioned in the filename, the WFPC switch is
+automatically turned on.
+
+If the directory is not explicitly given in the filename, the program tries
+to read from the image directory (or from the spectrum directory if the
+word SPEC is given, although this usage is now considered archaic, see the
+notes below).  If a filename extension is not given in the filename, the
+program puts on a default extension from the list of extensions.  You can
+show the default directories and extensions with the command PRINT
+DIRECTORIES.
+
+In the examples below, assume that the default directories 
+/vista/ccd/ for images and /vista/spectra/ for spectra:
+\begin{itemize}
+  \item[RD 1 m92\hfill]{reads /vista/ccd/m92.fits  to buffer 1.}
+  \item[RD 7 demo/m92\hfill]{reads demo/m92.fits to buffer 7.}
+  \item[RD 3 m92.xyz\hfill]{reads /vista/ccd/m92.xyz  to buffer 3.}
+  \item[RD \$N m92\hfill]{reads /vista/ccd/m92.fits  to buffer N, where
+       N is a variable.}
+  \item[RD 12 HD183543 SPEC\hfill]{reads /vista/spectra/HD183143.fits to
+buffer 5}
+\end{itemize}
+
+{\bf A Note About Images, Spectra, and Directories:}
+
+We wish to point out that in general there is no requirement within VISTA
+to treat images and spectra separately, as both are treated equally as 2-D
+or 1-D FITS format images, respectively.  The old segregation was an
+artifact of earlier versions of VISTA in which 2-D images and 1-D spectra
+had completely separate data formats (images were .ccd files, spectra .spc
+files), and separate commands associated with them (e.g., WD for images, WS
+for spectra, separate image and spectral arithmetic routines, etc.).  With
+Version 3, this illogical separation was eliminated, but the old SPEC
+syntax was retained for backward compatibility.  It often confuses new
+users, and in general we suggest that new users ignore the SPEC keyword and
+V\_SPECDIR environment variables altogether.  Old users with bad habits are
+on their own.
+
+The use of special image and/or spectrum directories is of course an
+artifact of the old days when computer systems had large scratch disks
+(``large'' at that time meant 300Mb units the size of a large-capacity
+washing machine) and very small user disk areas, and hence it was necessary
+to farm out large images to centralized data disks assigned by the system
+administrator.  In this day and age of multi-gigabyte disks that fit in the
+palm of your hand, this no longer makes any sense, but it has been retained
+to ensure some measure of backwards compatibility (note that IRAF carries
+the convention out as well).  In general, we find that many VISTA users
+define their default image directory to be \verb+./+, the current working
+directory, and ignore the spectrum directory altogether.  The typical
+exceptions are when using VISTA for quick-look data analysis at the
+telescope, when many users find it convenient to define the default image
+directory to be the incoming raw data file system.
+
+\section{WD: Write an Image to a Disk File}
+\begin{rawhtml}
+<!-- linkto wd.html -->
+\end{rawhtml}
+
+\index{Disk!Write image or spectrum to}
+\index{Image!Write to disk}
+\index{Spectrum!Write to disk}
+\begin{itemize}
+  \item[\textbf{Form: } WD source filename {[FULL]} {[ZERO=z
+       SCALE=s]} {[SPEC]} {[WFPC]} {[DOM]} {[SDAS]}\hfill]{}
+
+  \item[source]{is the buffer holding the image to be written}
+
+  \item[filename]{(character string) is the name of the file into which the
+                 image will be written.}
+
+  \item[FITS=]{specifies the number of bits to output for FITS integer images.}
+
+  \item[FULL]{write the pixels as 32-bit floating point numbers rather than
+       16-bit integers.}
+
+  \item[ZERO=z]{Adjusts the zero level of the image before writing.}
+
+  \item[SCALE=s]{Adjusts the range of the image before writing.}
+
+  \item[SPEC]{write the image to the spectrum directory instead of the
+       image directory (archaic)}
+
+  \item[WFPC,DOM,SDAS]{Specifies that the file be written in WF/PC team format}
+\end{itemize}
+
+WD writes the image contained in buffer 'buf' to the specified file.
+Unless you specify otherwise, the image will be written in FITS format to
+the default directory for images with the current default file extension.
+By default, WD writes the images in FITS format using 16-bit signed
+integers (BITPIX=16).  You can alternatively specify 32-bit signed integers
+(BITPIX=32) by using the FITS=32 keyword, or 32-bit floating point values
+(BITPIX=-32) using the FULL keyword.  Because VISTA stores all image data
+internally as 32-bit floating-point arrays, the FULL option is often the
+fastest as it requires no data conversion/scaling computations to convert
+the data arrays into the specified integer formats.  Also note that
+conversion of data to 16-bit integers might incur precision degradation (or
+loss of dynamic range), especially for heavily processed data comprised of
+a combination of many individual images.
+
+The optional keywords WFPC, DOM, and SDAS may be used to specify that the
+file is to be written in proprietary formats used by the WF/PC-1 team (in
+DEC byte order). IF WFPC is specified, the names are taken to be
+filename.IMG and filename,HDR; for SDAS, the filenames are filename.HHD and
+filename.HHH; for DOM, the file is specified by a number, W00000n.IMG and
+W00000n.HDR. If any of these extensions are explicitly mentioned in the
+filename, the WFPC switch is automatically turned on.  General users are
+advised to ignore these options and write all data in FITS format, as FITS
+data are generally portable and should be understood by all other data
+analysis programs.
+
+The SPEC word tells WD to write to the spectrum directory and to
+append the default file extension for spectra [NB: This is an archaic usage
+that is artifact of an earlier version of VISTA where images and spectra
+were treated as separate entities with separate commands, and is no longer
+required.  You can treat images and spectra identically in the current
+version of VISTA.  See the notes at the end of the RD command for a further
+discussion].
+
+The command PRINT DIRECTORIES shows the current directories and
+extensions. If you do not give a filename, the program will ask you for it.
+
+FULL is used to write the pixels in 32-bit floating point format.  This
+preserves the full precision of the pixels in the buffers.  Note that the
+WF/PC standard is currently defined to be 16 bit integers, so FULL cannot
+be used with WF/PC files.  If the data are to be written as integers
+(either 16- or 32-bit formats), WD will first compute the maximum and
+minimum pixel values, and then scale the pixels so that the maximum and
+minimum values will be packed into the full allowed data range for that bit
+precision (+/-32767 for 16-bit integers, and +/-2147483647 for 32-bit
+integers).  The scaling parameters are printed on the terminal, and stored
+in the FITS header as the BZERO and BSCALE keywords, which will be used by
+subsequent FITS file readers to de-scale the data according to the formula:
+\begin{itemize}
+  \item{true = BZERO + data*BSCALE}
+\end{itemize}
+The scaling parameters can be overridden by the
+ZERO=z and SCALE=s keywords, following the formula:
+\begin{itemize}
+  \item{data = (true - ZERO ) / SCALE}
+\end{itemize}
+but playing with data scaling is ill-advised unless you are absolutely
+certain of what you are doing.
+
+The command RD will use these parameters to restore the pixel values when
+the image is read from the disk.  This is similar to the default option of
+the WT command.
+
+NOTE: This scaling convention conforms to FITS standard.  In versions 3
+and earlier of VISTA, a backwards convention was used such that if for
+some reason you encounter old FITS images written with VISTA before about
+1985, you could find data scaling problems.  If you invert the BSCALE 
+variable in the header and make BZERO negative, it should come out OK.
+
+In the examples below, assume the default image directory and extension are
+/vista/ccd/ and .fits, and the default spectrum directory and extension are
+/vista/spectra and .fits.
+\begin{itemize}
+  \item[WD 1 m92\hfill]{writes buffer 1 to /vista/ccd/m92.fits.}
+  \item[WD 7 demo/m92\hfill]{writes buffer 7 to demo/m92.CCD.}
+  \item[WD 3 m92.xyz\hfill]{writes buffer 3 to /vista/ccd/m92.xyz.}
+  \item[WD \$N m92\hfill]{writes buffer N to /vista/ccd/m92.CCD, where
+        N is a variable.}
+  \item[WD 5 mydir/junk SPEC\hfill]{writes buffer 5 to mydir/junk.fits}
+  \item[WD 4 ./junk FULL\hfill]{writes buffer 4 to ./junk.fits, using
+        full 32-bit precision.  The disk file will be twice as large this way.}
+  \item[WD 3 file SPEC\hfill]{writes buffer 3 to /vista/spectra/file.fits}
+\end{itemize}
+
+In earlier versions of VISTA, the 32-bit per pixel format was the default.
+The FULL keyword is new to version 3.
+
+See the notes at the end of the RD command for an explanation of the
+archaic custom of separating images and spectra.
+
+\section{SETDIR: Set the VISTA Default Directories and File Extensions}
+\index{Image!Set default directory}
+\index{Spectra!Set default directory}
+\index{Directories!Set default directories}
+\index{Extensions!Set default for files}
+\index{Files!Default directories and extensions}
+\index{Procedures!Set default directory}
+\begin{rawhtml}
+<!-- linkto setdir.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: } SETDIR code {[DIR=directory\_name]} 
+       {[EXT=extension]}\hfill]{}
+  \item[code]{specifies which directory is being set or changed}
+  \item[DIR= ]{   specifies a directory for the type of object
+       indicated by the code.}
+  \item[EXT=]{gives the extension for files in the default directory}
+\end{itemize}
+
+SETDIR sets the default directories and extensions of files storing images,
+spectra, color maps, etc.  You can see the default values with the command
+PRINT DIRECTORIES.  See the section FILES (type HELP FILES if you're on a
+terminal) for information about default directories and extensions.  See
+also the command CD to change the current working directory (./) on a UNIX
+system.
+
+The DIR word gives the default directory for the type of object specified
+by the code, and the EXT word gives the extension for that type of object.
+An example of a default extension is that for '.fits' for images.  An
+example of a default directory is 'ccd/spec' for spectra.  You must specify
+either the directory or the extension or both with SETDIR. If the extension
+is not blank, it must include a period as its first character: For example,
+'.xyz' is a valid extension, while 'flk' is not.
+
+The 'code' gives the directory which is being set or changed. The code is
+derived from the type of object in the directory you are specifying.  You
+must type at least the first two letters of the code:
+
+\begin{center}
+\begin{tabular}{llll}
+Directory&Code&Abbrev&Notes\\
+\hline
+Images&IMAGES&IM&(user defined, usually ./)\\
+Spectra&SPECTRA&SP&(archaic, use IMAGES)\\
+Procedures&PROCEDURES&PR&(user defined)\\
+Data Files&DATA&DA&(user defined, usually ./)\\
+DAOPHOT files&PHOTOMETRY&PH&(user defined)\\
+Flux calibration files&FLUX&FL&(assigned by system)\\
+Wavelength files&WAVE&WA&(assigned by system)\\
+Color maps&COLOR&CO&(assigned by system)\\
+\hline
+\end{tabular}
+\end{center}
+
+Examples: Suppose you see with PRINT DIR that the default directory for CCD
+spectra is ccd/spec and the default extension is '.fits'
+\begin{itemize}
+  \item[SETDIR SP DIR=mydir/spec\hfill]{changes the default directory
+       to mydir/spec}
+  \item[SETDIR SP EXT=.xyz\hfill]{changes the default extension to '.xyz'}
+  \item[SETDIR SP EXT=.XYZ DIR=mydir/spec\hfill]{changes both the
+       directory and extension at one time.}
+\end{itemize}
+
+\section{CD: Change the Current Working Directory}
+\begin{rawhtml}
+<!-- linkto cd.html -->
+\end{rawhtml}
+\begin{itemize} 
+  \item[\textbf{Form: } CD path\_name\hfill]{}
+  \item[path\_name]{any valid Unix directory path}
+\end{itemize}
+ 
+CD will change the current working directory (./) of VISTA to be
+path\_name.  This working directory will remain current until either you
+issue CD again, or you exit VISTA.  On exiting VISTA, you will be in the
+*original* working directory from which you executed VISTA.
+ 
+CD is most useful when you have defined the default image directory to the
+current working directory, (./), allowing you to navigate among different
+directories containing data of interest without having to redefine the
+default image directory each time with the SETDIR command.  It also defines
+the current working directory for shell commands (\$).
+ 
+\section{COPY: Copy an Image between Buffers}
+\begin{rawhtml}
+<!-- linkto copy.html -->
+\end{rawhtml}
+
+\index{Image!Copy}
+\index{Spectrum!Copy}
+\begin{itemize}
+  \item[\textbf{Form: } COPY dest source {[BOX=n]}\hfill]{}
+  \item[dest]{is the buffer where the new image will be stored.}
+  \item[source]{is the original copy.}
+  \item[BOX=n]{tells the program to copy only the part of the
+       image that is in box 'n'.}
+\end{itemize}
+
+COPY copies the image in buffer 'source' to the buffer 'dest'. The header
+associated with the source image is also copied.  NOTE THAT THE DESTINATION
+BUFFER COMES FIRST ON THE COMMAND LINE!  The syntax of the copy command is:
+\begin{itemize}
+  \item{COPY into (dest) from image (source).}
+\end{itemize}
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[COPY 2 1\hfill]{copies the image in buffer 1 to
+       buffer 2, along with buffer 1's header
+       and label.}
+  \item[COPY \$B \$A\hfill]{copies the image image in buffer A to 
+       buffer B. A are B are variables.}
+  \item[COPY 1 2 BOX=7\hfill]{copies the segment of image 2 that is
+       in box 7 into image buffer 1.  The
+       size of the new image will be the size
+       of the box.  See BOX for more details.}
+\end{itemize}
+
+The related command, WINDOW, is used to trim (``crop'') an image or
+spectrum.
+
+If you copy wavelength-calibrated spectra, you should copy the
+\textit{entire} spectrum.  You should not use BOX= with wavelength-calibrated 
+spectra.  If you do, the wavelength scale of the spectrum after the COPY
+could end up incorrect.
+
+\section{BUFFERS: List the Contents of the Image Buffers}
+\begin{rawhtml}
+<!-- linkto buffer.html -->
+<!-- linkto buffers.html -->
+\end{rawhtml}
+
+\index{Image!Header}
+\index{Spectrum!Header}
+\index{Buffers!List of images in}
+\begin{itemize}
+  \item[\textbf{Form: } BUFFERS {[bufs]} {[FULL]} {[FITS{[=param]}]}
+       (redirection)\hfill]{}
+  \item[bufs]{ are integers which specify which buffers are to be displayed
+       by the program}
+  \item[FULL]{produce a long listing of the buffer information}
+  \item[FITS]{list the FITS parameters for the image}
+  \item[FITS=param]{list the individual fits parameter 'param'}
+\end{itemize}
+This command shows a brief summary of the header information for the images
+contained in the buffers.  If specific buffers are listed, the program
+lists information for only those buffers.  Otherwise, all buffers with
+images in them are listed. If the keyword FULL is specified, a longer
+listing is given for each buffer.  If the keyword FITS=param is given then
+the literal text of the FITS header is printed for the FITS header
+parameter 'param'.  If you use just the keyword FITS (no specified
+parameter) AND you use the FULL keyword then all of the FITS header
+parameters will be shown.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[BUFFERS\hfill]{Give a brief list of all buffers containing images.}
+  \item[BUFFERS FULL\hfill]{Give a long listing of the image buffers.}
+  \item[BUFFERS 3 4 8 FULL\hfill]{Give a long listing of buffers 3, 4, and 8.}
+  \item[BUFFERS 3 FULL FITS\hfill]{List all the individual FITS header 
+       parameters and values for buffer 3.}
+  \item[BUFFERS 3 FITS=AIRMASS\hfill]{Prints the FITS card beginning with
+       'AIRMASS' (if it exists).}
+\end{itemize}
+
+\section{DISPOSE: Clear (Delete) an Image Buffer}
+\begin{rawhtml}
+<!-- linkto dispose.html -->
+\end{rawhtml}
+
+\index{Image!Delete from buffer}
+\index{Spectrum!Delete from buffer}
+\index{Virtual memory!Define}
+\index{Virtual memory!What to do when not enough}
+\begin{itemize}
+  \item[\textbf{Form: } DISPOSE {[ALL]} {[buf]} {[buf2]} {[buf3]}
+       {[...]} \hfill]{}
+  \item[ALL]{delete the contents of all image buffers.}
+  \item[buf]{is the image buffer to be deleted.}
+  \item[buf2]{is another image buffer to be deleted ...}
+\end{itemize}
+This command will delete image buffer number 'buf' and discard its
+contents.  The memory needed to hold an image or spectrum is not
+pre-assigned when the VISTA program is compiled, instead it is allocated
+dynamically by the system when a new image is read in or created.  By
+allocating ``virtual memory'', VISTA can work efficiently by only using as
+much system memory at one time as required.  The DISPOSE command is used to
+free this memory when the image is no longer needed or when VISTA has run
+out of memory for assigning images to other buffers.  If you want to save
+the image, it should be written to disk or tape first with the WD command
+before using DISPOSE.
+
+You can delete several image buffers at once by putting their numbers on
+the command line, up to a maximum of 20.  The DISPOSE ALL command will
+clear out the contents of all image buffers, releasing all of the
+dynamically allocated memory.
+
+\noindent{ Examples:}
+\begin{itemize}
+  \item[DISPOSE 7\hfill]{deletes image 7}
+  \item[DISPOSE 1 3 5 7 9\hfill]{deletes images 1, 3, 5, 7, and 9.}
+  \item[DISPOSE \$Q\hfill]{deletes image Q, where Q is a variable.
+        (This form is helpful in procedures.)}
+  \item[DISPOSE ALL\hfill]{deletes all images and spectra.}
+\end{itemize}
+
+VISTA may sometimes respond with the message 'No virtual memory available'
+when trying to load or create an image.  To make room for the new image,
+use DISPOSE to delete an unused image buffer or two.  This frees up more
+memory, allowing you to proceed.
+
+If you DISPOSE of images that you will no longer need, the VISTA program
+may run faster, especially if there are many users on the system or if you
+are working with large (>2048x2048 images).
+
+\section{CREATE: Create a Blank Image}
+\begin{rawhtml}
+<!-- linkto create.html -->
+\end{rawhtml}
+
+\begin{itemize}
+  \item[\textbf{Form: } CREATE buf {[BOX=b]} {[SR=sr]} {[SC=sc]} {[NR=nr]} 
+       {[NC=nc]} {[CONST=c]} {[N=n]} {[V=v]} {[HEADBUF=oldbuf]} \hfill]{}
+  \item[buf]{is the buffer holding the new image}
+  \item[BOX=b]{create an image with the size and orientation of box 'b'}
+  \item[SR=sr]{specify the start row of the new image}
+  \item[SC=sc]{specify the start column}
+  \item[CR=sr]{specify the center row of the new image}
+  \item[CC=sc]{specify the center column}
+  \item[NR=nr]{specify the number of rows}
+  \item[NC=nc]{specify the number of columns}
+  \item[N=n]{specifies number of rows and columns (square image)}
+  \item[V=n]{loads center row and column for new image using
+       coordinates from VISTA variables Rn and Cn}
+  \item[CONST=c]{fill the image pixels with value 'c'}
+  \item[HEADBUF=oldbuf]{fill the new header with all cards from buffer 'oldbuf'}
+\end{itemize}
+
+CREATE creates a new blank image, giving all the pixels in that image some
+constant value (the default is 0.0).  Any image that is in the buffer will
+be destroyed.  Use CONST=c to set the initial values of all of the pixels
+to 'c'.
+
+The BOX=b keyword is used to define the image size and location.  This
+makes the new image have the size and location of bux 'b'.  See BOX for
+instructions for defining boxes. You may also give the size and location of
+the new image with the keywords SR, SC, NR, NC, or N.  NR and NC, or N, are
+required.  If SR, SC , CR, and CC are not given, the default origin is
+(0,0).
+
+If you wish to have the header cards in the new buffer populated with cards
+from an existing buffer (except for cards having to do with image size,
+origin, etc.), use the HEADBUF=oldbuf keyword to copy cards from buffer
+\textit{oldbuf}.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[CREATE 1 BOX=5 \hfill]{creates an image in buffer 1 having 
+       the size and orientation of box 5.  the image is filled with zeroes.}
+  \item[CREATE 1 BOX=5 CONST=100.0\hfill]{does the same as the first example, 
+       but fills the image with value 100.0}
+  \item[CREATE 5 SR=5 SC=10 NR=25 NC=35\hfill]{creates an image in buffer 5.  
+       The start (row, column) is (5,10) and the size of the image is 25 rows by
+       35 columns.}
+  \item[CREATE 1 N=100\hfill]{creates an 100 by 100 image in buffer 1.
+       The start row and column are both 0.}
+\end{itemize}
+
+\section{CHANGE: Change the Object Name of an Image}
+\begin{rawhtml}
+<!-- linkto change.html -->
+\end{rawhtml}
+
+\index{Image!Change object name}
+\index{Spectrum!Change object name}
+\index{Name!Change name of object image}
+\begin{itemize} 
+  \item[\textbf{Form: } CHANGE buf 'new\_name'\hfill]{}
+  \item[buf]{is the number of the buffer holding the 
+       image which is having its name changed.}
+  \item[new\_name]{is the new label.}
+\end{itemize}
+This command allows you the change the object name of the image or spectrum
+held in buffer number 'buf'.  The object name of an image is the value of
+its OBJECT keyword in the FITS header.  The new image name can be given on
+the command line or it can be given in response to the prompt if CHANGE
+is issued with no arguments.
+
+If the new name is given on the command line, it must be enclosed in quotes
+if it is more than one word long.  
+
+If the new name is not given on the command line, VISTA will type the
+current object name and prompt you for the new name.  If you respond with
+only a carriage return then the old name is left unchanged.  To force a
+blank object name you must enter at least one space character before the
+carriage return.  
+
+\noindent{Examples: }
+\begin{itemize}
+  \item[CHANGE 1 HD183143\hfill]{changes the name of image 1 to 'HD183143'. }
+  \item[CHANGE 7 'Test Image 2'\hfill]{changes the name of image 7 to 
+       'Test Image 2'.}
+  \item[CHANGE \$R 'new Label'\hfill]{changes the name of image R (where R
+       is a variable) to 'new Label'.}
+  \item[CHANGE 1\hfill]{changes the name of image 1.  The old 
+       name is printed, and the program asks you for the new name.}
+\end{itemize}
+
+\section{FITS: Insert/Edit a FITS Header Card}
+\begin{rawhtml}
+<!-- linkto fits.html -->
+\end{rawhtml}
+
+\index{Image!Insert a FITS header card}
+\index{Image!Edit a FITS header card}
+\index{Spectrum!Insert a FITS header card}
+\index{Spectrum!Edit a FITS header card}
+\begin{itemize}
+  \item[\textbf{Form: } FITS buf {[FLOAT=name]} float\_value\hfill]{}
+  \item[FITS buf {[INT=name]} integer\_value\hfill]{}
+  \item[FITS buf {[CHAR=name]} 'character string'\hfill]{}
+  \item[FITS PROF {[FLOAT=name float]} {[INT=name in]} {[CHAR=name char]}\hfill]{}
+\end{itemize}
+Use one of these forms to insert a new FITS header card into the image
+header, or to change the value of an existing FITS header card.  If you
+specify the optional PROF keyword rather than a buffer number, the new
+header card will be inserted into the internal PROFILE header (see PROFILE
+and SAVE PROF).  The FITS keyword name may be no longer than 8 characters.
+
+Except for two special cases, a FITS card already in the header with the
+same name will be replaced.  The two exceptions are CHAR=COMMENT and
+CHAR=HISTORY, which will always add a new COMMENT or HISTORY card,
+respectively, to the header.  
+
+The float\_value for the FLOAT keyword should be a floating point constant
+or an arithmetic expression.  The integer\_value for the INT keyword should
+be an integer constant or an arithmetic expression whose result will be
+rounded to the nearest integer.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[FITS 1 FLOAT=AIRMASS 1.3\hfill]{Inserts a FITS header card named
+        AIRMASS with value 1.3 into the header of the image in buffer 1.}
+  \item[FITS 3 CHAR=COMMENT 'My best observation ever'\hfill]{
+        Inserts a new COMMENT card into he header of the image in buffer 3.}
+\end{itemize}
+
+\section{UNFIT: Delete a FITS Header Card}
+\begin{rawhtml}
+<!-- linkto unfit.html -->
+\end{rawhtml}
+
+\index{Image!Delete/Remove a FITS header card}
+\index{Spectrum!Delete/Remove a FITS header card}
+\begin{itemize}
+  \item[\textbf{Form: } UNFIT buf {[CARD=name]} {[PROF]}\hfill]{}
+\end{itemize}
+
+Use UNFIT to delete the specified FITS header card from the header of image
+in the specified VISTA buffer.  This image will remove only the first
+instance of the card, so if you want to remove multiple COMMENT cards, for
+example, the command needs to be issued many times.
+
+You can delete cards from the internal PROFILE header by using the PROF
+keyword, rather than specifying a buffer number.
+
+\section{HEDIT: Edit FITS Headers}
+\begin{rawhtml}
+<!-- linkto hedit.html -->
+\end{rawhtml}
+
+\index{Image!Edit FITS header}
+\index{Spectrum!Edit FITS header}
+\begin{itemize} 
+  \item[\textbf{Form: } HEDIT buf\hfill]{}
+  \item[buf]{is the number of the buffer holding the 
+image that is having its FITS header edited.}
+\end{itemize}
+
+VISTA writes the FITS header associated with buffer 'buf' into a temporary
+disk file and then invokes the default editor to edit the file.  When you
+exit the editor the modified version of the FITS header replaces the old
+version.
+
+The default editor is vi, although you can specify any other editor by
+setting the environment variable VISUAL before running VISTA to be the name
+of the editor you wish to use (e.g. to use emacs, setenv VISUAL
+/path/to/emacs, where ``/path/to/'' is the full path to the emacs
+executable on your system).
+
+%
+% HEADCON commented out as a potentially defunct command
+%
+%\section{HEADCON: Decode FITS Headers from Various Observatories}
+%\begin{rawhtml}
+%<!-- linkto headcon.html -->
+%\end{rawhtml}
+
+%\begin{itemize}
+%  \item[\textbf{Form: } HEADCON imno {[MCD]} {[LAPALMA]} {[CTIO]} {[KPNO]} 
+%       {[PALOMAR]}\hfill]{}
+%  \item[imno]{is the image buffer with the image whose FITS header is
+%       to be decoded.}
+%  \item[only ONE of the following:\hfill]{}
+%  \item[MCD]{decode McDonald Observatory FITS Headers}
+%  \item[LAPALMA]{decode La Palma Observatory FITS Headers - NOT INSTALLED}
+%  \item[CTIO]{decode CTIO FITS Headers- NOT INSTALLED}
+%  \item[KPNO]{decode Kitt Peak FITS Headers- NOT INSTALLED}
+%  \item[PALOMAR]{decode Palomar Observatory FITS Headers. - NOT INSTALLED}
+%  \item[ESO]{decode European Southern Observatory FITS Headers - NOT INSTALLED}
+%\end{itemize}
+%
+%Only a handful of FITS header cards are strictly defined in the FITS
+%standard, and the remainder are used at the discretion of the observatory.
+%While the FITS standard makes recommendations for names of other header
+%cards, in practice different sites have different conventions of encoding
+%information like exposure times, UT date/time, etc. Since there is no
+%accepted standard yet (perhaps someday by near-universal acceptance of IRAF
+%or some similar mega-package), these different header cards must be decoded
+%into a form VISTA can understand on a case-by-case basis.
+%
+%VISTA follows from the FITS header convention used at Lick Observatory,
+%which pretty much follows the recommendations of the standard (sort of) and
+%so Lick FITS images are default.  The data which need to be decoded are:
+%\begin{itemize}      
+%  \item{EXPOSURE TIME}
+%  \item{UT DATE and TIME at start of exposure}
+%  \item{RA and DEC of TELESCOPE (image field)}
+%  \item{HA at start of exposure}
+%\end{itemize}
+%All of these are essential for flux calibration and extinction correction.
+%
+%Other cards may be converted, mostly for consistency with the VISTA format:
+%\begin{itemize}
+%  \item{TAPENUM -  the number of the image on the data tape}
+%  \item{OBSNUM  -  the observation number (assigned differently or not at all)}
+%  \item{STATUS  -  a specific comment giving the image status }
+%\end{itemize}
+%New formats are always arising, and so users should be sensitive to
+%peculiarities that might be explained if one is using data from an
+%observatory that is "foreign" to your installation.  Addition of new
+%conversion modules is relatively straightforward, but will require
+%programming intervention by your local custodian.
+
+\section{FIXHEAD: Fix FITS Headers}
+\begin{rawhtml}
+<!-- linkto fixhead.html -->
+\end{rawhtml}
+
+\index{Image!Fix buggy FITS headers}
+\index{Image!Fix FITS header coordinate cards}
+\begin{itemize} 
+  \item[\textbf{Form: } FIXHEAD imbuf {[ORIGIN]} {[RORIGIN]} 
+       {[CORIGIN]}\hfill]{}
+  \item{{[WFPC]} {[GROUP]} {[BLANK]} }
+  \item[imbuf]{image buffer with the FITS header to be fixed}
+  \item[ORIGIN]{reset the FITS coordinate system cards.}
+  \item[RORIGIN]{reset the FITS coordinates along rows only.}
+  \item[CORIGIN]{reset the FITS coordinates along columns only.}
+  \item[WFPC]{remove WF/PC1 image header cards}
+  \item[GROUP]{remove all FITS group cards}
+  \item[BLANK]{remove any blank cards from the header}
+\end{itemize}
+
+FIXHEAD is used to reset or fix FITS headers with various pathologies.
+
+ORIGIN and the related RORIGIN and CORIGIN cards are used to reset the FITS
+coordinate system cards (CRVALn, CTYPEn, CRPIXn, CDELTn, and CNPIXn).  This
+is useful if the coordinate cards have been altered by programs (like IRAF
+or STSDAS) in ways that cause problems with various VISTA image
+manipulation programs, especially SHIFT.  FIXHEAD ORIGIN can also be used
+to strip out wavelength calibration information (but you cannot uncalibrate
+a spectrum if it has been, for example, resampled onto a linear wavelength
+scale).  ORIGIN resets the coordinate info along both axes, CORIGIN and
+RORIGIN only reset coordinates along the Columns and Rows axis,
+respectively.
+
+BLANK is used to remove any empty (blank) header cards.  While blank cards
+are allowed under the standard FITS definition for headers, they can be a
+nuisance as they eat up available header memory.
+
+GROUP removes various header cards related to the ``group'' structure
+of complex FITS files.  Since the current version of VISTA does not
+recognize the group structure, these cards are eating up header memory.
+
+WFPC is used to remove header cards in WF/PC1 imaging data.  Again, the
+purpose is to try to free up header memory, especially in old WF/PC1 image
+which have huge image headers.
+

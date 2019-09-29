@@ -1,0 +1,33 @@
+
+<H1><A NAME="SECTION001630000000000000000">
+FIND: DAOPHOT FIND Command</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml469#
+<BR>
+<tex2html_image_mark>#command7502#
+<BR>
+
+<P>
+Finds stars in buffer <I>im</I> over a local threshold value. 
+The threshold and low bad pixel value can be set
+with the THRESH= and LOWBAD= keywords, or else they will be prompted for in
+the normal DAOPHOT fashion. If THRESH= is specified, program won't ask user
+to confirm (or change) the value of THRESH after finding stars unless the INT keyword is
+also used. The program will prompt for a file in which to store the
+coordinates unless the command DAOFILES COO=file has been previously
+issued, in which case the coordinates will be stored automatically in the
+specified file.
+
+<P>
+FIND attempts to find objects which have a FWHM similar to that specified by
+the FWHM option by convolving the image with a gaussian of the specified
+FWHM before looking for objects (see the DAOPHOT manual and/or the source
+code for more precise details). After finding objects, some simple image
+statistics are computed for each object called SHARP and ROUND. SHARP measures
+the ``peakiness'' of the object and has values between 0 (not sharp) and
+2 (very sharp). ROUND measures the azimuthal symmetry of an object and has
+values between -2 and 2. Only objects with SHARP and ROUND between the
+allowed values specified by the options LS/HS and LR/HR are taken as final
+detections.
+
+<P>

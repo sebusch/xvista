@@ -1,0 +1,51 @@
+
+<H1><A NAME="SECTION00320000000000000000">
+SET: Define a VISTA Variable and Assign it a Value</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml92#
+
+<P>
+<A NAME="820"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command821#
+<BR>
+
+<P>
+SET defines VISTA variables in terms of numerical constants, other
+variables, or the result of arithmetic operations between other
+variables. The name of a VISTA variable is any alphanumeric string.  The
+value of the variable is a floating point number. VISTA supports an
+internal variable table which holds variables defined by you or as the
+output of a program.  These variables can be used to pass the results of
+arithmetic calculations to keywords, to control the flow of a procedure in
+IF tests or DO loops, or to store convenient numbers in symbolic form.
+
+<P>
+Each SET command can handle up to 15 definitions.  Each definition must
+include an '=' sign with the name of the new variable to its left, and a
+defining expression to its right.  The expression on the right may be any
+proper VISTA arithmetic expression (see the section MATH for rules on
+expressions).
+
+<P>
+Examples:
+<BR>
+<tex2html_image_mark>#example828#
+<BR>
+
+<P>
+NOTE: All operations are done in double precision floating point.  There
+must be no spaces between the beginning of 'var_name' and the end of
+'value'.
+
+<P>
+<#977#><B>IMPORTANT!</B><#977#>
+
+<P>
+The command SET may be left off when defining variables.  This saves lots
+of time.  Just use an arithmetic expression defining a variable.  Examples:
+<BR>
+<tex2html_image_mark>#example838#
+<BR>
+
+<P>

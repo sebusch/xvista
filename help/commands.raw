@@ -1,0 +1,291 @@
+include/daophot.PGM:        ELSE IF (COM .EQ. 'OFFSET') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'APPEND') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'FIND') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'MULTISTAR') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'PHOTOMETRY') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'OPTIONS') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'MONITOR') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'NOMONITOR') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'SORT') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'NMAG') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'GROUP') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'OLDGROUP') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'SELECT') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'DAOSKY') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'PSF') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'PEAK') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'NSTAR') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'NULTISTAR') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'ADD*' .OR. 
+include/daophot.PGM:     &           COM .EQ. 'ADDSTAR') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'DAOLIB') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'SUB*' .OR.
+include/daophot.PGM:     &           COM .EQ. 'SUBSTAR') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'DUMP') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'COMBINE') THEN
+include/daophot.PGM:        ELSE IF (COM .EQ. 'MAGAVER') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'CLEAR') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'TERM') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'PLOT' .OR.
+include/display.PGM:     &           COM .EQ. 'LINE') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'RPLOT') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'TVRPLOT') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'CONTOUR' .OR. COM .EQ. 'MCON') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'HISTOGRAM') THEN
+include/display.PGM:        ELSE IF (COM .EQ. '3D' .OR. COM .EQ. 'THREED' .OR.
+include/display.PGM:     &          COM .EQ. 'PLOT3D') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'TV') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'BLINK') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'ITV' .OR. COM .EQ. 'MARKSTAR') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'POSTIT' .OR. COM .EQ. 'IMPOST') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'COLOR') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'TVBOX') THEN
+include/display.PGM:	ELSE IF (COM .EQ. 'TVPLOT') THEN
+include/display.PGM:       ELSE IF (COM .EQ. 'GRYKEY') THEN
+include/display.PGM:       ELSE IF (COM .EQ. 'TEXT') THEN
+include/display.PGM:        ELSE IF (COM .EQ. 'OVERLAY') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'ALIGN') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'MASK' .OR.
+include/image.PGM:     &           COM .EQ. 'UNMASK') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'MN') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'OLDSKY') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'SKY' .OR. COM .EQ. 'TODSKY' .OR.
+include/image.PGM:     &           COM .EQ. 'SKY4') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'WSKY') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'ABX') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'BIN') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'REPLICATE') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'SURFACE') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'SHIFT') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'SMOOTH') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'ZAP' .OR. COM .EQ. 'LZAP') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'TVZAP' .OR. COM .EQ. 'ZAPTV') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'BIGMEDIAN') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'REJECT') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'MEDIAN') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'MIN') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'MAX') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'SIG') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'CROSS') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'CONVOLVE') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'INTERP') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'MERGE') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'REGISTAR') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'AXES') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'ADD'  .OR.
+include/image.PGM:     &           COM .EQ. 'SUBTRACT' .OR.
+include/image.PGM:     &           COM .EQ. 'MULTIPLY' .OR.
+include/image.PGM:     &           COM .EQ. 'DIVIDE')  THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'TAN' .OR. COM .EQ. 'SIN' .OR.
+include/image.PGM:     &           COM .EQ. 'COS' .OR. COM .EQ. 'ARCTAN' .OR.
+include/image.PGM:     &           COM .EQ. 'LOG' .OR. COM .EQ. 'EXP' .OR.
+include/image.PGM:     &           COM .EQ. 'LN' .OR.  COM .EQ. 'ONEOVER' .OR. 
+include/image.PGM:     &           COM .EQ. 'NINT' .OR. COM .EQ. 'SQRT') THEN
+include/image.PGM:	ELSE IF (COM .EQ. 'ATAN2') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'BL') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'CLIP') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'ROTATE') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'FLIP') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'ROWFIT') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'FFT' .OR. COM .EQ. 'IFFT') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'FILT') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'POWERS' .OR.
+include/image.PGM:     &           COM .EQ. 'CDIV' .OR.
+include/image.PGM:     &           COM .EQ. 'CMUL' .OR.
+include/image.PGM:     &           COM .EQ. 'CABS' .OR.
+include/image.PGM:     &           COM .EQ. 'CONJ' .OR.
+include/image.PGM:     &           COM .EQ. 'IMAG' .OR.
+include/image.PGM:     &           COM .EQ. 'REAL' .OR.
+include/image.PGM:     &           COM .EQ. 'CMPLX') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'FLAT') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'ROUND' .OR.
+include/image.PGM:     &           COM .EQ. 'POLARGRID') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'PSFMODEL') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'PSFTRANS') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'LINCOMB') THEN
+include/image.PGM:	ELSE IF (COM .EQ. 'MARKPOLY') THEN
+include/image.PGM:        ELSE IF (COM .EQ. 'HISTLIST') THEN
+include/misc.PGM:	ELSE IF (COM .EQ. 'COLFIX') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'AREA') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'ATODSIM') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'ATODFIX') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'RANCR') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'STREAK') THEN
+include/misc.PGM:	ELSE IF (COM .EQ. 'TABTRAN') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'PRECS') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'CD') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'PICCRS') THEN
+include/misc.PGM:        ELSE IF (COM .EQ. 'DSSCOORD') THEN
+include/misc.PGM:         ELSE IF (COM .EQ. 'WFPC2DIST') THEN
+include/simulate.PGM:      ELSE IF (COM .EQ. 'PHOTONS') THEN
+include/simulate.PGM:        ELSE IF (COM .EQ. 'DEVAUC') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'MASH') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'EXTRACT') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'STRETCH') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'SPECTROID') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'LINEID') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'WSCALE') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'EWAVE') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'COPW') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'EXTINCT') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'FLUX' .OR.
+include/spectra.PGM:     &          COM .EQ. 'FLUXSTAR') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'SKYLINE') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'POLY') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'EXTSPEC') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'FINDPEAK') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'FINDSHIFT') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'SPLINE') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'ISPLINE') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'SPINDEX') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ.'FQUO') THEN
+include/spectra.PGM:        ELSE IF (COM .EQ. 'BLACKBODY') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'FIND') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'MULTISTAR') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'VSUB*' .OR.
+include/starphot.PGM:     &           COM .EQ. 'VSUBSTAR') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'PHOTOMETRY') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'SUBPHOT') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'DAOSKY') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'PSF') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'ADD*' .OR. 
+include/starphot.PGM:     &           COM .EQ. 'ADDSTAR') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'DAOLIB') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'OPTIONS' .OR. COM .EQ. 'MONITOR' .OR.
+include/starphot.PGM:     &           COM .EQ. 'NOMONITOR') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'SORT') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'NMAG') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'SELECT') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'APPEND') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'OFFSET') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'OLDGROUP' .OR. COM .EQ. 'GROUP') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'AUTOMARK') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'APERSTAR' .OR.
+include/starphot.PGM:     &           COM .EQ. 'APER*') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'MODPHOT') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'COORDS') THEN
+include/starphot.PGM:C        ELSE IF (COM .EQ. 'DAOPHOT') THEN
+include/starphot.PGM:C        ELSE IF (COM .EQ. 'PEAK') THEN
+include/starphot.PGM:C        ELSE IF (COM .EQ. 'NSTAR') THEN
+include/starphot.PGM:C        ELSE IF (COM .EQ. 'SUB*' .OR.
+include/starphot.PGM:C     &           COM .EQ. 'SUBSTAR') THEN
+include/starphot.PGM:C        ELSE IF (COM .EQ. 'DUMP') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'DAOFILES') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'REGISTER') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'SHORTAP') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'PLOTAP' .OR. COM .EQ. 'APCOR') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'CORRECT') THEN
+include/starphot.PGM:	ELSE IF (COM .EQ. 'FITSTAR' .OR.
+include/starphot.PGM:     &           COM .EQ. 'FIT*') THEN
+include/starphot.PGM:C	ELSE IF (COM .EQ. 'DOUB') THEN
+include/starphot.PGM:	ELSE IF (COM .EQ. 'PSFFIT') THEN
+include/starphot.PGM:	ELSE IF (COM .EQ. 'PLOTFOCUS') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'PSFINTERP') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'COMBINE') THEN
+include/starphot.PGM:        ELSE IF (COM .EQ. 'MAGAVER') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'PRADIAL' .OR. COM .EQ. 'CUT') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'TEMPLATE') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'RECON') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'APER') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'PROFILE') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'ANNULUS') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'AEDIT') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'DOEDIT') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'GPROF') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'EMAG') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'GPSAVE') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'GPGET') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'OPREP') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'CLPREP') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'RPREP') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'WPREP') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'RMARK') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'EMARK') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'TVPROF') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'CPROF') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'CLPROF') THEN
+include/surfphot.PGM:	ELSE IF (COM .EQ. 'SNUC') THEN
+include/surfphot.PGM:	ELSE IF (COM .EQ. 'HISTNUC') THEN
+include/surfphot.PGM:	ELSE IF (COM .EQ. 'RENUC') THEN
+include/surfphot.PGM:	ELSE IF (COM .EQ. 'EGAL') THEN
+include/surfphot.PGM:	ELSE IF (COM .EQ. 'ELLMAG') THEN
+include/surfphot.PGM:	ELSE IF (COM .EQ. 'SURFBRIGHT') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'AUTOCEN') THEN
+include/surfphot.PGM:	ELSE IF (COM .EQ. 'SECTOR') THEN
+include/surfphot.PGM:        ELSE IF (COM .EQ. 'BDFIT2D') THEN
+include/tape.PGM:        ELSE IF (COM .EQ. 'RT') THEN
+include/tape.PGM:        ELSE IF (COM .EQ. 'WT') THEN
+include/tape.PGM:        ELSE IF (COM .EQ. 'INT') THEN
+include/tape.PGM:        ELSE IF (COM .EQ. 'MOUNT' .OR.
+include/tape.PGM:     &           COM .EQ. 'DISMOUNT') THEN
+include/tape.PGM:        ELSE IF (COM .EQ. 'TDIR') THEN
+	IF (COM .EQ. ' ') THEN
+	ELSE IF (COM .EQ. 'SET' .OR.
+     &           COM .EQ. 'TYPE' .OR.
+     &           COM .EQ. 'ASK') THEN
+	ELSE IF (COM .EQ. 'GETTIME') THEN
+	ELSE IF (COM .EQ. 'PRINTF' .OR.
+     &           COM .EQ. 'NPRINTF' .OR.
+     &           COM .EQ. 'STRING') THEN
+	ELSE IF (COM .EQ. 'OPEN') THEN
+	ELSE IF (COM .EQ. 'CLOSE') THEN
+	ELSE IF (COM .EQ. 'REWIND') THEN
+	ELSE IF (COM .EQ. 'STAT') THEN
+	ELSE IF (COM .EQ. 'SKIP') THEN
+	ELSE IF (COM .EQ. 'READ') THEN
+	ELSE IF (COM .EQ. 'CLOCK') THEN
+	ELSE IF (COM .EQ. 'GO') THEN
+	ELSE IF (COM .EQ. 'PARAMETER') THEN
+	ELSE IF (COM .EQ. 'DO' .OR.
+     &           COM .EQ. 'END_DO') THEN
+	ELSE IF (COM .EQ. 'IF'     .OR.
+     &           COM .EQ. 'END_IF' .OR.
+     &           COM .EQ. 'ELSE_IF'.OR.
+     &           COM .EQ. 'ELSE')   THEN
+	ELSE IF (COM .EQ. 'GOTO') THEN
+	ELSE IF (COM .EQ. 'END' .OR. COM .EQ. 'STOP') THEN
+		IF (COM .EQ. 'STOP') THEN
+	ELSE IF (COM .EQ. 'RETURN') THEN
+	ELSE IF (COM .EQ. 'CALL') THEN
+	ELSE IF (COM .EQ. 'DEBUGPROC') THEN
+	ELSE IF (COM .EQ. 'PAUSE') THEN
+	ELSE IF (COM .EQ. 'CONTINUE' .OR.
+     &           COM .EQ. 'C') THEN
+	ELSE IF (COM .EQ. 'RD') THEN
+	ELSE IF (COM .EQ. 'WD') THEN
+	ELSE IF (COM .EQ. 'COPY' .OR.
+     &           COM .EQ. 'WINDOW') THEN
+	ELSE IF (COM .EQ. 'BUFFERS') THEN
+	ELSE IF (COM .EQ. 'DISPOSE') THEN
+	ELSE IF (COM .EQ. 'SETDIR') THEN
+	ELSE IF (COM .EQ. 'CREATE' .OR.
+     &           COM .EQ. 'MASKTOIM') THEN
+	ELSE IF (COM .EQ. 'CHANGE') THEN
+	ELSE IF (COM .EQ. 'BOX') THEN
+	ELSE IF (COM .EQ. 'SAVE' .OR. COM .EQ. 'GET') THEN
+	ELSE IF (COM .EQ. 'PRINT') THEN
+	ELSE IF (COM .EQ. 'HEDIT') THEN
+	ELSE IF (COM .EQ. 'FITS' .OR. COM .EQ. 'UNFIT') THEN
+	ELSE IF (COM .EQ. 'HEADCON') THEN
+	ELSE IF (COM .EQ. 'FIXHEAD') THEN
+	ELSE IF (COM .EQ. 'SETUP') THEN
+        ELSE IF (COM .EQ. 'HJD') THEN
+	ELSE IF (COM .EQ. 'MEMORY') THEN
+	ELSE IF (COM .EQ. 'DEF'  .OR.
+     &           COM .EQ. 'RDEF' .OR.
+     &           COM .EQ. 'IDEF') THEN
+	ELSE IF (COM .EQ. 'PEDIT') THEN
+	ELSE IF (COM .EQ. 'SHOW') THEN
+	ELSE IF (COM .EQ. 'RP' .OR.
+     &           COM .EQ. 'WP') THEN
+	ELSE IF (COM .EQ. 'HISTORY') THEN
+	ELSE IF (COM .EQ. 'ALIAS' .OR.
+     &           COM .EQ. 'UNALIAS') THEN
+	ELSE IF (COM .EQ. 'VERIFY') THEN
+	ELSE IF (COM .EQ. 'OLDHELP') THEN
+	ELSE IF (COM .EQ. 'HELP') THEN
+	ELSE IF (COM .EQ. 'BELL') THEN
+	ELSE IF (COM .EQ. 'NEWS') THEN
+	ELSE IF (COM .EQ. 'EOF') THEN
+	ELSE IF (COM .EQ. 'ERROR') THEN
+	ELSE IF (COM .EQ. 'QUIT') THEN

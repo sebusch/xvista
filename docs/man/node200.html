@@ -1,0 +1,115 @@
+
+<H1><A NAME="SECTION001600000000000000000">
+Stellar Photometry</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml466#
+
+<P>
+<A NAME="7471"><tex2html_anchor_invisible_mark></A>
+<A NAME="7472"><tex2html_anchor_invisible_mark></A>
+
+<P>
+VISTA has a package of programs designed to measure stellar brightnesses on
+CCD pictures. Many of these are taken from the DAOPHOT stellar photometry
+package originally written by Peter Stetson. Some additional routines are
+included for interaction with the video display and some modifications have
+been made to the DAOPHOT routines. The various DAOPHOT programs estimate
+the total counts in each star on a frame -- no attempt is made to convert
+these counts to magnitudes on some standard system. Some additional
+routines are included to help with this transformation.
+
+<P>
+The version of DAOPHOT which is included in VISTA is an adaptation of
+Stetson's 1987 version of the code. Subsequently, Stetson has made
+modifications to the standard distribution of DAOPHOT which are NOT
+included in the VISTA package. In addition, some modification of the
+original DAOPHOT code was necessary to make it work inside of VISTA.
+Several new options were added as well by Jon Holtzman. Because of these
+facts, Stetson can NOT be help responsible for any results that come out of
+the VISTA/DAOPHOT routines. From extensive use of the code, we feel the
+routines are reliable, but this cannot be absolutely guaranteed. We are
+very grateful to Peter Stetson for allowing us to incorporate his code.
+
+<P>
+If you wish to use a Stetson's up-to-date version of DAOPHOT, contact him
+for the source code, and simply use VISTA to write out the data in some
+format which the standalone DAOPHOT can read.
+
+<P>
+Any questions about the VISTA/DAOPHOT routines should be addressed to the
+VISTA distributors and not to Stetson. Publications using the VISTA/DAOPHOT
+routines should give credit both to VISTA and to Stetson but remember, he
+cannot be help responsible for the results.
+
+<P>
+The inclusion of DAOPHOT is new to VISTA Version 4. Some of the old VISTA
+commands have been discarded because they are less accurate and rather
+difficult to make portable.  Gone are FITSTAR, PSF, and BFITSTAR, the old
+VISTA routines used for point spread function fitting (although note there
+is now a new command FITSTAR which does something entirely different,
+namely fits for extinction and transformation coefficients given observed
+and standard photometry).
+
+<P>
+The DAOPHOT routines are discussed below (or CTRL-C out of this and type
+HELP DAOPHOT if you are on a terminal and want to skip straight to the
+DAOPHOT information). Generally, extensive information on the DAOPHOT
+routines is NOT given in this manual. Consult the DAOPHOT manual for more
+details.
+
+<P>
+Besides the DAOPHOT routines, VISTA has two routines to find stellar
+objects in a given field, MARKSTAR and AUTOMARK. MARKSTAR is extremely
+useful, as it allows the user to interactively enter stars, display stars
+in a photometry list, and access information about a star specified with
+the cursor on the display. Positions are found by interactively marking
+stars. The stored position is computed by centroiding around the cursor
+location. AUTOMARK finds objects automatically in a similar way, without
+any help from the user. It requires a range of peak values as input which
+is uses to decide what are stars.
+
+<P>
+Aperture brightnesses in circular apertures can be measured quickly using
+APERSTAR, which total counts in an aperture of specified size around all
+stars on a photometry list. More sophisticated aperture photometry is
+available in DAOPHOT using the PHOTOMETRY command.
+
+<P>
+VISTA includes several commands for the processing of instrumental
+magnitudes: COMBINE lets one combine lists of stars from several frames,
+MAGAVER computes the weighted mean and other statistics from output from
+COMBINE, and FITSTAR allows one to get extinction and transformation
+coefficients. The routines REGISTER and OFFSET allow one to determine the
+linear plate coefficients from the positions of stars on different frames
+and to correct the DAOPHOT files for these plate transformations. 
+
+<P>
+Most of the programs use a <B>photometry file</B>.  
+This is a series of records
+which contain information about the location, brightness, and type of
+observation for each star.  There is one record per star. The photometry
+file is <B>not</B> currently used by the DAOPHOT routines.
+
+<P>
+<BR>
+<tex2html_image_mark>#example7475#
+<BR>
+The VISTA photometry file is stored internally in the VISTA program as a
+common block.  It is NOT automatically written to the disk. You have to
+save the results you make with the photometry routines using the SAVE
+command. Similarly, you can connect a photometry file to the program with
+the GET command. The photometry files are stored in the data directory (See
+PRINT DIRECTORIES) with the extension .PHO, unless you specify otherwise
+(DAOPHOT files have default extension .COO).  If you are using the DAOPHOT
+routines, all results are stored in disk files just as in standalone
+DAOPHOT.
+
+<P>
+Some additional commands:
+<BR>
+<tex2html_image_mark>#example7484#
+<BR>
+The operation and limitations of each commands is explained in
+the section of the help file for that command. 
+
+<P>

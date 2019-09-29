@@ -1,0 +1,96 @@
+
+<H1><A NAME="SECTION00240000000000000000">
+<tex2html_percent_mark>: Repeating/Editing a Previous Command</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml70#
+<A NAME="432"><tex2html_anchor_invisible_mark></A>
+
+<P>
+You can repeat a command in VISTA without typing it over by using the <tex2html_percent_mark>
+character.  The <tex2html_percent_mark> character comes before the command you want to repeat.
+It is also possible to modify a command while you repeat it.
+
+<P>
+The <tex2html_percent_mark> command comes in several forms:
+
+<UL>
+<LI><#434#>Typing '<tex2html_percent_mark>' by itself repeats the last command that you executed. <#434#>
+
+<P>
+</LI>
+<LI><#435#>Typing '<tex2html_comment_mark>65
+of the command can be found by the HISTORY command.<#435#>
+
+<P>
+</LI>
+<LI><#436#>Typing '<tex2html_percent_mark>string' repeats the last command beginning with 'string'.<#436#>
+</LI>
+</UL>
+
+<P>
+As an example, suppose the HISTORY command gives the output:
+<PRE><tex2html_verbatim_mark>verbatim71#</PRE>
+Then
+<BR>
+<tex2html_image_mark>#example440#
+<BR>
+
+<P>
+Note the last example: The history mechanism will repeat the last command
+which begins with 'M'.  If there are several commands which begin with the
+same letter, you have to supply enough of the command name after the <tex2html_percent_mark> to
+uniquely specify the command to be repeated.
+
+<P>
+It is possible to modify a previous command using the <tex2html_percent_mark> construction
+before executing the command again. There are several ways in which this
+modification can be done:
+
+<P>
+
+<OL>
+<LI><#447#>You can ADD words to the command by typing them after you enter
+       '<tex2html_percent_mark>command', provided that these words are not keyword values
+       (EXPRESSION=VALUE) which are already present in the previous
+       command.<#447#>
+
+<P>
+</LI>
+<LI><#448#>You can modify keyword values which already exist in the previous
+       command by simply repeating the keyword with a new value.  For
+       instance, if the old command was ;SPMquot;PLOT 1 R=200 XS=200 XE=300
+       MIN=400;SPMquot;, and you re-ran the command with ;SPMquot;<tex2html_percent_mark>PLOT R=234;SPMquot;, the new
+       command would be ;SPMquot;PLOT 1 R=234 XS=200 XE=300 MIN=400;SPMquot;<#448#>
+
+<P>
+</LI>
+<LI><#449#>You can force a keyword value to be added to or deleted from the
+       previous command (and not substituted as described above) by
+       preceding the keyword with a plus (+) or minus (-) sign.<#449#>
+</LI>
+</OL>
+
+<P>
+As an examples of command modification with <tex2html_percent_mark>, assume you wanted to repeat
+in various ways the command
+<BR>
+<tex2html_image_mark>#hanging451#
+<BR>
+which, we will assume is number 10 in the history list.
+<BR>
+<tex2html_image_mark>#example454#
+<BR>
+Now suppose that command number 58 was
+<BR>
+<tex2html_image_mark>#hanging460#
+<BR>
+Then
+<BR>
+<tex2html_image_mark>#example463#
+<BR>
+
+<P>
+Note: When using the '-' sign to delete words, you must supply an exact
+match to the word being deleted.
+
+<P>

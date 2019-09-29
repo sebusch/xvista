@@ -1,0 +1,13 @@
+Lick Mongo can only drive one device at a time.  Involved with this is the fact
+that Lick Mongo does not use any kind of transformation matrix.  Thus, the
+transformation is recalculated for almost every point Lick Mongo draws.  This
+also makes implementation of any kind of 3-d graphics impossible.
+
+Lick Mongo's command parser is a nightmare to maintain for addition of new
+commands.  It would be really nice to rewrite the parser in yacc, but
+we are committed to support of a primarily Fortran-based Lick Mongo for
+the sake of sites using Vista on VAXen.
+
+Lick Mongo does not draw circles or ellipses.  Because Lick is a scientific
+data-processing site, there really should be some way to easily draw
+error ellipses given their covariance matrices.

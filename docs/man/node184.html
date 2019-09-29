@@ -1,0 +1,35 @@
+
+<H1><A NAME="SECTION001580000000000000000">
+EGAL: Reconstruct a Galaxy from its PROFILE</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml442#
+<A NAME="6918"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6919#
+<BR>
+
+<P>
+EGAL is used to reconstruct a galaxy image from the high-resolution profile
+generated with the PROFILE command.  The reconstructed galaxy will be
+smoothed along isophotes and can be used as an ideal model for comparison
+to the original.  The reconstruction preserves high spatial frequencies in
+the center.  
+
+<P>
+It is possible to change the center of the reconstructed model galaxy to
+any fractional pixel location with the CR and CC keywords.  
+
+<P>
+Noise in the outer contours may be suppressed with the AVANG keyword, which
+azimuthally averages isophotes.  
+
+<P>
+By the default, the outer contours are replaced with an r1/4 fit to
+suppress noise.  This feature can be defeated with the NODEV keyword.  This
+command can be called at any time provided a profile has been calculated
+with PROFILE or loaded from a disk file with the GET command.
+
+<P>
+See Also: RECON, PROFILE
+
+<P>

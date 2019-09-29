@@ -1,0 +1,43 @@
+
+<H1><A NAME="SECTION00270000000000000000">
+EDIT: Editing the Last Command</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml76#
+
+<P>
+<A NAME="507"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command508#
+<BR>
+
+<P>
+The EDIT command loads the last command into a temporary file in your
+current directory, and then puts you into the default editor.  On Unix
+systems, the default editor is vi.  If you leave the editor with saving
+changes, the edited command is immediately executed.  If abort the editor
+(exiting without saving changes), the command is not executed. Only the
+first line of the temporary file is read; do NOT use EDIT to create several
+lines, thinking that you are making a procedure.  Procedures are created
+with PEDIT.
+
+<P>
+Do not put more than one command in the temporary file you are editing.  Do
+not chain several commands together with semicolons.
+
+<P>
+For EDIT and other commands which invoke an editor (HEDIT, WEDIT, PEDIT),
+the default is to execute the editor vi. If you wish to change this, you
+can do so by setting the environment variable VISUAL to be the editor that
+you wish to use. For example, to use the emacs editor, execute the
+following statement BEFORE starting up VISTA (e.g., in your .cshrc file):
+<PRE><tex2html_verbatim_mark>verbatim77#</PRE>
+In many cases, you may have to provide the full path to an editor, for
+example:
+<PRE><tex2html_verbatim_mark>verbatim78#</PRE>
+in order to be able to execute it from within VISTA.  It is always a good
+idea to verify the full path (using the Unix which command) before setting
+an environment variable.
+
+<P>

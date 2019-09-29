@@ -1,0 +1,67 @@
+
+<H1><A NAME="SECTION001130000000000000000">
+ABX: Analyze Pixel Statistics in an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml319#
+<A NAME="4364"><tex2html_anchor_invisible_mark></A>
+<A NAME="4365"><tex2html_anchor_invisible_mark></A>
+<A NAME="4366"><tex2html_anchor_invisible_mark></A>
+<A NAME="4367"><tex2html_anchor_invisible_mark></A>
+<A NAME="4368"><tex2html_anchor_invisible_mark></A>
+<A NAME="4369"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command4370#
+<BR>
+
+<P>
+ABX analyzes the statistics of an image or spectrum.  It computes the total,
+mean, and standard deviation about the mean.  It also finds the locations
+and values of the highest and lowest pixels.  The output of this program
+can be redirected.
+
+<P>
+To analyze the object in regions defined by boxes, give the NUMBERS of the
+boxes on the command line.  If you give no numbers, the entire image will
+be analyzed. Alternatively, specify any number of boxes using the
+BOX=b1,b2,... keyword. Examples:
+<BR>
+<tex2html_image_mark>#example4398#
+<BR>
+
+<P>
+Note that in ABX, boxes are specified by integers, and not by BOX= keyword,
+as is usual in other commands.  See BOX to see how to define boxes.
+
+<P>
+To analyze the entire image or spectrum, use the keyword ALL or simply do
+not specify a box number. Any box specifiers on the command line are
+ignored.  To analyze part of a wavelength-calibrated spectrum, use W= to
+specify the part in Angstroms.
+
+<P>
+ABX finds the image mean, total count over all pixels, values of the
+highest and lowest pixels, location of the highest and lowest pixels, and
+the standard deviation of the counts in the pixels about the mean. A table
+of the results is printed on the output device.
+
+<P>
+ABX will store the values for the various properties of the image in
+variables if certain keywords are included on the command line:
+<BR>
+<tex2html_image_mark>#example4404#
+<BR>
+
+<P>
+<#4416#>Examples of storing information in variables are:<#4416#>
+<BR>
+<tex2html_image_mark>#example4417#
+<BR>
+The use of the variable-setting keywords should be used only when you
+analyze an image one box at a time, as the values will be loaded into the
+variables only for the last box analyzed.
+
+<P>
+SILENT is used to prevent printing of the output.  This is helpful in
+procedures when variables are set.
+
+<P>

@@ -1,0 +1,30 @@
+
+<H1><A NAME="SECTION001370000000000000000">
+CMPLX/IMAG/REAL/CONJ: Complex Image Operators</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml374#
+<BR>
+<tex2html_image_mark>#command5568#
+<BR>
+
+<P>
+CMPLX synthesizes a complex image from a real and a imaginary buffers.  
+
+<P>
+IMAG extracts the imaginary part of a complex image.  
+
+<P>
+REAL extracts the real part of a complex image.  
+
+<P>
+CONJ take the complex conjugate of the complex image.
+
+<P>
+The 'source' buffer does not have to be a complex image for commands IMAG,
+REAL and CONJ to operate. If the 'source' image is not complex, REAL will
+extract the odd columns, IMAG will extract the even rows, and CONJ will
+simply multiply the even columns by -1.
+
+<P>
+<tex2html_endfile>#./chap13.tex#
+<tex2html_file>#./chap14.tex#

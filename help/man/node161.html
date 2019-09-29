@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>SKYLINE: Re-Calibrate Wavelengths Using Night-Sky Lines</TITLE>
+<META NAME="description" CONTENT="SKYLINE: Re-Calibrate Wavelengths Using Night-Sky Lines">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001490000000000000000">
+SKYLINE: Re-Calibrate Wavelengths Using Night-Sky Lines</A>
+</H1>
+
+<!-- linkto skyline.html -->
+<A NAME="5903"></A>
+<A NAME="5904"></A>
+<BR>
+<IMG
+ WIDTH="271" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img300.png"
+ ALT="\begin{command}
+\item[Form:SKYLINE s1 {[s2]} {[s3]} ... {[s15]} {[INT]}\hfill]{...
+...e deletion of lines
+from the list of identified night sky lines.}
+\end{command}">
+<BR>
+
+<P>
+SKYLINE searches the night sky spectrum in buffer 's1' for known night sky
+emission lines.  All spectra must be linear wavelength calibrated. If it
+finds at least two lines in the spectrum it will use them to compute a
+corrected zero-point for the wavelength scale (the dispersion term is not
+changed).  This new zero-point is then applied to all of the other spectra
+supplied on the command line.  All of the spectra should be on the same
+linear wavelength scale (using the ALIGN command) to begin with.
+
+<P>
+If the keyword INT is used then you will be given the option to delete
+lines from the list of night sky lines found in spectrum 's1'.
+
+<P>
+Example:
+<BR>
+
+<BR>
+MASH is used to operate on image 8, producing a sky-subtracted program
+spectrum in buffer 1 and the sky spectrum in buffer 2.  Wavelength
+parameters are copied from a previously calibrated comparison spectrum (in
+buffer 20). The two spectra are transformed to a linear wavelength scale
+using ALIGN. Then the zero-point of the wavelength scale is corrected using
+SKYLINE.  This procedure can remove instrumental flexure if your spectra
+contain usable night-sky lines.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

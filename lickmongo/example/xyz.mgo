@@ -1,0 +1,17 @@
+data cietristm.dat
+xcolumn 1
+ycolumn 4
+limits
+box
+exp 2
+xlabel Wavelength [nm]
+ylabel Visual stimulus
+expand .8
+ptype -90 0
+points
+ycolumn 3
+ptype -89 0
+points
+ycolumn 2
+ptype -88 0
+points

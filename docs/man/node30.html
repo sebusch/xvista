@@ -1,0 +1,74 @@
+
+<H1><A NAME="SECTION00370000000000000000">
+STRING: Defining VISTA String Variables</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml97#
+
+<P>
+<A NAME="902"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command903#
+<BR>
+
+<P>
+STRING defines string variables.  String variables are names to which a
+character string is associated.
+
+<P>
+STRING works like PRINTF (see that section of the help information), except
+that the name of the string variable being defined appears between the
+command STRING and the format string.  As in PRINTF, you can define strings
+directly, as in:
+<BR>
+<tex2html_image_mark>#example911#
+<BR>
+Remember that multiple words to be considered as one string must be
+enclosed in quotes.  If you wish to define a blank string, you must define
+it as a single blank in quotes, as in:
+<BR>
+<tex2html_image_mark>#hanging915#
+<BR>
+
+<P>
+You may also define strings using expression evaluation as in:
+<BR>
+<tex2html_image_mark>#hanging918#
+<BR>
+which evaluates the numeric variable J, then substitutes its value into the
+string beginning FILE..., and loads the final string into the stack of
+string variables under the name J.  In this example, the value of the
+string variable NAME is FILE007.
+
+<P>
+If the first character of the format string is a question mark, STRING will
+print the remainder of the format string as a prompt, then pause while you
+enter the string.  This allows the interactive definition of strings.  If
+the format string contains only a question mark, then the prompt will be
+'Enter' followed by the name of the string variable which is being defined.
+Examples:
+<BR>
+<tex2html_image_mark>#example922#
+<BR>
+
+<P>
+You CANNOT evaluate arithmetic expressions when defining strings
+interactively.  Thus
+<BR>
+<tex2html_image_mark>#hanging926#
+<BR>
+will NOT work. The newline character (<tex2html_verb_mark>2<tex2html_verb_mark>) will also not work.
+
+<P>
+You can list all defined strings with the command PRINT STRINGS.
+
+<P>
+A string variable can be substituted into a command line by enclosing the
+name of the string in braces.  See HELP SUBSTITUTE for more information,
+plus information about printing STRINGS.
+
+<P>
+String variables are stored in a different stack from numeric variables.
+Thus it is possible to have a string variable and a numeric variable with
+the same name.
+
+<P>

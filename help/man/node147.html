@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>POWERS: Generate a Power Spectrum (Periodogram Estimate)</TITLE>
+<META NAME="description" CONTENT="POWERS: Generate a Power Spectrum (Periodogram Estimate)">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001330000000000000000">
+POWERS: Generate a Power Spectrum (Periodogram Estimate)</A>
+</H1>
+
+<!-- linkto powers.html -->
+<BR>
+
+<BR>
+
+<P>
+POWERS generates the periodogram power spectrum estimate from the 1D or 2D
+fourier transform of a real image. The periodogram estimate is just a way
+to normalize the power spectrum such that Parseval's theorem holds
+(i.e. the sum of all the power terms equals the mean squared amplitude of
+the transform).
+
+<P>
+POWERS only operates on fourier transforms generated with VISTA command
+FFT. If you want to generate the power spectrum from a more general
+complex image (p.e. an image synthesized with command CMPLX) which is
+supposed to be the fourier transform of a real image, use command CABS to
+get the modulus of the transform and multiply it by itself (with MULT not
+CMULT since the modulus of a complex image is real). The periodogram
+estimate and the modulus-squared are basically identical (they may only
+differ in the 0th and Nyquist frequencies).
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

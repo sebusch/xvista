@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>READ: Read the Next Line of an ASCII Text File</TITLE>
+<META NAME="description" CONTENT="READ: Read the Next Line of an ASCII Text File">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00760000000000000000"></A>
+<A NAME="2323"></A>
+<BR>
+READ: Read the Next Line of an ASCII Text File
+</H1>
+
+<!-- linkto read.html -->
+<BR>
+
+<BR>
+
+<P>
+READ will read the next line of the named opened file (the argument of READ
+is the logical name of a file previously opened with OPEN).  This line then
+becomes the 'current' line for the file and all subsequent references to
+the file in arithmetic expressions use the current line.  Each READ causes
+a new line to be read in the order in which they appear in the file.
+However, it is possible to skip specified lines in the file using the SKIP
+command. The following example shows how to use the OPEN, and READ commands
+in conjunction with arithmetic expressions.
+
+<P>
+Suppose you have a file called photometry.dat containing the following four
+lines of data:
+<PRE>
+     B      V
+   100.5  150.3
+   110.4  164.9
+    75.3  113.6
+</PRE>
+We could compute B-V using the following simple procedure.
+<PRE>
+    OPEN PHOT photometry.dat
+    SKIP PHOT 1
+    DO I=1,3
+       READ PHOT
+       BV=2.5*(LOG10{[@PHOT.1]}-LOG10{[@PHOT.2]})
+       PRINTF '%I2 %F10.3' I BV
+    END_DO
+    END
+</PRE>
+The first line opens the file and gives it the name PHOT.  Since the first
+line of the file does not contain numeric data and is just a header for the
+columns of data, we use the SKIP command to label line 1 as a line to be
+skipped.  We then begin to read the real data. The first time line 4 is
+executed it reads line 1 of the file.  It finds that we have marked line 1
+as a line to skip so it then reads the next line.
+
+<P>
+Line 5 then makes two references to the file.  The construction @PHOT.1 is
+interpreted in the following way: In the 'current' line of PHOT (the one we
+just got with the READ), extract the first word of the line and convert it
+into a numeric value.  And, of course, @PHOT.2 refers to the second word on
+the current line.  The 'word' indicator can be either a constant as shown
+or it can be a variable. So if B=1 and V=2 we could have said @PHOT.B and
+@PHOT.V.  Expressions are not allowed: @PHOT.(B+1) is illegal and @PHOT.B+1
+means "add 1 to the value of @PHOT.B".
+
+<P>
+<A NAME="2333"></A>
+<A NAME="2334"></A>
+
+<P>
+Implicit READing: String substitutions, using the string_name
+construction, can also substitute lines from an opened file.  To do so use
+the form logical_name, which does an implied READ of the named file and
+substitutes the entire line from the file into the command line.  You can
+also substitute particular words using the form
+logical_name.word_indicator where the word indicator is an expression
+giving the word number.  These substitutions always do a new implicit READ
+for each substitution.  The following example shows how to use these
+implied READ string substitutions.
+
+<P>
+In this procedure, the user is asked to give a filename.  The file contains
+a list of disk file names for images which are to be processed in some
+standard way.  The processed image is written out with the same name.
+There is one disk file name per line.
+
+<P>
+<PRE>
+    STRING FILE '?Enter image name file. &gt;&gt; ' ! Get image name file
+    OPEN IMAGES {FILE}  ! Open the name file
+    STAT LINES=COUNT{[IMAGES]}  ! Get number of lines in file
+    DO I=1,LINES  ! For each image ...
+       STRING DISKIM {IMAGES}  ! Get image name from file
+       RD 1 {DISKIM}                         ! Read image
+       CALL PROCESS                          ! Process it
+       WD 1 {DISKIM}                         ! Write out
+    END_DO
+    END
+</PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

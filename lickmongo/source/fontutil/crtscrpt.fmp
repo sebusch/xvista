@@ -1,0 +1,97 @@
+VLINE -16 -9 0 12 16    Vertical font metric information for
+H 2190  <sp>    Weierstrass             Greek Alphabet and Special Characters
+H 0860  !       Anchorage
+H 0861  "       Aerodrome
+H 0862  #       Mine
+H 0863  $       Derrick
+H 0864  %       Lightship
+H 0865  &       Wreck
+H 0866  '       Cross
+H 0867  (       Crescent
+H 0868  )       Star
+H 0869  *       Bell <--Not MG 42. This cannot be used as a "Greek/Symbol" font
+H 0870  +       Palm
+H 0871  ,       Pine
+H 0872  -       Oak
+H 0873  .       Willow
+H 0874  /       Grass
+H 2750  0       Hershey Complex Script Numerals
+H 2751  1
+H 2752  2
+H 2753  3
+H 2754  4
+H 2755  5
+H 2756  6
+H 2757  7
+H 2758  8
+H 2759  9
+H 0856  :       Star
+H 0857  ;       Flag
+H 0741  <       Spade
+H 0742  =       Heart
+H 0743  >       Diamond
+H 0744  ?       Club
+H 0745  @       Shamrock
+MS  65  A       [Hershey Complex Script]
+MS  66  B
+MS  67  C
+MS  68  D
+MS  69  E
+MS  70  F
+MS  71  G
+MS  72  H
+MS  73  I
+MS  74  J
+MS  75  K
+MS  76  L
+MS  77  M
+MS  78  N
+MS  79  O
+MS  80  P
+MS  81  Q
+MS  82  R
+MS  83  S
+MS  84  T
+MS  85  U
+MS  86  V
+MS  87  W
+MS  88  X
+MS  89  Y
+MS  90  Z
+H 0746  [       Fleur de Lis
+H 0751  \       Rain
+H 0752  ]       Snow
+H 0758  ^       Cumulo
+H 0767  _       Thunderstorm
+H 0768  `       Hurricane
+MS  97  a       [Hershey Simplex Script]
+MS  98  b
+MS  99  c
+MS 100  d
+MS 101  e
+MS 102  f
+MS 103  g
+MS 104  h
+MS 105  i
+MS 106  j
+MS 107  k
+MS 108  l
+MS 109  m
+MS 110  n
+MS 111  o
+MS 112  p
+MS 113  q
+MS 114  r
+MS 115  s
+MS 116  t
+MS 117  u
+MS 118  v
+MS 119  w
+MS 120  x
+MS 121  y
+MS 122  z
+H 0831  {       left angle brace (bra)
+H 0832  |       Filament
+H 0833  }       Ground
+H 0834  ~       Antenna
+MG 127  <del>   <---NOT ACCESSIBLE FROM MONGO

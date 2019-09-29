@@ -1,0 +1,23 @@
+erase
+psfmode 2
+data cietristm.dat
+xcolumn 1
+ycolumn 4
+limits
+box
+exp 2
+xlabel Wavelength [nm]
+ylabel Visual stimulus
+tlabel Distribution of hearts, clubs, & spades
+expand 1.5
+ptype 0 -1 \g\251
+color 3 1 0 0
+points
+ycolumn 3
+ptype 0 -1 \g\247
+color 4 0 1 0
+points
+ycolumn 2
+ptype 0 -1 \g\252
+color 1
+points

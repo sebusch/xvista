@@ -1,0 +1,43 @@
+
+<H1><A NAME="SECTION00930000000000000000">
+MASK/UNMASK: Ignore (Mask) Specified Pixels</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml290#
+<A NAME="3972"><tex2html_anchor_invisible_mark></A>
+<A NAME="3973"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command3974#
+<BR>
+
+<P>
+MASK tells VISTA programs to ignore the specified pixels when doing
+computations.
+
+<P>
+The command UNMASK is the opposite of MASK; it tells the programs to stop
+ignoring the specified pixels.  UNMASK can be used without options to
+unmask all pixels.
+
+<P>
+You can type UNMASK without any options to tell the routines to use all the
+pixels.  Remember that rows and columns are often numbered from ZERO.  The
+row or column numbers specified in MASK are the same as those given by the
+'D' option in the ITV command, but remember that if the TV image is
+compressed, the 'D' option will not give the exact location of certain
+features in the image.  Use the BOX option in the TV command to show
+smaller sections of an image when finding features you want to mask.
+
+<P>
+The mask may be saved on the disk with SAVE, and retrieved later with GET.
+
+<P>
+Not all VISTA commands recognize masked pixels.  The ones that do are: ABX,
+AUTOMARK, MN, CROSS, INTERP, MASH, and SURFACE.
+
+<P>
+<#3991#>Examples:<#3991#>
+<BR>
+<tex2html_image_mark>#example3992#
+<BR>
+
+<P>

@@ -1,0 +1,525 @@
+%
+%  VISTA Cookbook;  Basic Image Processing (Chapter 4)
+%
+%  Began:  1988 August 9
+%
+%  Last Revision:  1988 August 30
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:bas
+%
+%
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+%\def \hitkey#1 {$\langle${\tt #1}$\rangle$\/}
+%
+%\begin{document}
+%
+%\setcounter{chapter}{3}
+%
+
+\chapter{Basic Image Processing}
+
+This chapter describes image processing techniques that are ``basic'' in that
+they are common to almost all image reduction tasks, whether the final end is
+imaging or spectrophotometry.  They represent the basic corrections that must
+be applied to the ``raw'' data from the instrument before measurements can be
+made from the imaging data. 
+
+We have tried, in so far is as possible, to keep to what we perceive as the
+most basic considerations.  
+If nothing
+else, the following will give you some feel for the reasons for the
+corrections, and how to perform them.  Fine details will always come in to
+mess up simple recipes.  We will avoid refinements, but will endeavour to
+remind you of them to keep things in proper perspective. 
+
+It must be pointed that ``basic'' is not synonymous with ``simple'' in this
+context.  The corrections described below are crucial to all reduction that
+follows, and great care must be taken.  In addition, we feel that all
+observers should understand the problems and above all the fundamental
+limitations of each step so that they may approach their data more sensibly.
+CCD-based instruments are very complicted, and few observers (the authors
+included) have sufficient depth of knowledge in electronics, computers, and
+solid-state physics to be able to fully grasp what CCDs are really giving
+them. This leads, unfortunately, to a tendency to make CCDs ``magic black
+boxes'' which produce data which are then passed to `black box' reduction
+programs out of which pops the flattened, de-biased, cleaned-up image.  While
+this is fine in principle, it strikes us as dangerous; black boxes rarely if
+ever cope with anomalies well.  Thus, even a rudimentary appreciation of the
+``causes and cures'' of flat-field correction, dark bias subtraction, and
+other basic reduction techniques, will help the average observer spot and
+hopefully resolve anomalous problems that the black boxes cannot. 
+
+%----------------------------------------------
+
+\section{Flat Fields}
+
+\subsection{Basic Principles}
+\nobreak
+By the ``response'' of a CCD we mean the conversion between the flux of
+photons falling into each pixel and the number or ``count'' in the readout
+computer's memory that constitutes the image ``data''. If each pixel on a CCD
+chip responded exactly the same as its neighbors to the light falling into it,
+then if it were uniformly illuminated, you would observe the same number of
+counts ($\pm$ noise) in each pixel.  In other words, the response would be
+``flat''.  Real CCDs don't behave this way.  Many don't even get close. 
+
+The response of a CCD is never very uniform.  Each pixel has its own response
+function, an in addition, the average response is often correlated with the
+response of its neighbors.  Thus some CCDs have areas of high sensitivity, and
+regions of low or zero sensitivity.  In addition, the response of a given
+pixel is also a function of the wavelength of the incident photons.  The
+better the quality of the CCD, the more uniform or ``flatter'' the
+pixel-to-pixel response across the face of the chip. 
+
+To correct for this pixel-to-pixel response variation, an image is taken with
+the CCD uniformly illuminated.  This is called the ``Flat-Field Frame''. There
+are a variety of ways to do this.  A white screen in front of the telescope on
+the dome is imaged (out of focus), or the twilight sky are both common
+techniques.  The goal is to get the illumination at the chip surface as
+uniform as is possible, with the same approximate mixtures of wavelengths that
+will be in your data.  Remember, the response varies both as a function of
+pixel and {\it wavelength} across the face of the CCD.  Each different
+instrument setting (different filters, gratings, whatever) requires its
+own unique set of flat-field frames.  If you change the optics in any way,
+the flat-field will change.  
+
+The techniques used to achieve this are as varied as the observers themselves.
+We are not going to espouse any particular method for taking flat-field
+frames, but we will tell you what to do with them once you have them. Simply
+put, flat-field exposures are more surrounded by lore, black magic, and
+undiluted voodoo than practically anything else in astronomy since the glory
+days of RCA 1P21 photomultiplier tubes.  Our advice is to do what you think is
+sensible given your final goal (imaging, spectrophotometry, etc), and do it
+{\it consistently}.  If you can spare the time (and it is definitely worth
+your time), test your techniques exhaustively before adopting them and getting
+seriously entrenched in observing. The flat-field step is the most important
+factor in your observing.  If you blow the flat-field step, you're screwed.
+Pure and simple. 
+
+Once you have solved the uniform illumination problem, the next most important
+consideration is that you want as much signal as you can squeeze into your
+flat-field frames without saturating any part of the CCD.  The usual practice
+is to take many flat-field frames (4 or more) from the beginning and end of
+the night, and then average them in some fashion to create a mean flat-field
+frame, either for the night or for the entire run.  Since a flat-field
+contains effects of both CCD and the telescope optics, flat fields will often
+vary from run to run, and hopefully not from night to night.  By
+``averaging'', we mean either a simple sum of all flat-field frames, an
+arithmetic mean, or even such sophisiticated techniques as median filtering of
+an image stack (see the 2-D image processing chapter for a discussion of
+this).  Like the illumination question, there is also much lore and voodoo
+surrounding which is ``average flat-field'' is best.  Again, choose the most
+sensible to your needs, and be consistent. 
+
+A flat-field correction is accomplished by generating a flat-field frame using
+one of the techniques alluded to above.  The program image is then divided
+by the flat-field frame to remove the pixel-to-pixel response variations, 
+resulting in a ``flattened'' image.  What a flat-field frame really contains
+is the relative pixel-to-pixel response normalized to the average 
+image intensity in the frame.  Thus to restore the image ``counts'', it
+is necessary to follow division by the flat-field frame by re-scaling
+with the flat-field normalization.
+
+\subsection{A Simple Example}
+\nobreak
+In VISTA, the flat-fielding procedure would be as follows:  Suppose that
+the program image to be flattened is in Buffer 1, and the flat field
+frame is in Buffer 2.  The first step is to compute the mean intensity
+in the flat-field frame to be used as the normalization factor.  Then
+divide the program image by the flat-field, and restore the normalization.
+The commands you would type are:
+
+\begin{command}
+      \item MN 2
+      \item DIV 1 2 FLAT
+\end{command}
+
+\noindent
+The \comm{FLAT} keyword of the \comm{DIV} command uses the image mean of
+Buffer 2 (the flat-field frame) calculated with the \comm{MN} command to
+normalize the flattened image.  The result of the above 2 commands is to leave
+a flattened program image in Buffer 1.  If the flat-field frame in Buffer 2 is
+to be used to flatten many images, then so long as this flat-field always
+resides in Buffer 2, the first step of taking the image mean need only be done
+once in a session.  If you are ever unsure of this, issue the \comm{MN}
+command on the buffer with the flat-field frame. If no image mean exists for
+the flat-field frame's buffer, the \comm{DIV} command will issue an error and
+stop. An alternate to using the \comm{FLAT} keyword is to get the mean of
+your flat field (e.g., using the MN command), then do a
+
+\begin{command}
+	\item DIV 2 C=M
+\end{command}
+to normalize the image in buffer 2, then do simple \comm{DIV} commands to
+flat field your images.
+
+Flat-field correction should be last step before further reduction of the
+program image.  It must follow removal of effects due to image readout or
+intrinsic data biases which are (usually) independent of the light falling on
+the chip.  Corrections for these effects are discussed below. 
+
+%----------------------------------------------
+
+\section{Dark Current}
+
+\subsection{Basic Principles}
+\nobreak
+Light falling into a pixel produces electron-hole pairs in the semiconductor
+layer proportional to the number of photons striking the pixel.  It is these
+electrons which are accumulated as the "counts" in a pixel.  However, some
+pixels make electron-hole pairs all by themselves, even when it is dark. This
+``Dark Current'' is 
+primarily thermal in origin (thermal giggling of the atoms in
+the semiconductor can make electron-hole pairs as well), thus the reason that
+CCDs are operated at cryogenic temperatures.  Since the CCD temperature is
+held steady throughout a night (presumably), the number of electrons/second
+produced by a given pixel should be constant in time, and thus the spurious
+dark current in a pixel should scale linearly with exposure time.  For most
+pixels, the dark current is negligible, but some individual pixels (or clusters
+of pixels) are ``hot,'' producing many electrons/second.  A few of these ``hot
+pixels'' behave non-linearly, so that the actual dark current in them scales only
+roughly with exposure time.  The dark current enters into the image as an
+additive constant (``bias'') which is a function of exposure time. To correct
+for it, one must somehow subtract the dark current from the frame. 
+
+The dark current is a function both of location on the CCD, as the dark count
+rate varies seemingly arbitrarily from pixel to pixel, and a function of
+exposre time.  Thus it is necessary to somehow create a ``Dark Current Frame''
+which will be subtracted from the image to remove the dark current.  There are a
+number of schemes for doing this, depending on the details of the CCD chip
+that you are using.  In particular, it will depend on its ``non-signal'' bias
+characteristics.  Typically, there are two non-signal bias components to most
+CCDs we've had experience with.  The first is a time-dependent dark bias,
+linear with time in all but a handful of very hot pixels.  The second is a
+time-independent bias often called ``fixed-pattern noise''.  This latter is
+treated in more detail below.  Both are additive contributions. 
+
+Two basic ways of removing dark current from an image will be presented.  It must
+be emphasized that these are not exclusive of other methods that might also be
+employed to this end. 
+
+\subsection{Matched Exposure Dark Frames}
+\nobreak
+This method is most useful if you are using only a few exposure times during a
+run, for example, you are making an imaging survey and always use 15 minute
+exposures.  In this case, you would take 2 or more dark frames of the same
+exposure time as your program exposures during your run.  Since the dark bias
+is a function of CCD temperature, you should be careful to bracket all CCD
+temperature changes with dark frames.  A ``dark frame'' is one taken with the
+shutter closed and (if possible) the dome as dark as possible. 
+
+With long exposures, the dark frames you take will be contaminated with ion
+hits.  This is particularly true of thick CCD chips like the GEC P8600 or the
+un-thinned Tektronix CCDs.  For this reason, you want to take at least 2 dark
+frames of the same exposure time (and same CCD temperature).  The trick to
+removing the ion hits is as follows: 
+
+Load the first dark frame into Buffer 1, and the second into Buffer 2. Make a
+copy of the dark frame in Buffer 1 in Buffer 3 using the command: 
+
+\begin{command}
+      \item COPY 3 1
+\end{command}
+
+\noindent
+Then, subtract the dark frame in Buffer 2 from the dark in Buffer 3:
+
+\begin{command}
+      \item SUB 3 2
+\end{command}
+
+\noindent
+The ion hits on the dark frame in Buffer 2 will make large negative spikes,
+and the ion hits on the dark frame in Buffer 1 will be left as large positive
+spikes.  We will now make 2 frames:  1 containing only the residual ion hits
+for the dark frame in Buffer 1, and the other to contain the residual ion hits
+for the dark frame in Buffer 2. Consider all signal below 10 counts to be
+worth ignoring.  Create the residual frames as follows: 
+
+\begin{command}
+      \item COPY 4 3
+      \item CLIP 3 MIN=10. VMIN=0.
+      \item CLIP 4 MAX=-10. VMAX=0.
+\end{command}
+
+\noindent
+Buffer 3 now contains the residual ion hits on the dark frame in Buffer 1, and
+Buffer 4 contains the {\it negative} of the residual ion hits on the dark
+frame in Buffer 2.  Remove the residual ion hits from each of the original
+dark frames with the following commands: 
+
+\begin{command}
+      \item SUB 1 3
+      \item ADD 2 4
+\end{command}
+
+\noindent
+Note that since the residual counts in Buffer 4 are {\it negative} we must
+{\it add} them to the raw counts in Buffer 2 rather than subtract as we did to
+the raw counts in Buffer 1.  Now, make an average dark bias frame by averaging
+the dark frames in Buffers 1 and 2: 
+
+\begin{command}
+      \item ADD 1 2
+      \item DIV 1 CONST=2.0
+\end{command}
+
+\noindent
+The frame in Buffer 1 is now a ``Mean Dark Bias Frame'' for images with that
+exposure time.  Change the header of this file to reflect its new status,
+write it to disk, and clean up the leftover debris: 
+
+\begin{command}
+      \item CH 1 'Mean Dark Bias Frame'
+      \item WD 1 DARKBIAS.CCD
+      \item DISPOSE 2 3 4
+\end{command}
+
+\noindent
+The actual correction for the image dark current is quite simple.  It must be
+done after baseline correction (if you are using Lick CCD data) and {\it
+before} flat-field correction.  Simply subtract the mean dark current frame from
+an image frame of the {\it same} exposure time.  This latter point is repeated
+because dark current is time-dependent.  In practice, this technique vastly
+improves the appearance of long-exposure images with high dark-current CCDs.  For
+non-linear hot pixels, this corrects for most of the hot pixel dark current, but
+the remaining counts will have to be accepted as beyond correction. 
+
+\subsection{Scaled Dark Frames} 
+\nobreak 
+This method is most useful if you are using many different exposure times
+during a run.  In outline, one takes a ``fiducial'' dark frame which is long
+enough that it will contain significant dark bias (you want enough signal to
+get away from the readout noise).  Typically, you would choose a dark frame
+which has the same exposure time as the shortest exposure time images for
+which dark bias is important.  Unless you have a frightfully dark-noisy CCD
+chip, dark bias will usually be insignificant on short (less than 1 minute)
+exposures.  Then, this dark frame is multiplied by a constant so that it has
+the same equivalent exposure time as the image from which the dark bias is to
+be removed.  This constant is the just the program image exposure time divided
+by the dark frame exposure time. You want this constant to be small (not more
+than 5 or 6), otherwise the extrapolation error could be very large.  Then
+the scaled dark frame is subtracted from the program image.
+
+In outline, simple; in practice, complicated by small details.  Simply scaling
+the fiducial dark frame will also scale up the constant fixed pattern noise,
+thus over-correcting the program image by the scaling factor.  In addition,
+ion hits must first be removed from the fiducial dark, otherwise those will be
+scaled up and cause large negative spikes on the program image.  The following
+seems to be a sensible procedure for Lick CCDs, but there are most likely
+others that more imaginative folks can come up with. 
+
+\noindent{\bf Step 1:}\ While on the mountain, take a number (at least 2)
+fiducial dark frames, followed {\it immediately} by 1 second dark frames.  The
+latter 1 second frames will contain only (more or less) the time-independent
+fixed pattern noise of the CCD.  (We're getting ahead of the game, the fine
+details of how we deal with fixed pattern noise is covered in the next
+section.  We'll use the techniques without explanation here.) 
+
+\noindent{\bf Step 2:}\ Back home, prepare a fiducial dark frame as follows:
+You will repeat this procedure for each fiducial dark frame.  The idea is the
+same as the ``Matched Exposure'' technique described above, you want to use
+multiple dark frames to eliminate (as much as possible) contamination of the
+dark frame by ion hits. Read one of the fiducial dark frames into Buffer 1,
+and its companion 1 second dark frame into Buffer 2.  Remove the fixed pattern
+noise with the following procedure:
+
+\begin{command}
+      \item MASH 10 2 SP=(SR[2],NR[2]-SR[2]+1) NORM
+      \item STRETCH 3 10 SIZE=NR[2] HORIZ
+      \item SUB 1 3
+      \item DISPOSE 3 10
+\end{command}
+
+This example assumes explicitly that the fixed pattern noise runs along image
+columns and is essentially the same row-by-row.  This is almost always the
+case, as fixed pattern noise is introduced during readout, and readout is
+row-by-row.  When this procedure is completed, the image in Buffer 1 will have
+the fiducial dark frame with the fixed pattern noise removed, and the image in
+Buffer 2 is the untouched 1 second companion dark frame.  Save the fiducial
+dark in Buffer 1 in some safe Buffer (or in a temporary disk file), and repeat
+the procedure for all of the fiducial dark frames.  Then, prepare a fiducial
+dark bias frame following the techniques described in the section on ``Matched
+Exposure Dark Frames'' above for creating a ``mean dark bias frame''. This is
+why you need at least 2 fiducial dark frames and their companion darks to use
+this method. 
+
+Once you have generated a ``mean fiducial dark frame'', it is used as
+follows.  Suppose the fiducial dark frame is in Buffer 1, and has
+an exposure time of 10 minutes.  The program image frame to be dark
+bias corrected is in Buffer 2, and has a 45 minute exposure.  To correct
+the program image, you would type the commands:
+
+\begin{command}
+      \item MUL 1 CONST=45./10.
+      \item SUB 2 1 
+      \item DIV 1 CONST=45./10.
+\end{command}
+
+\noindent The first command scales the fiducial dark up to the exposure time
+of the program image.  The second command subtracts the scaled dark bias from
+the program image, and the third command removes the scale factor from the
+fiducial dark, restoring it to its original exposure time.
+
+This method does not remove the fixed pattern noise from the program image,
+like the ``matched exposure'' method.  Usually, the fixed pattern noise is
+negligible compared to the sky level in program images.  Where it is {\it not}
+negligible, it must be removed from the program image following the methods
+described in the section below. 
+
+A final note about dark bias correction.  Implicit in all of this is the
+assumption that the dark counts in a given pixel scale linearly with time.
+This may not be exactly true, but most hot pixels seem to behave linearly on
+average.  Thus, one should avoid large extrapolations between fiducial dark
+bias frames and the program images to avoid over/under-correction of
+individual pixels.  In addition, recall that any procedure that changes the
+image introduces noise which must be taken into account later when discussion
+true uncertainties of measurements made for corrected imaging data.  We
+will not be discussion error propagation in this cookbook, but want to
+remind you that it is an issue, one often poorly appreciated.
+
+%----------------------------------------------
+
+\section{Fixed Pattern Noise}
+
+\subsection{Basic Principles}
+\nobreak
+Fixed pattern noise (as it is often called) is any noise which is impressed on
+the image data during readout of the CCD.  It usually takes the form of a
+background pattern across the chip, repeated from row-to-row (hence the
+description ``fixed'').  One common cause is 60~Hz pickup on the data
+transmission cables from the dome to the data taking computer. On the old GEC
+P8600 CCD used at the 1-meter Nickel Telescope on Mt. Hamilton, this used to
+be a real problem, with the amplitude of the fixed pattern noise $\pm$~5
+counts or more. 
+
+The exact character of fixed pattern noise changes from device to device. At
+Lick, by sychronizing the readout clock triggers to the 60~Hz power lines, the
+pattern is the same from row to row.  Before this was done, the pattern
+shifted in phase as the readout clock triggers beat against the 60~Hz line,
+causing an awful ``herring-bone'' pattern.  Since the pattern repeated on each
+row, an average over 576 rows (on the old GEC CCD) meant a very high
+signal-to-noise representation of the pattern which could be removed. 
+
+A common feature of fixed pattern noise is that since it is imposed at readout
+time, it is fixed amplitude, and independent of exposure time.  It then enters
+as a (hopefully) small additive bias to the image data, and thus may be
+removed simply by subtracting a suitably defined ``fixed pattern frame'' from
+the data. 
+
+\subsection{A Simple Example}
+\nobreak
+The following is an example of how you would correct a program image for fixed
+pattern noise.  This example will assume that the fixed pattern repeats
+row-to-row (how it works at Lick).  To remove the fixed pattern noise, along
+with our program image, there is a short (1 second) dark frame taken
+immediately after the program image which contains only the fixed pattern
+noise (plus readout noise, assume dark bias in 1 second is negligible).
+Because the amplitude of fixed pattern noise is usually close to the readout
+noise of the system, we want our removal of the fixed pattern to introduce as
+little noise as possible into the program image. 
+
+To make a high signal-to-noise template of the fixed pattern, we will average
+each row of the image by mashing the fixed pattern image into a 1-D image
+which contains just the mean fixed pattern.  Then this 1-D fixed pattern image
+will be stretched back out into a full size 2-D image, and subtracted from the
+program image.  For the following, the program image is in Buffer 1 and starts
+on (Row,Column)=(0,0). The 1-second dark frame is in Buffer 2 and likewise
+starts on (0,0). Buffers 3 and 10 will be used as working space.  The basic
+VISTA procedure is as follows: 
+
+\begin{command}
+      \item MASH 10 2 SP=(0,NR[2]) NORM
+      \item STRETCH 3 10 SIZE=NR[2] HORIZ
+      \item SUB 1 3
+\end{command}
+
+\noindent Buffer 1 now contains the program image corrected for fixed pattern
+noise.  Buffer 3 contains a normalized fixed pattern frame, and Buffer 10
+contains the template pattern, derived from the average (\comm{NORM} keyword
+of the \comm{MASH} command) of all of the rows of the 1-second dark frame in
+Buffer 2. 
+
+\subsection{Refinements}
+\nobreak
+One problem is that the pattern is sometimes unstable over a night, and thus
+for each image you would have to obtain a companion fixed pattern frame
+(typically defined as a 1 second dark exposure, since the pattern is exposure
+time independent).  Depending on what you wish to achieve, this could pose
+a real problem, and you must decide if the overhead of a fixed pattern
+frame (which is readout time dominated) is worth the trouble.
+
+In most cases, fixed pattern noise is small amplitude, a few ``counts''
+peak-to-peak.  If your mean background (sky, etc.) is many orders larger than
+this, the contribution from fixed pattern noise will be negligible and thus
+may be safely neglected in detail.  This is often the case with the TI
+500$\times$500 CCD used for imaging on the 1-meter Nickel telescope. It is
+probably always negligible in full-frame, high-signal flat fields. 
+
+However, in cases where the background is small, fixed pattern noise will be a
+problem.  For example, following the ``Scaled Dark Frame'' method for removing
+dark bias described above, neglecting the fixed pattern noise on the the
+fiducial dark frame can lead to real problems with the dark bias subtraction. 
+It is also a consideration for the low background present on Echelle images
+(see the chapter on Echelle reductions), where it make a non-trivial
+contribution to inter-order scattered light. 
+
+If you are lucky enough to ignore fixed pattern noise in detail, you should
+not forget that it is there.  For example, if you are dividing images well
+separated in time, large, beating between out-of-phase fixed patterns could
+produce undesirable artifacts.  Always beware of features that might be
+artifacts of the interaction of fixed pattern noise and image data.  How
+sensitive your measurements will be to fixed pattern noise depends on what
+information you are trying to get out of your images. 
+
+%----------------------------------------------
+
+\section{Baseline Restoration}
+
+{\bf Warning:}\ This procedure is relevant for Lick Observatory CCD images
+only, and may produce very peculiar results if applied blindly to images from
+other telescopes. 
+
+The last column of CCD images taken at Lick Observatory contains information
+on changes in the reference voltage during image readout.  This reference
+voltage corresponds to zero signal from the CCD; the ``CCD Baseline.''  During
+readout, noise is introduced due to digital round-off errors when the signal
+from the CCD pixels (a voltage) is converted to a digital ``count'' and stored
+in the data taking computer's memory.  To correct for this, a running average
+of the baseline counts during readout of a given row is subtracted from each
+pixel in that row, and stored in the last column of the image.  This allows
+for correction of slow drifts in the baseline voltage during an image readout
+after the fact.  Thus, before further image processing, it is necessary to
+``restore'' the image baseline. 
+
+In VISTA, this is done using the BL command. For example, to restore the
+baseline in a raw image read off a tape into buffer 1, you would type: 
+
+\begin{command}
+      \item BL 1
+\end{command}
+
+VISTA will then print the mean baseline level (in digital counts; DN), and the
+slope (in units of DN/pixel), giving an idea of the amount of baseline drift
+during readout.  If there are problems with the CCD readout electronics, they
+will often show up as peculiarities in the baseline data.  Large jumps or
+spike in the baseline value usually signal troubles, thus the baseline serves
+as a good ``quick look'' diagnostic of the instrument performance.  It is
+prudent to make a habit of looking at the image baselines throughout the night.
+
+One further point of caution.  The baseline column is then replaced with the
+mean baseline computed, so running baseline on an image a second time could
+produce very strange results. 
+
+%\end{document}
+%\end

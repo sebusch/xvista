@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>BIGMEDIAN: Compute Median of a Large Number of FITS Images</TITLE>
+<META NAME="description" CONTENT="BIGMEDIAN: Compute Median of a Large Number of FITS Images">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0012130000000000000000">
+BIGMEDIAN: Compute Median of a Large Number of FITS Images</A>
+</H1>
+
+<!-- linkto bigmedian.html -->
+<A NAME="4881"></A>
+<A NAME="4882"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+BIGMEDIAN loads the 'dest' buffer with the median of images specified in
+the file given by the LIST=file keyword. The list file must contain the
+names of at least 3 images, in FITS format, with one image name specified
+per line of the input file. Optionally, the name of the file can be
+followed (on the same line) with a normalization constant and a zero point
+to be applied to each pixel in this input FITS file before the median is
+performed. For example, if the list file looks like this:
+<BR>
+
+<BR>
+then the median of those frames will be taken from the raw input FITS
+values.  If the input file looks like this:
+<BR>
+
+<BR>
+then the median will be taken of image001, (image002/20.), and
+(image003-5)/20.  Note that the specified zero point is SUBTRACTED from the
+image before computing the median; this makes it ideal to use for subtracting e.g. an
+overscan value.
+
+<P>
+In addition, you can do a pixel-by-pixel bias subtraction for each frame in
+the input list if you specify a FITS bias frame to subtract with the
+BIAS=file keyword. In this case, the bias frame will be subtracted before
+the median is performed.
+
+<P>
+The normalization of each frame can also be specified if there is a FITS
+card called MEAN in the FITS headers. If this card exists, the value of the
+card will be used to normalize the individual frames. Finally, if the
+NOMEAN keyword is specified, no normalization will be applied, regardless
+of the presence of a MEAN card or a value in the input list file.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,353 @@
+\chapter{Basic Image Analysis}
+\begin{rawhtml}
+<!-- linkto imbasic.html -->
+\end{rawhtml}
+
+%
+% All routines checked for keyword and function against current sources
+% HISTOGRAM help block moved to Chapter 8 (display & plotting)
+%
+% rwp/osu 1998 Aug 13 & 25
+%
+
+VISTA Provides the following commands for doing basic statistical
+analysis of pixel values:
+\begin{itemize}
+  \item[MN\hfill]{Compute the Mean of the Pixel Values}
+  \item[SKY\hfill]{Compute the Modal Sky/Background Level in an Image}
+  \item[ABX\hfill]{Analyze Pixel Statistics in an Image}
+  \item[AXES\hfill]{Compute the Centroid of an Object in an Image}
+\end{itemize}
+See also the HISTOGRAM command.
+
+\section{MN: Compute the Mean of the Pixel Values}
+\begin{rawhtml}
+<!-- linkto mn.html -->
+\end{rawhtml}
+\index{Image!Mean}
+\begin{itemize}
+  \item[\textbf{Form:}MN source {[NOBL]} {[BOX=b]} {[NOZERO]} {[MASK]}
+       {[PIX=p]} {[SILENT]} {[W=w1,w2]}\hfill]{}
+  \item[source]{the image or spectrum for which the mean
+       is to be computed}
+  \item[NOBL]{ignore baseline (last) column in an image}
+  \item[BOX=b]{find the mean in box b}
+  \item[NOZERO]{ignore pixels with value zero}
+  \item[MASK]{ignore masked pixels}
+  \item[PIX=p]{use every p'th pixel (for speed)}
+  \item[W=w1,w2]{find the mean in a wavelength calibrated
+       spectrum in the interval from wavelength w1 to w2.}
+  \item[SILENT]{do not print the results of the calculation.}
+\end{itemize}
+
+The mean of all the pixels in the image contained in buffer 'source' is
+computed.  Use MASK or NOZERO to ignore masked or zero-valued pixels in the
+computation.  PIX=p computes the mean using every p'th pixel in every p'th
+row, for speed.
+
+The computed mean value is printed at the terminal (unless the SILENT word
+is given) and is also loaded into the VISTA variable Mn, where 'n' is the
+image buffer number. (ex: the command MN 1 loads the variable M1.  The
+command MN 31 loads the variable MN31).  The value of the mean is also
+loaded into the variable MEAN.
+
+The mean is used by other commands such as the TV command for a default
+display range, or the DIVIDE command for rescaling images after flat-field
+divisions.
+
+See MASK for the operation of the pixel mask.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[MN 4\hfill]{finds the mean of buffer 4.  The
+  value of the mean is printed on the terminal and is loaded into the 
+  variables MEAN and M4.}
+  \item[MN 2 PIX=5\hfill]{computes the mean using every 5th 
+  pixel in every 5th row.  This makes the computation go very fast.}
+  \item[MN 5 W=4000,5000\hfill]{finds the mean of the wavelength-
+  calibrated spectrum in buffer 5 in the interval from 4000 to 5000 Angstroms.}
+  \item[MN \$Q MASK\hfill]{finds the mean of the object in buffer
+  Q (Q a variable), ignoring masked pixels.}
+  \item[MN 4 BOX=6\hfill]{finds the mean of the object in
+  buffer 4 using those pixels in box 6.}
+\end{itemize}
+
+\section{SKY: Compute the Modal Sky/Background Level in an Image}
+\begin{rawhtml}
+<!-- linkto sky.html -->
+\end{rawhtml}
+\index{Image!Background level}
+\begin{itemize}
+  \item[\textbf{Form:}SKY source {[BOX=n]} {[SILENT]} {[CORNERS]}
+       {[MAX=c]}\hfill]{}
+  \item[source]{is the number of the image that SKY works on.}
+  \item[BOX=n]{tells SKY to work only box=n.}
+  \item[SILENT]{do not print the result of the calculation.}
+  \item[CORNERS]{tells SKY to use the corners of the image.}
+  \item[MAX=c]{tells SKY to ignore pixels greater than 'c'.}
+\end{itemize}
+
+This routine finds the sky background level of an image under the
+assumption that the most common pixel intensity in the image is the level
+of the 'sky' or background.  This is a nonlinear algorithm which is largely
+insensitive to bright objects in the image. The routine calculates the mean
+of the image 'source', and builds a histogram of pixel intensities about
+the mean. The region of the peak value is located in the histogram, and is
+fit with a parabola to find its precise location. This center of the
+parabola is defined to be the sky value, and is loaded into the VISTA
+variable 'SKY' for access by other commands.  The width of the histogram is
+determined by a simple linear interpolation.  The value loaded into the
+VISTA variable 'SKYSIG' is a 1-sigma uncertainty estimate derived from the
+full width half max, and assumes the histogram is Gaussian.
+
+The use of a box may be helpful if a large fraction of the image is
+occupied by stars or an extended object, causing the routine to measure a
+sky level systematically higher than the true level.  The box can in this
+case be used to select a region of the image that does not have bright
+objects in it.  The CORNERS keyword tells SKY to find the sky value in the
+four corners of the image.  Each corner area consists of a region whose
+sides are one fourth the dimensions of the full image.  The minimum sky
+value found in the four corners is assumed to be the true sky value.  The
+MAX=c keyword tells SKY to ignore all pixel values greater than 'c'.  This
+is normally not needed unless there are many bright stars in the field.
+
+This version of SKY is new to Vista Version 4.2. It was supplied by Tod
+Lauer, and has been tested to be more accurate. The old VISTA SKY routine
+can still be accessed using the command OLDSKY.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[SKY 5\hfill]{ finds the background in image 5, loading 
+  its value into the variable SKY.}
+  \item[SKY \$W BOX=5\hfill]{finds the sky level in image W
+  (W a variable) in box 5.}
+  \item[SKY 2 CORNERS SILENT\hfill]{finds the sky level in image 2 using
+  only the corners of the image.  The value is loaded into SKY, but nothing
+  is printed on the terminal.}
+\end{itemize}
+
+\section{ABX: Analyze Pixel Statistics in an Image}
+\begin{rawhtml}
+<!-- linkto abx.html -->
+\end{rawhtml}
+\index{Image!Statistics in selected regions}
+\index{Box!Statistics of image or spectrum in}
+\index{Image!High pixel}
+\index{Image!Low pixel}
+\index{Image!Mean}
+\index{Image!Standard deviation}
+\begin{itemize}
+  \item[\textbf{Form:}ABX source {[boxes]} {[ALL]} {[W=w1,w2]} {[SILENT]} 
+       {[MASK]}\hfill]{}
+  \item{{[TOTAL=var]} {[MEAN=var]} {[HIGH=var]}}
+  \item{{[LOW=var]} {[HIGH\_ROW=var]} {[HIGH\_COL=var]}}
+  \item{{[LOW\_ROW=var]} {[LOW\_COL=var]} {[SIGMA=var]} (redirection)}
+  \item{{[AREA=farea]} {[P=var]}}
+  \item[source]{specifies the object.}
+  \item[boxes or BOX=b1,b2...]{list boxes to be used in the analysis.}
+  \item[ALL]{tells the program to analyze the entire image or spectrum.}
+  \item[W=w1,w2]{limits the analysis to the wavelength interval w1 to w2 for 
+       wavelength-calibrated spectra.}
+  \item[SILENT]{do not print output.} 
+  \item[MASK]{ignore masked pixels.}
+  \item[AREA=farea]{Determine the pixel position where the total reaches
+       the value farea.}
+  \item[var]{the name of a variable.}
+\end{itemize}
+
+ABX analyzes the statistics of an image or spectrum.  It computes the total,
+mean, and standard deviation about the mean.  It also finds the locations
+and values of the highest and lowest pixels.  The output of this program
+can be redirected.
+
+To analyze the object in regions defined by boxes, give the NUMBERS of the
+boxes on the command line.  If you give no numbers, the entire image will
+be analyzed. Alternatively, specify any number of boxes using the
+BOX=b1,b2,... keyword. Examples:
+\begin{itemize}
+  \item[ABX 3\hfill]{Finds the properties of object 3 in the entire image}
+  \item[ABX 3 1\hfill]{Finds the properties of object 3 in box 1}
+  \item[ABX 2 3 4 5 6\hfill]{Analyzes object 2 in boxes 3, 4, 5, and 6}
+  \item[ABX 2 BOX=3,4,5,6 \hfill]{Analyzes object 2 in boxes 3, 4, 5, and 6}
+\end{itemize}
+
+Note that in ABX, boxes are specified by integers, and not by BOX= keyword,
+as is usual in other commands.  See BOX to see how to define boxes.
+
+To analyze the entire image or spectrum, use the keyword ALL or simply do
+not specify a box number. Any box specifiers on the command line are
+ignored.  To analyze part of a wavelength-calibrated spectrum, use W= to
+specify the part in Angstroms.
+
+ABX finds the image mean, total count over all pixels, values of the
+highest and lowest pixels, location of the highest and lowest pixels, and
+the standard deviation of the counts in the pixels about the mean. A table
+of the results is printed on the output device.
+
+ABX will store the values for the various properties of the image in
+variables if certain keywords are included on the command line:
+\begin{itemize}
+  \item[TOTAL=var\hfill]{Stores the total count of all the pixels in 'var'}
+  \item[MEAN=var\hfill]{Stores the average of the image}
+  \item[HIGH=var\hfill]{Stores the VALUE of the pixel with the highest count}
+  \item[LOW=var\hfill]{Stores the VALUE of the pixel with the lowest count}
+  \item[HIGH\_ROW=var\hfill]{Stores the row number in which the highest-valued
+       pixel is located}
+  \item[HIGH\_COL=var\hfill]{Stores the column number in which the 
+       highest-valued pixel is located}
+  \item[LOW\_ROW=var\hfill]{Stores the row number in which the lowest-valued
+       pixel is located.}
+  \item[LOW\_COL=var\hfill]{Stores the column number in which the lowest-valued
+       pixel is located.}
+  \item[SIGMA=var\hfill]{Stores the standard deviation of the pixel values
+       about the mean.}
+  \item[P=var \hfill]{ Stores the pixel where the total reaches farea
+       (using AREA=farea) keyword.}
+\end{itemize}
+
+\noindent{Examples of storing information in variables are:}
+\begin{itemize}
+  \item[ABX 1 3 MEAN=M3 SIGMA=SIG3\hfill]{Analyzes image 1 in box 3, storing
+       the mean in variable M3 and the standard deviation in SIG3.}
+  \item[ABX 2 7 HIGH\_ROW=HR HIGH\_COL=HC\hfill]{ Analyzes image 2 in box 7, 
+       storing the location of the highest-valued pixel in HR and HC}
+\end{itemize}
+The use of the variable-setting keywords should be used only when you
+analyze an image one box at a time, as the values will be loaded into the
+variables only for the last box analyzed.
+
+SILENT is used to prevent printing of the output.  This is helpful in
+procedures when variables are set.
+
+\section{HISTOGRAM: Display a Histogram of Image Pixel Values}
+\begin{rawhtml}
+<!-- linkto histogram.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form:}   HISTOGRAM source {[BOX=b]} {[NOLOG]} {[BIN=n]} {[XMIN=x1]} {[XMAX=x2]}\hfill]{}
+  \item{{[YMIN=y1]} {[YMAX=y2]} {[HARD]} {[WIND=n]} {[BUF=buf]}}
+  \item{{[NOERASE]} {[PORT]}}
+  \item[source\hfill]{   specifies the image.}
+  \item[BOX=b\hfill]{limits the computation to those pixels in box 'b'.}
+  \item[NOLOG\hfill]{displays the number of pixels at each intensity,
+rather than the logarithm.}
+  \item[BIN=n\hfill]{   bins the image values by the specified factor.}
+  \item[XMIN, XMAX\hfill]{  limits the computation to those pixels with values
+between x1 and x2, inclusive.}
+  \item[YMIN, YMAX   \hfill]{   limits the display of the histogram on the Y-axis
+to be from y1 to y2.}
+  \item[HARD\hfill]{sends the plot to the hardcopy device.}
+  \item[WIND=n\hfill]{put the plot in window n of a 2x2 grid}
+  \item[BUF=buf\hfill]{  load the histogram data into image buffer 'buf'}
+  \item[   NOERASE   \hfill]{don't erase screen before plotting.}
+  \item[PORT\hfill]{make hardcopy output in portrait mode (default: landscape)}
+\end{itemize}
+
+This program displays a histogram of an image, plotting the logarithm of
+the number of pixels at each value for the image 'source'.
+
+Use the BIN word to specify how wide the intensity intervals show in the
+plot is to be.  Normally the binning factor is 1, meaning that the plot
+displayed is the logarithm of the number of pixel values at each intensity
+(the image values are converted to integers).  If the bin factor is
+non-zero, the display is the log of the number in larger bins.  For
+example, if the bin was 5, and the minimum value in the image is 0, then
+the plot shows the number of pixels with intensity 0 - 4, 5 - 9, 10 - 14,
+15 - 19, etc. If there is a large range in intensities, the BIN word should
+be used to keep the plot from having so many points that it looks like
+hash. If the number of points in the histogram is larger than 2048, the
+program will increase the bin size to reduce the number of points in the
+plot.
+
+The BOX word limits the calculation to those pixels in the specified box.
+The XMIN and XMAX words limit the calculation to those pixels in the
+specified intensity range.  If XMIN is not given, the lower limit will be
+the minimum pixel value in the image.  If XMAX is not given, the upper
+limit will be the maximum pixel value in the image.
+
+The YMIN and YMAX words, by contrast, limit the DISPLAY of the histogram so
+that the Y-axis runs over the given range.  These words do not change the
+calculation in any way.  If YMIN is not used, the lower limit of the
+display will be the smallest number of pixels in the image that have a
+given value (often this is zero pixels at many intensities).  If YMAX is
+not used, the upper limit of the display will be the largest number of
+pixels which have a certain intensity.
+       
+NOLOG makes the plot show the actual number of pixels at each intensity,
+rather than the logarithm.  When the logarithm is computed in the default
+option, intensities with no pixels are given the value 0, so you cannot
+distinguish an intensity with 1 pixel and an intensity with 0 pixels unless
+you use the NOLOG word.
+
+The NOERASE keyword suppresses the erasure of the screen before plotting.
+Up to 4 histograms may be plotted on a single output page using the WIND=n
+keyword, where n=(1,2,3,4), with windows numbered from left-to-right,
+bottom-to-top in the conventional MONGO order.  Hardcopy is flushed to the
+printer only after WIND=4 is used.  The plot may be printed in portrait
+mode (long axis of the paper vertical) using the PORT keyword.
+
+The histogram for an image may be loaded into an image buffer as a
+"spectrum" (1-D image) for further analysis or storage for use with
+external programs using the BUF=buf keyword.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[HISTOGRAM 4 \hfill]{Shows the histogram for image 4}
+  \item[HISTOGRAM \$Q BOX=3 \hfill]{Shows the histogram for image Q 
+       (where Q is a variable) using only the pixels in box 3}
+  \item[HISTOGRAM 2 XMIN=1000 XMAX=1999 \hfill]{
+       Shows the log of number of pixels with values between 1000 and 1999.}
+  \item[HISTOGRAM 4 NOLOG \hfill]{
+       Shows the number of pixels (not the log) at each value in image 4.}
+  \item[HISTOGRAM 3 HARD\hfill]{
+       computes a histogram for image 3, sending it to hardcopy printer.}
+  \item[HISTOGRAM 2 XMIN=1000 XMAX=1999 BUF=10\hfill]{ same as \#3 above,
+       except that instead of plotting the histogram, it is loaded into image
+       buffer 10 as a spectrum.}
+\end{itemize}
+
+\section{AXES: Compute the Centroid of an Object in an Image}
+\begin{rawhtml}
+<!-- linkto axes.html -->
+\end{rawhtml}
+\index{Image!Centroid of object in}
+\index{Centroid!Finding centroid of object in.}
+\begin{itemize}
+  \item[\textbf{Form:}AXES source {[BOX=n]} {[SKY=s]} {[W=w1,w2]} (redirection) {[SILENT]}\hfill]{}
+  \item[source\hfill]{is the image that AXES uses.}
+  \item[BOX=n\hfill]{specifies the section of the image used.}
+  \item[SKY=s\hfill]{specifies the sky value used in the calculation.}
+  \item[W=\hfill]{finds the centroid in a specified interval
+of a wavelength-calibrated spectrum (for use
+with emission spectra, NOT absorption spectra.)}
+  \item[SILENT \hfill]{suppresses terminal output}
+\end{itemize}
+
+This command will find the centroid of an object within the specified box
+in the source image, or in the entire image if no box specifier is
+given. The centroid coordinates are loaded into VISTA variables AXR and
+AXC, and are also held in a common block for use by other routines.  If the
+W= keyword is used, the wavelength of the centroid of the spectrum in the
+given interval is loaded into the variable WAVE.
+
+The routine uses the highest pixel value on the box perimeter as a
+threshold value for the centroid, unless the SKY word is given, in which
+case the argument of the SKY word is taken as the threshold.  The threshold
+is subtracted from each pixel in the box during the calculation.
+
+The output of AXES can be redirected.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[AXES 3\hfill]{finds the centroid of the object in buffer 3.}
+  \item[AXES 4 BOX=5\hfill]{finds the centroid of the part of
+       object 4 that is in box 5.}
+  \item[AXES 1 W=6550,6800\hfill]{finds the centroid of the part of
+       the wavelength calibrated spectrum that lies between wavelengths 6550
+       and 6800 Angstroms.}
+  \item[AXES 3 >AXES.OUT\hfill]{does the same as the first example,
+       but prints the result of the calculation on the file AXES.OUT, 
+       instead of on the terminal.}
+  \item[AXES 3 SILENT\hfill]{does the same as the first example,
+       but does not print output.}
+\end{itemize}

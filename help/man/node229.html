@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>AUTOCEN: Find the Center of an Extended Object</TITLE>
+<META NAME="description" CONTENT="AUTOCEN: Find the Center of an Extended Object">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0016290000000000000000">
+AUTOCEN: Find the Center of an Extended Object</A>
+</H1>
+
+<!-- linkto autocen.html -->
+<BR>
+
+<BR>
+
+<P>
+AUTOCEN attempts to find the center of an extended and possibly amorphous
+object by use of reflected autocorrelation.  It is designed for objects
+like globular clusters. For smooth objects, the AXES command is better. The
+routine works by calculating a set of correlation amplitudes about an
+estimated image center. Amplitudes are measured on an N X N grid with
+sampling taken at STEP spacing in pixels. At each sample point the mean is
+calculated in a SIZE X SIZE pixel cell, and is subtracted in calculations
+of the autocorrelation amplitude, which is calculated by the product of the
+cell with its image reflected about its center. The default values for N,
+SIZE, and STEP are 7, 75, and 4. The final center is calculated by fitting
+a paraboloid to the grid of amplitudes. The results are saved in the VISTA
+variables AXR and AXC, and in the AXES common block.  If the PLOT keyword
+is specified, a cross is marked at the determined center on the TV image.
+
+<P>
+See Also: AXES
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

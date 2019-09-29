@@ -1,0 +1,78 @@
+
+<H1><A NAME="SECTION00840000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2648"><tex2html_anchor_invisible_mark></A>
+<A NAME="2649"><tex2html_anchor_invisible_mark></A>
+<A NAME="2650"><tex2html_anchor_invisible_mark></A><BR>
+COLOR: Load a Color Map into the Image Display
+</H1>
+<tex2html_verbatim_mark>rawhtml268#
+<BR>
+<tex2html_image_mark>#command2651#
+<BR>
+
+<P>
+COLOR is used to load a new color look-up table from a file, or to create a
+new color map.  Color maps (look-up tables) are used to translating pixel
+data values into displayed colors.  The new look-up table will be loaded
+into the display without needing to reloading the image.
+
+<P>
+To load a black and white map, type 
+<BR>
+<tex2html_image_mark>#hanging2661#
+<BR>
+To invert the order of the colors, type
+<BR>
+<tex2html_image_mark>#hanging2664#
+<BR>
+
+<P>
+Color maps are assumed to be in the color directory. (Type PRINT
+DIRECTORIES to display the directories).  Many color maps are available
+with the default VISTA distribution.  Get a directory listing of the color
+directory to see the names of the distribution color maps.  You can specify
+color files that are in specific directories with the usual manner.  For
+example:
+<BR>
+<tex2html_image_mark>#example2667#
+<BR>
+
+<P>
+A color map is a list of length 256, each entry of which holds three
+numbers for the mapping to Red, Green, and Blue, respectively.  These
+entries, or 'levels', run from 0-255 for each color.  The 256 entries in
+the table give the proportions of each of these colors to use to display
+each of the 256 intervals of intensity (8-bits).  COLOR defines these
+numbers, either by loading them from a pre-determined list, or by creating
+a new list.
+
+<P>
+If you wish to create a new list, type the command 'COLOR' with no
+arguments.  The program will ask you to define the proportions of red,
+green, and blue intensity to use for each of the entries in the color map.
+The entries are numbered from 0 to 255.  The proportions of each color are
+linear functions of entry number.  You define a starting entry number and
+value, and an ending entry number and value. You may chain several linear
+segments together to produce various effects in the color map.  You must
+define all 256 entries in the map.  Typing in color maps by hand is tricky
+and tedious, and not advised for most users.
+
+<P>
+The last thing the COLOR program will ask you is to specify the color of
+the label and tick marks.
+
+<P>
+As an example of defining a color map, consider the black and white map.
+For each level of intensity, the proportions of red, green, and blue are
+equal.  We want increasing brightness to correspond to higher intensity, so
+each color should have zero intensity at the bottom of the map, and full
+intensity (255) at the top of the map.  The sequence of responses for
+defining this color map would be:
+<PRE><tex2html_verbatim_mark>verbatim269#</PRE>
+
+<P>
+In this example, all three colors have zero intensity at the bottom level
+of the color file, and full intensity at the top level.  The label color is
+green with slightly less red, with a tinge of blue.
+
+<P>

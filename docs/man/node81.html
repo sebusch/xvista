@@ -1,0 +1,127 @@
+
+<H1><A NAME="SECTION00820000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2570"><tex2html_anchor_invisible_mark></A>
+<A NAME="2571"><tex2html_anchor_invisible_mark></A>
+<A NAME="2572"><tex2html_anchor_invisible_mark></A>
+<A NAME="2573"><tex2html_anchor_invisible_mark></A><BR>
+TV: Display an Image
+</H1>
+<tex2html_verbatim_mark>rawhtml264#
+<BR>
+<tex2html_image_mark>#command2574#
+<BR>
+
+<P>
+For more general TV help, type HELP X11.
+
+<P>
+TV displays the image in 'buf' on the X11 image display.  Only those pixels
+with data numbers between Z and Z+L are displayed.  Data values greater
+than the maximum are all shown as one color, although the interactive
+cursor will still be able to display the data associated with the ;SPMquot;clipped;SPMquot;
+pixels.
+
+<P>
+If no intensity scaling is given on the command line, TV will assume Z=0
+and L=3 times the image mean intensity.  If the mean has not been
+calculated, TV will do a quick calculation using every 9th pixel.  A peak
+intensity of 4x the mean is a reasonable values to use for many
+astronomical images with a large dynamic range.  It is not so good,
+however, for viewing flat fields, skies, or dark images that have a narrow
+range of data values.  In the latter case, you should specify the display
+levels explicitly on the command line.
+
+<P>
+BOX=n tells TV to only display that part of the image within box 'n'
+(see BOX command).
+
+<P>
+OLD tells TV to use the same display limits as the previous image.
+
+<P>
+CF=filename loads the color map (;SPMquot;look-up table;SPMquot;) used to translate
+pixel values into colors.  'BW' loads a black and white color map.  Once
+the map is loaded, it remains in effect until changed by either the
+COLOR or subsequent TV commands.
+
+<P>
+The basic set of color maps is:
+<BR>
+<tex2html_image_mark>#example2602#
+<BR>
+More are available, see the COLOR command for specifics.
+
+<P>
+The NCOLOR= keyword can be used to limit the number of colors displayed in
+X windows.  By default, 256 colors are displayed.  A limited color map is
+useful when VISTA is being run at the same time as other color-hungry
+applications (e.g., SAOimage, or web browsers like Netscape).  If VISTA
+asks for too many colors, the X server can refuse to open the image
+display.  An alternative is to shut down the unneeded applications when
+running VISTA.
+
+<P>
+The TV display uses a 4-place ;SPMquot;ring buffer;SPMquot; to hold the 4 most recently
+displayed images in memory.  You can page through these images using the
+<tex2html_image_mark>#tex2html_wrap_inline3413# and <tex2html_image_mark>#tex2html_wrap_inline3415# keys when the mouse is on the TV display window.  Blinking may
+be accomplished by displaying two images sequentially, and then using the
+<tex2html_image_mark>#tex2html_wrap_inline3417# keys to blink between them.
+
+<P>
+If the blink buffers are getting filled with a confusing mix of images, the
+CLEAR IMAGES command may be used to clean them out (except for the
+currently displayed image) and allow you to start over again.
+
+<P>
+The default image coordinates are as follows:
+<PRE><tex2html_verbatim_mark>verbatim265#</PRE>
+
+<P>
+The origin is at the upper left-hand corner, with columns increasing to the
+left and rows increasing from top to bottom.  This is the ;SPMquot;natural;SPMquot; order
+in which to directly map images from memory onto the display, and allows us
+to display images as fast as possible without remapping.
+
+<P>
+The FLIP keyword is provided to invert the rows axis so as to increase
+vertically from bottom to top, i.e., in ``Cartesian'' coordinate order.
+This will give you an orientation that is more ``natural'' from the user's
+point of view, but which incurs some performance penalty.
+
+<P>
+The properties of the display (size, whether or not to auto-dezoom, etc.)
+can be customized using X resources variables set in the user's .Xdefaults
+file.  See HELP X11 for an overview.
+
+<P>
+Whenever an image is in the display, a set of basic cursor keys are
+available to provide simple interactive capabilities.  See HELP X11 for
+details.
+
+<P>
+<#2610#>Examples:<#2610#>
+
+<OL>
+<LI><#3396#>
+<BR>
+<tex2html_image_mark>#example2612#
+<BR><#3396#>
+</LI>
+<LI><#3397#>
+<BR>
+<tex2html_image_mark>#example2616#
+<BR><#3397#>
+</LI>
+<LI><#3398#>
+<BR>
+<tex2html_image_mark>#example2619#
+<BR><#3398#>
+</LI>
+<LI><#3399#>
+<BR>
+<tex2html_image_mark>#example2622#
+<BR><#3399#>
+</LI>
+</OL>
+
+<P>

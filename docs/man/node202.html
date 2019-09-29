@@ -1,0 +1,136 @@
+
+<H1><A NAME="SECTION001620000000000000000">
+OPTIONS: Daophot OPTIONS Command</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml468#
+<BR>
+<tex2html_image_mark>#command7492#
+<BR>
+
+<P>
+Allows user to change DAOPHOT options. 
+The command OPTIONS by itself will put the
+user into interactive options mode, where OPTIONS are changed just as they
+are in standard DAOPHOT. If DAOFILES FILE=file.opt is specified before
+calling options, OPTIONS will automatically load the options from file.opt
+and exit; this is useful for batch use. Finally, OPTIONS opt1=val1
+opt2=val2 ..., can be used to change the values of the specified options
+opt1, opt2, etc, on the command line; this is probably the preferred mode
+of use. In all cases, the options can be specified using the first
+two letters of the full names listed below
+
+<P>
+The different options, along with the preset defaults, are:
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="RIGHT">FWHM OF OBJECT</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">2.50</TD>
+<TD ALIGN="RIGHT">FITTING RADIUS</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">2.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">PSF RADIUS</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">11.00</TD>
+<TD ALIGN="RIGHT">WATCH PROGRESS</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">LS (LOW SHARPNESS CUTOFF)</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.20</TD>
+<TD ALIGN="RIGHT">HS (HIGH SHARPNESS CUTOFF)</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">LR (LOW ROUNDNESS CUTOFF)</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">-1.00</TD>
+<TD ALIGN="RIGHT">HR (HIGH ROUNDNESS CUTOFF)</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">MAXIMUM GOOD DATA-VALUE</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">32766.50</TD>
+<TD ALIGN="RIGHT">PKRATIO</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">WEIGHTEXPO</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">8.00</TD>
+<TD ALIGN="RIGHT">NOWEIGHT</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">SEPRATIO</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+<TD ALIGN="RIGHT">WRATIO</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">APPSF</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+<TD ALIGN="RIGHT">ISKY</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">IPSFMODE</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+<TD ALIGN="RIGHT">IFIT</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">NGAU</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+<TD ALIGN="RIGHT">INTERP</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">1.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">IGROUP</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+<TD ALIGN="RIGHT">IADD</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">NPBOX</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">2.00</TD>
+<TD ALIGN="RIGHT">DIFFM</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">-1.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">LOCK POSITIONS</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+<TD ALIGN="RIGHT">IMODE</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+</TR>
+<TR><TD ALIGN="RIGHT">CHIRATIO</TD>
+<TD ALIGN="CENTER">=</TD>
+<TD ALIGN="RIGHT">0.00</TD>
+<TD ALIGN="RIGHT">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="RIGHT">;SPMnbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+FWHM is used by FIND; FITTING RADIUS by MULTISTAR; PSF RADIUS by PSF and
+MULTISTAR; WATCH by most routines; LS, HS, LR, HR by FIND; MAXIMUM GOOD by
+many routines; PKRATIO, WEIGHTEXPO, SEPRATIO, WRATIO, CHIRATIO, ISKY, IFIT by 
+MULTISTAR; APPSF, NGAU, NPBOX by PSF.
+
+<P>
+For most commands, the desired options can be specified on the command line
+of the relevant command, making the OPTIONS command obsolete. We are still
+working on full implementation of this, however.
+
+<P>

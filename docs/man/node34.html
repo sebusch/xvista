@@ -1,0 +1,39 @@
+
+<H1><A NAME="SECTION00420000000000000000">
+PEDIT: Edit the Procedure Buffer</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml110#
+
+<P>
+<BR>
+<tex2html_image_mark>#command1220#
+<BR>
+
+<P>
+PEDIT loads the procedure buffer into a temporary file in your current
+directory, then runs a process which allows you to edit it with the default
+editor (usually vi).  If you exit the editor and save changes, the modified
+procedure is loaded back into the procedure buffer, but not executed.  If
+quit the editor without saving changes, the procedure buffer is left
+unchanged.
+
+<P>
+On a UNIX system, you can use another editor by defining the environment
+variable VISUAL. For example, to use the vi editor, jus execute the
+following BEFORE running VISTA:
+<PRE><tex2html_verbatim_mark>verbatim111#</PRE>
+A maximum number of 2500 lines is allowed in a procedure.  If you leave the
+editor with EXIT and your procedure contains more than 2500 lines, it is
+truncated and the last line is set to 'END'.  Also, each line is allowed a
+maximum length of 80 characters. You can have longer lines by using
+<A NAME="tex2html4"
+  HREF="line continuation">linecontinue.html</A>
+as described
+earlier.
+
+<P>
+You may also define procedures (with a maximum length of 2500 lines) with
+the editor before running VISTA, and read them into the procedure buffer
+with RP or execute them with CALL.
+
+<P>

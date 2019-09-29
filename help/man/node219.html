@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>APERSTAR: Measure Brightnesses by Circular Aperture Photometry</TITLE>
+<META NAME="description" CONTENT="APERSTAR: Measure Brightnesses by Circular Aperture Photometry">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0016190000000000000000">
+APERSTAR: Measure Brightnesses by Circular Aperture Photometry</A>
+</H1>
+
+<!-- linkto aperstar.html -->
+<A NAME="7720"></A>
+<A NAME="7721"></A>
+<BR>
+
+<BR>
+
+<P>
+APERSTAR estimates the brightness of each star on a photometry file using
+aperture photometry.  The brightness is the sum of the counts within a
+specified radius around each star, with the sky estimated by the mean level
+of counts in an annulus around the stars. APERSTAR performs the same task
+as the DAOPHOT 
+<A NAME="tex2html8"
+  HREF="photom.html">PHOTOMETRY</A>
+routine, 
+but the latter probably does a better
+job and is recommended for most occasions.
+
+<P>
+There are three steps to measuring stellar brightnesses using
+APERSTAR. First locate the stars you want to be measured using AUTOMARK or
+MARKSTAR.  Then measure the brightness using APERSTAR.  Finally, save the
+results to disk using SAVE PHOT or print then using the command PRINT PHOT.
+
+<P>
+You MUST specify the radius of a stellar aperture, and the radii of an
+annulus used to estimate the sky.  The inner radius of the sky annulus must
+be larger than the radius of the star aperture. The sky radii must differ
+by at least 2.  Exception: if you give the word SKY=NONE, the sky value is
+assumed to be 0.0.  This allows you to determine the sky value globally for
+the image (using the SKY program), then having all stars measured with the
+same sky level. If SKY=NONE is not given, the sky level is estimated for
+each star.
+
+<P>
+The algorithm for determining the sky level works like this: The MEAN and
+standard deviation of the intensities is measured in a first pass. Those
+pixels which differ from the mean by four times the standard deviation are
+then excluded from the list, and the mean level computed again.  This mean
+is taken as the sky brightness.  The brightness of the star is then the sum
+of (pixel - sky) for all pixels in the star's aperture.  The rejection
+level can be changed from 4-sigma to a user specified value using
+REJECT=sig, which gives the number of sigma objects to reject.
+
+<P>
+A similar program is APER, which measures the brightness of an single
+object using a series of apertures.  Also see PROFILE or PRAD, which
+measure the radial profile of objects on a frame.
+
+<P>
+Examples: 
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

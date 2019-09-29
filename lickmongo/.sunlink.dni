@@ -1,0 +1,30 @@
+#!/bin/csh
+# A little chell script which used the SunLink DNI Decnet copy facility to
+# copy an entire directory tree from the Sun to a VMS/VAX.
+# This script assumes that there is enough disk space and quota on the VAX.
+#
+# Variables set something like these should be set by the file in arg 1
+# the following 3 lines will need changing depending on what you are copying
+# set UNIXROOT = /usr/tmp/lick
+# set VMSROOT  = 'ccdvax::[users.mongo.lick'
+# set VMSUSER  = mongo
+#
+# The rest of this should not need changing
+source $1
+echo Going to copy all the contents of Sun directory to a VMS/VAX
+echo $UNIXROOT "==>" "$VMSROOT""...]"
+set foobar = (`find $UNIXROOT -type d -print`)
+stty -echo
+echo -n "Enter the password for user $VMSUSER on the vax:  "
+set vpw = $<
+echo ""
+stty echo
+foreach subdir ($foobar)
+	set noglob
+	set vmsdir = `echo $subdir | sed s%$UNIXROOT%$VMSROOT% | tr '/' '.'`
+	echo dcp -u $VMSUSER $subdir/* $vmsdir"]"
+	unset noglob
+	dcp -u $VMSUSER $subdir/* "$vmsdir""]" << EPW
+	$vpw
+EPW
+end

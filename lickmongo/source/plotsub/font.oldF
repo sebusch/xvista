@@ -1,0 +1,271 @@
+#include "Config.h"
+C==============================================================================
+C==============================================================================
+	logical function PTUV(readafont)()
+c       Code to read from the ASCII font file FONTS.DAT
+c       Results get stuffed into the 'fonts' common blocks.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOPAR.inc'
+	include 'MONGOLUN.inc'
+	include 'MONGOFIL.inc'
+C       Internal Variables
+	integer         inbuf(20)
+	integer         nchar, filfont
+	integer         iosnum
+	integer         i, j, k
+	integer         in, i2
+C       External Functions
+#ifdef  CHAR_NOT_CHAR
+	character*1     char
+#endif  /* CHAR_NOT_CHAR */
+C       Common Blocks
+	include 'fonts.par'
+	include 'fonts.inc'
+	include 'fonts.cmn'
+C       Executable Code
+	iosnum = 0
+	write(STDERR,*) ' Reading old ASCII font file.'
+	open(unit=LUFONTS,status='OLD',IOSTAT=iosnum,file=FONTDAT)
+	PTUV(readafont) = iosnum .eq. 0
+	if (.not. PTUV(readafont)) then
+	    write(STDERR,*) ' Cannot OPEN ASCII font file ', FONTDAT
+	    write(STDERR,*) ' No vector stroked characters can be used.'
+	    return
+	endif
+c       Find out how many characters are stored in this ASCII font file
+	read(LUFONTS,'(2i8)') nchar, nvertex
+	PTUV(readafont) = nvertex .le. MAXVRTX
+	if (.not. PTUV(readafont)) then
+	    write(STDERR,*) ' Too many strokes in ASCII font file ',
+     &      FONTDAT
+	    write(STDERR,*) ' No vector stroked characters can be used.'
+	    return
+	endif
+	numfont = nchar / (ASCIICHAR - 32)
+	filfont = numfont
+	if (numfont .gt. MAXFONT) then
+	    write(STDERR,*) ' There are too many fonts in ASCII file ',
+     &      FONTDAT
+	    write(STDERR,*) ' We shall use the first ', MAXFONT
+c           We can get away with doing this because we already know we
+c           have enough space to store ALL of the strokes.
+	    numfont = MAXFONT
+	endif
+c       Get the Character Metrics and Pointers to Vertices
+	do 1011 k = 0,numfont-1
+c         for every font
+	  do 1010 j = 32,ASCIICHAR-1
+c           for every character in the font
+c           read the description of the character
+	    read(LUFONTS,'(5i8)') (inbuf(i),i=1,5)
+c           stuff this character into the arrays
+	    nstroke(j,k) = char(inbuf(2) / 2)
+	    ladj(j,k) = char(inbuf(3))
+	    radj(j,k) = char(inbuf(4))
+	    pointer(j,k) = inbuf(5)
+1010      continue
+1011    continue
+c       Read past any extra fonts
+	do 1051 k = numfont,filfont-1
+c         for every font
+	  do 1050 j = 32,ASCIICHAR-1
+c           for every character in the font
+c           read the description of the character
+	    read(LUFONTS,'(5i8)') (inbuf(i),i=1,5)
+c           and do nothing with the info
+1050      continue
+1051    continue
+c       Get the actual Character Vertex information
+	in = 0
+	do 1111 k = 1,(nvertex+19)/20
+	  i2 = min(20,nvertex-in)
+	  read(LUFONTS,'(20i4)') (inbuf(i),i=1,i2)
+	  do 1112 i = 1,i2
+	    font(in+i) = char(inbuf(i))
+1112      continue
+	  in = in + i2
+1111    continue
+	close(LUFONTS)
+c       This is an old font file without vertical font info
+	do 10 i=0,numfont-1
+	  if (i .ne. 3) then
+	      vline(BOT,i) = -16
+	      vline(BAS,i) =  -9
+	      vline(HLF,i) =   0
+	      vline(CAP,i) =  12
+	      vline(TOP,i) =  16
+	  else
+	      vline(BOT,3) =  -5
+	      vline(BAS,3) =  -3
+	      vline(HLF,3) =   0
+	      vline(CAP,3) =   4
+	      vline(TOP,3) =   5
+	  endif
+10      continue
+	return
+	end
+C==============================================================================
+C==============================================================================
+	subroutine PTUV(writebfont)()
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOLUN.inc'
+C       External Variables
+C       Internal Variable
+	integer         i, j
+C       Common Block
+	include 'fonts.par'
+	include 'fonts.inc'
+	include 'fonts.cmn'
+C       Executable Code
+	write(STDERR,*) ' Creating new binary font file....'
+c       Write all the font information in binary format for faster access
+	open(unit=LUFONTS,status='NEW',form='UNFORMATTED',
+     &  file='fonts.bin')
+	write(LUFONTS) numfont*ASCIICHAR, nvertex
+	write(LUFONTS) ((nstroke(j,i),j=0,ASCIICHAR-1),i=0,numfont-1),
+     &                 ((   ladj(j,i),j=0,ASCIICHAR-1),i=0,numfont-1),
+     &                 ((   radj(j,i),j=0,ASCIICHAR-1),i=0,numfont-1),
+     &                 ((pointer(j,i),j=0,ASCIICHAR-1),i=0,numfont-1),
+     &                  (   font(i)  ,i=1,nvertex)
+	write(LUFONTS) ((  vline(j,i),j=BOT,TOP)      ,i=0,numfont-1)
+	close(LUFONTS)
+	write(STDERR,*) ' ... Done making new font file.'
+	return
+	end
+C==============================================================================
+C==============================================================================
+	logical function PTUV(readbfont)()
+c       code to read from the binary font file FONTBIN
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+	include 'MONGOLUN.inc'
+	include 'MONGOPAR.inc'
+	include 'MONGOFIL.inc'
+C       Internal Variables
+	integer         i, j, iosnum, nchar, filfont
+	character       dumchr
+C       External Function
+	logical         PTUV(readafont)
+	logical         PTUV(writebfont)
+C       Common Blocks
+	include 'fonts.par'
+	include 'fonts.inc'
+	include 'fonts.cmn'
+C       Executable Code
+	open(unit=LUFONTS,status='OLD',file=FONTBIN,iostat=iosnum,
+     &  form='UNFORMATTED' Shared_ReadOnly )
+	PTUV(readbfont) = iosnum .eq. 0
+	if (.not. PTUV(readbfont)) then
+c           we could not open the binary font file
+	    write(STDERR,*)
+     &      ' Error OPENing binary font file, IOSTAT=', iosnum
+c           Read the ASCII file and try to make a new file FONTBIN
+	    if (PTUV(readafont)()) PTUV(readbfont) =
+     &      PTUV(writebfont)()
+	else
+c           Get the first record and see if the content and format of
+c           the font file are compatible with this version of Lick Mongo.
+	    read(LUFONTS,iostat=iosnum) nchar, nvertex
+	    PTUV(readbfont) = nvertex .le. MAXVRTX .and. iosnum .eq. 0
+	    if (iosnum .ne. 0) then
+		write(STDERR,*) ' Cannot read binary font file ',FONTBIN
+	    elseif (nvertex .gt. MAXVRTX) then
+		write(STDERR,*) ' Too many strokes in binfont file ',
+     &          FONTBIN
+	    endif
+	    if (.not. PTUV(readbfont)) then
+		write(STDERR,*)
+     &          ' No vector stroked characters can be used.'
+		return
+	    else
+		numfont = nchar / ASCIICHAR
+		filfont = numfont
+		if (numfont .gt. MAXFONT) then
+		    write(STDERR,*)
+     &              ' Too many fonts in binfont file ', FONTBIN
+		    write(STDERR,*) ' We shall use the first ', MAXFONT
+		    numfont = MAXFONT
+		endif
+		read(LUFONTS)
+     &          ((nstroke(j,i),j=0,ASCIICHAR-1),i=0,numfont-1),
+     &          ((      dumchr,j=0,ASCIICHAR-1),i=numfont,filfont-1),
+     &          ((   ladj(j,i),j=0,ASCIICHAR-1),i=0,numfont-1),
+     &          ((      dumchr,j=0,ASCIICHAR-1),i=numfont,filfont-1),
+     &          ((   radj(j,i),j=0,ASCIICHAR-1),i=0,numfont-1),
+     &          ((      dumchr,j=0,ASCIICHAR-1),i=numfont,filfont-1),
+     &          ((pointer(j,i),j=0,ASCIICHAR-1),i=0,numfont-1),
+     &          ((      nchar ,j=0,ASCIICHAR-1),i=numfont,filfont-1),
+     &           (   font(i)  ,i=1,nvertex)
+		iosnum = 0
+		read(LUFONTS,iostat=iosnum)
+     &          ((  vline(j,i),j=BOT,TOP)      ,i=0,numfont-1)
+		close(LUFONTS)
+		if (iosnum .ne. 0) then
+		    write(STDERR,*)
+     &              'No vertical font metric info in binfont file ',
+     &              FONTBIN
+		endif
+	    endif
+	endif
+	return
+	end
+C==============================================================================
+C==============================================================================
+	character*1 function PTUV(fontkey)(ifont)
+c       given a font number, this returns the character that activates it
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+C       External Variable
+	integer         ifont
+C       Internal Variable
+c                       this had better match what is in keyfont
+	character*1     fkey(0:11)
+C       Data Statement
+c                       this had better match what is in keyfont
+	data    fkey    /'r', 'g', 's', 't', 'i', 'o',
+     &                   'q', '~', '~', '~', '~', '~'/
+C       Executable Code
+	if (ifont .lt. 0 .or. ifont .ge. 12) then
+	    PTUV(fontkey) = '~'
+	else
+	    PTUV(fontkey) = fkey(ifont)
+	endif
+	return
+	end
+C==============================================================================
+C==============================================================================
+	integer function PTUV(keyfont)(fchar)
+c       given a font character, this returns the font number it matches
+c       if the character matches nothing, this returns -1
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	IMPLICIT_NONE
+C       External Variable
+	character*(*)   fchar
+C       External Function
+	character*1     PTUV(fontkey)
+C       Executable Code
+	do 10 PTUV(keyfont) = 0,11
+	  if (fchar .eq. PTUV(fontkey)( PTUV(keyfont))) return
+10      continue
+	PTUV(keyfont) = -1
+	return
+	end
+C==============================================================================
+C==============================================================================

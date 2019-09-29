@@ -1,0 +1,66 @@
+
+<H1><A NAME="SECTION0012150000000000000000">
+SURFACE: Fit a Plane or Second-Order Surface to an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml349#
+<A NAME="4938"><tex2html_anchor_invisible_mark></A>
+<A NAME="4939"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command4940#
+<BR>
+
+<P>
+SURFACE fits a second-order polynomial surface to the specified image, or
+to the subset of that image designated by the BOX keyword.  It fits to all
+pixels in the image or box, except those that have the value zero, or those
+masked with the MASK command. These two features allow you to mark out
+sections of an image that you do not want included in the fit.  Use the
+command CLIP to set pixels to zero.
+
+<P>
+For speed, you can have the program find the best-fitting surface using
+every n-th pixel.  Use the PIX keyword for this. For example, if you say
+PIX=3, the surface is fit to the pixels in columns 0, 3, 6, 9, ... in rows
+0, 3, 6, 9...
+
+<P>
+A polynomial expression for the fit is printed on the output device.  These
+coefficients may be loaded into variables with the LOAD keyword.
+
+<P>
+The MASK keyword tells SURFACE to ignore masked pixels.  Otherwise, all
+pixels except those that have value zero are included in the FIT.  
+
+<P>
+The NOZERO keyword will force SURFACE to fit <I>all</I> pixels, including
+those that have value zero.  (This word is short for ``NO ZERO
+CHECKING''). 
+
+<P>
+To fit a planar (instead of a second-order) surface, include the PLANE
+keyword.
+
+<P>
+In its normal operation, the program replaces the image with the
+best-fitting surface.  To subtract the surface from the image, use the word
+SUB.  To divide the image by the surface, use the word DIV.  The best-fit
+surface is applied in the manner you specify to EVERY pixel, regardless
+what the PIX word says.
+
+<P>
+<#4962#>Examples:<#4962#>
+<BR>
+<tex2html_image_mark>#example4963#
+<BR>
+
+<P>
+The LOAD keywords load the variables COEFF0, COEFFR, COEFFC, COEFFR2,
+COEFFC2, COEFFRC, MIDR, MIDC, where the surface that is fit satisfies the
+equation:
+<PRE><tex2html_verbatim_mark>verbatim350#</PRE>
+The LOAD keyword is useful for locating the peak of cross-correlations.
+See the section CROSS for information.
+
+<P>

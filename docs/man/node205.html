@@ -1,0 +1,26 @@
+
+<H1><A NAME="SECTION001650000000000000000">
+GROUP: DAOPHOT GROUP Command</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml471#
+<BR>
+<tex2html_image_mark>#command7526#
+<BR>
+
+<P>
+GROUP splits stars into separate groups for possible use during the
+PSF-fitting procedure. OLDGROUP (or GROUP with option IGROUP=1) splits
+stars just on the basis of the distance to the nearest neighbor, and
+needs a critical separation as input. GROUP
+(with option IGROUP=0) uses brightness information and information about
+the PSF as well, and uses a critical brightness ratio as input.
+
+<P>
+GROUP uses as input an output file from
+the PHOTOMETRY command. The program will prompt for a critical separation or
+critical ratio, or it can be specified with the CRIT= keyword.  The command will
+also prompt for an input aperture photometry file, an output group file,
+and a PSF file (for GROUP IG=0).  Alternatively, these files can
+be specified with the DAOFILES MAG=magfile GRP=grpfile PSF=psffile command.
+
+<P>

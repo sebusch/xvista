@@ -1,0 +1,92 @@
+
+			  ----------------------------
+				Lick Mongo 1989
+				VAX/VMS Version
+			  ----------------------------
+
+
+S. Allen (Lick Observatory)
+R. Pogge (McDonald Observatory)
+
+1989 August 20
+
+
+This file contains a description of the Lick Mongo Plotting Package for VMS
+system, and a summary of the necessary logical name assignments.
+
+For details of the installation of Lick Mongo at your site, see the file
+AAA-INSTALL.HOW in this directory.
+
+
+Lick Mongo Directory Tree (VMS Version)
+---------------------------------------
+
+   It is best to create a user called "mongo" who will install and maintain
+the package.  Access to the account should be restricted to the person (or
+persons) actually maintaining the code.  The reason for the [.lick]
+subdirectory is so that user mongo might maintain more than one flavor of
+MONGO at the same time.  It also facilitates export of the code to other VMS
+machines as the backup tape won't contain all the login.com and other
+site-specific files.
+
+    [mongo]                 Login directory for user mongo
+       |
+    [.lick]                 Executable, font, help files, PS files live here
+       |
+       |
+  [.source]                 Parent directory of all the source code.
+       |
+       +-----------+------------+----------+----------+----------+
+       |           |            |          |          |          |
+  [.devices]  [.interact]   [.plotsub] [.raster]  [.sysvms]  [.fontutil]
+
+    Device      Command      Code       Hardcopy    VMS        Tools for
+    driver      parser       that       batch       System     Building
+    code        code         draws      code        Code       Fonts
+					(VMS)
+
+Also included somewhere in the distribution should be
+
+     [.lickdoc]     LaTeX Manual and interactive command summary.
+
+_______________________________________________________________________________
+
+Lick Mongo Logical Name Assignments
+-----------------------------------
+
+It is recommended that a system logical name (set at login in sylogin)
+MONGODIR: be defined which points at [mongo.lick]. This logical name
+assignment greatly facilitates the use of Lick Mongo.  MONGO is sufficiently
+popular at the sites it has been installed, and used heavily enough that
+the inclusion into sylogin seems warranted.
+
+If this is not or cannot be done, then the logical names may set by the users,
+but at a cost of total chaos if things have to change (like the disk mongo
+lives on is changed).  The logical names are listed below, and if set, they
+supersede the defaults which are set in "MLOGNAME.COM"
+
+	FONTDAT         Human-readable default Lick Mongo font file.
+	FONTNEW         Binary Lick Mongo font file.
+	HELPFILE        Lick Mongo's interactive help file.
+	MONGOSCR        Directory for temporary storage of hardcopy files.
+
+It is suggested that all MONGO users include the following line in their
+LOGIN.COM files (or whatever files are executed during normal login):
+
+      $ @MONGODIR:MLOGNAME.COM
+
+This will define all of the necessary Lick Mongo logical names automatically.
+It serves the additional purpose of making it easy for things to be changed
+by either the local Lick Mongo custodian (or the system manager) without
+causing utter confusion among the users.  We learned the hard way at UCSC
+when we changed things and were then deluged by users who suddenly found they
+could not run Lick Mongo.  Users should not have to set the Lick Mongo
+logicals themselves EXCEPT via the MLOGNAME.COM file which is accessible to all
+users.
+
+From the system manager's point of view, it is best to define some scratch
+space somewhere that is publicly accessible, and pointed at by the MONGOSCR
+logical name.  This space should be swept clean of files very few days to
+prevent getting cluttered up by the ruins of failed plot files.
+
+

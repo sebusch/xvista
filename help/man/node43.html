@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>PARAMETER: Pass Arguments to a Procedure</TITLE>
+<META NAME="description" CONTENT="PARAMETER: Pass Arguments to a Procedure">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION004110000000000000000">
+PARAMETER: Pass Arguments to a Procedure</A>
+</H1>
+
+<!-- linkto parameter.html -->
+
+<P>
+<A NAME="1336"></A>
+<BR>
+
+<BR>
+PARAMETER evaluate parameters passed to a procedure.  An example will show
+best how PARAMETER works.  Suppose the following command was typed:
+<BR>
+
+<BR>
+The parameter list portion of the command line is saved, i.e.  '2 X
+IMAGEFILE'.  The procedure TEST.PRO is then called.  TEST has in it the
+command
+<BR>
+
+<BR>
+BUFNUM and FACTOR are taken to be variable names and are associated with
+the first two parameters from the parameter list.  In effect it does the
+command SET BUFNUM=2 FACTOR=X.  Note that '2' and 'X' could have been any
+arithmetic expression.
+
+<P>
+The STRING= keyword means that the third parameter is used as a literal
+string and the string variable name FILENAME is given the string value
+IMAGENAME, in effect doing the command:
+<BR>
+
+<BR>
+
+<P>
+If there are fewer parameters in the CALL than required in the PARAMETER
+command, the missing parameters are taken to be 0 or blank, as appropriate.
+
+<P>
+Note that there is only one area in VISTA for saving the list of passed
+parameters, so the PARAMETER command should be executed before calling
+another procedure.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,425 @@
+\chapter{Advanced VISTA Command Syntax}
+\begin{rawhtml}
+<!-- linkto command.html -->
+\end{rawhtml}
+
+%
+% minor reformatting and editing
+% used verbatim environment for some examples (will process as <PRE> tags
+% in HTML
+% rwp/osu 98Jul25
+%
+
+\section{Abbreviating VISTA Commands}
+\begin{rawhtml}
+<!-- linkto abbrev.html -->
+\end{rawhtml}
+\index{Command Abbreviation}
+
+You do not need to type the full command name to execute a command -- all
+that is needed is the shortest unambiguous string which defines a command.
+For example, the command FITSTAR can be executed with FITSTAR, FITSTA,
+FITST, ... etc.  If it turns out that more than one command begins with the
+command that you type, all those commands will be listed, and none
+executed.
+
+The question mark command can be used to list those commands which begin
+with a certain pattern.  Type '?' followed by the pattern you are
+examining.  There should be no spaces between the ? and the pattern.
+Examples:
+
+\begin{itemize}
+  \item[?A\hfill]{List all commands beginning with A}
+  \item[?MA\hfill]{List all commands beginning with MA}
+\end{itemize}
+
+Keywords and command arguments CANNOT be abbreviated.
+
+The ? operator may also be used as an abbreviation for the HELP command.
+To receive help on a given topic, type ?, followed by a space, followed by
+the topic about which you wan help.  Some examples:
+
+\begin{itemize}
+  \item[? MASH\hfill]{Print help on the command MASH}
+  \item[? HELP\hfill]{Print help on the command HELP}
+  \item[?\hfill]{Help on everything.}
+\end{itemize}
+
+\section{Output Redirection}
+\begin{rawhtml}
+<!-- linkto redirect.html -->
+\end{rawhtml}
+
+\index{Data,Printing in file}
+\index{Data,Printing on lineprinter}
+\index{Output Redirection Mechanism}
+
+Many (but not all!) programs that produce large amounts of information may
+have their output REDIRECTED by the user.  The output from these programs
+normally goes to the terminal, but instead can be written to a file or to
+the line-printer.
+
+To redirect the output, you use the '$>$' or '$>>$' constructions at the
+end of a valid command.  A single $>$ will write the output to a new file
+(overwriting one if it already exists).  A $>>$ will append to an existing
+file, or create a new file if the named file does not exist. If you use the
+output redirection '$>$lp:', then the output will be printed on your
+printer (using the lpr command to the default printer).
+
+Recall that you cannot have any spaces in a word on the command line; this
+applies to output direction as well. Do not put a space after the $>$ and
+before your file name!
+
+\noindent{Examples:}
+
+\begin{itemize}
+  \item[PRINT PHOT $>$first.lis\hfill]{Prints the contents of a 
+       photometry file into the file 'first.lis'.  The file will be
+       located in the current directory.}
+ 
+   \item[HELP MASH $>>$help.xxx\hfill]{Appends the help information for
+        MASH to the end of file 'help.xxx', if it exists.  If it does not,
+        the file is created.}
+\end{itemize}
+
+\section{HISTORY: Recall the Last Several Commands }
+\begin{rawhtml}
+<!-- linkto history.html -->
+\end{rawhtml}
+\index{Commands!Show list of recent commands}
+
+\begin{itemize}
+  \item[\textbf{Form: }HISTORY (output redirection)]{}
+\end{itemize}
+
+The command HISTORY will show on your terminal the last 50 commands that
+you have executed.  Use this to find commands that you want to repeat with
+the \% substitution character.
+
+The output from HISTORY can be redirected.  As an example:
+\begin{itemize}
+  \item{HISTORY $>$history.txt}
+\end{itemize}
+prints the recent command history to the file history.txt in your
+current working directory.
+
+\section{\%: Repeating/Editing a Previous Command}
+\begin{rawhtml}
+<!-- linkto repeat.html -->
+\end{rawhtml}
+\index{Commands,Repeat previous command}
+
+You can repeat a command in VISTA without typing it over by using the \%
+character.  The \% character comes before the command you want to repeat.
+It is also possible to modify a command while you repeat it.
+
+The \% command comes in several forms:
+\begin{itemize}
+  \item{Typing '\%' by itself repeats the last command that you executed. }
+
+  \item{Typing '%n' where 'n' is a number repeats command n.  The numbers
+   of the command can be found by the HISTORY command.}
+
+  \item{Typing '\%string' repeats the last command beginning with 'string'.}
+\end{itemize}
+
+As an example, suppose the HISTORY command gives the output:
+\begin{verbatim}
+   10  RD 1 [MYDIR]HD183143
+   11  MN 1
+   12  ADD 2 1
+   13  PLOT 1 R=342 MIN=100.0 MAX=300.0
+   14  MASH 4 1 SP=100,103
+   15  PLOT 4
+\end{verbatim}
+Then
+\begin{itemize}
+   \item[\%\hfill]{repeats command 15 (the last command):  PLOT 4}
+   \item[\%10\hfill]{repeats command 10:  RD 1 [MYDIR]HD183143}
+   \item[\%MASH \hfill]{repeats command 14 (the last MASH command): 
+       MASH 4 1 SP=100,103}
+   \item[\%M\hfill]{repeats command 14:  MASH 4 1 SP=100,103}
+\end{itemize}
+
+Note the last example: The history mechanism will repeat the last command
+which begins with 'M'.  If there are several commands which begin with the
+same letter, you have to supply enough of the command name after the \% to
+uniquely specify the command to be repeated.
+
+It is possible to modify a previous command using the \% construction
+before executing the command again. There are several ways in which this
+modification can be done:
+
+\begin{enumerate}
+  \item{You can ADD words to the command by typing them after you enter
+       '\%command', provided that these words are not keyword values
+       (EXPRESSION=VALUE) which are already present in the previous
+       command.}
+
+  \item{You can modify keyword values which already exist in the previous
+       command by simply repeating the keyword with a new value.  For
+       instance, if the old command was "PLOT 1 R=200 XS=200 XE=300
+       MIN=400", and you re-ran the command with "\%PLOT R=234", the new
+       command would be "PLOT 1 R=234 XS=200 XE=300 MIN=400"}
+
+  \item{You can force a keyword value to be added to or deleted from the
+       previous command (and not substituted as described above) by
+       preceding the keyword with a plus (+) or minus (-) sign.}
+\end{enumerate}
+
+As an examples of command modification with \%, assume you wanted to repeat
+in various ways the command
+\begin{itemize}
+  \item{PLOT 1 R=50}
+\end{itemize}
+which, we will assume is number 10 in the history list.
+\begin{itemize}
+  \item[\%10 HARD\hfill]{does PLOT 1 R=50 HARD}
+  \item[\%10 R=55\hfill]{does PLOT R=55}
+  \item[\%10 R=55 HARD\hfill]{does PLOT R=55 HARD}
+  \item[\%10 XS=100 XE=200\hfill]{does PLOT 1 R=50 XS=100 XE=100}
+\end{itemize}
+Now suppose that command number 58 was
+\begin{itemize}
+  \item{PLOT 3 PIXEL HARD XS=100 XE=300 MAX=4096.0}
+\end{itemize}
+Then
+\begin{itemize}
+  \item[\%58 -PIXEL -HARD\hfill]{does PLOT 3 XS=100 XE=300 MAX=4096.0}
+\end{itemize}
+
+Note: When using the '-' sign to delete words, you must supply an exact
+match to the word being deleted.
+
+\section{Extending Commands Past One Line}
+\begin{rawhtml}
+<!-- linkto extend.html -->
+\end{rawhtml}
+\index{Commands,Extending a command}
+
+A VISTA command is ordinarily terminated by typing a RETURN, thus limiting
+the normal command length to one line of 80 characters.  However, you can
+continue a command onto the next line by ending the current line of
+characters with the $|$ character.  The last non-blank character must be a
+$|$ for your command to be extended.  You will be prompted for the rest of
+the command with a colon on the next line. Example:
+
+\begin{itemize}
+  \item{ RD 1 /mydirectory/$|$}
+  \item{really\_long\_file\_name SPEC}
+\end{itemize}
+
+There is a limit to the length of a command permitted even when using the
+$|$ character, and that limit is 500 characters.
+
+\section{ALIAS/UNALIAS: Define/Delete Command Aliases}
+\begin{rawhtml}
+<!-- linkto alias.html -->
+<!-- linkto unalias.html -->
+\end{rawhtml}
+\index{Commands,Defining synonyms}
+\index{Commands,Removing synonyms}
+\index{Synonyms,Defining or deleting synonyms for commands}
+
+\begin{itemize}
+  \item[\textbf{Form: }ALIAS {[synonym]} {[command]} {[output
+       redirection]}\hfill]{} 
+  \item[\textbf{Form: }UNALIAS {[synonym]}\hfill]{}
+\end{itemize}
+
+The ALIAS and UNALIAS commands are used to define and delete synonyms
+(``aliases'') for commands, respectively.  The aliasing mechanism can save
+you typing if you have several commands that have to be used repeatedly.
+
+ALIAS (with no arguments) shows a list of synonyms of your terminal.  The
+list can be loaded into a file or sent to the printer with the output
+redirection mechanism.
+
+To define an alias, use the full syntax:
+\begin{verbatim}
+  ALIAS SYNONYM COMMAND
+\end{verbatim}
+For example:
+\begin{itemize}
+  \item{ALIAS T 'TV 1 1234.0 CF=NEWTHREE'}
+\end{itemize}
+defines a new command, T, which executes 'TV 1 ...' . As is usual, if the
+command for which you are defining an alias is composed of more than one
+word, the entire command must be enclosed in quotes.
+
+If you give only the new alias and no not give the command, the program
+will ask for it.  You can redefine a synonym at any time.
+
+To execute the command that you have defined with ALIAS, type the synonym
+just as you would type any other command.  You can add keywords to the
+command at the time of execution by typing them after the synonym.  Using
+the example above, the command
+\begin{itemize}
+  \item{T BOX=1}
+\end{itemize}
+executes TV 1 1234.0 CF=NEWTHREE BOX=1.  The command 'T' goes on the
+history list. 
+
+The aliases that you define need not be commands that would actually run;
+they MUST contain a command name and MAY contain keywords, but these are
+the only restrictions.  For example:
+\begin{itemize}
+  \item{ALIAS H 'HISTOGRAM'}
+\end{itemize}
+is a perfectly valid alias.  Typing H by itself as a command would not
+work, since HISTOGRAM is not a complete command (it needs an image number).
+You can, however, add arguments to an alias exactly the same as with
+commands, hence:
+\begin{itemize}
+  \item{H 3\hfill}
+\end{itemize}
+will execute the HISTOGRAM command on image 3.
+
+To delete an alias, use the UNALIAS command.  Type UNALIAS followed by the
+name of the synonym that you want to remove from the list.  As an example,
+UNALIAS T will remove the definition of T that was defined above.
+
+It is not possible to define a alias that includes other aliases.  For
+example, the sequence
+\begin{verbatim}
+  ALIAS A  'TV 1 1234.0 CF=NEWTHREE'
+  ALIAS AA 'A BOX=1'
+\end{verbatim}
+correctly defines the command alias 'A', but AA will be invalid because it
+contains the alias 'A'.
+
+Similarly, you cannot define a single alias made up of several commands
+chained together by a semicolon (;).  For example:
+\begin{itemize}
+  \item{ALIAS ALL 'RD 1 ./a.fits; MN 1; PLOT 1 R=50; BUF'}
+\end{itemize}
+is not allowed: \textbf{one command per alias}.
+
+You can have aliases defined automatically on startup by putting ALIAS
+commands in the startup procedure.  See the sections FILES and PROCEDURE
+for information about the startup procedure.
+
+\section{EDIT: Editing the Last Command}
+\begin{rawhtml}
+<!-- linkto edit.html -->
+\end{rawhtml}
+
+\index{Command,Edit last command}
+
+\begin{itemize}
+  \item[\textbf{Form: }EDIT\hfill]{}
+\end{itemize}
+
+The EDIT command loads the last command into a temporary file in your
+current directory, and then puts you into the default editor.  On Unix
+systems, the default editor is vi.  If you leave the editor with saving
+changes, the edited command is immediately executed.  If abort the editor
+(exiting without saving changes), the command is not executed. Only the
+first line of the temporary file is read; do NOT use EDIT to create several
+lines, thinking that you are making a procedure.  Procedures are created
+with PEDIT.
+
+Do not put more than one command in the temporary file you are editing.  Do
+not chain several commands together with semicolons.
+
+For EDIT and other commands which invoke an editor (HEDIT, WEDIT, PEDIT),
+the default is to execute the editor vi. If you wish to change this, you
+can do so by setting the environment variable VISUAL to be the editor that
+you wish to use. For example, to use the emacs editor, execute the
+following statement BEFORE starting up VISTA (e.g., in your .cshrc file):
+\begin{verbatim} 
+  setenv VISUAL emacs
+\end{verbatim}
+In many cases, you may have to provide the full path to an editor, for
+example:
+\begin{verbatim} 
+  setenv VISUAL /opt/local/bin/emacs
+\end{verbatim}
+in order to be able to execute it from within VISTA.  It is always a good
+idea to verify the full path (using the Unix which command) before setting
+an environment variable.
+
+\section{SETDIR: Set the VISTA Default Directories and File Extensions}
+\index{Image!Set default directory}
+\index{Spectra!Set default directory}
+\index{Directories!Set default directories}
+\index{Extensions!Set default for files}
+\index{Files!Default directories and extensions}
+\index{Procedures!Set default directory}
+\begin{rawhtml}
+<!-- linkto setdir.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form: } SETDIR code {[DIR=directory\_name]} 
+       {[EXT=extension]}\hfill]{}
+  \item[code]{specifies which directory is being set or changed}
+  \item[DIR= ]{   specifies a directory for the type of object
+       indicated by the code.}
+  \item[EXT=]{gives the extension for files in the default directory}
+\end{itemize}
+
+SETDIR sets the default directories and extensions of files storing images,
+spectra, color maps, etc.  You can see the default values with the command
+PRINT DIRECTORIES.  See the section FILES (type HELP FILES if you're on a
+terminal) for information about default directories and extensions.  See
+also the command CD to change the current working directory (./) on a UNIX
+system.
+
+The DIR word gives the default directory for the type of object specified
+by the code, and the EXT word gives the extension for that type of object.
+An example of a default extension is that for '.fits' for images.  An
+example of a default directory is 'ccd/spec' for spectra.  You must specify
+either the directory or the extension or both with SETDIR. If the extension
+is not blank, it must include a period as its first character: For example,
+'.xyz' is a valid extension, while 'flk' is not.
+
+The 'code' gives the directory which is being set or changed. The code is
+derived from the type of object in the directory you are specifying.  You
+must type at least the first two letters of the code:
+
+\begin{center}
+\begin{tabular}{llll}
+Directory&Code&Abbrev&Notes\\
+\hline
+Images&IMAGES&IM&(user defined, usually ./)\\
+Spectra&SPECTRA&SP&(archaic, use IMAGES)\\
+Procedures&PROCEDURES&PR&(user defined)\\
+Data Files&DATA&DA&(user defined, usually ./)\\
+DAOPHOT files&PHOTOMETRY&PH&(user defined)\\
+Flux calibration files&FLUX&FL&(assigned by system)\\
+Wavelength files&WAVE&WA&(assigned by system)\\
+Color maps&COLOR&CO&(assigned by system)\\
+\hline
+\end{tabular}
+\end{center}
+
+Examples: Suppose you see with PRINT DIR that the default directory for CCD
+spectra is ccd/spec and the default extension is '.fits'
+\begin{itemize}
+  \item[SETDIR SP DIR=mydir/spec\hfill]{changes the default directory
+       to mydir/spec}
+  \item[SETDIR SP EXT=.xyz\hfill]{changes the default extension to '.xyz'}
+  \item[SETDIR SP EXT=.XYZ DIR=mydir/spec\hfill]{changes both the
+       directory and extension at one time.}
+\end{itemize}
+
+\section{CD: Change the Current Working Directory}
+\begin{rawhtml}
+<!-- linkto cd.html -->
+\end{rawhtml}
+\begin{itemize} 
+  \item[\textbf{Form: } CD path\_name\hfill]{}
+  \item[path\_name]{any valid Unix directory path}
+\end{itemize}
+ 
+CD will change the current working directory (./) of VISTA to be
+path\_name.  This working directory will remain current until either you
+issue CD again, or you exit VISTA.  On exiting VISTA, you will be in the
+*original* working directory from which you executed VISTA.
+ 
+CD is most useful when you have defined the default image directory to the
+current working directory, (./), allowing you to navigate among different
+directories containing data of interest without having to redefine the
+default image directory each time with the SETDIR command.  It also defines
+the current working directory for shell commands (\$).
+ 

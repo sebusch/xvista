@@ -1,0 +1,123 @@
+
+<H1><A NAME="SECTION00380000000000000000">
+Substituting String Variables into the Command Line</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml98#
+
+<P>
+<A NAME="930"><tex2html_anchor_invisible_mark></A>
+<A NAME="931"><tex2html_anchor_invisible_mark></A>
+<A NAME="932"><tex2html_anchor_invisible_mark></A>
+<A NAME="933"><tex2html_anchor_invisible_mark></A>
+
+<P>
+To substitute the value of a string into a command line, enclose the name
+of the string in braces.  As an example, the command RD reads a file from
+disk.  Its syntax is
+<BR>
+<tex2html_image_mark>#hanging934#
+<BR>
+which reads a disk file 'filename' into buffer number 'buf'.  Suppose the
+string FNAME has been defined to be MYDIR/MYFILE.  Then
+<BR>
+<tex2html_image_mark>#hanging937#
+<BR>
+will execute the command
+<BR>
+<tex2html_image_mark>#hanging940#
+<BR>
+
+<P>
+To print string variables:
+
+<OL>
+<LI><#944#>Use the command PRINT STRINGS to show all defined strings.<#944#>
+</LI>
+<LI><#978#>Use PRINTF and substitute the string as the format string.
+       Example:<BR>
+       PRINTF '<#945#>STRING<#945#>'<BR>
+       The <#946#> and <#946#> do the string substitution.  The quotes are needed
+       if the string has more than one word in it.<#978#>
+
+<P>
+</LI>
+<LI><#979#>Use PRINTF with the <tex2html_percent_mark>A format specification.  (As in FORTRAN),
+       this may be followed by the number of characters to print.
+       Examples:<BR>
+	PRINTF 'Writing file <tex2html_percent_mark>A' '<#947#>FNAME<#947#>'<BR>
+	PRINTF 'Writing file <tex2html_percent_mark>A20 ' '<#948#>FNAME<#948#>'<#979#>
+</LI>
+</OL>
+
+<P>
+The substitution mechanism can be used to copy the value of a FITS card
+into a string.  The syntax for this is:
+
+<P>
+<BR>
+<tex2html_image_mark>#hanging950#
+<BR>
+
+<P>
+where BUFFER is an arithmetic expression which evaluates to a buffer
+number, and CARDNAME is the name of a FITS card.
+
+<P>
+The value of the FITS card is substituted into the command line where
+indicated by the {?BUFFER:CARDNAME} construction.  If the buffer number
+is incorrect, there is nothing in the listed buffer, or if the named card
+does not exist, an error message is printed and a blank string is
+loaded. Leading blanks and comments are stripped off. Use the STRING
+command to load a string with a FITS character card. Use a direct
+assignment to load a numerical FITS card into a VISTA variable.  For
+example:
+<BR>
+<tex2html_image_mark>#example953#
+<BR>
+
+<P>
+<#959#> ADVANCED EXAMPLES:<#959#>
+
+<P>
+In the examples below, the string substitution is used as part of
+procedures.  See the section on procedures for more information.
+
+<OL>
+<LI><#981#>In this procedure, the user is asked to give a filename.  The file
+       contains an image which is to be processed in some standard way.
+       The processed image is written out with the same name.
+  <PRE><tex2html_verbatim_mark>verbatim99#</PRE>
+  As the procedure is run, the prompt 'Enter ... ' appears user's screen.
+  The reply is loaded into the string variable FILE.  Suppose the reply was
+  ./mydir/hd183143.  The next command, which reads an image from the disk,
+  uses the string substitution mechanism to insert the string FILE into the
+  command.  The actual command executed is
+  <BR>
+<tex2html_image_mark>#hanging963#
+<BR>
+  Similarly, the last command in the procedure is
+  <BR>
+<tex2html_image_mark>#hanging966#
+<BR><#981#>
+
+<P>
+</LI>
+<LI><#982#>The following loop defines the string NAME.  The value of NAME
+      is successively FILE001, FILE002, FILE003, FILE004, ... FILE100
+  <PRE><tex2html_verbatim_mark>verbatim100#</PRE><#982#>
+
+<P>
+</LI>
+<LI><#983#>The following procedure reads an image from tape, processes it in
+        some way, then writes it out to disk in a directory specified by
+        the user.  The filename is FILEnnn, where nnn is the number of the
+        image on tape.  Program stops when the user gives a number less
+        than or zero.
+  <PRE><tex2html_verbatim_mark>verbatim101#</PRE>
+  The string substitution mechanism, <#973#> and <#973#>, can also be used to
+  substitute text from an OPEN'ed file.  See the discussion for the OPEN
+  and READ commands for more details on using text files.  <#983#>
+</LI>
+</OL>
+<tex2html_endfile>#./chap3.tex#
+<tex2html_file>#./chap4.tex#

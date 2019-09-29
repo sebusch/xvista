@@ -1,0 +1,112 @@
+#include "Vista.h"
+
+	SUBROUTINE HISTLIST(A,ISROW,IEROW,ISCOL,IECOL)
+
+	REAL A(ISCOL:IECOL,ISROW:IEROW)
+	PARAMETER (MAXOUT = 131072)
+	REAL OUT(MAXOUT,2)
+        CHARACTER PARM*8
+ 	LOGICAL KEYCHECK
+	COMMON /WORK/ OUT
+
+	INCLUDE 'vistadisk/source/include/vistalink.inc'
+	INCLUDE 'vistadisk/source/include/imagelink.inc'
+
+	CALL KEYINIT
+	CALL KEYDEF('BUF=')
+	CALL KEYDEF('NTOT=')
+
+	IF (.NOT. KEYCHECK()) THEN
+          XERR = .TRUE.
+          RETURN
+        END IF
+
+	JBUF = 0
+	NTOTAL = 0
+	DO 4401 I = 1, NCON
+          IF (WORD(I)(1:4) .EQ. 'BUF=') THEN
+            CALL ASSIGN(WORD(I),TMP,PARM)
+            IF (XERR) RETURN
+            JBUF = NINT(TMP)
+          ELSE IF (WORD(I)(1:5) .EQ. 'NTOT=') THEN
+            CALL ASSIGN(WORD(I),TMP,PARM)
+            IF (XERR) RETURN
+            NTOTAL = NINT(TMP)
+          END IF
+4401    CONTINUE
+
+	IF (JBUF .LT. 1 .OR. JBUF .GT. MAXIM) THEN
+          PRINT *, 'You must specify a legal buffer with BUF=', jbuf
+	  XERR = .TRUE.
+          RETURN
+        END IF
+
+	NTOT = 0
+	DO 5501 IROW = ISROW, IEROW
+	  Y = CRVAL2(IM) + (IROW-CRPIX2(IM))*CDELT2(IM)
+          DO 5502 ICOL = ISCOL, IECOL
+
+	    X = CRVAL1(IM) + (ICOL-CRPIX1(IM))*CDELT1(IM)
+	    N = NINT(A(ICOL,IROW))
+            DO 5503 I = 1, N
+              NTOT = NTOT + 1
+	      IF (NTOT .LE. MAXOUT) THEN
+                OUT(NTOT,1) = X
+                OUT(NTOT,2) = Y
+              ELSE
+                PRINT *, 'Too many points for internal array!!'
+	        XERR = .TRUE.
+	        RETURN
+              END IF
+5503        CONTINUE
+
+5502       CONTINUE
+5501    CONTINUE
+
+
+        ITMP = IBUF(1)	
+	IBUF(1) = JBUF
+        TEMPHEAD = 'END '
+	CALL LHEADSET('SIMPLE',.TRUE.,TEMPHEAD)
+	CALL INHEADSET('BITPIX',16,TEMPHEAD)
+        CALL INHEADSET('NAXIS',2,TEMPHEAD)
+	IF (NTOTAL .GT. 0) THEN
+          CALL INHEADSET('NAXIS1',NTOTAL,TEMPHEAD)
+        ELSE
+          CALL INHEADSET('NAXIS1',NTOT,TEMPHEAD)
+        END IF
+        CALL INHEADSET('NAXIS2',2,TEMPHEAD)
+        CALL INHEADSET('CRVAL1',1,TEMPHEAD)
+        CALL INHEADSET('CRVAL2',1,TEMPHEAD)
+        CALL INHEADSET('CDELT1',1,TEMPHEAD)
+        CALL INHEADSET('CDELT2',1,TEMPHEAD)
+
+	CALL CREATEIM(LOCNEW,JSROW,JEROW,JSCOL,JECOL,1,TEMPHEAD,.TRUE.)
+        IBUF(1) = ITMP
+
+	CALL CCHISTLOAD(LOCNEW,JSROW,JEROW,JSCOL,JECOL,OUT,MAXOUT,2,NTOT)
+
+	RETURN
+	END
+
+	SUBROUTINE HISTLOAD(A,JSROW,JEROW,JSCOL,JECOL,OUT,MAXOUT,NCOL,NTOT)
+
+	REAL A(JSCOL:JECOL,JSROW:JEROW)
+	REAL OUT(MAXOUT,NCOL)
+
+	J = 0
+	DO IROW = JSROW, JEROW
+          J = J + 1
+          I = 0
+          DO ICOL = JSCOL, JECOL
+            I = I + 1
+            IF (ICOL .LE. NTOT) THEN
+              A(ICOL,IROW) = OUT(I,J)
+            ELSE
+              A(ICOL,IROW) = -32767
+            END IF
+          END DO
+        END DO
+
+	RETURN
+	END

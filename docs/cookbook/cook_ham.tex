@@ -1,0 +1,622 @@
+%
+%  VISTA Cookbook;  Hamilton Image Reduction Chapter (7 for now)
+%
+%  Began:  1988 June 20
+%
+%  Last Revision:  1988 August 30
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:ham
+%
+
+
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+%
+%\begin{document}
+%\setcounter{chapter}{6}
+
+\chapter{Hamilton Echelle Reduction}
+
+This chapter describes the techniques used to reduce data obtained with the
+Hamilton echelle spectrograph at Lick.  As the reduction of Hamilton data is
+significantly more complex, we shall follow in this chapter a somewhat
+different approach than in the previous chapters.  A detailed discussion of
+all the steps of Hamilton data reduction would indeed be extremely tedious so
+we will discuss instead the procedures used to reduce these data. These
+procedures are well-suited to the batch processing of echelle data; but also
+give the user some flexibility in following some of the procedures in an
+interactive mode.  The idea was to have highly automated procedures which
+require as few inputs from the user as possible, but still allow some control
+over reduction parameters.
+
+In addition to these procedures two VISTA commands have been created to help
+reduce Hamilton data.  The first one called \comm{EWAVE} is used for the
+wavelength calibration; it is discussed in \S\ref{sec:hamwave}.  The second
+command is called \comm{EXTSPEC} and is used to extract a given order from a
+wavelength-calibrated image where each row corresponds to a different order.
+This command preserves the wavelength information of the original image.  It
+will be discussed in \S\ref{sec:hammerge}.
+
+The first section will cover what the Hamilton user needs to obtain at the
+telescope to correctly reduce the data.  Then we will show how to use the two
+top-level procedures that prepare and extract the raw data. Next we will
+discuss the techniques used to remove interference fringes in the data and how
+to proceed for the wavelength calibration. Finally, the flux calibration
+procedure will be described along with considerations on how to combine the
+orders of an Hamilton frame.
+
+These routines, in principle, could be used for reduction of any echelle
+spectrograph data.  Echelle spectrographs all have unique properties (for
+example, how the echelle images are affected by interorder scattered light),
+thus a general discussion of echelle reduction with VISTA is well beyond the
+scope of this cookbook.  However, it does provide a good starting point for
+users interested in such an application of VISTA.
+
+% -----------------------------------------------
+
+\section{Input Data}
+\label{sec:haminput}
+
+First a word about what you need to get at the telescope in order to reduce
+your Hamilton data.  Using the ``Dome Quartz'' lamp you need to take
+open-decker flats.  These flats will remove the pixel-to-pixel variations in
+sensitivity of the detector.  If your data cover the spectral range above
+about 6000\AA\ you also need to take short-decker (1-2 $\arcsec$) flats in
+order to remove the color- and position-dependent fringing effects (see
+\S\ref{sec:hamfringe}).  It is recommended to obtain both these flat-field
+exposures using broad-band filters to get a more even illumination and thus
+minimize the number of exposures required to obtain good counts everywhere on
+the chip. (e.g. use a BG 14 or BG 38 for 4500 $\ltaprx \lambda \ltaprx $
+8000\AA\ and a UG 5 for 3500 $\ltaprx  \lambda \ltaprx $ 5000\AA). For
+wavelength calibration purposes you need to take exposures of the Th-Ar lamp
+spectrum. Once again a combination of exposures using broad-band filters can be
+used to try to reduce the intensity of the strong Argon lines above about
+7000\AA\ and some Thorium lines.
+
+It is recommended to take a short (1--2 seconds) dark exposure. It will be
+used to remove the fixed pattern from the data (see Chapter 3 for a brief
+discussion of the fixed pattern). Note, however, that the acquisition of a
+short dark is just a further precaution to correctly remove the fixed pattern
+since the method used to subtract the interorder light in the procedures
+discussed below  should remove this fixed pattern from the data. Some users
+also like to take a long dark exposure ($\gtaprx$ 15 minutes) to define an
+overall dark rate and/or help remove the hot columns on the ``old'' TI
+800$\times$800 CCD (for this last purpose, the long dark has to be of the same
+exposure time as the image from which the observer wish to remove the hot
+columns and simple modifications of the procedures described below are
+necessary).  This determination of the dark rate is only approximative since
+it is known to depend on a number of factors difficult to control (e.g.
+whether the light in the coud\'e room have been on recently, whether there are
+any glowing oscilloscope screens in the coud\'e room, whether an exposure of a
+bright star or a calibration lamp has been taken recently, etc). Finally, if
+you wish to flux your Hamilton data, you need to take a well-exposed spectrum
+of one of the standard stars out of the list of Goodrich and Veilleux (1988).
+
+% ----------------------------------------------
+
+\section{Preparation of the Data}
+\label{sec:hamprep}
+
+Before starting, you need to tell VISTA where the Hamilton reduction
+procedures reside on your machine.  On most VISTA installations, these will be
+in the default VISTA procedure directory.  For the example below, we shall use
+the installation as it exists on the Lick VAX 11/780, thus the procedures
+files are in the directory DRA0:[CCDEV.RELEASE3.HAM].  We make the following
+logical definition:
+
+\begin{verbatim}
+    $ DEFINE V$PRODIR DRA0:[CCDEV.RELEASE3.HAM].
+\end{verbatim}
+
+\noindent There are two top-level procedures used to extract the Hamilton
+data.  They are {\tenit HAMPREP} and {\tenit HAMREDUCE}.  The first prepares
+things which you will need for most of the rest of your data reduction, like a
+fixed-pattern spectrum, an estimate of the general dark count rate on the CCD,
+a flat-field sum, and the positions of the orders across the CCD.  The second,
+{\tenit HAMREDUCE}, assumes that all of these have been prepared and is used
+to reduce subsequent images.  Another very important procedure which both of
+these call is the {\tenit SETPARAMS} procedure.  This provides all of the
+default values for things such as the sizes of the spectrum and background
+extraction windows, the names of the files for fixed pattern, flat, etc.,
+flags to turn various features on and off, a flag to determine whether you are
+using the tape drive or files already transferred to disk, etc.  It is advised
+that you have a hardcopy of this file so that you can see what the available
+parameters are in case you ever need to change them.  Almost all of the other
+procedures have a statement at the top which will not allow them to be run
+unless {\tenit SETPARAMS} has already been run, but if you are only using
+{\tenit HAMPREP} and {\tenit HAMREDUCE} don't worry, the first thing these
+procedures do is call {\tenit SETPARAMS}.
+
+The next thing that these procedures do is call a routine called {\tenit
+CHANGEPARAMS}. Currently the only thing that this does is to pause to allow
+you to alter the default values which {\tenit SETPARAMS} has set up. Someone
+might prefer to put into {\tenit CHANGEPARAMS} a set of questions which will
+ask the user for various parameters to be changed but it seems that this is
+not really necessary. After {\tenit CHANGEPARAMS} has paused and you have made
+any changes type \comm{CONTINUE} and the procedure will resume.
+
+In {\tenit HAMPREP} you will be asked a number of questions.  We will assume
+throughout the rest of this section that you are reading data from tape --- if
+you are reading data from disk \comm{SET TAPE=0} and the program will ask for
+the disk file name instead of the tape file number.  Also, be advised that the
+disk files should be transferred directly from tape to disk, without doing a
+baseline correction or anything (without using full precision) --- all of this
+is done within the procedures.  The first thing you will be asked is the file
+number of an observation containing a short dark exposure. This will be used
+to construct the fixed-pattern spectrum. If you don't want to correct for the
+fixed pattern then \comm{SET USEFP=0} in {\tenit CHANGEPARAMS}.
+
+Next the file number of a long dark will be requested.  This will be used to
+define an overall dark rate.  As we mentioned above the dark rate is somewhat
+difficult to determine accurately and if you want to skip this part then
+\comm{SET USEDARK=0}. Otherwise, the dark rate in units of DN/sec will be
+determined and printed out. The next time {\tenit SETPARAMS} is run the value
+of the VISTA variable \comm{DARK} will be reset to 0, so during {\tenit
+CHANGEPARAMS} you will have to reset it to the value determined previously.
+Because a constant dark count across the chip is also removed by the
+background subtraction this step is often skipped to save some reduction time.
+
+Next come the flat-fields.  {\tenit HAMPREP} will ask for the number of
+flat-fields, then for the list of file numbers.  These will all be averaged
+together and written to disk.  Finally, the routine will ask for the tape
+number of the ``standard'' star.  This doesn't necessarily mean a ``flux
+standard'' in the usual Cassegrain sense, but merely a well-exposed spectrum
+from which the order positions can be determined accurately. Since it is best
+to have a featureless spectrum for this (although not at all critical) it is
+suggested that some hot, bright star be used. Next you will be asked for the
+position (near the left side of the CCD) of an order, and then the number of
+this order.  These numbers can easily be recorded on the mountain while you
+are taking the data --- otherwise you might want to read an image into VISTA
+before starting {\tenit HAMPREP} and determine these numbers from the AED
+image display or do all this while in {\tenit HAMPREP}  by typing \comm{$-$1}.
+ If you are off by a little on the order number the routine probably won't get
+lost, but you need to rectify this situation before you can do the wavelength
+calibration, and preferably immediately after running {\tenit HAMPREP}.
+
+{\tenit HAMPREP} will then iterate to find and fit polynomials to each order
+on the CCD.  After this is done it will ask for the name of the output file
+for these data.  The order positions will be written out to a file with the
+extension .ORD and the spectrum of the object will be written out using the
+extension .CCD. In these files the x-axis is in pixels and the y-axis
+corresponds to the order number (pixel--order space).
+
+% ----------------------------------------------
+
+\section{Extraction of the Data}
+\label{sec:hamextract}
+
+Now that all of the preliminary images and whatnot have been formed you can
+run {\tenit HAMREDUCE} to start reducing your data.  {\tenit SETPARAMS} and
+{\tenit CHANGEPARAMS} will be run. Type \comm{CONTINUE} when you are finished
+resetting the values of the variables you wanted to change. Next the file
+number to be reduced will be requested.  This image will be ``prepared'' by
+removing the fixed pattern, a mean dark count, interpolating over the bad
+columns  and flat-fielding. Note that the mask used for the interpolation over
+the bad columns is by default the map for the ``old'' TI CCD; if you are using
+the NSF~\#4 CCD you need to set the string \comm{BADMAP} to
+\comm{NEWINTERP.MSK} (instead of the default name \comm{INTERP.MSK}) when
+{\tenit CHANGEPARAMS} is run. Next the following question will be asked:
+
+\begin{verbatim}
+     Do you want to locate the orders from this image
+     (type ``0'') or use the order positions determined
+     from the standard star (``1'') ?
+\end{verbatim}
+
+\noindent
+If you answer ``1'' the name of the file containing the order positions will
+be requested. If you answer ``0'' you will be asked for the position of an
+order near the left side of the chip and the order number.  The order fits
+will be re-done using this image (which hence must also be pretty
+well-exposed).  The usual choice here will probably be ``1'', but the option
+exists. The procedure will first determine the background intensities between
+each order and will then proceed to extract the intensities in each order.
+The extraction windows for the background and the spectrum are by default 3
+and 10 pixels, respectively.  These can be changed by setting the variables
+\comm{BKW} and \comm{SPW} to the values you desire while still in the
+procedure {\tenit CHANGEPARAMS}. When \comm{BALANCE} is not set to zero the
+procedure will make a first order correction to the background intensities for
+the presence of irregularities in the open-decker flat-field exposure. By
+default the background intensities will also be median filtered and smoothed
+by a 1-D. gaussian with FWHM of \comm{BSMOOTH=21} columns before being
+subtracted from the data. If you wish to skip this part of the reduction (this
+may be the case if your backgrounds are strongly affected by the presence of
+some strong hot columns) simply \comm{SET BSMOOTH=0}. Finally, the name of the
+output file will be requested and the extracted spectrum contained in BUFFER 4
+will be written to disk.  At this point BUFFER 5 contains the treated
+background.  Rerun {\tenit HAMREDUCE} for each of your other images.
+
+It is recommended to run these procedures in BATCH mode since {\tenit HAMPREP}
+takes more than 20 cpu minutes to complete while {\tenit HAMREDUCE} requires
+about 10 cpu minutes per object (for a VAX 11/780 running under VMS version
+4.3 with FPA).  These numbers are only indicative since they obviously depend
+on the number of orders in the raw image and which options you use. To make it
+easier, a sample DCL command file (with comment statements added) to show what
+numbers you have to provide to run {\tenit HAMPREP} and {\tenit HAMREDUCE} is
+shown below.  Directories containing the necessary files are defined for the
+VISTA installation on the Lick VAX/VMS 11/780.  Actual directory names and
+batch command syntax will vary depending on your local computer/operating
+system, and the details of your particular VISTA installation.
+
+\vskip 0.5in
+
+\begin{verbatim}
+   $ DEFINE V$PRODIR DRA0:[CCDEV.RELEASE3.HAM]
+   $ DEFINE V$CCDIR DRA1:[SCRATCH.USERNAME.ECHELLE]
+   $ VISTA :== R DRA0:[CCDEV.RELEASE3.BASE]VISTA
+   $ VISTA                  ! A bunch of blank lines are
+                            ! put here because VISTA asks
+                            ! for some input at the
+                            ! beginning, and we need to
+                            ! get past it before typing
+                            ! commands in.
+    RP HAMPREP
+    GO
+    STRING FLATFILE 'FLATSUM.CCD' ! File name of the summed
+                                  ! flat-field.
+    CONTINUE
+    4                           ! Short dark file number.
+    5                           ! Long dark file number.
+    3                           ! Number of flat-fields.
+    10                          ! First flat-field file.
+    11                          ! Second "     "     ".
+    12                          ! Third  "     "     ".
+    18                          ! Standard star file.
+    196                         ! Row position of an order.
+    87                          ! Number of that order.
+    STRD                        ! Output name for the order
+                                ! positions.
+    SET OLDDARK=DARK            ! This keeps track of the
+                                ! dark count for later.
+    RP HAMREDUCE
+    GO
+    SET DARK=OLDDARK              ! Reset the dark rate.
+    STRING FLATFILE 'FLATSUM.CCD' ! File name of the summed
+                                  ! flat-field.
+    CONTINUE
+    23                      ! File number to reduce.
+    1                       ! Use orders positions from
+                            ! standard star.
+    STRD.ORD                ! Name of file with order
+                            ! positions.
+    MYOBS23                 ! Name of file for
+                            ! extracted spectrum.
+    QUIT                    ! Don't forget this!!!
+                            ! Otherwise the .LOG file
+                            ! will keep growing until it
+                            ! fills up your disk quota!!
+  $ EXIT
+\end{verbatim}
+
+% ----------------------------------------------
+
+\section{Fringe Removal}
+\label{sec:hamfringe}
+
+The fringes caused by interference in the CCD layers start to become apparent
+above about 6000\AA. In usual Cassegrain spectroscopy the flat-field
+exposures correct for both the pixel-to-pixel sensitivity variations {\it and}
+the fringing effects. This is not the case for the open-decker flats obtained
+with the Hamilton spectrograph because of the considerable order overlap. They
+are excellent for removing the pixel-to-pixel sensitivity variations (which
+are only weakly dependent on the color of the incident light) but are not good
+at correcting the color-sensitive fringing effects.  To do so you need to take
+a short-decker flat exposure in which the fringe pattern is identical to
+the pattern in the images of your objects.
+
+The order structure of the short-decker flats prevents you from doing a
+straightforward division of the object frame by the short-decker flat (as was
+done for the open-decker flats). There are many schemes to solve this problem.
+The one we recommend here is to use {\tenit HAMREDUCE} and reduce the
+short-decker flats exactly the same way as you reduced the object from which
+you want to remove the fringes ({\it i.e.} same long-decker flat-field, short
+and long dark, extraction windows of the spectrum and the background, etc). The
+next and final step is to simply divide the object's extracted data by the
+extracted short-decker flat.
+
+There are two potential problems with this method. First,
+the positions of the orders in
+the short-decker flat are not exactly the same as those of the object (due to
+a slightly different illumination). The shift is generally less than
+one pixel and is of no consequences if the extraction windows are large
+enough. Ideally, this method also requires that
+the profiles of the orders perpendicular to the dispersion are the same for
+the flat field and for the object. As this is never exactly the case in
+reality one may wonder about the accuracy of this method.
+Figure~\ref{fig:hamfringes}\ shows the spectrum of a star before (upper curve)
+and after (lower curve) being fringe-corrected using this method. The fringes
+have been almost completely removed from the data. This method has proved to
+give good results even at wavelengths where the fringes have amplitudes
+of 25 \%.
+
+\begin{figure}[t]
+   \centering
+   \vspace{4.0in}
+   \caption[]{\label{fig:hamfringes} Effect of Fringing.  Top curve shows the
+            spectrum of a star before fringe-correction with the method
+            described in the text, and the bottom curve shows the spectrum
+            after fringe correction.}
+\end{figure}
+
+% ----------------------------------------------
+
+\section{Wavelength Calibration}
+\label{sec:hamwave}
+
+When it comes the time to reduce a wavelength calibration (thorium-argon)
+image using {\tenit HAMREDUCE} you must set \comm{BKW=0} to avoid doing any
+background subtraction on the image. We also suggest that you set
+\comm{USEFLAT=0, USEFP=0, and USEDARK=0}  in order to speed up the reduction
+of your image. After you are done extracting the thorium-argon spectrum use
+the VISTA command \comm{EWAVE} to calibrate it.  This has the form:
+
+\begin{command}
+  \item {EWAVE 1 [XOFF=MMM] [TRACE] [TTY] [REJ=NNN] [FAST]}
+\end{command}
+
+\noindent
+where the thorium spectrum is assumed to be in BUFFER 1 in this example. The
+optional keywords \comm{TTY} and \comm{TRACE} print out a list of the lines
+identified and the fit parameters, respectively. The keyword \comm{REJ} is a
+hard rejection limit in m\AA\ determining the maximum residual allowed between
+the wavelength of a line and the wavelength determined from the fit;
+\comm{REJ=75} is generally sufficient. The keyword \comm{XOFF} defines the
+distance in pixels of the CCD position from the nominal center of the echelle
+pattern. Its value can be determined from the grating rotation (written in the
+FITS header with the FITS card name GRATING; type \comm{BUF 1 FITS FULL} to
+find the value of GRATING in your image) using
+$$ XOFF = 0.8791827 \times GRATING - 434172$$
+\noindent{or}
+$$ XOFF = 0.8803644 \times GRATING - 434739$$
+\noindent
+whether you are using the ``old'' TI CCD or the ``new'' NSF~\#~4 CCD,
+respectively.  Finally, the \comm{FAST} keyword invokes a faster matrix
+inversion solver for the fit. When this keyword is used, the wavelength
+calibration of frames containing about 600 lines takes 4--5 cpu minutes
+instead of 30--40 minutes. The accuracy reached by the wavelength solution is
+the same with or without the \comm{FAST} keyword; therefore, there is
+absolutely no reason {\it not} to use the \comm{FAST} keyword; it is simply a
+relic from the days of debugging the fitting algorithm.
+
+
+Once a calibration has been performed on the thorium spectrum you should write
+the BUFFER containing the wavelength calibrated image (BUFFER 1 in the example
+above) to disk. You can copy the wavelength parameters onto any other spectrum
+using the command \comm{COPW}:
+
+\begin{command}
+      \item {COPW 2 1}
+\end{command}
+
+\noindent
+where again BUFFER 1 holds the thorium and BUFFER 2 holds the other image.
+Then if you type, e.g., \comm{PLOT 2 R=94} you will get a plot of order 94
+with the appropriate wavelength scale along the x-axis.
+
+Below is a sample DCL command file used to reduce and wavelength calibrate a
+thorium-argon image and copy the wavelength parameters onto another file.
+Again, the example uses directory syntax appropriate to the Lick VAX 11/780.
+
+\vskip 0.5in
+
+\begin{verbatim}
+   $ DEFINE V$PRODIR DRA0:[CCDEV.RELEASE3.HAM]
+   $ DEFINE V$CCDIR DRA1:[SCRATCH.USERNAME.ECHELLE]
+   $ VISTA :== R DRA0:[CCDEV.RELEASE3.BASE]VISTA
+   $ VISTA
+
+     RP HAMREDUCE
+     GO
+     SET BKW=0              ! Skip background subtraction.
+     SET USEFP=0            ! Don't correct for the fixed
+                            ! pattern.
+     SET USEDARK=0          ! Don't correct for dark
+                            ! counts.
+     SET USEFLAT=0          ! Don't use a flat-field.
+     CONTINUE
+     22                     ! File to reduce.
+     1
+     STRD.ORD
+     MYTHORIUM
+
+     EWAVE 1 TTY TRACE XOFF=390 FAST REJ=75
+     WD 1 MYCAL FULL            ! Write out the calibrated
+                                ! image.
+     RD 2 MYOBS23
+     COPW 2 1
+     WD 2 MYOBS23 FULL          ! Write the calibrated
+                                ! observation.
+     QUIT
+   $ EXIT
+\end{verbatim}
+
+\vskip 0.5in
+
+% ----------------------------------------------
+
+\section{Flux Calibration}
+\label{sec:hamflux}
+
+The purpose of the fluxing procedure is to put all of the orders of a frame on
+the same intensity scale. It is necessary to flux your data if you want to
+compare the relative strength of features at different wavelengths or if you
+wish to merge images which cover different parts of the echelle format. Note
+that flux calibration is {\it not} necessary if you only want to measure
+equivalent widths in an object with a well-defined continuum.  In this case,
+the only thing you need to do is to normalize the continuum using, for
+instance, the spline fitting routine \comm{ISPLINE}.
+
+The top-level procedure used for fluxing Hamilton data is called {\tenit
+HAMFLUX}. It first asks you for the name of the file containing the reduced
+standard star which will be used to determine the flux curve of each order.
+Next you need to provide the name of the file containing the wavelength
+parameters to be used. The procedure will then correct for the mean (smooth)
+atmospheric extinction and, if necessary, for the presence of atmospheric
+absorption features between 6800 $\leq \lambda \leq $ 7400\AA\ (orders 76--83)
+by linearly interpolating the continuum over each atmospheric blend. This last
+step is essential since the flux points that will be used later were
+determined from standard stars that have been corrected for the presence of
+these atmospheric bands.
+
+Next the procedure asks you for the the file name containing the flux points.
+These files are kept with the other flux calibration files (.FLX extension) in
+the default flux calibration directory. (In the example below, they are in the
+directory \comm{DRA0:[CCD.SPEC]} on the Lick VAX 11/780.  See Chapter 2 for
+details on default data file directories). The flux points listed in these
+files were determined from spectra obtained with the UV-Schmidt spectrograph
+at Lick. Each order should contain at least 30 of these flux points. Note
+that, although the flux points extend from 3600\AA\ to 7650\AA, it is in
+practice quite difficult to flux Hamilton data below about 4000\AA\ (order
+$\gtaprx$ 140) because of the presence of many strong lines in the spectrum of
+the standard stars.
+
+At the end of the procedure, BUFFER 1 contains the fluxed standard star,
+BUFFER 4 contains the flux curves normalized to an exposure time of 1 second
+of all the orders, and BUFFER 5 contains the atmospheric correctors used to
+remove the atmospheric features from the spectrum of the standard star. A plot
+of BUFFER 4 along a given column will show a smooth curve except at a few
+orders (Figure~\ref{fig:hamflux}, upper curve).  These anomalous flux curves
+coincide with the position of strong absorption lines in the spectrum of the
+standard stars or the position of atmospheric lines that have not been
+corrected in the {\tenit HAMFLUX} procedure (e.g. order 87: H$\alpha$,
+order 117 or
+118: H$\beta$, order 110: Mg I, order 91: atmospheric band, etc.). The
+procedure {\tenit FINTERP} corrects for those anomalous flux curves by
+replacing them with the result of the linear interpolation of the adjacent
+flux curves (Figure~\ref{fig:hamflux}, lower curve). Once you are satisfied
+with the flux curves of all the orders you can then run the procedure {\tenit
+HAMFLUX2} which will flux calibrate your objects (reduced the same way as the
+standard star) using the flux curves produced by {\tenit HAMFLUX}.
+
+\begin{figure}[t]
+   \centering
+   \vspace{4.0in}
+   \caption[]{\label{fig:hamflux} ... }
+\end{figure}
+
+Since it requires about 10 cpu minutes to create a flux image using {\tenit
+HAMFLUX} and about 2 cpu minutes to flux an object using {\tenit HAMFLUX2}
+(for a VAX 11/780 running VMS 4.3) both of these procedures should probably be
+run in BATCH mode. Below is a sample DCL command file used to run {\tenit
+HAMFLUX}:
+
+\vskip 0.5in
+
+\begin{verbatim}
+   $ DEFINE V$PRODIR DRA0:[CCDEV.RELEASE3.HAM]
+   $ DEFINE V$CCDIR DRA1:[SCRATCH.USERNAME.ECHELLE]
+   $ VISTA
+
+     RP HAMFLUX
+     GO
+     FF.CCD                 ! File name of the extracted
+                            ! short-decker flat.
+     STRD.CCD               ! File name of the extracted
+                            ! standard star.
+     THAR.WAV               ! File name of the
+                            ! wavelength-calibrated Th-Ar.
+     [CCD.SPEC]STRD.HAMFLX  ! File name containing the flux
+                            ! points.
+     WD 1 STRD.FLX FULL     ! Write to disk the fluxed
+                            ! standard star.
+     WD 4 STRD.CRV FULL     ! Write flux curves to disk.
+     WD 5 STRD.COR FULL     ! Write to disk the atmospheric
+                            ! corrector.
+     QUIT
+   $ EXIT
+\end{verbatim}
+
+\vskip 0.2in
+
+\noindent{After interactively correcting STRD.CRV for any anomalous orders
+(using the procedure {\tenit FINTERP}) you can then run {\tenit HAMFLUX2}:}
+
+\vskip 0.2in
+\begin{verbatim}
+   $ VISTA
+
+
+     RP HAMFLUX2
+     GO
+     FF.CCD
+     THAR.WAV
+     OBJECT.CCD             ! File name of the object
+                            ! to be fluxed.
+     WD 6 OBJECT.FLX FULL   ! Write fluxed object to disk.
+
+     QUIT
+   $ EXIT
+\end{verbatim}
+
+\vskip 0.5in
+
+Finally, a word about the accuracy of these fluxing procedures.  The Hamilton
+spectrograph should not be considered a good instrument to accurately measure
+{\it absolute} fluxes.  Comparisons of the flux curves of standard stars
+obtained at the beginning and the end of the night have shown, however, that
+the accuracy of {\it relative} fluxes of features within the same order in a
+well-exposed standard star is about 2--3\% while it is 5--30\% (depending
+on the atmospheric conditions, guiding errors, position of the object in the
+sky, etc) for relative fluxes of features at the top and bottom of an
+Hamilton image. The uncertainty of the relative fluxes in the objects other
+than the standard stars greatly depends on the quality of the raw image.
+Non-linearity effects of the CCD at low light levels can for instance affect
+poorly-exposed frames. Accurate relative fluxing becomes in this case almost
+impossible.
+
+% ----------------------------------------------
+
+\section{Merging the Orders}
+\label{sec:hammerge}
+
+Once your data are fluxed (or the continuum of your object normalized)
+you can start combining the orders together. Merging
+the orders of a well-exposed standard star or normalized object is generally
+quite straightforward.  You first have to extract from the flux-calibrated
+image of your star the orders you wish to merge using the command
+\comm{EXTSPEC}. For instance:
+
+\begin{command}
+      \item {EXTSPEC 10 1 ORD=87}
+      \item {EXTSPEC 20 2 ORD=87}
+\end{command}
+
+\noindent
+will extract order 87 from BUFFERs 1 and 2 and put it in BUFFERs 10 and 20,
+respectively. The command \comm{MASH} should {\it not} be used since it
+doesn't preserve the wavelength information. The next step is to put all of
+the spectra you want to merge on the same linear or logarithmic wavelength
+scale with the command \comm{ALIGN} (use for the value of the keyword
+\comm{DSP} the {\it smallest} dispersion of your spectra so you do not lose
+any spectral information and don't forget to type the \comm{NOFLUX} keyword)
+and finally use \comm{MERGE} to actually combine the orders together:
+
+\begin{command}
+      \item {MERGE 10 20 NOZERO}
+\end{command}
+
+Note that it is preferable to avoid using the \comm{NOMATCH} keyword in
+\comm{MERGE} and use instead appropriate values of \comm{W} in \comm{ALIGN}
+before merging. The intensity at the edges of the orders sometimes curves up
+or down so, in order to obtain a better match between different orders, it is
+recommended to exclude the first and last 20 pixels or so in an order using,
+for instance, the \comm{BOX} command. If you wish to merge different frames of
+an object which is not a flux standard you generally need to multiply one of
+the images by a constant to obtain a better match in intensity between the
+frames. This ``grey shift'' corrects for any passing clouds, seeing changes,
+etc. between the observation of the standard star and your object.
+
+% ----------------------------------------------
+
+%\end{document}
+%\end
+

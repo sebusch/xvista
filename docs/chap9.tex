@@ -1,0 +1,190 @@
+\chapter{Marking Image Subsections or Pixels}
+
+\section{Selecting Image Subsections for Computation}
+\begin{rawhtml}
+<!-- linkto marking.html -->
+\end{rawhtml}
+
+%
+% all sections checked for keywords and function
+% rwp/osu 98Aug2
+%
+
+VISTA provides various programs for designating that certain subsections of
+an image are to be ignored or included in calculations.
+\begin{example}
+  \item[BOX\hfill]{define a rectangular region of an image --
+       a set of contiguous rows and columns.}
+  \item[MASK\hfill]{ignore specified pixels or regions}
+  \item[UNMASK\hfill]{stop ignoring masked pixels}
+  \item[MASKTOIM\hfill]{create a map of masked pixels.}
+\end{example}
+
+\section{BOX: Define a Box or Image Subsection}
+\index{Box!Defining}
+\begin{rawhtml}
+<!-- linkto box.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form:}  BOX box\_num {[NC=n]} {[NR=n]} {[N=n]} {[CR=n]} 
+       {[CC=n]} {[SR=n]} {[SC=n]} {[INT]}\hfill]{}
+  \item{   {[CENT]} {[V=n]}}
+  \item[box\_num]{(integer) is the number of the box being defined,}
+  \item[NC]{defines the number of columns in the box,}
+  \item[NR]{defines the number of rows in the box,}
+  \item[N  ]{ defines the number of rows and columns (square box),}
+  \item[CR]{defines the center row,}
+  \item[CC]{defines the center column,}
+  \item[SR]{defines the starting row, and}
+  \item[SC]{defines the starting column.}
+  \item[INT]{lets you define the box interactively on the TV}
+  \item[CENT]{toggles back and forth between origin and center based system}
+  \item[V=n  ]{defines the center row and column using the
+       VISTA variables Rn and Cn}
+\end{command}
+
+VISTA can store the specifications for up to 20 boxes defining image
+sub-sections.  These parameters can be used by other commands (such as TV,
+WINDOW and PRINT) by including 'BOX=' in the command line, modifying these
+commands so they operate only on the designated subsection.
+
+When a box is initially defined, the size of the box in both dimensions
+center must be specified; use both the NR and NC keywords, or for the case
+of a square box, the N= keyword may also be used.  If the origin or center
+is not given, the box is assumed to start at row 0 and column 0.  You may
+change the origin and size of the box later by entering only the changes on
+the command line.  All parameters not given on the command line are left
+unchanged.
+
+By default, the VISTA boxes have fixed origins, so if you only change the
+box size, then the origin with be preserved. By using the CENT keyword,
+however, you can change this to a center based system, where the center of
+the box will be preserved. The CENT keyword acts as a toggle switch between
+the two modes - once it is set in one mode, it remains in that mode until
+explicitly changed by the user.
+
+The INT command allows you to define boxes interactive on the video
+display. Follow the instructions given.
+
+\noindent{Examples:}
+\begin{example}
+  \item[BOX 1 NR=45 NC=56\hfill]{defines box 1.  Box 1 has origin at row 0 and 
+       column 0 and has 45 rows and 56 columns.}
+  \item[BOX 1 INT\hfill]{defines box 1. The locations of the upper left and 
+       lower right corners are specified using the cursor on the TV.}
+  \item[BOX 1 SC=100 NC=100 SR=0 NR=100\hfill]{defines box 1 as columns
+       100 to 199 and rows 0 to 99.}
+  \item[BOX 2 CC=100 CR=100 NR=13 NC=13\hfill]{    defines a box having 13 rows
+       and columns, centered on row=100 and column=100.}
+\end{example}
+
+\noindent{Examples of changing the location of boxes.
+Suppose we have defined box 1 as in example 1 above.}
+\begin{example}
+  \item[BOX 1 SR=50\hfill]{moves the box so that the starting row is row 50. 
+       The starting column, and the number of rows and columns is unchanged.}
+  \item[BOX 1 CC=50 CR=66\hfill]{moves the box so that the center of the box 
+       is at row 50 and column 66.  The size of the box is unchanged.}
+\end{example}
+
+The locations of the defined boxes can be found with the PRINT BOXES
+command.
+
+All spectra have start row 0 and 1 row.  Thus, to define a box for use with
+spectra, use
+\begin{hanging}
+  \item{BOX n SR=0 NR=1 ...}
+\end{hanging}
+
+You can display the boundaries of defined boxes on the television. See the
+command TVBOX.
+
+\section{MASK/UNMASK: Ignore (Mask) Specified Pixels}
+\begin{rawhtml}
+<!-- linkto mask.html -->
+<!-- linkto unmask.html -->
+\end{rawhtml}
+\index{Pixel!Ignoring}
+\index{Pixel!Mask}
+\begin{command}
+  \item[\textbf{Form:} MASK {[R=r1,r2]} {[C=c1,c2]} {[BOX=N]} 
+       {[PIX=r,c]}\hfill]{}
+  \item[UNMASK  {[R=r1,r2]} {[C=c1,c2]} {[BOX=N]} {[PIX=r,c]}\hfill]{}
+  \item[R=]{Ignore all pixels in rows.}
+  \item[C=]{Ignore all pixels in columns.}
+  \item[BOX=b]{Ignore all pixels in box b.}
+  \item[PIX=r,c]{Ignore the pixel at row 'r' and col 'c'.}
+\end{command}
+
+MASK tells VISTA programs to ignore the specified pixels when doing
+computations.
+
+The command UNMASK is the opposite of MASK; it tells the programs to stop
+ignoring the specified pixels.  UNMASK can be used without options to
+unmask all pixels.
+
+You can type UNMASK without any options to tell the routines to use all the
+pixels.  Remember that rows and columns are often numbered from ZERO.  The
+row or column numbers specified in MASK are the same as those given by the
+'D' option in the ITV command, but remember that if the TV image is
+compressed, the 'D' option will not give the exact location of certain
+features in the image.  Use the BOX option in the TV command to show
+smaller sections of an image when finding features you want to mask.
+
+The mask may be saved on the disk with SAVE, and retrieved later with GET.
+
+Not all VISTA commands recognize masked pixels.  The ones that do are: ABX,
+AUTOMARK, MN, CROSS, INTERP, MASH, and SURFACE.
+
+\noindent{Examples:}
+\begin{example}
+  \item[MASK C=234\hfill]{Masks column 234.}
+  \item[UNMASK C=234\hfill]{Removes the mask from column 234.}
+  \item[MASK PIX=(120,100)\hfill]{Masks the single pixel at
+column 100 and row 125.}
+  \item[MASK R=20,40\hfill]{Masks pixels in rows 20 to 40.}
+  \item[UNMASK BOX=5\hfill]{Unmasks the pixels in box 5.}
+\end{example}
+
+\section{MASKTOIM: Create an Image Showing Masked Pixels}
+\begin{rawhtml}
+<!-- linkto masktoim.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form:}  MASKTOIM buf {[BOX=b]} {[SR=sr]} {[SC=sc]} {[NR=nr]} {[NC=nc]}\hfill]{}
+  \item[buf]{is the buffer holding the new image}
+  \item[BOX=b]{create an image with the size and orientation of box 'b'}
+  \item[SR=sr]{specify the start row of the new image}
+  \item[SC=sc]{specify the start column}
+  \item[NR=nr]{specify the number of rows}
+  \item[NC=nc]{specify the number of columns}
+\end{command}
+
+MASKTOIM creates an image, showing which pixels are masked.  Masked pixels
+are set to 0 in the image, while unmasked pixels are set to 1.
+
+Use BOX=b to define the image size and location.  This makes the new image
+have the size and location of box 'b'.  See BOX for instructions for
+defining boxes.
+
+You may also give the size and location of the new image with the keywords
+SR, SC, NR, and NC.  NR and NC are required.  If SR or SC are not given,
+they default to zero.
+
+Any image already in the destination buffer is destroyed.
+
+\noindent{Examples:}
+\begin{example}
+  \item[MASKTOIM 1 BOX=5\hfill]{creates an image in buffer 1 having the
+       size and orientation of box 5.  The image is filled with zeroes.}
+
+  \item[MASKTOIM 1 BOX=5 CONST=100.0\hfill]{does the same as the first
+       example, but fills the image with value 100.0}
+
+  \item[MASKTOIM 5 SR=5 SC=10 NR=25 NC=35\hfill]{creates an image in buffer
+       5.  The start (row, column) is (5,10) and the size of the image is
+       25 rows by 35 columns.}
+
+  \item[MASKTOIM 1 NR=100 NC=100\hfill]{creates an 100 by 100 image in
+       buffer 1.  The start row and column are both 0.}
+\end{example}

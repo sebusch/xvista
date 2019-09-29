@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>SETUP: Set the Longitude and Latitude for VISTA</TITLE>
+<META NAME="description" CONTENT="SETUP: Set the Longitude and Latitude for VISTA">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0014110000000000000000">
+SETUP: Set the Longitude and Latitude for VISTA</A>
+</H1>
+
+<!-- linkto setup.html -->
+<A NAME="5937"></A>
+<A NAME="5938"></A>
+<A NAME="5939"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+SETUP is used to view the current default observing site longitude and
+latitude that VISTA is using and to change these values if desired.  The
+Latitude and Longitude of the observing site are used to help compute the
+necessary airmass (atmospheric extinction) corrections used for
+spectroscopy and photometry. This is <B>very important</B>, because
+the default behavior of xvista is to recompute airmasses from the observation
+position and time, rather than use values which may be included in the header 
+by the telescope (see below).
+
+<P>
+On startup, the VISTA searches for the environment variables V_LONGITUDE
+and V_LATITUDE.  If these are found, the values are loaded into the VISTA
+internal variables.  The units for both longitude and latitude are assumed
+to be degrees.
+
+<P>
+If you issue SETUP with no arguments, the current values will be printed.
+You can enter new values using the LONG= and LAT= keywords, or else you
+will be prompted for them by the program. Coordinates for 9 different
+observatories are preloaded into xvista, and can be selected at the
+prompt or by keywords (MMT, KPNO, CTIO, LOWELL, APO, LICK, AAT (or SS0),
+ESO, CFHT).
+
+<P>
+The arguments CHECKAIR, COMPUTEAIR, and USEAIR can be used if one wishes
+to consider the value of the AIRMASS card within an image's FITS header.
+If you issue SETUP CHECKAIR, then the programs which compute airmasses will
+check them against the value in the FITS header; if the latter exists, the
+user will be warned if the computed airmass differs from the header airmass
+by more than 0.03 airmasses. If SETUP COMPUTEAIR has been issued (this is
+the default startup configuration), the program will just use the computed
+value regardless (and you'd better have the longitude and latitude right!).
+If SETUP USEAIR has been issued, the program will use the airmass from the
+AIRMASS or AM card in the FITS header if it exists, otherwise it will use
+the computed value. Using any of CHECKAIR, COMPUTEAIR, or USEAIR will change
+the default mode of execution until a subsequent SETUP command is issued or
+until you exit xvista. Upon starting up xvista, the default behavior is
+to use the computed airmass without warning whether it differs from the
+header value. If you wish to change this default behavior, put a command
+in your xvista startup file (we highly recommend using SETUP CHECKAIR, but
+didn't make this the default to maintain compatability with earlier releases).
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Introduction to Command Procedure Scripts</TITLE>
+<META NAME="description" CONTENT="Introduction to Command Procedure Scripts">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00410000000000000000">
+Introduction to Command Procedure Scripts</A>
+</H1>
+
+<!-- linkto procedure.html -->
+<!-- linkto procedures.html -->
+
+<P>
+<A NAME="1199"></A>
+<A NAME="1200"></A>
+<A NAME="1201"></A>
+
+<P>
+VISTA can store several commands in a list and execute them as a program.
+A list of such commands is termed a PROCEDURE.  The list is stored in a
+special buffer, called the 'procedure buffer'.
+
+<P>
+Almost any VISTA command that has proper syntax can be used in a procedure.
+The basic commands for creating, storing, and modifying procedures are
+these:
+<BR>
+
+<BR>
+
+<P>
+There are several 'control commands' that effect the operation of a
+procedure.
+<BR>
+
+<BR>
+
+<P>
+This list serves not only as an introduction to those not familiar with
+procedures, but illustrates the flexibility that procedures give to VISTA
+programming.  A defined procedure eliminates the boredom of typing
+repetitive commands over and over, but it does much more than that: it
+greatly expands the functions of VISTA so that new applications do not
+always require new subroutines.  A familiarity with procedures will make
+your data reductions more efficient.
+
+<P>
+IMPORTANT:
+<BR>
+Do NOT put any of the flow-control statements (DO, IF, END_DO, etc.) with
+other commands on a line.  They must appear separately.  Thus:
+<PRE>
+   DO I=1,10}
+   DO J=1,10}
+      (some stuff)}
+   END\_DO; END\_DO
+</PRE>
+or similar constructions, will NOT work properly!
+
+<P>
+As the VISTA program begins, it executes the procedure stored in the file
+defined by the environment variable V_STARTUP.  For example, if you had
+defined V_STARTUP through
+<PRE>
+   setenv V_STARTUP ./myprocs/myproc.pro
+</PRE>
+<I>before</I> running VISTA, then myprocs/myproc.pro will be executed as the
+program begins.  Typically, the startup procedure will contain definitions
+of aliases, the setting of symbol values, or the reading into buffers of
+repeatedly-used images.  This procedure is not saved in the procedure
+buffer as it is executed.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

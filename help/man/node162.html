@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>EXTINCT: Correct a Spectrum for Atmospheric Extinction</TITLE>
+<META NAME="description" CONTENT="EXTINCT: Correct a Spectrum for Atmospheric Extinction">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0014100000000000000000">
+EXTINCT: Correct a Spectrum for Atmospheric Extinction</A>
+</H1>
+
+<!-- linkto extinct.html -->
+<A NAME="5925"></A>
+<A NAME="5926"></A>
+<A NAME="5927"></A>
+<BR>
+
+<BR>
+
+<P>
+EXTINCT will correct a wavelength-calibrated spectrum 'source' for
+atmospheric extinction.  The zenith angle is measured from the header
+information, and the air mass calculated with a polynomial in secant(z) to
+account for the finite thickness of the atmosphere.  A set of extinction
+values is calculated at several wavelengths, and a spline drawn through
+them.  The spectrum is multiplied by the spline to correct it for
+extinction.
+
+<P>
+The extinction correction which is used is the average extinction for Lick
+Observatory.  The keyword CTIO will have EXTINCT use values appropriate for
+Cerro Tololo; KPNO uses the Kitt Peak extinction coefficients.  These are
+very similar. Note that the set of coefficients used is remembered between
+successive calls to EXTINCT; if you specify CTIO on one call to EXTINCT,
+the CTIO coefficients will be used on all successive calls unless the
+keyword LICK or KPNO is explicitly used on the command line.
+
+<P>
+The longitude and latitude of the observatory at which the data were
+acquired must be defined either before running VISTA by defining the UNIX
+environment variables V_LONGITUDE and V_LATITUDE, or by using the VISTA
+SETUP command.  You will need to do this to obtain correct determinations of
+airmass or extinction when reducing CCD images from other observatories.
+The longitude and latitude must be in decimal degrees: For example
+<PRE>
+  SETENV V_LONGITUDE 121.64554
+  SETENV V_LATITUDE 37.43029
+</PRE>
+Is the longitude and latitude of the Lick Observatory (Mount Hamilton, CA).
+
+<P>
+If these variables are not defined, defaults set at compile time will be
+used.  You can also redefine the longitude with the SETUP command inside of
+VISTA.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

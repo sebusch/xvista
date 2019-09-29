@@ -1,0 +1,45 @@
+
+<H1><A NAME="SECTION0012120000000000000000">
+MEDIAN: Compute Median of Several Images</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml345#
+<A NAME="4856"><tex2html_anchor_invisible_mark></A>
+<A NAME="4857"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command4858#
+<BR>
+
+<P>
+MEDIAN loads the 'dest' buffer with the median of images im1, im2, im3, ...
+Each pixel in the destination image is the median of the corresponding
+pixels in the input images. Normally, the program scales each image to have
+the same mean before computing the median of the stack. If you wish to do
+the background determination and scaling yourself, you can suppress the
+auto-rescaling by using the NOMEAN keyword.
+
+<P>
+Note that all input images must be in VISTA buffers. This prevents
+computing the median of very large numbers of images because of insufficient memory.  For
+this purpose, try the command BIGMEDIAN, which will median input disk FITS
+files and store the median in a VISTA buffer.
+
+<P>
+At least 3 input images must be given.  None of the images can be in the
+same buffer as the output image.  All the images must have the same size
+and starting pixel.
+
+<P>
+The program is useful for removing cosmic-ray hits from many exposures of
+the same object.  Make sure the location of the objects on the image
+(stars, location of spectrum, etc) are the SAME on ALL images!  Use SHIFT
+or ALIGN to align images before using MEDIAN.
+
+<P>
+<#4869#>Example:<#4869#>
+<BR>
+<tex2html_image_mark>#example4870#
+<BR>
+
+<P>

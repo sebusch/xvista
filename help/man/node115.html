@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>MN: Compute the Mean of the Pixel Values</TITLE>
+<META NAME="description" CONTENT="MN: Compute the Mean of the Pixel Values">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001110000000000000000">
+MN: Compute the Mean of the Pixel Values</A>
+</H1>
+
+<!-- linkto mn.html -->
+<A NAME="4321"></A>
+<BR>
+
+<BR>
+
+<P>
+The mean of all the pixels in the image contained in buffer 'source' is
+computed.  Use MASK or NOZERO to ignore masked or zero-valued pixels in the
+computation.  PIX=p computes the mean using every p'th pixel in every p'th
+row, for speed.
+
+<P>
+The computed mean value is printed at the terminal (unless the SILENT word
+is given) and is also loaded into the VISTA variable Mn, where 'n' is the
+image buffer number. (ex: the command MN 1 loads the variable M1.  The
+command MN 31 loads the variable MN31).  The value of the mean is also
+loaded into the variable MEAN.
+
+<P>
+The mean is used by other commands such as the TV command for a default
+display range, or the DIVIDE command for rescaling images after flat-field
+divisions.
+
+<P>
+See MASK for the operation of the pixel mask.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>FLUXSTAR: Compute Flux Curves from a Standard-Star Spectrum</TITLE>
+<META NAME="description" CONTENT="FLUXSTAR: Compute Flux Curves from a Standard-Star Spectrum">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0014120000000000000000">
+FLUXSTAR: Compute Flux Curves from a Standard-Star Spectrum</A>
+</H1>
+
+<!-- linkto fluxstar.html -->
+<A NAME="5961"></A>
+<BR>
+
+<BR>
+
+<P>
+FLUXSTAR computes a flux calibration curve from a standard star spectrum
+and a file containing the correct flux levels as a function of wavelength.
+The input spectrum must be wavelength calibrated, be corrected for
+atmospheric extinction, and have its intensities on an uncalibrated
+F-lambda scale.  The routine locates the flux points given in the input
+file, and finds the star's average flux over the specified wavelength bin
+of the flux point.  A set of correction points are thus defined, which
+consist of the correct fluxes, reduced to the Hayes-Latham Vega calibration
+(Hayes &amp; Latham, 1975 ApJ, 197, 593), divided by the observed intensity of
+the standard star.  A spline is drawn through these points and replaces the
+standard star spectrum to give the flux curve. If you wish to use a
+polynomial rather than a spline, use the POLY=n keyword, where n specifies
+the degree of the polynomial to use.
+
+<P>
+The FLUX command takes the correction points defined above, and uses a
+spline (or polynomial) to define a flux calibration buffer for the input
+spectrum.  The spectrum is then calibrated by multiplication by this
+buffer.  The separate FLUXSTAR and FLUX commands permit the calibration of
+spectra on different wavelength scales than the standard star spectrum.
+
+<P>
+The standard star's flux measurements are read in from a file, which is
+assumed to be in the spectrum directory (see PRINT DIRECTORIES), with
+extension .FLX unless specified otherwise.  The file is headed by the stars
+apparent V magnitude, and then its magnitude at 5556 A.  Generally these
+are identical, and will only be different if a (grey) change in the Vega
+calibration is made. Each line of the file will contain a flux point
+specified by its wavelength, magnitude per unit frequency, and bin width in
+angstroms.  The points must be in order of increasing wavelength, but there
+is no strict format that must be observed.
+
+<P>
+Below is an example of a standard star flux file:
+
+<P>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">11.48</TD>
+<TD ALIGN="LEFT">11.48</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">3200.0</TD>
+<TD ALIGN="LEFT">13.17</TD>
+<TD ALIGN="LEFT">40.0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">3350.0</TD>
+<TD ALIGN="LEFT">12.87</TD>
+<TD ALIGN="LEFT">40.0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">3400.0</TD>
+<TD ALIGN="LEFT">12.64</TD>
+<TD ALIGN="LEFT">40.0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">3862.0</TD>
+<TD ALIGN="LEFT">12.32</TD>
+<TD ALIGN="LEFT">40.0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">4036.0</TD>
+<TD ALIGN="LEFT">12.12</TD>
+<TD ALIGN="LEFT">40.0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">.... ETC.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+The keywords 'AVE' and 'WT=' allow the averaging with weights of multiple
+flux curves.  The default weighting, used for the first flux curve as well
+as for those using 'AVE', is 1.  Anytime neither keyword is specified a
+fresh flux curve is started (again, with a weight of 1.).  Note that the
+averaging can handle two flux curves which overlap (but do not necessarily
+match perfectly) in wavelength, and can even create a flux curve from two
+curves with completely disjoint wavelength scales, but it cannot insert
+flux points in the midst of an existing flux curve.
+
+<P>
+The SYSA keyword produces a point-by-point flux curve instead of a smooth,
+spline fitted flux curve.  This is done by removing the known stellar
+absorption lines from the observed standard star spectrum. The atmospheric
+bands, however, are not removed.  The result is that you end up with a flux
+curve which can correct for the atmospheric bands.  A drawback for SYSA is
+that any "anomalous" absorption lines not known to the program will appear
+in the response curve and can lead to extraneous features in the data.
+
+<P>
+The SYSC keyword produces a compromise response curve with the best
+features of both "system A" and (the default) "system B".  In this option
+the system A curve is smoothly fitted by a spline (at the usual knot
+points) while the B and A atmospheric bands (+/- 65 Angstroms) are
+retained.  The curve is piecewise continuous.  It is free from glitches
+introduced by spurious absorption features in the stellar spectra, retains
+a higher accuracy outside the extreme knot points, and compensates for the
+atmospheric bands in the data.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

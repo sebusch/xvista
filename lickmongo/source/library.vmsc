@@ -1,0 +1,38 @@
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!      This VMS DCL procedure is Copyrighted software.
+$!      The file COPYRIGHT must accompany this file.  See it for details.
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!
+#include "Config.h"
+$!      Put all of the .OBJ files in this Lick Mongo source code directory
+$!      into the Lick Mongo object library, then delete the .OBJ files.
+
+
+$ set noverify
+$ on control_y then goto clean
+$!      Create the library if it does not yet exist
+$ objlib = f$search("mongodir:mongo.olb")
+$ if objlib .eqs. "" then library/create mongodir:mongo.olb
+$ if objlib .eqs. "" then write sys$output "creating new library"
+$ if objlib .eqs. "" then objlib = f$search("mongodir:mongo.olb")
+$!      Tidy up before beginning
+$ set message/nofaci/noiden/noseve/notext
+$ purge/nocon *.obj
+$ set message/faci/iden/seve/text
+$!      Start shoving object files into the library
+$ set protection=(g,w) mongodir:mongo.olb       ! prevent access during update
+$ loop:
+$    name = f$search("*.obj")
+$    if name .eqs. "" then goto loopdone
+$    library mongodir:mongo.olb 'name' /log
+$    delete 'name'
+$    goto loop
+$ loopdone:
+$!      library.dat tells us when we last made the library.
+$!      This is for the convenience of the compile.com procedure, so that
+$!      it can decide which source files need to be recompiled.
+$ delete library.dat;*
+$ create library.dat
+$ clean:
+$ set protection=(g:re,w:re) mongodir:mongo.olb
+$ exit

@@ -1,0 +1,46 @@
+
+<H1><A NAME="SECTION0014100000000000000000">
+EXTINCT: Correct a Spectrum for Atmospheric Extinction</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml399#
+<A NAME="5918"><tex2html_anchor_invisible_mark></A>
+<A NAME="5919"><tex2html_anchor_invisible_mark></A>
+<A NAME="5920"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command5921#
+<BR>
+
+<P>
+EXTINCT will correct a wavelength-calibrated spectrum 'source' for
+atmospheric extinction.  The zenith angle is measured from the header
+information, and the air mass calculated with a polynomial in secant(z) to
+account for the finite thickness of the atmosphere.  A set of extinction
+values is calculated at several wavelengths, and a spline drawn through
+them.  The spectrum is multiplied by the spline to correct it for
+extinction.
+
+<P>
+The extinction correction which is used is the average extinction for Lick
+Observatory.  The keyword CTIO will have EXTINCT use values appropriate for
+Cerro Tololo; KPNO uses the Kitt Peak extinction coefficients.  These are
+very similar. Note that the set of coefficients used is remembered between
+successive calls to EXTINCT; if you specify CTIO on one call to EXTINCT,
+the CTIO coefficients will be used on all successive calls unless the
+keyword LICK or KPNO is explicitly used on the command line.
+
+<P>
+The longitude and latitude of the observatory at which the data were
+acquired must be defined either before running VISTA by defining the UNIX
+environment variables V_LONGITUDE and V_LATITUDE, or by using the VISTA
+SETUP command.  You will need to do this to obtain correct determinations of
+airmass or extinction when reducing CCD images from other observatories.
+The longitude and latitude must be in decimal degrees: For example
+<PRE><tex2html_verbatim_mark>verbatim400#</PRE>
+Is the longitude and latitude of the Lick Observatory (Mount Hamilton, CA).
+
+<P>
+If these variables are not defined, defaults set at compile time will be
+used.  You can also redefine the longitude with the SETUP command inside of
+VISTA.
+
+<P>

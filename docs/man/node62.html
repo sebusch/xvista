@@ -1,0 +1,49 @@
+
+<H1><A NAME="SECTION00670000000000000000">
+DISPOSE: Clear (Delete) an Image Buffer</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml223#
+
+<P>
+<A NAME="1877"><tex2html_anchor_invisible_mark></A>
+<A NAME="1878"><tex2html_anchor_invisible_mark></A>
+<A NAME="1879"><tex2html_anchor_invisible_mark></A>
+<A NAME="1880"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1881#
+<BR>
+This command will delete image buffer number 'buf' and discard its
+contents.  The memory needed to hold an image or spectrum is not
+pre-assigned when the VISTA program is compiled, instead it is allocated
+dynamically by the system when a new image is read in or created.  By
+allocating ``virtual memory'', VISTA can work efficiently by only using as
+much system memory at one time as required.  The DISPOSE command is used to
+free this memory when the image is no longer needed or when VISTA has run
+out of memory for assigning images to other buffers.  If you want to save
+the image, it should be written to disk or tape first with the WD command
+before using DISPOSE.
+
+<P>
+You can delete several image buffers at once by putting their numbers on
+the command line, up to a maximum of 20.  The DISPOSE ALL command will
+clear out the contents of all image buffers, releasing all of the
+dynamically allocated memory.
+
+<P>
+<#1893#> Examples:<#1893#>
+<BR>
+<tex2html_image_mark>#example1894#
+<BR>
+
+<P>
+VISTA may sometimes respond with the message 'No virtual memory available'
+when trying to load or create an image.  To make room for the new image,
+use DISPOSE to delete an unused image buffer or two.  This frees up more
+memory, allowing you to proceed.
+
+<P>
+If you DISPOSE of images that you will no longer need, the VISTA program
+may run faster, especially if there are many users on the system or if you
+are working with large (;SPMgt;2048x2048 images).
+
+<P>

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>COPW: Copy a Wavelength Scale onto a Spectrum</TITLE>
+<META NAME="description" CONTENT="COPW: Copy a Wavelength Scale onto a Spectrum">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001470000000000000000">
+COPW: Copy a Wavelength Scale onto a Spectrum</A>
+</H1>
+
+<!-- linkto copw.html -->
+<A NAME="5826"></A>
+<A NAME="5827"></A>
+<BR>
+
+<BR>
+
+<P>
+COPW will copy a wavelength calibration from one spectrum to another.  This
+is done to copy the wavelength scale computed with the WSCALE command from
+the comparison spectrum to a program spectrum.  The actual spectral data
+are not changed by this command, only the wavelength calibration parameters
+stored in the image header.  
+
+<P>
+If a second source spectrum is given then the command assumes that you have
+two comparison spectra which bracket the program spectrum in time, and it
+will use the times of observations of the image headers of the three
+spectra to do a linear interpolation of the wavelength parameters of the
+comparisons to the time of the program spectrum.  This procedure can
+sometimes provide an improved wavelength calibration by correcting for the
+effects of instrumental flexure.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

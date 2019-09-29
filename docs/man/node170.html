@@ -1,0 +1,29 @@
+
+<H1><A NAME="SECTION0014180000000000000000">
+FINDSHIFT: Compute Relative Shifts Between Two Spectra</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml410#
+<BR>
+<tex2html_image_mark>#command6112#
+<BR>
+
+<P>
+FINDSHIFT computes the relative shift between two spectra.  Given two
+spectra (1 row images), it computes SHIFT, the number pixels that the
+second (shifted) spectrum would have to be shifted to match (in the least
+squared sense) the first (template) spectrum. The user can selected a
+spectral region for the chi-squared computation. The algorithm solves the
+interpolation problem, so the command provides accurate fractional shifts.
+
+<P>
+Since the algorithm minimizes the difference in counts, results are more
+accurate if the spectra are normalized to have the same number of counts
+within the spectral region of interest. The algorithm looses sense if the
+spectra are very different.
+
+<P>
+If two images are given (more than one row), a single row will be
+considered for the shift calculation, the template's starting row is the
+default row, but can be changed with the 'ROW=' keyword.
+
+<P>

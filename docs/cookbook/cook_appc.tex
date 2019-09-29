@@ -1,0 +1,185 @@
+%
+%  VISTA Cookbook;  VISTA and the FITS Standard (Appendix C
+%
+%  Began:  1988 August 9
+%
+%  Last Revision:  1988 August 31
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:fits
+%
+
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+%\def \hitkey#1 {$\langle${\tt #1}$\rangle$\/}
+%
+%\begin{document}
+
+\chapter{VISTA and the FITS Standard}
+
+This appendix is meant to discuss, briefly, the basic principles of the FITS
+standard, and how VISTA interacts with it.  The main reason for this
+discussion is to clarify areas where VISTA has adopted some of the optional
+FITS header cards to somewhat non-standard applications, and troubles that can
+arise reading data from other sites.   This primarily for experts, but since
+VISTA has a \comm{FITS} command that allows the user to change FITS cards,
+it is possible (and demonstrated) that the user can crash VISTA right to the
+floor by tweaking a wrong card (``not {\it that} button!'').
+
+To get straight to one important point.  In the current release of VISTA in
+use since 1986, images written to magnetic tape by VISTA are FITS standard,
+and have been read successfully by most other image processing programs in use
+among the astronomical community (IRAF, MIDAS, and AIPS).  In addition, VISTA
+has been able to read FITS tapes brought from other institutions (\eg\ ESO),
+but it cannot at present read so-called ``blocked'' tapes written at 6250bpi
+density.
+
+As will be discussed below, VISTA has adopted a few of the standard FITS
+header cards for use {\it internally} in a manner inconsistent with the
+accepted standard.  This is perfectly harmless for most applications.  Where
+VISTA collides with the standard is in operation which attempt to work in
+``physical'' (or ``world'') coordinates --- such as arcseconds, wavelength,
+etc. --- explicitly.  For most applications, like 1-D spectra, the difference
+vanishes.  For more sophisticated applications, like calibrated 2-D spectra
+(this does not include echelle spectra, but rather long-slit spectra), there
+can be points of confusion.  It is hoped that this discussion will serve to
+clarify the issues.
+
+\section{The FITS Standard}
+
+FITS is an acronym for {\it Flexible Image Transport System}.  It is an
+internationally agreed upon structuring standard governing the format used to
+write astronomical data to magnetic tape.  The basic intent is to make any
+data written anywhere in the world completely portable to anywhere else,
+without having to have a separate program to read the data.  One standard
+format, one standard set of conventions, one program (in principle) capable of
+reading everything.
+
+For the most part, this has been accomplished.  Some uses of the FITS format
+for storing multi-dimensional radio data (or Fabry-Perot Interferometer
+images) are more than some sites can handle, but when it comes to 2-D images,
+it works quite well.  I won't go into great detail in this appendix, but
+rather refer you to the principal reference: {\it FITS: A Flexible Image
+Transport System}, Wells, Greisen, and Harten, 1981, {\it Astronomy and
+Astrophysics Supplement Series}, {\bf 44}, 363.
+
+The basic structure of a FITS file, as it pertains to 2-D images, is as
+follows:  Each file has a {\it Header} containing all of the information on
+the structure of the image data on the tape, and any auxilliary information
+describing the contents to the user (\eg\ object name, exposure time, date of
+observation, etc.).  Following the Header are the data records, which contain
+the image data itself.
+
+The way most programs, including VISTA, work is to first read the header. This
+will tell the program how to sort out the data records and essentially
+reconstruct the image from an (effectively) unstructured stream of numbers.
+The means that data storage is (in principle) as compact as possible, and
+intelligible to any program that can interpret FITS headers.  This is the
+essense of ``portability.''
+
+The organization of the header is relevant to the following discussion. The
+header is divided into ``cards'' each of which contains some piece of
+information.  The first 8 characters of a card contain the name of the card.
+The header cards most essential for image untangling have been standardized.
+In brief, 6 cards are absolutely required for a 2-D image.  These are, IN
+ORDER:
+
+\begin{description}
+      \item[SIMPLE] A logical variable, always ``T'' (True) if the
+		    image is a ``simple'' FITS image.  All VISTA images are
+		    ``simple'' in this regard.
+
+      \item[BITPIX] An integer, it gives the number of bits per pixel
+		    of the image data.  VISTA, and most other programs,
+		    support only BITPIX=16 and BITPIX=32.
+
+      \item[NAXIS]  An integer, equal to the number of image axes.  A 2-D
+		    image has\hfil\break ``NAXIS=2''.  A 1-D image
+		    (``spectrum'') has ``NAXIS=1''.
+
+      \item[NAXIS1] The number of pixels along the `first' image axis.  For 2-D
+		    images, this is the number of columns, or for spectra, the
+		    number of pixels (sometimes called ``channels'').
+
+      \item[NAXIS2] The number of pixels along the `second' image axis.  For
+		    2-D images, this is the number of rows, and for spectra,
+		    NAXIS2 is 1.
+
+      \item[END]    In between the last {\it NAXISn} card and the end of the
+		    FITS header, you can have as many cards with as much
+		    info as you like.  However, the last card must be ``END''.
+\end{description}
+
+Beyond this basic set of FITS cards, all of the other cards are considered
+optional.  FITS cards can take real, integer, or character variables, single
+or double precision.  The FITS standard also defines some basic `optional'
+cards that most people use.  Thus, while intended as `optional', they have by
+common use become an integral part of the standard.  Again, interested readers
+are referred to the aforementioned paper for details.  VISTA has adopted some
+of these for its own purposes, and these are discussed in the next section.
+
+\section{FITS Cards Important to VISTA}
+
+VISTA uses some of the FITS header cards info in non-standard ways that can
+potentially cause trouble if care is not taken.  These are listed in the table
+below, with the VISTA usage and standard usage given.
+
+\begin{center}
+  \begin{tabular}{|l|p{2.0in}|p{2.0in}|}
+    \hline
+    \multicolumn{3}{|c|}{Special FITS Cards}\\ \hline
+    \multicolumn{1}{|c|}{FITS Card}&
+    \multicolumn{1}{c|}{VISTA Usage}&
+    \multicolumn{1}{c|}{Standard Usage}\\ \hline
+      CRVAL1&Starting Column of an Image&Value in physical coordinates
+	    along the columns axis of the reference pixel in columns\\
+      CRVAL2&Starting Row of an Image&Value in physical coordinates along the
+	    rows axis of the reference pixel in rows\\
+      CDELT1&On-Chip Binning Factor in Columns&pixel scale in physical
+	    coordinates along columns axis\\
+      CDELT2&On-Chip Binning Factor in Rows&pixel scale in physical coordinates
+	    along rows axis\\
+      CRPIX1&Array index of starting column&Array index of the refernce pixel
+	    in columns\\
+      CRPIX2&Array index of starting row&Array index of the refernce pixel
+	    in rows\\
+      CTYPE1&If a spectrum, indicates wavelength scale type&Units of physical
+	    coordinates along the columns axis (\eg\ arcsec)\\
+      CTYPE2&Unused&Units of physical coordinates along the rows axis (\eg\
+	    arcsec)\\ \hline
+  \end{tabular}
+\end{center}
+
+Of particular importance to VISTA are the \comm{CRVAL1} and \comm{CRVAL2}
+cards, which are used to to determine the array indices for the image.  If
+these are changed without care, it could cause VISTA to crash.  If these cards
+are changed for any reason, you need to copy the image buffer into itself
+(\eg\ if you change them in the image header of Buffer 1, you need to issue
+the command: \comm{COPY 1 1}).  This operation will reset the internal array
+index pointers and keep VISTA happy.  VISTA is internally consistent in its
+use of these cards, but there is demonstrated collision with some data from
+other institutions.  For example, 2-D images which are wavelength calibrated
+along one axis brought to Lick from ESO caused a fair amount of havoc. An
+exception is within the plotting commands (\comm{PLOT} and \comm{CONTOUR})
+which make use of the FITS coordinate cards as defined by the standard.
+Examples of this is given in the chapter on ``dirty tricks''.
+
+The principal point here is to keep in mind that VISTA works internally with
+array indices (\ie\ pixel number), not physical coordinates.  Thus, if you add
+together two spectra that are wavelength calibrated together, they will be
+added {\it pixel-by-pixel}, not by wavelength.  Unless the spectra overlap in
+pixels and wavelength simultaneously, the addition of the two will create
+garbage. As can be seen from the above table, VISTA does not use physical
+coordinate FITS cards in a manner consistent with the definitions outlined in
+the 1981 standard paper.  This constitutes VISTA's primary weakness.
+
+%\end{document}
+%\end

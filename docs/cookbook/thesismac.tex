@@ -1,0 +1,100 @@
+%
+%  Lick Observatory custom TeX macros.
+%
+%  Adapted for LaTeX THESIS document environment
+%  by R. Pogge, 1988 January 24
+%
+%  Updated: 1988 March 13
+%
+%  May be read into regular TeX.
+%
+%  "Human Version" with comments is in THESISMAC.DOC
+%
+\def\er#1{\hbox{\rm {#1}}}  
+\def\eb#1{\hbox{\bf {#1}}}  
+\def\sr#1{_{\hbox{\scriptsize\rm {#1}}}}  
+\def\si#1{_{\hbox{\scriptsize\it {#1}}}}
+\def\scin#1#2{{#1}\times 10^{#2}}
+\def\drvop#1{{d\over{d{#1}}}}  
+\def\drvf#1#2{{{d{#1}}\over{d{#2}}}} 
+\def\partop#1{{{\partial}\over{\partial {#1}}}} 
+\def\partf#1#2{{{\partial{#1}}\over{\partial {#2}}}} 
+\def\divr{\nabla\cdot}  
+\def\curl{\nabla\times}  
+\def\lapl{\nabla^2}
+\def\square{\vbox to 7pt{\boxit{\hbox to 0pt{}}}\hskip 1pt}
+\def\dalem{\square^2}
+\def\advect#1{{{\partial{#1}}\over{\partial t}}+\eb{v}\cdot\nabla {#1}}
+\def\delt#1#2{\delta({#1}-{#2})}
+\def\sint#1{\oint_{\cal {S}} {#1} \, d\Omegait}
+\def\suminf#1{\sum_{{#1}=0}^{\infty}}
+\def\liminf#1{\lim_{{#1}\to\infty}}
+\def\gtaprx{\mathrel{\vcenter{\offinterlineskip \hbox{$>$}
+    \kern 0.3ex \hbox{$\sim$}}}}
+\def\ltaprx{\mathrel{\vcenter{\offinterlineskip \hbox{$<$}
+    \kern 0.3ex \hbox{$\sim$}}}}
+\def\avg#1{\overline{#1}}
+\def\deg{$^{\circ}$}
+\def\degc{^\circ \er{C}}  
+\def\degf{^\circ \er{F}}  
+\def\degk{^\circ \er{K}}
+\def\fnu{\er{ergs~sec}^{\hbox{\scriptsize -1}}
+\er{cm}^{\hbox{\scriptsize -2}}\er{Hz}^{\hbox{\scriptsize -1}}}  
+\def\flam{\er{ergs sec}^{\hbox{\scriptsize -1}}
+\er{cm}^{\hbox{\scriptsize -2}}\er{\AA}^{\hbox{\scriptsize -1}}}  
+\def\flux{\er{ergs cm}^{\hbox{\scriptsize -2}} 
+\er{sec}^{\hbox{\scriptsize -1}}}
+\def\intens{\er{ergs sec}^{\hbox{\scriptsize -1}}
+\er{cm}^{\hbox{\scriptsize -2}}\er{sr}^{\hbox{\scriptsize -1}}}
+\def\wave#1{$\lambda${#1}}  
+\def\waves#1{$\lambda\lambda${#1}}  
+\def\sol{$_\odot$}
+\def\stel{_\ast}  
+\def\earth{_\oplus}  
+\def\losol#1{({\hbox{#1}}/{\hbox{#1}\sol})}  
+\def\bosol#1{\left({{\hbox{#1}}\over{\hbox{#1}\sol}}\right)} 
+\def\eff{\si{eff}}
+\def\kms{km~sec$^{\hbox{\scriptsize -1}}$}
+\def\hunit{km~sec$^{\hbox{\scriptsize -1}}$~Mpc$^{\hbox{\scriptsize -1}}$} 
+\def\hub{H$_{\hbox{\scriptsize 0}}$}
+\def\pp{\par\yskip\noindent\hangindent 0.4in \hangafter 1}
+\def\ctr#1{\hfil#1\hfil}%
+\def\lft#1{ #1\hfil}%
+\def\rt#1{\hfil#1}%
+\def\etal{{\it et al.}}
+\def\eg{{\it e.g.,}}
+\def\ie{{\it i.e.,}}
+\def\etc{{\it etc.}}
+\def\apriori{{\it a priori}}
+\def\ibid{{\it ibid.}}
+\def\opcit{{\it opcit.}}
+\def\vis{{\it vis}}
+\def\blank#1{\hbox to #1{\leaders\hrule\hfill}}
+\def\lickdot#1{\setbox5=\hbox{#1}\setbox6=\hbox{\quad}
+{#1}\hskip -.5\wd5 \hskip -.15\wd6 \raise 1.2\ht5\hbox{.}\hskip .5\wd5 }
+\def\littleprime{\ifmmode{\scriptscriptstyle \prime }
+    \else{\hbox{$\scriptscriptstyle \prime$ }}\fi}
+\def\littless{\ifmmode{\scriptscriptstyle s }
+    \else{\hbox{$\scriptscriptstyle s $ }}\fi}
+\def\littlemm{\ifmmode{\scriptscriptstyle m }
+    \else{\hbox{$\scriptscriptstyle m $ }}\fi}
+\def\littlecirc{\ifmmode{\scriptscriptstyle \circ }
+    \else{\hbox{$\scriptscriptstyle \circ $ }}\fi}
+\def\littlehour{\ifmmode{\scriptscriptstyle h }
+    \else{\hbox{$\scriptscriptstyle m $}}\fi}
+\def\toph{\raise .9ex \hbox{\littlehour}}
+\def\hourpoint{\hbox to 2pt{}\rlap{\hskip -.5ex \toph}.\hbox to 2pt{}}
+\def\topemm{\raise .9ex \hbox{\littlemm}}
+\def\magpoint{\hbox to 2pt{}\rlap{\hskip -.5ex \topemm}.\hbox to 2pt{}}
+\def\arcss{\raise .9ex \hbox{\littless}}
+\def\arcsspoint{\hbox to 1pt{}\rlap{\arcss}.\hbox to 2pt{}}
+\def\sdeg{\raise .9ex \hbox{\littlecirc}}
+\def\degpoint{\hbox to 1pt{}\rlap{\sdeg}.\hbox to 2pt{}}
+\def\arcmin{\raise .9ex \hbox{\littleprime}}
+\def\arcminpoint{\hbox to 1pt{}\rlap{\arcmin}.\hbox to 2pt{}}
+\def\arcsec{\raise .9ex \hbox{\littleprime\hskip-3pt\littleprime}}
+\def\arcsecpoint{\hbox to 1pt{}\rlap{\arcsec}.\hbox to 2pt{}}
+\def\yskip{\penalty-50\vskip3pt plus3pt minus2pt}
+\def\yyskip{\penalty-100\vskip6pt plus6pt minus4pt}
+\def\xskip{\hskip7pt plus3pt minus4pt}
+\def\Sskip{\penalty-200\vskip24pt plus12pt minus6pt}

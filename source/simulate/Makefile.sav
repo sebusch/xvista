@@ -1,0 +1,83 @@
+MLIB=../../lib/simulate.$(MACHINE).a
+VMSTREE=/usr/tmp/vista
+OBJS=devauc.o photons.o
+LOBJS=$(MLIB)(devauc.o) $(MLIB)(photons.o) $(MLIB)(psfbuf.o)
+VMSCODE=devauc.for photons.for
+#
+#       Teach make how to do a number of things that certain systems don't know
+.SUFFIXES:
+.SUFFIXES: .out .o .c .e .r .F .f .y .l .s .p .a
+.F.o:
+	$(CPP) $(CPPFLAGS) $*.F $*.$(FPP)
+	$(FC) -c $(FFLAGS) $*.$(FPP)
+	$(RM) -f $*.$(FPP)
+.F.a:
+	$(CPP) $(CPPFLAGS) $< $*.$(FPP)
+	$(FC) -c $(FFLAGS) $*.$(FPP)
+	$(AR) rv $@ $*.o
+	$(RM) -f $*.$(FPP) 
+	rm -f $*.o
+.f.a:
+	$(FC) -c $(FFLAGS) $*.f
+	$(AR) rv $@ $*.o
+	rm -f $*.o
+.c.a:
+	$(CC) -c $(CFLAGS) $*.c
+	$(AR) rv $@ $*.o
+	rm -f $*.o
+
+.F.inc: ; $(CPP) $(CPPFLAGS) $*.F $*.inc
+
+#       Teach make how to make files for export to a VMS system
+.SUFFIXES: .vmsf .for .inc .vmsc .com
+.vmsf.for: ; cp $*.vmsf $*.for
+.vmsc.com: ; cp $*.vmsc $*.com
+.f.for: ; cp $*.f $*.for
+.F.for: ; $(CPP) $(VMSFLAGS) $*.F $*.for
+#
+datefile::Vista.h $(MLIB) tidy
+	date > datefile
+#       Don't let make delete the object library!
+.PRECIOUS: $(MLIB)
+#
+$(MLIB): $(DOOBJS)
+	$(MAR)
+	-$(MRM)
+	-ranlib $(MLIB)
+clean:
+	-rm *.o \#* *.bak
+tidy:
+	-rm Vista.h datefile
+Vista.h:
+	ln -s ../Vista.$(MACHINE) Vista.h
+#       THE FOLLOWING STUFF MAKES CODE FOR THE VAXen
+avmscode: Vista.h.avms $(VMSCODE)
+	-mkdir $(VMSTREE)/source/simulate
+	mv *.for $(VMSTREE)/source/simulate
+	-cp *.c $(VMSTREE)/source/simulate
+	cp ../Vista.avms $(VMSTREE)/source/simulate/Vista.h
+	-rm Vista.h avmscode
+	date >  avmscode
+Vista.h.avms:
+	-rm Vista.h
+	ln -s ../Vista.avms Vista.h
+uvmscode: Vista.h.uvms $(VMSCODE)
+	-mkdir $(VMSTREE)/source/simulate
+	mv *.for $(VMSTREE)/source/simulate
+	-cp *.c $(VMSTREE)/source/simulate
+	cp ../Vista.uvms $(VMSTREE)/source/simulate/Vista.h
+	-rm Vista.h uvmscode
+	date >  uvmscode
+Vista.h.uvms:
+	-rm Vista.h
+	ln -s ../Vista.uvms Vista.h
+pvmscode: Vista.h.pvms $(VMSCODE)
+	-mkdir $(VMSTREE)/source/simulate
+	mv *.for $(VMSTREE)/source/simulate
+	-cp *.c $(VMSTREE)/source/simulate
+	cp ../Vista.pvms $(VMSTREE)/source/simulate/Vista.h
+	-rm Vista.h pvmscode
+	date >  pvmscode
+Vista.h.pvms:
+	-rm Vista.h
+	ln -s ../Vista.pvms Vista.h

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>CUT: Extract a Brightness Profile Cut along any Position Angle</TITLE>
+<META NAME="description" CONTENT="CUT: Extract a Brightness Profile Cut along any Position Angle">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001510000000000000000">
+CUT: Extract a Brightness Profile Cut along any Position Angle</A>
+</H1>
+
+<!-- linkto cut.html -->
+
+<P>
+<A NAME="6723"></A>
+<BR>
+
+<BR>
+
+<P>
+CUT will extract the surface-brightness profile of an object along an
+arbitrary position angle.  The center of the object can be loaded with the
+AXES command or by the C keyword.  A cut can also be offset from any center
+using the OFF keyword, as might be done to take a series of cuts at
+different locations along the major axis of a galaxy.  The position angle
+is defined from the top of the image.  Adding 180 to any PA will generate a
+cut running in the opposite direction.  This can be used to compare or add
+profiles reflected about the center of a galaxy, for example.  The default
+width is one pixel, and the height or length extends to the image borders.
+Both parameters are rounded to the nearest whole pixel. The PLOT keyword
+shows the bounds of the cut on the image display.
+
+<P>
+The cut is loaded into the 'dest' image buffer, and can be treated,
+analyzed, processed, saved, etc., as an image with a row dimension of one.
+The central column of the cut is always set to occur at column 0.  Sinc
+interpolation is used to generated cuts of width 1; bilinear interpolation
+is used otherwise.  Pixels are always summed across the width of the cut.
+Divide the resulting cut vector by the width in pixels (WIDTH= keyword) to
+normalize it after the fact.
+
+<P>
+See Also: AXES, TEMPLATE
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

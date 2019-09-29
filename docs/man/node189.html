@@ -1,0 +1,28 @@
+
+<H1><A NAME="SECTION0015130000000000000000">
+CLPROF: Clear the Contents of the PROFILE Buffer</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml447#
+<BR>
+<tex2html_image_mark>#command7021#
+<BR>
+
+<P>
+CLPROF sets all parameters in the PRF common block to zero. CLPROF should
+always be used when the command GET PROF= is used to overwrite the existing
+contents of the profile block with new profile parameters stored in a .pro
+file. If CLPROF is not run, and if the profile being overwritten is larger
+than the new one, the old parameters will remain in the common block for
+radii larger than the maximum radius of the new profile.
+
+<P>
+To retain the existing profile parameters out to a given radius, setting
+them to zero beyond this, the optional keyword RAD=r may be given. All
+profile parameters corresponding to radii greater than or equal to r are
+then set to zero. This is valuable if a PROFILE calculation is seen to have
+gone awry beyond a certain radius.
+
+<P>
+See Also: PROFILE, CPROF
+
+<P>

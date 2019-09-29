@@ -1,0 +1,30 @@
+			PostScript in Lick Mongo
+
+This directory contains files which are used for generation and printing
+of PostScript.  The active versions of these files are also linked up into
+the next higher directory ("/mongodir").
+
+PSprint             | cshell script which is invoked to print PS files
+dodot.ps            | PostScript macro for drawing Lick Mongo points
+dodot.orig          | older version
+mongolabel.old      | PS macro for full Mongo labeling--no comments
+mongolabel.ps       | PS macro for full Mongo labeling--Apple LaserWriter fonts
+simputlabel.ps      | PS macro for simple labeling
+simputlabel.orig    | older version
+
+The PSprint cshell script is tailored for Lick Observatory's printers and
+will need to be changed.  All it really needs is to invoke the correct command
+to print a PostScript file on your system.
+
+The mongolabel.* macros use fonts which are likely to be found on most
+PostScript printers.  If necessary, changing mongolabel.ps to use other fonts
+is a simple procedure of editing the top few lines.
+
+These macros also contain lots of comments which may be processed rather slowly
+by your host machine if it is slow (e.g., a 4.3bsd VAX11/780 with high load).
+These can be removed if desired for faster printing.  If they are removed, then
+the "Config.(yourmachinehere)" file should be modified to include the CPP line
+#define NO_PS_COMMENTS
+and the .../lick/source/devices/psdrivers.F file should be recompiled.  This
+will significantly speed up the execution of Lick Mongo while it generates
+the PostScript plot files.

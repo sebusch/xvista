@@ -1,0 +1,95 @@
+#include "Vista.h"
+      SUBROUTINE SHORTAP
+
+C   Subroutine to convert an aperture photometry file to a .NST look alike
+#ifdef VMS
+      INCLUDE 'VINCLUDE:VISTALINK.INC'
+      INCLUDE 'VINCLUDE:CUSTOMIZE.INC'
+#else
+      INCLUDE 'vistadisk/source/include/vistalink.inc'
+      INCLUDE 'vistadisk/source/include/customize.inc'
+#endif
+
+      PARAMETER (MAXAP = 12)
+      REAL APMAG(MAXAP), ERR(MAXAP)
+      CHARACTER LINE*132, NAME*80, PARM*8
+      CHARACTER*132 COOFILE, MAGFILE, PSFFILE, PROFILE, GRPFILE, SWITCH, LINE3
+      COMMON /FILENAM/ COOFILE, MAGFILE, PSFFILE, PROFILE, GRPFILE
+      LOGICAL NOFILES, KEYCHECK
+      COMMON /DAOASK/ NOFILES
+
+      REAL LOWBAD
+
+      CALL KEYINIT
+      CALL KEYDEF('AP=')
+      CALL KEYDEF('SCALE=')
+      IF (.NOT. KEYCHECK()) THEN
+	XERR = .TRUE.
+	RETURN
+      END IF
+
+      NAP = 1
+      SCALE = 1.
+      DO 5501 I=1,NWORD
+	IF (WORD(I)(1:3) .EQ. 'AP=') THEN
+	  CALL ASSIGN(WORD(I),TMP,PARM)
+          IF (XERR) RETURN
+	  NAP = NINT(TMP)
+	ELSE IF (WORD(I)(1:6) .EQ. 'SCALE=') THEN
+	  CALL ASSIGN(WORD(I),SCALE,PARM)
+          IF (XERR) RETURN
+	END IF
+5501  CONTINUE
+      IF (NAP .GT. MAXAP) THEN
+	 PRINT *, ' ERROR: only', MAXAP,' apertures in file'
+	 XERR = .TRUE.
+	 RETURN
+      END IF
+
+      CALL ASKFILE('Name of input (.AP) file:',MAGFILE)
+      IF (MAGFILE .EQ. 'END OF FILE') RETURN
+
+      CALL FILEDEF(MAGFILE,NAME,DAODIR,'.ap')
+      OPEN (2, FILE=NAME, STATUS='OLD',ERR=9400)
+      REWIND(2)
+      CALL RDHEAD(2,NL, NCOL, NROW, LOWBAD, HIGHBAD, THRESH, AIR,
+     &      EXPOSE, HJD, AP1, PHPADU, READNS, FRAD, LINE3)
+
+      IF (NOFILES) THEN
+      PROFILE = SWITCH(MAGFILE,'.nst')
+      END IF
+      CALL ASKFILE('Name of output file:',PROFILE)
+      IF (PROFILE .EQ. 'END OF FILE') RETURN
+      CALL FILEDEF(PROFILE,NAME,DAODIR,'.nst')
+      CALL OUTFILE(3, NAME)
+      CALL WRHEAD(3, 1, NCOL, NROW, 10, LOWBAD, HIGHBAD, THRESH, AIR,
+     &     EXPOSE, HJD, AP1, PHPADU, READNS, 0., LINE3)
+
+C  Now loop through the input file, outputting just one aperture
+
+5     READ(2,'(A)',END=50,ERR=50) LINE
+      IF (LINE .EQ. ' ') GOTO 5
+
+      READ(LINE,320,END=50,ERR=50) ISTAR, X, Y, (APMAG(I),I=1,NAP)
+ 320  FORMAT(I6, 2F9.2, 12F9.3)
+      READ(2,'(A)',END=50,ERR=50) LINE
+      READ(LINE,321,END=50,ERR=50) SKY, DUM, DUM, (ERR(I),I=1,NAP)
+ 321  FORMAT(4X, F9.3, 2F6.2, 12(F8.3,1X))
+
+      WRITE(3,103) ISTAR,X,Y,APMAG(NAP)-2.5*LOG10(SCALE),ERR(NAP),SKY,0.,0.,0.
+103   FORMAT(I6,2F9.2,12F9.3)
+    
+      GOTO 5
+
+50    CONTINUE
+      CLOSE(2,ERR=51)
+51    CLOSE(3,ERR=52)
+52    CONTINUE
+      RETURN
+9400  PRINT *, 'Error opening file', NAME
+      XERR = .TRUE.
+      RETURN
+
+      END
+
+     

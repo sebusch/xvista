@@ -1,0 +1,26 @@
+
+<H1><A NAME="SECTION001280000000000000000">
+COLFIX: Fix Deferred Charge Columns in a CCD Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml341#
+
+<P>
+<BR>
+<tex2html_image_mark>#command4756#
+<BR>
+
+<P>
+COLFIX will attempt to fix deferred charge columns (or rows) under
+the assumption that they can be fixed by additive corrections.  Under
+default operation, the routine finds the median of each column, and then
+generates corrections to each column such that they all have the same
+median.  The median is selected is a super-median, of median of the the
+original column medians.  A number of fixes are given for crowded images or
+those containing extended objects, where the median may be biased.  The
+SPLINE option fits a spline to the column medians in an attempt to preserve
+and slow trends originally in the data.  MAX sets an upper threshold to
+exclude bright pixels that may bias the median, and MODE attempts to revise
+the median by using the difference in value between the median and first
+quartile to exclude bright pixels in the last quartile.
+
+<P>

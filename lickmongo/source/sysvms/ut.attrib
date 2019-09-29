@@ -1,0 +1,28 @@
+From cornell@puck.as.utexas.edu Mon Jun 10 13:16:26 1991
+Return-Path: <cornell@puck.as.utexas.edu>
+Received: from ucscc.UCSC.EDU by helios (4.1/SMI-4.1)
+	id AA14353; Mon, 10 Jun 91 13:16:24 PDT
+Received: from puck.as.utexas.edu by ucscc.UCSC.EDU (5.65/1.35)
+	id AA23216; Mon, 10 Jun 91 13:15:52 -0700
+Date: Mon, 10 Jun 91 15:23:03 CDT
+From: cornell@puck.as.utexas.edu (Mark E. Cornell)
+Posted-Date: Mon, 10 Jun 91 15:23:03 CDT
+Message-Id: <9106102023.AA01434@puck.as.utexas.edu>
+Received: by puck.as.utexas.edu (5.65/1.00)
+	id AA01434; Mon, 10 Jun 91 15:23:03 CDT
+To: mongo@helios.UCSC.EDU
+Subject: Re:  bug under VMs
+Status: RO
+
+I guess I wrote that userhost.F, based on an idea from Rick Pogge.
+You might want to test and/or clean it up.  I just hacked it together
+moments ago.
+
+============================================================================
+| Mark E. Cornell, Ph.D.            Internet: cornell@astro.utexas.edu     |
+| Software Support                            cornell@puck.as.utexas.edu   |
+| McDonald Observatory                                                     |
+| University of Texas, RLM 15.308   Voice:    (512) 471-3423 or 471-3000   |
+| Austin, TX  78712-1083            FAX:      (512) 471-6016               |
+============================================================================
+

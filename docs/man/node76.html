@@ -1,0 +1,35 @@
+
+<H1><A NAME="SECTION00770000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2334"><tex2html_anchor_invisible_mark></A><BR>
+SKIP: Mark Selected Lines to Skip in a File
+</H1>
+<tex2html_verbatim_mark>rawhtml248#
+<BR>
+<tex2html_image_mark>#command2335#
+<BR>
+
+<P>
+SKIP builds a skip table of lines to be skipped inside the named file.  The
+file must have been previously opened using the OPEN command.  Up to 50
+skip points are available in the table for each opened file.  Each
+individual line skipped counts as one specification and each range of lines
+skipped counts as two specifications.  Whenever a file is OPEN'ed, or
+reOPEN'ed, its skip table is cleared.  REWINDing a file (see the REWIND
+command) does not clear the skip table.  If you just type SKIP
+logical_name without any lines to skip then the table of skipped lines for
+the named file is printed.
+
+<P>
+Lines which are SKIPped in a file can not be read with the READ command or
+by string substitution and are not used by the STAT command.  In
+particular, note that the number of lines in the file as returned by the
+STAT command is the actual number of lines minus any skipped lines.
+
+<P>
+<#2342#>Examples:<#2342#>
+<BR>
+<tex2html_image_mark>#example2343#
+<BR>
+See the example under the READ command for one use of the SKIP command.
+
+<P>

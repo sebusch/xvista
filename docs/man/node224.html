@@ -1,0 +1,30 @@
+
+<H1><A NAME="SECTION0016240000000000000000">
+MAGAVER: Compute Weighted Means of Photometry from COMBINE</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml492#
+<BR>
+<tex2html_image_mark>#command7788#
+<BR>
+
+<P>
+MAGAVER takes the output file from COMBINE when run with the CMB=
+option. It will ask the user which columns in this file correspond to which
+colors, and will do a weighted average of multiple observations in each
+color. Currently, only 3 different colors are allowed.  If the PLOT keyword
+is specified, the magnitudes to be averaged will be displayed with a MONGO
+plot for each star. If the TTY keyword is specified, the user will be
+allowed to interactively remove points from each set of observations.
+
+<P>
+This command can also be used on output photometry files to merge them
+together into one file, for later use by FITSTAR.  In this mode, the
+program will prompt for a file name, read the stars in from this file and
+output them to a new file, then ask for a new input file, from which to
+append the results onto the original output file. This can be used, for
+example, to merge all observations of standard stars from multiple frames
+into one file.  The NORM keyword will normalize all the measured magnitudes
+to a standard exposure time, assuming the exposure is stored in the data
+file.
+
+<P>

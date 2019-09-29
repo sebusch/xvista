@@ -1,0 +1,38 @@
+
+<H1><A NAME="SECTION0015230000000000000000">
+WPREP: Write a Record into a Batch Surface Photometry Prep-File</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml457#
+<BR>
+<tex2html_image_mark>#command7115#
+<BR>
+
+<P>
+WPREP writes a record into a batch surface photometry preparation file
+opened using OPREP.  The data written in each record are as follows:
+
+<UL>
+<LI><#7119#>SKY value (from VISTA variable SKY)<#7119#>
+</LI>
+<LI><#7120#>max. radius for photometry (from variable RMAX)<#7120#>
+</LI>
+<LI><#7121#>estimated HWHM for the PSF (from variable PSF)<#7121#>
+</LI>
+<LI><#7122#>contents of the AXES block (from AXES)<#7122#>
+</LI>
+<LI><#7123#>image header.<#7123#>
+</LI>
+</UL>
+
+<P>
+This information is formatted to be read by RPREP.  The file must have
+already been opened with write-access using the `OPREP W' command.
+
+<P>
+NOTE: You must compute the image parameters above ahead of time, either
+outside of VISTA or using the AXES command without the CORR option.
+
+<P>
+See Also:  OPREP, RPREP, CLPREP
+<tex2html_endfile>#./chap15.tex#
+<tex2html_file>#./chap16.tex#

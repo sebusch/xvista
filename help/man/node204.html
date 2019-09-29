@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>PHOTOM: DAOPHOT APERTURE PHOTOMETRY Command</TITLE>
+<META NAME="description" CONTENT="PHOTOM: DAOPHOT APERTURE PHOTOMETRY Command">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001640000000000000000">
+PHOTOM: DAOPHOT APERTURE PHOTOMETRY Command</A>
+</H1>
+
+<!-- linkto photom.html -->
+<BR>
+
+<BR>
+
+<P>
+Does aperture photometry on buffer <I>im</I> using input star file.  Unlike
+standalone DAOPHOT, a photometry table which gives aperatures, etc., is not
+used.  The user can specify pixel radii (up to 30 different
+values) with the RAD= keyword to give the desired radii for aperture
+photometry. The GAIN= and RN= keywords need to be
+used to give proper error estimates. With the RAD= keyword, the SKY is
+assumed to be 0 unless it a sky value is supplied with the SKY= keyword, or 
+unless two annulus radii are specified with the SKYRAD= keyword 
+(which is the normal mode of operation).  A series of
+aperture radii in an aritmetic progression can be specified in shorthand using
+RAD=-naper,startaper,deltaaper (note that this format is recognized by a
+NEGATIVE naper), where naper is the desired total number of apertures,
+startaper is the size of the first aperture, and deltaaper is the amount
+added to the previous aperture size.
+
+<P>
+The keyword SKY= can be used to set a sky value, used for all stars. Normally,
+however, one wishes to allow for possible background variations across
+the frame, and a sky value is computed from an annulus around each object;
+the size of the annulus is specified using the SKYRAD=r1,r2 keyword.
+The default mode of operation uses the DAOPHOT MMM routine to compute a
+sky value based on an estimate of the mode of the distribution within the
+sky annulus. Alternatively, the
+keyword MEAN forces a mean sky value to be used,  and the 3SIG keyword
+computes an iterated mean with 3-sigma rejection.
+The keyword SKYINT will
+compute a sky value for each star, then prompt the user to enter a desired 
+value for each star. 
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

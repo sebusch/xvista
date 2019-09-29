@@ -1,0 +1,97 @@
+
+<H1><A NAME="SECTION00610000000000000000">
+RD: Read an Image from a Disk File</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml217#
+
+<P>
+<A NAME="1734"><tex2html_anchor_invisible_mark></A>
+<A NAME="1735"><tex2html_anchor_invisible_mark></A>
+<A NAME="1736"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1737#
+<BR>
+This command reads images from the disk into a buffer. Images with only one
+dimension (i.e. spectra) are converted to two-dimensional images when read
+from the disk.
+
+<P>
+VISTA (starting with v4.2) has adopted the FITS format as the default image
+format for input and output.  FITS images are organized (in their simplest
+form) into header and data records.  The FITS format has the great
+advantage that is it defined independently of your machine type and is a
+nearly universally accepted and well-documented standard for data
+interchange in the astronomical community.  Consequently, it is possible to
+exchange images between different machines and/or operating systems without
+having to use special translation software.  For more information on the
+FITS format, see the FITS Support Office Home Page at the NASA Goddard
+Space Flight Center
+(<A NAME="tex2html5"
+  HREF="http://fits.gsfc.nasa.gov/">http://fits.gsfc.nasa.gov/</A>).
+
+<P>
+If the specified image cannot be found, the program will attempt to find
+a ``gzip''ed version of the file by appending a .gz to the file name. If
+RD finds a file name with a .gz extension, it will copy the file to the
+/tmp directory, uncompress it, read it, and then delete the temporary
+uncompressed verions.
+
+<P>
+The optional keywords WFPC, DOM, and SDAS may be used to specify that the
+file to be read is a WF/PC team format file (in DEC byte order). If WFPC is
+specified, the names are taken to be filename.IMG and filename.HDR; for
+SDAS, the filenames are filename.HHD and filename.HHH; for DOM, the file is
+specified by a number, W00000n.IMG and W00000n.HDR. If any of these
+extensions are explicitly mentioned in the filename, the WFPC switch is
+automatically turned on.
+
+<P>
+If the directory is not explicitly given in the filename, the program tries
+to read from the image directory (or from the spectrum directory if the
+word SPEC is given, although this usage is now considered archaic, see the
+notes below).  If a filename extension is not given in the filename, the
+program puts on a default extension from the list of extensions.  You can
+show the default directories and extensions with the command PRINT
+DIRECTORIES.
+
+<P>
+In the examples below, assume that the default directories 
+/vista/ccd/ for images and /vista/spectra/ for spectra:
+<BR>
+<tex2html_image_mark>#example1755#
+<BR>
+
+<P>
+<#1762#><B>A Note About Images, Spectra, and Directories:</B><#1762#>
+
+<P>
+We wish to point out that in general there is no requirement within VISTA
+to treat images and spectra separately, as both are treated equally as 2-D
+or 1-D FITS format images, respectively.  The old segregation was an
+artifact of earlier versions of VISTA in which 2-D images and 1-D spectra
+had completely separate data formats (images were .ccd files, spectra .spc
+files), and separate commands associated with them (e.g., WD for images, WS
+for spectra, separate image and spectral arithmetic routines, etc.).  With
+Version 3, this illogical separation was eliminated, but the old SPEC
+syntax was retained for backward compatibility.  It often confuses new
+users, and in general we suggest that new users ignore the SPEC keyword and
+V_SPECDIR environment variables altogether.  Old users with bad habits are
+on their own.
+
+<P>
+The use of special image and/or spectrum directories is of course an
+artifact of the old days when computer systems had large scratch disks
+(``large'' at that time meant 300Mb units the size of a large-capacity
+washing machine) and very small user disk areas, and hence it was necessary
+to farm out large images to centralized data disks assigned by the system
+administrator.  In this day and age of multi-gigabyte disks that fit in the
+palm of your hand, this no longer makes any sense, but it has been retained
+to ensure some measure of backwards compatibility (note that IRAF carries
+the convention out as well).  In general, we find that many VISTA users
+define their default image directory to be <tex2html_verb_mark>3<tex2html_verb_mark>, the current working
+directory, and ignore the spectrum directory altogether.  The typical
+exceptions are when using VISTA for quick-look data analysis at the
+telescope, when many users find it convenient to define the default image
+directory to be the incoming raw data file system.
+
+<P>

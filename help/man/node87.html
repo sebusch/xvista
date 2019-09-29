@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>PLOT: Plot a Row or Column of an Image or Spectrum</TITLE>
+<META NAME="description" CONTENT="PLOT: Plot a Row or Column of an Image or Spectrum">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00880000000000000000"></A>
+<A NAME="2901"></A>
+<A NAME="2902"></A>
+<A NAME="2903"></A>
+<BR>
+PLOT: Plot a Row or Column of an Image or Spectrum
+</H1>
+
+<!-- linkto plot.html -->
+<BR>
+
+<BR>
+
+<P>
+PLOT produces a plot of a selected rows, columns, or spectra for up to 15
+different images, using the LickMongo plotting package. All the specified
+buffers will come out on the same plot, or each successive specified buffer
+can come out in a series of windows (with the number of horizontal and
+vertical windows specified by the NH= and NV= keywords). If desired, all
+the plots can come out in a single subwindow using the WIND= keyword.
+PLOT also allows the possibility of hardcopy on your hardcopy device
+(as specified by the TERM HARCOPY= command).
+
+<P>
+The index 'buf' specifies which of the image buffers contains the image for
+plotting a row or column. No 'buf' is needed to plot results from the
+PROFILE or the MULT common block, which contain profiles determined with
+the PROFILE or SNUC command.  The optional index 'box' specifies one of the
+10 available boxes (see BOX command) to be used to select a sub-section of
+an image. Row 'n' is displayed by using the option R=n, column 'n' by using
+the C=n option, and spectrum 'n' by using no option. The RS and CS keywords
+are used to display the sum of the selected rows or columns in an image.
+
+<P>
+Normally the endpoints of the x- and y-axes are selected in this way: The
+x-axis runs over the entire row, column, or spectrum selected. The minimum
+and maximum y-values define the corresponding limits for the y-axis.
+
+<P>
+XS and XE override this autoscaling and allow you to set the limits along
+the X-axis.  XS and XE refer to the starting and ending X values in pixels
+(or Angstroms for a spectrum with a wavelength scale determined.)  If the
+USER option is defined, XS and XE are in the user-defined coordinates.
+MIN and MAX override the autoscaling and allow the user to set the limits
+along the Y-axis.
+
+<P>
+The keyword GRID will produce a coordinate grid on the plot.  This is very
+useful if you are trying to make measurements from a hard copy plot.  The
+keyword INFO will put some additional information onto the plot.
+
+<P>
+LOG and SEMILOG will produce Log-Log or Log-Linear plots as desired.  The
+R4 keyword will plot  along the x-axis, particularly useful when
+plotting the output image from PROFILE. NOLABEL prevents the drawing of
+axis labels and the name of the image or spectrum.  Use this with NOERASE
+to overplot several graphs.  The OLD keyword will produce a plot using the
+last used set of parameters.
+
+<P>
+If multiple window are desired, use the NH= and NV= keywords to set the
+number of windows in the horizontal and vertical directions,
+respectively. The plots of b1, b2, b3 ... will appear in the window
+starting in the upper left and progressing right across the page and then
+down. If limits are specified with MIN and MAX, e.g., all windows will have
+these limits. If no limits are specified, each window will autoscale
+individually.
+
+<P>
+If you wish all plots to be sent to a subwindow, use the WIND= keyword,
+with three parameters following the normal LickMongo syntax; number of
+windows in the x direction, number of windows in the ydirection, and
+a specification of which window to draw into (e.g. WIND=2,3,5 will
+draw in the upper left window of a 2x3 layout).
+
+<P>
+HARD will send the plot to the hardcopy device as specified by the TERM
+command (or the default device). If you use the PSFILE=file option,
+PostScript output is sent to the specified file, rather than directly to
+the printer.  The PORT keyword will make a Portrait mode plot (long side of
+the paper vertical), and EPS will make an Encapsulated PostScript file.
+EPS should be used in conjunction with the PSFILE= keyword to create the
+EPS file.
+
+<P>
+The MACRO=file keyword can be used to execute the Mongo macro file 'file'
+after each plot is made.  This provides a way to add additional annotation
+or data to a plot (especially for preparation of figures for papers or
+talks).
+
+<P>
+INT is an alternative to MACRO= that invokes an interactive LickMongo shell
+allowing users to enter plot annotations and other commands interactively.
+Note that if this is done on a screen plot you need to use the WRITE ALL
+... command in LickMongo to save the macro, then when you make a hardcopy
+you can use the MACRO= keyword to execute the LickMongo commands.)  If
+MACRO= and INT are both specified, the macro file will be executed before
+the user is put into the interactive LickMongo shell.
+
+<P>
+USER will scale and label the axes according to the user-defined
+coordinates instead of pixels.  This is done using the CRVALn, CRPIXn,
+CDELTm, CTYPEn and BUNIT cards in the image (or spectrum) FITS header.  The
+conversion between user coordinates and pixels is given by:
+<BR>
+<IMG
+ WIDTH="34" HEIGHT="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="img176.png"
+ ALT="\begin{hanging}
+\item{X = CRVAL1 + CDELT1 * FLOAT(COL - CRPIX1)}
+\end{hanging}">
+<BR>
+for Columns, or
+<BR>
+<IMG
+ WIDTH="34" HEIGHT="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="img177.png"
+ ALT="\begin{hanging}
+\item{X = CRVAL2 + CDELT2 * FLOAT(ROW - CRPIX2)}
+\end{hanging}">
+<BR>
+for Rows, where
+<DL COMPACT>
+<DT></DT>
+<DD>CRPIXn = INTEGER equal to the starting pixel of a Column (n=1)
+         or a Row (n=2) in an image.  For spectra, CRPIX1=1 typically.
+  
+</DD>
+<DT></DT>
+<DD>CRVALn = REAL value of user coordinates at pixel=CRPIXn.  For
+         spectra, CRVAL1 = the starting wavelength (of pixel=1 typically).
+  
+</DD>
+<DT></DT>
+<DD>CDELTn = REAL value scaling factor between rows (n=2) or columns
+         (n=1) and user coordinates.  For spectra, CDELT1 = linear dispersion.
+</DD>
+</DL>
+
+<P>
+The X-axis label is taken from the CTYPEn card, which is a CHARACTER string
+surrounded by single quote (') marks.  The Y-axis label is taken from the
+BUNIT card, which is a CHARACTER string surrounded by single quote (')
+marks containing the appropriate units for the "Intensity" units of the
+pixels (e.g. counts/sec or flux).  These header cards may be set using the
+HEDIT command.  If a particular FITS card is not found, appropriate
+defaults are chosen, but be warned: older images and spectra from the Lick
+Data Taking programs do not conform to the FITS standard and may give
+strange results.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

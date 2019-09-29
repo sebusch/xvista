@@ -1,0 +1,58 @@
+
+<H1><A NAME="SECTION00860000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2691"><tex2html_anchor_invisible_mark></A><BR>
+TVPLOT: Draw Text and Graphics on the Image Display
+</H1>
+<tex2html_verbatim_mark>rawhtml271#
+<BR>
+<tex2html_image_mark>#command2692#
+<BR>
+
+<P>
+TVPLOT is used to markup, label, annotate, or otherwise deface the image
+display.  It has loads of options and clever use of defaults, so you don't
+have to say everything.  The origin of the plots is from a predefined
+center loaded by the AXES command or is given by the C= keyword.
+
+<P>
+In simple use TVPLOT will draw lines.  Use just L=l, or just P= for the
+default center, or two P=(r,c) endpoints to ignore the default origin.  Use
+SCALE if you mean arcseconds for L and not pixels, PA to rotate, or OFF to
+give an offset in whatever direction the X axis is for any PA
+specification.  TICKS will give nice scale marks on the line.
+
+<P>
+Show the image subsection boxes (see BOX) with BOX=n.  You can also make up
+any boxes just for plotting by giving the BOX keyword.  This tells TVPLOT
+to think about BOX plotting instead of lines.  Use W and H with the default
+center or C= keyword, two P= keywords to give opposite corners, P and C
+together for corners, any of L, W, or H by themselves for square boxes, and
+so on.  Use PA, OFF, SCALE to help out.
+
+<P>
+Other symetrical plots.  Here you have CROSS, CIRC=r, COMPASS=r, all of
+which follow the AXES, C=, or P= centers. Use PA, OFF, SCALE here, too.
+
+<P>
+Now you can make any label you want with the TEXT option -- except you can't
+rotate it with PA (sorry -- it uses system fonts that I didn't want to muck
+with).  Use P=, or C= to position it -- where you give where you want the
+center of the string to be.  Right now VISTA has a little trouble with
+multiword strings enterred directly on the TVPLOT command line, but they
+work fine if you load them first with the STRING command.
+
+<P>
+<#2712#>Examples:<#2712#>
+<BR>
+<tex2html_image_mark>#example2713#
+<BR>
+
+<P>
+O.K. so now you want real vector graphics.
+<BR>
+<tex2html_image_mark>#example2722#
+<BR>
+Use procedures to make a neat grid at a funny angle.
+<PRE><tex2html_verbatim_mark>verbatim272#</PRE>
+
+<P>

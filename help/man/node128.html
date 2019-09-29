@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>COLFIX: Fix Deferred Charge Columns in a CCD Image</TITLE>
+<META NAME="description" CONTENT="COLFIX: Fix Deferred Charge Columns in a CCD Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001280000000000000000">
+COLFIX: Fix Deferred Charge Columns in a CCD Image</A>
+</H1>
+
+<!-- linkto colfix.html -->
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+COLFIX will attempt to fix deferred charge columns (or rows) under
+the assumption that they can be fixed by additive corrections.  Under
+default operation, the routine finds the median of each column, and then
+generates corrections to each column such that they all have the same
+median.  The median is selected is a super-median, of median of the the
+original column medians.  A number of fixes are given for crowded images or
+those containing extended objects, where the median may be biased.  The
+SPLINE option fits a spline to the column medians in an attempt to preserve
+and slow trends originally in the data.  MAX sets an upper threshold to
+exclude bright pixels that may bias the median, and MODE attempts to revise
+the median by using the difference in value between the median and first
+quartile to exclude bright pixels in the last quartile.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

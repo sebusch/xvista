@@ -1,0 +1,129 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {1.1}Overview of VISTA}{1}
+\contentsline {section}{\numberline {1.2}The Cookbook}{2}
+\contentsline {section}{\numberline {1.3}Final Remarks}{4}
+\contentsline {chapter}{\numberline {2}A Brief VISTA Tutorial}{5}
+\contentsline {section}{\numberline {2.1}Starting VISTA}{6}
+\contentsline {subsection}{\numberline {2.1.1}Logical Assignments}{6}
+\contentsline {subsection}{\numberline {2.1.2}Running VISTA}{7}
+\contentsline {subsection}{\numberline {2.1.3}Terminal Type}{8}
+\contentsline {section}{\numberline {2.2}Stopping VISTA}{9}
+\contentsline {section}{\numberline {2.3}The VISTA Command Prompt}{9}
+\contentsline {section}{\numberline {2.4}A Simple VISTA Session}{10}
+\contentsline {section}{\numberline {2.5}Final Remarks}{16}
+\contentsline {chapter}{\numberline {3}Basic Image Processing}{17}
+\contentsline {section}{\numberline {3.1}Flat Fields}{18}
+\contentsline {subsection}{\numberline {3.1.1}Basic Principles}{18}
+\contentsline {subsection}{\numberline {3.1.2}A Simple Example}{19}
+\contentsline {section}{\numberline {3.2}Dark Bias}{20}
+\contentsline {subsection}{\numberline {3.2.1}Basic Principles}{20}
+\contentsline {subsection}{\numberline {3.2.2}Matched Exposure Dark Frames}{21}
+\contentsline {subsection}{\numberline {3.2.3}Scaled Dark Frames}{23}
+\contentsline {section}{\numberline {3.3}Fixed Pattern Noise}{25}
+\contentsline {subsection}{\numberline {3.3.1}Basic Principles}{25}
+\contentsline {subsection}{\numberline {3.3.2}A Simple Example}{25}
+\contentsline {subsection}{\numberline {3.3.3}Refinements}{26}
+\contentsline {section}{\numberline {3.4}Baseline Restoration}{27}
+\contentsline {chapter}{\numberline {4}2-D Image Reduction}{29}
+\contentsline {section}{\numberline {4.1}Basic Image Reduction}{29}
+\contentsline {section}{\numberline {4.2}Secondary Image Reduction}{31}
+\contentsline {subsection}{\numberline {4.2.1}Windowing}{31}
+\contentsline {subsection}{\numberline {4.2.2}Image Position and Orientation}{32}
+\contentsline {subsection}{\numberline {4.2.3}Cosmic Ray Events}{34}
+\contentsline {subsection}{\numberline {4.2.4}Coping with Bad CCD Regions}{36}
+\contentsline {subsection}{\numberline {4.2.5}Sky Subtraction}{40}
+\contentsline {section}{\numberline {4.3}Advanced Techniques}{43}
+\contentsline {subsection}{\numberline {4.3.1}Image Compression}{44}
+\contentsline {subsection}{\numberline {4.3.2}Image Smoothing}{45}
+\contentsline {subsection}{\numberline {4.3.3}Editing Image Values}{47}
+\contentsline {subsection}{\numberline {4.3.4}Image Registration}{47}
+\contentsline {subsection}{\numberline {4.3.5}Image Stacking and Combining}{50}
+\contentsline {subsection}{\numberline {4.3.6}Image Mosaics}{51}
+\contentsline {section}{\numberline {4.4}Final Remarks}{53}
+\contentsline {chapter}{\numberline {5}Spectral Data Reduction}{55}
+\contentsline {section}{\numberline {5.1}Basic Techniques}{55}
+\contentsline {subsection}{\numberline {5.1.1}Wavelength Calibration}{56}
+\contentsline {subsection}{\numberline {5.1.2}Linearizing the Wavelength Scale}{59}
+\contentsline {subsection}{\numberline {5.1.3}Flux Calibration and Extinction Correction}{59}
+\contentsline {section}{\numberline {5.2}Advanced Techniques}{61}
+\contentsline {subsection}{\numberline {5.2.1}Flat-Field Notes}{61}
+\contentsline {subsection}{\numberline {5.2.2}{\ptt MASH\/} alternatives: {\ptt SPECTROID\/} and {\ptt EXTRACT\/}}{62}
+\contentsline {subsection}{\numberline {5.2.3}Spatial Distributions and 2-D Distortion Corrections}{64}
+\contentsline {subsection}{\numberline {5.2.4}``Re-fluxing'' and ``Atmospheric Correctors''}{64}
+\contentsline {chapter}{\numberline {6}Hamilton Echelle Reduction}{67}
+\contentsline {section}{\numberline {6.1}Input Data}{68}
+\contentsline {section}{\numberline {6.2}Preparation of the Data}{69}
+\contentsline {section}{\numberline {6.3}Extraction of the Data}{70}
+\contentsline {section}{\numberline {6.4}Fringe Removal}{73}
+\contentsline {section}{\numberline {6.5}Wavelength Calibration}{74}
+\contentsline {section}{\numberline {6.6}Flux Calibration}{76}
+\contentsline {section}{\numberline {6.7}Merging the Orders}{79}
+\contentsline {chapter}{\numberline {7}Dirty Tricks}{81}
+\contentsline {section}{\numberline {7.1}User Defined Axes for Plots}{81}
+\contentsline {section}{\numberline {7.2}Putting Labels on Plots}{84}
+\contentsline {section}{\numberline {7.3}Plotting RA and DEC on Contour Maps}{86}
+\contentsline {section}{\numberline {7.4}Preparing Images with Boxes and Scale Bars}{86}
+\contentsline {chapter}{\numberline {A}VISTA Command Summary}{89}
+\contentsline {section}{\numberline {A.1}Stopping VISTA}{89}
+\contentsline {section}{\numberline {A.2}VISTA Command Syntax}{89}
+\contentsline {section}{\numberline {A.3}VISTA User-Defined Variables}{91}
+\contentsline {subsection}{\numberline {A.3.1}Defining VISTA variables}{91}
+\contentsline {subsection}{\numberline {A.3.2}Arithmetic Operations among VISTA Variables}{92}
+\contentsline {subsection}{\numberline {A.3.3}VISTA Functions}{92}
+\contentsline {subsection}{\numberline {A.3.4}Variable Related Commands}{94}
+\contentsline {subsection}{\numberline {A.3.5}String Variables}{94}
+\contentsline {section}{\numberline {A.4}Tape and Disk Input/Output}{95}
+\contentsline {subsection}{\numberline {A.4.1}FITS Tape Input/Output}{95}
+\contentsline {subsection}{\numberline {A.4.2}VISTA Disk Format Image Input/Output}{95}
+\contentsline {section}{\numberline {A.5}VISTA Buffers}{96}
+\contentsline {section}{\numberline {A.6}Display of Images and Spectra}{97}
+\contentsline {subsection}{\numberline {A.6.1}Image Display and Interaction}{97}
+\contentsline {subsection}{\numberline {A.6.2}Image Hardcopy}{98}
+\contentsline {subsection}{\numberline {A.6.3}Line Graphics and Spectrum Plotting}{98}
+\contentsline {section}{\numberline {A.7}Marking Image Segments and Pixels}{98}
+\contentsline {subsection}{\numberline {A.7.1}VISTA Image {\ptt BOX}es}{98}
+\contentsline {subsection}{\numberline {A.7.2}Image Masks}{99}
+\contentsline {section}{\numberline {A.8}Image and Spectrum Arithmetic}{100}
+\contentsline {subsection}{\numberline {A.8.1}Basic Arithmetic}{100}
+\contentsline {subsection}{\numberline {A.8.2}Advanced Image Arithmetic}{100}
+\contentsline {section}{\numberline {A.9}Image Statistics}{101}
+\contentsline {section}{\numberline {A.10}Image Processing}{101}
+\contentsline {subsection}{\numberline {A.10.1}Image Size, Orientation, and Position}{101}
+\contentsline {subsection}{\numberline {A.10.2}Changing Image Pixel Values}{102}
+\contentsline {section}{\numberline {A.11}Spectroscopic Reduction Routines}{103}
+\contentsline {subsection}{\numberline {A.11.1}Spectrum Extraction from 2--D Images}{103}
+\contentsline {subsection}{\numberline {A.11.2}Wavelength Calibration}{104}
+\contentsline {subsection}{\numberline {A.11.3}Flux Calibration}{105}
+\contentsline {subsection}{\numberline {A.11.4}Spectrum Fitting and Stretching}{105}
+\contentsline {subsection}{\numberline {A.11.5}Echelle Reduction Routines}{105}
+\contentsline {section}{\numberline {A.12}Stellar Photometry Routines}{106}
+\contentsline {subsection}{\numberline {A.12.1}Locate Stars on an Image}{106}
+\contentsline {subsection}{\numberline {A.12.2}Measure Stellar Brightnesses}{106}
+\contentsline {subsection}{\numberline {A.12.3}Photometry Files}{107}
+\contentsline {section}{\numberline {A.13}Extended Object and Surface Photometry Routines}{107}
+\contentsline {subsection}{\numberline {A.13.1}Aperture Photometry}{107}
+\contentsline {subsection}{\numberline {A.13.2}Surface Photometry by Elliptical Contour Fitting}{108}
+\contentsline {subsection}{\numberline {A.13.3}Radial Brightness Profile Routines}{108}
+\contentsline {subsection}{\numberline {A.13.4}Model 2-D Brightness Profile Generation}{108}
+\contentsline {section}{\numberline {A.14}VISTA Command Procedures}{109}
+\contentsline {subsection}{\numberline {A.14.1}Defining Procedures}{109}
+\contentsline {subsection}{\numberline {A.14.2}Executing VISTA Procedures}{110}
+\contentsline {subsection}{\numberline {A.14.3}Variable Input/Output in Procedures}{110}
+\contentsline {subsection}{\numberline {A.14.4}Simple Flow Control in Procedures}{111}
+\contentsline {subsection}{\numberline {A.14.5}Logical `IF' Control Statements}{112}
+\contentsline {section}{\numberline {A.15}External ASCII Data Files}{113}
+\contentsline {subsection}{\numberline {A.15.1}Opening and Closing Text Files}{113}
+\contentsline {subsection}{\numberline {A.15.2}External File Operations}{114}
+\contentsline {section}{\numberline {A.16}Miscellaneous Commands}{115}
+\contentsline {chapter}{\numberline {B}Sample VISTA Command Procedures}{117}
+\contentsline {section}{\numberline {B.1}A Sample STARTUP Procedure}{117}
+\contentsline {section}{\numberline {B.2}Interpolate across known bad columns}{118}
+\contentsline {section}{\numberline {B.3}Prepare Summed Flats}{119}
+\contentsline {section}{\numberline {B.4}Draw a Scale Bar on an Image}{119}
+\contentsline {section}{\numberline {B.5}Cross Correlate 2 Images}{120}
+\contentsline {section}{\numberline {B.6}Another Interpolation Procedure}{121}
+\contentsline {section}{\numberline {B.7}Automatic Tape Archiving}{121}
+\contentsline {section}{\numberline {B.8}Automated Wavelength Calibration Procedure}{123}
+\contentsline {chapter}{\numberline {C}VISTA and the FITS Standard}{127}
+\contentsline {section}{\numberline {C.1}The FITS Standard}{128}
+\contentsline {section}{\numberline {C.2}FITS Cards Important to VISTA}{129}

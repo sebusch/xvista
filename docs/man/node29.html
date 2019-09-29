@@ -1,0 +1,70 @@
+
+<H1><A NAME="SECTION00360000000000000000">
+PRINTF: Formatted Display of Strings and Arithmetic Expressions</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml96#
+
+<P>
+<A NAME="878"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command879#
+<BR>
+This command displays character strings and variables in specified formats,
+thus producing tables of results.
+
+<P>
+The simplest form of PRINTF is PRINTF 'string'.  This prints the specified
+string.  Examples are:
+<BR>
+<tex2html_image_mark>#example885#
+<BR>
+
+<P>
+You can print the values of expressions by specifying in the character
+string (1) that expression is to be evaluated and its value printed, and
+(2) the format for the printing of the variable.  The character <tex2html_percent_mark> in the
+string does the job. It tells that an expression is to be evaluated and
+printed where the <tex2html_percent_mark> appears. The rest of the word following the <tex2html_percent_mark> is used
+to specify the format of the string.  The format specifiers are the same as
+they are in FORTRAN.  ANY valid FORTRAN specifier appropriate for
+displaying numeric values may be used. You can specify multiple variables
+with the same format specification by putting the number of variables for
+which you wish to use the specifier for before the format specifier.
+
+<P>
+For example, if you want to print a single floating point variable with a
+field width of 9 characters with 3 after the decimal point, use
+<tex2html_percent_mark>f9.3, and give one argument after the format specifier. If you have
+5 variables which you want all printed in this format, you can use
+either '<tex2html_percent_mark>f9.3 <tex2html_percent_mark>f9.3 <tex2html_percent_mark>f9.3 <tex2html_percent_mark>f9.3 <tex2html_percent_mark>f9.3', or '<tex2html_percent_mark>5f9.3'.
+
+<P>
+For users familiar with C, you can also use the <tex2html_percent_mark>d specifier for an
+integer (as well as <tex2html_percent_mark>i); note, however, that the width/precision
+specification comes <#889#><I>after</I><#889#> the format specifier, not before it (e.g.,
+arguments to be printed with the desired format.
+
+<P>
+<#890#> Examples:<#890#>
+
+<P>
+Suppose we have the variables A with value 1.0 and PI with value
+3.14159. Then
+<BR>
+<tex2html_image_mark>#example891#
+<BR>
+Note that spaces between <tex2html_percent_mark> specifiers are printed. The output of PRINTF
+can be redirected.
+
+<P>
+To force a new line when printing, use the pattern <tex2html_verb_mark>1<tex2html_verb_mark> in the format
+statement (the newline character).  An example is:
+<BR>
+<tex2html_image_mark>#example896#
+<BR>
+
+<P>
+See the section SUBSTITUTE (type 'HELP SUBSTITUTE' if you are on a
+terminal) for instructions on printing string variables.
+
+<P>

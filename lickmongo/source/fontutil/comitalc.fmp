@@ -1,0 +1,97 @@
+VLINE -16 -9 0 12 16    Vertical font metric information for
+MR  32  <sp>                    Hershey Complex Italic
+H 3264  !
+H 3278  "
+MR  35  #
+H 3269  $
+MR  37  %
+H 3268  &
+H 3267  '
+H 3271  (
+H 3272  )
+MR  42  *
+H 3275  +
+H 3261  ,
+H 3274  -
+H 3260  .
+MR  47  /
+H 3250  0       Triplex Italic Numerals
+H 3251  1
+H 3252  2
+H 3253  3
+H 3254  4
+H 3255  5
+H 3256  6
+H 3257  7
+H 3258  8
+H 3259  9
+H 3262  :
+H 3263  ;
+MR  60  <
+H 3276  =
+MR  62  >
+H 3265  ?
+MR  64  @
+H 2051  A
+H 2052  B
+H 2053  C
+H 2054  D
+H 2055  E
+H 2056  F
+H 2057  G
+H 2058  H
+H 2059  I
+H 2060  J
+H 2061  K
+H 2062  L
+H 2063  M
+H 2064  N
+H 2065  O
+H 2066  P
+H 2067  Q
+H 2068  R
+H 2069  S
+H 2070  T
+H 2071  U
+H 2072  V
+H 2073  W
+H 2074  X
+H 2075  Y
+H 2076  Z
+MR  91  [
+H 2269  \       Circuit (Contour) Integral
+MR  93  ]
+0       ^
+H 0736  _
+H 3266  `
+H 2151  a
+H 2152  b
+H 2153  c
+H 2154  d
+H 2155  e
+H 2156  f
+H 2157  g
+H 2158  h
+H 2159  i
+H 2160  j
+H 2161  k
+H 2162  l
+H 2163  m
+H 2164  n
+H 2165  o
+H 2166  p
+H 2167  q
+H 2168  r
+H 2169  s
+H 2170  t
+H 2171  u
+H 2172  v
+H 2173  w
+H 2174  x
+H 2175  y
+H 2176  z
+0       {
+0       |
+0       }
+0       ~
+MR 127  <del>   <---NOT ACCESSIBLE FROM MONGO

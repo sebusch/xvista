@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>COORDS: Compute Celestial Coordinates for Stars</TITLE>
+<META NAME="description" CONTENT="COORDS: Compute Celestial Coordinates for Stars">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0016200000000000000000">
+COORDS: Compute Celestial Coordinates for Stars</A>
+</H1>
+
+<!-- linkto coords.html -->
+<A NAME="7742"></A>
+<A NAME="7743"></A>
+<A NAME="7744"></A>
+<BR>
+
+<BR>
+
+<P>
+COORDS finds the right ascension and declination for each star in a
+photometry file.  At least three of the stars must have had their R.A. and
+Declination. entered in MARKSTAR or in MODPHOT.  The coordinates for the
+standards must all be at the same epoch. (One day we will have a precession
+program.)
+
+<P>
+COORDS works by solving a least-square relation between the rectangular
+coordinates on the image (i.e., row and column) and the spherical
+coordinates on the sky. The program calculates the coordinates for every
+star in the photometry file based on the standard positions you have
+entered, including the standard stars. The input positions, calculated
+positions, and difference in seconds of time for the standards will be
+displayed on your terminal. The program will then print the positions of
+the standards.
+
+<P>
+The difference between the input and the calculated positions should be
+small and evenly distributed about zero. If not, one or more of your input
+coordinates is possibly wrong.  Use MODPHOT to change that coordinate, and
+try again.  Note that the difference is in seconds of arc for both the
+declination and the right ascension.
+
+<P>
+If you want to save the coordinates computed by the MODPHOT command, you
+must use the 'SAVE PHOT=filename' command.
+
+<P>
+The output of COORDS can be redirected.  See HELP REDIRECT for information
+about the redirection mechanism.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

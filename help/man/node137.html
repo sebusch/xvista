@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>CROSS: Cross-Correlate Images or Spectra</TITLE>
+<META NAME="description" CONTENT="CROSS: Cross-Correlate Images or Spectra">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0012170000000000000000">
+CROSS: Cross-Correlate Images or Spectra</A>
+</H1>
+
+<!-- linkto cross.html -->
+<A NAME="5012"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+CROSS does a cross-correlation on two images, loading the resulting image
+into a third buffer.  This program is useful for registering two images or
+determining a shift between two spectra, for instance. It is usual practice
+to subtract an appropriate baseline from the images, usually the sky level
+for images and the continuum level for spectra. The RAD=r keyword defines
+the half-size of the cross-correlation image. If not specified the
+cross-correlation will be the same size as the first source image.
+However, a cross-correlation of a two-D image involves four nested DO
+loops, so it is advisable to use the RAD= keyword when possible so that two
+of the DO loops are short.  Often only the peak of the cross-correlation is
+of interest, so that the a very small radius may be specified (between 2
+and 5, say).  Spectra are automatically cross-correlated in one-dimension
+only.
+
+<P>
+The CORR keyword makes the routine compute full correlation coefficients
+rather than just cross-correlations as a function of lag. This option
+involved about a factor of 3 more operations, so runs slower. It is
+important for radial velocities or displacements because the correlation
+peak tends to be more symmetric than the cross-correlation
+peak. Asymmetries in cross-correlation and in correlation arise because
+both are computed over a finite region.
+
+<P>
+The peak of the cross-correlation image may be found using the SURFACE
+command with the LOAD keyword as in the following example, which
+cross-correlates two images, calculates the peak of the cross-correlation,
+and then shifts the two images into register:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

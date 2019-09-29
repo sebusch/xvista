@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>LINEID: Identify Lines in a Wavelength-Calibration Spectrum</TITLE>
+<META NAME="description" CONTENT="LINEID: Identify Lines in a Wavelength-Calibration Spectrum">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001450000000000000000">
+LINEID: Identify Lines in a Wavelength-Calibration Spectrum</A>
+</H1>
+
+<!-- linkto lineid.html -->
+<A NAME="5775"></A>
+<A NAME="5776"></A>
+<BR>
+
+<BR>
+
+<P>
+LINEID will match emission-lines in a wavelength calibration spectrum with
+tables of known line wavelengths.  The routine looks for peaks and attempts
+to identify them based on an initial estimate of the reciprocal dispersion
+in Angstroms/pixel and a list of line identifications read from a file in
+in the spectrum directory (SEE PRINT DIRECTORIES) with name 'xxx.WAV'.
+Accurate line centers are calculated, and if specified in the data file,
+partial line blends deconvolved. The matched lines are saved into a common
+block in VISTA.  The contents of the common block can be examined using the
+command 'PRINT LINEID'. By default, the previous contents of the common
+block are replaced with the current identifications.  However, if you use
+the 'ADD' keyword the new identifications will be appended to the older
+results. This allows you to combine the identifications from several
+independent wavelength calibration spectra. If the keyword 'INT' is
+specified, interactive line identifications can be made.  Once your line
+list has been created with LINEID you use the WSCALE command to fit a
+polynomial to the wavelengths as a function of pixel number.
+
+<P>
+Normally the first guess as to the dispersion of the wavelength fit (and
+the second order term in the fit) are given as the first line of the
+wavelength list.  (The central wavelength is then left as a free
+parameter.)  However, the starting dispersion guess may be specified via
+the DISP= keyword (specifying two numbers here allows the second order term
+to be input as well).  Also, using the CEN= keyword allows the user to
+input a starting guess for the central wavelength, a necessary feature in
+high-resolution work where the line lists are prohibitively long.
+
+<P>
+In instances where you have a small number of lines in your calibration
+spectrum the automatic line identification algorithm may find several
+possible matches between the observed lines and the wavelengths given in
+your line list.  In these instances the LAMBDA= option may help to identify
+the correct match.  You need to know the approximate wavelength of one
+point in your spectrum.  With the LAMBDA= keyword you specify a wavelength,
+a pixel number for that wavelength, and an uncertainty in that pixel
+number.  The line identification algorithm will then reject any set of
+line/wavelength identifications which are inconsistent with the given
+pixel/wavelength pair.  For this option to work you much choose a pixel
+which lies between identified lines in your spectrum; don't use a pixel
+near the ends of your spectrum.
+
+<P>
+If you only specify the wavelength and pixel number with the LAMBDA= option
+then the pixel uncertainty will default to 1.  You may want to supply a
+larger value though to avoid rejecting all line identifications.
+
+<P>
+In these examples, assume the default spectrum directory is 
+ccd/spec:
+<BR>
+
+<BR>
+
+<P>
+The wavelength file has the following format: The file is formatted, with
+the first line showing the estimated dispersion, followed by any
+second-order term. The format is free, but the second-order term must be
+0.0 if it is to be ignored.  Subsequent lines contain an ordered set of
+line wavelengths in Angstroms.  One spectral line is given per file
+line. The wavelength if followed by a two-letter ID code.  If the code is
+CO, that line is ignored.  The code is followed by the wavelengths of any
+blue-side or red-side satellites which might be blended with the primary
+line.  The wavelengths must be set to 0.0 if there are no lines blended
+with the primary.
+
+<P>
+Example file:
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="CENTER">7.86</TD>
+<TD ALIGN="CENTER">1.0E-03</TD>
+<TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">5881.4900</TD>
+<TD ALIGN="CENTER">NE</TD>
+<TD ALIGN="CENTER">5852.4900</TD>
+<TD ALIGN="CENTER">0.0</TD>
+</TR>
+<TR><TD ALIGN="CENTER">5944.8300</TD>
+<TD ALIGN="CENTER">NE</TD>
+<TD ALIGN="CENTER">0.0</TD>
+<TD ALIGN="CENTER">5975.2800</TD>
+</TR>
+<TR><TD ALIGN="CENTER">6030.0000</TD>
+<TD ALIGN="CENTER">NE</TD>
+<TD ALIGN="CENTER">0.0</TD>
+<TD ALIGN="CENTER">0.0</TD>
+</TR>
+<TR><TD ALIGN="CENTER">6096.1600</TD>
+<TD ALIGN="CENTER">NE</TD>
+<TD ALIGN="CENTER">6074.3400</TD>
+<TD ALIGN="CENTER">6143.0600</TD>
+</TR>
+</TABLE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

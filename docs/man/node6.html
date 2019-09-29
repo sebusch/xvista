@@ -1,0 +1,91 @@
+
+<H1><A NAME="SECTION00150000000000000000">
+VISTA and Disk Files</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml51#
+
+<P>
+<A NAME="138"><tex2html_anchor_invisible_mark></A>
+<A NAME="139"><tex2html_anchor_invisible_mark></A>
+
+<P>
+Many VISTA commands read from or write to the disk, and therefore require
+filenames. The program has defined several default directories and
+extensions for the various types of files that VISTA uses: for example,
+images are stored in one directory, spectra in a second, procedures in a
+third, etc. Unless you specify otherwise, VISTA will automatically search
+in certain directories for images, spectra, etc., and will assume that the
+files have standard extensions.  You can view these default directories
+with the VISTA command PRINT DIRECTORIES.
+
+<P>
+An example of a default directory is this: The WD command writes an image
+to disk with a filename specified in the command.  Assume the default
+directory for images is /vista/ccd/ and the default file extension for
+images is .CCD.  The command
+<BR>
+<tex2html_image_mark>#example140#
+<BR>
+writes the image in buffer 2 to the file /vista/ccd/m15.fits You can
+override the default locations any time: for example
+<BR>
+<tex2html_image_mark>#example143#
+<BR>
+
+<P>
+The default directories are established when the VISTA program is run by a
+subroutine called INITIAL.  That subroutine has a standard list of
+directories and extensions that it loads into a common block for use by
+other subroutines. The default directories can be changed by the user in
+two ways:
+
+<P>
+
+<OL>
+<LI>Use the SETDIR command from within VISTA
+
+<P>
+</LI>
+<LI>Every user can set up his/her own set of default directories using
+         environment variables. The appropriate environment variables to
+         modify are:<BR>
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">Variable</TD>
+<TD ALIGN="LEFT">Directory for</TD>
+</TR>
+<TR><TD ALIGN="LEFT">V_CCDIR</TD>
+<TD ALIGN="LEFT">Images</TD>
+</TR>
+<TR><TD ALIGN="LEFT">V_PRODIR</TD>
+<TD ALIGN="LEFT">Procedures</TD>
+</TR>
+<TR><TD ALIGN="LEFT">V_SPECDIR</TD>
+<TD ALIGN="LEFT">Spectra</TD>
+</TR>
+<TR><TD ALIGN="LEFT">V_FLUXDIR</TD>
+<TD ALIGN="LEFT">Flux calibrations</TD>
+</TR>
+<TR><TD ALIGN="LEFT">V_LAMBDIR</TD>
+<TD ALIGN="LEFT">Wavelength calibrations</TD>
+</TR>
+<TR><TD ALIGN="LEFT">V_COLORDIR</TD>
+<TD ALIGN="LEFT">TV color files</TD>
+</TR>
+<TR><TD ALIGN="LEFT">V_DATADIR</TD>
+<TD ALIGN="LEFT">Data files.</TD>
+</TR>
+<TR><TD ALIGN="LEFT">V_DAODIR</TD>
+<TD ALIGN="LEFT">DAOPHOT files.</TD>
+</TR>
+</TABLE>
+
+<P>
+An example is:
+<PRE><tex2html_verbatim_mark>verbatim52#</PRE>
+Remember, you must execute these setenv commands BEFORE starting VISTA.
+
+<P>
+</LI>
+</OL>
+
+<P>

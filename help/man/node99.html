@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>MASK/UNMASK: Ignore (Mask) Specified Pixels</TITLE>
+<META NAME="description" CONTENT="MASK/UNMASK: Ignore (Mask) Specified Pixels">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00930000000000000000">
+MASK/UNMASK: Ignore (Mask) Specified Pixels</A>
+</H1>
+
+<!-- linkto mask.html -->
+<!-- linkto unmask.html -->
+<A NAME="3979"></A>
+<A NAME="3980"></A>
+<BR>
+
+<BR>
+
+<P>
+MASK tells VISTA programs to ignore the specified pixels when doing
+computations.
+
+<P>
+The command UNMASK is the opposite of MASK; it tells the programs to stop
+ignoring the specified pixels.  UNMASK can be used without options to
+unmask all pixels.
+
+<P>
+You can type UNMASK without any options to tell the routines to use all the
+pixels.  Remember that rows and columns are often numbered from ZERO.  The
+row or column numbers specified in MASK are the same as those given by the
+'D' option in the ITV command, but remember that if the TV image is
+compressed, the 'D' option will not give the exact location of certain
+features in the image.  Use the BOX option in the TV command to show
+smaller sections of an image when finding features you want to mask.
+
+<P>
+The mask may be saved on the disk with SAVE, and retrieved later with GET.
+
+<P>
+Not all VISTA commands recognize masked pixels.  The ones that do are: ABX,
+AUTOMARK, MN, CROSS, INTERP, MASH, and SURFACE.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

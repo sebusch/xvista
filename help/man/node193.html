@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>RMARK: Interactively Set Maximum Radius for EMAG</TITLE>
+<META NAME="description" CONTENT="RMARK: Interactively Set Maximum Radius for EMAG">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0015170000000000000000">
+RMARK: Interactively Set Maximum Radius for EMAG</A>
+</H1>
+
+<!-- linkto rmark.html -->
+<BR>
+
+<BR>
+
+<P>
+RMARK enables the user to interactively set the maximum radius for the
+photometry routine EMAG. The image on which photometry is to be performed
+must be displayed, and an AXES computation must have been previously
+performed, in order for RMARK to work.
+
+<P>
+RMARK will prompt the user to move the cursor to a point at the distance
+from the object center to which the photometry is to be performed. The user
+then strikes the key "P". A cross will be displayed at this point and the
+user will be given the option of choosing another position. Once the user
+is satisfied with the position chosen, RMARK will compute the distance of
+this point from the object center. This distance is then loaded into the
+VISTA variable RMAX.
+
+<P>
+When RMAX is given as a command line keyword in EMAG, the value of this
+variable is retrieved and the photometry proceeds out to this radius.
+
+<P>
+See Also: EMARK, EMAG
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

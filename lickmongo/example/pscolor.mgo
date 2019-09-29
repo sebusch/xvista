@@ -1,0 +1,108 @@
+psfmode 0
+expand 2
+lw 3
+tlabel Support for Full Color
+color 0
+lw 1
+tlabel Support for Full Color
+color 1
+expand 1
+psfmode 2
+xlim -1 27
+ylim 0 1
+box
+lw 6
+color 0
+reloc 0 0
+draw  0 1
+color 1
+reloc 1 0
+draw  1 1
+color 2 1 0 0
+reloc 2 0
+draw  2 1
+color 3 0 1 0
+reloc 3 0
+draw  3 1
+color 4 0 0 1
+reloc 4 0
+draw  4 1
+color 5 1 1 0
+reloc 5 0
+draw  5 1
+color 6 1 0 1
+reloc 6 0
+draw  6 1
+color 7 0 1 1
+reloc 7 0
+draw  7 1
+color 8 .5 .5 .5
+reloc 8 0
+draw  8 1
+color 9 1 .5 0
+reloc 9 0
+draw  9 1
+color 10 1 0 .5
+reloc 10 0
+draw  10 1
+color 11 1 .5 .5
+reloc 11 0
+draw  11 1
+color 12 0 1 .5
+reloc 12 0
+draw  12 1
+color 13 .5 1 0
+reloc 13 0
+draw  13 1
+color 14 .5 1 .5
+reloc 14 0
+draw  14 1
+color 15 .5 0 1
+reloc 15 0
+draw  15 1
+color 16 0 .5 1
+reloc 16 0
+draw  16 1
+color 17 .5 .5 1
+reloc 17 0
+draw  17 1
+color 18 1 1 .5
+reloc 18 0
+draw  18 1
+color 19 1 .5 1
+reloc 19 0
+draw  19 1
+color 20 .5 1 1
+reloc 20 0
+draw  20 1
+color 21 .8 .8 1
+reloc 21 0
+draw  21 1
+color 22 1 .8 .8
+reloc 22 0
+draw  22 1
+color 23 .8 1 .8
+reloc 23 0
+draw  23 1
+color 24 .8 .8 .5
+reloc 24 0
+draw  24 1
+color 25 .5 .8 .8
+reloc 25 0
+draw  25 1
+color 26 .8 .5 .8
+reloc 26 0
+draw  26 1
+exp 2.5
+autolw 1
+angle 35
+pause
+lw 3
+color 0
+reloc 13 .5
+putlab 5 Lick Mongo in PostScript !
+lw 0
+color 1
+reloc 13 .5
+putlab 5 Lick Mongo in PostScript !
+reset

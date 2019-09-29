@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>WSCALE: Compute Wavelength Scale from Indentified Lines</TITLE>
+<META NAME="description" CONTENT="WSCALE: Compute Wavelength Scale from Indentified Lines">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001460000000000000000">
+WSCALE: Compute Wavelength Scale from Indentified Lines</A>
+</H1>
+
+<!-- linkto wscale.html -->
+<A NAME="5806"></A>
+<A NAME="5807"></A>
+<BR>
+
+<BR>
+
+<P>
+WSCALE calculates the wavelength calibration polynomial using the
+wavelengths and line centers of the calibration spectrum lines identified
+by the LINEID command.  The resulting calibration is associated with the
+spectrum specified by 'dest'. The line centers determined with the LINEID
+command are fit to a polynomial of order specified by 'ORD=n'. If the
+keyword 'INT' is specified, interactive line weighting can be done. The
+program will ask for all unspecified parameters.
+
+<P>
+The resulting wavelength scale becomes associated with the 'dest'
+spectrum. You can then use the COPW command to associate the wavelength
+scale with any other spectrum you wish.
+
+<P>
+Also, note that it is the REVERSE fit which is actually used by the command
+ALIGN to linearize a spectrum (see below).
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

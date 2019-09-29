@@ -1,0 +1,443 @@
+
+<H1><A NAME="SECTION008110000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="3057"><tex2html_anchor_invisible_mark></A><BR>
+CONTOUR: Make Contour Maps Images
+</H1>
+<tex2html_verbatim_mark>rawhtml277#
+<BR>
+<tex2html_image_mark>#command3058#
+<BR>
+
+<P>
+CONTOUR produces a contour map of an image or set of images either on the
+graphics terminal screen or on a hardcopy device.  Contour levels are user
+specified or suitable defaults are applied.  Options for coordinate
+transformations between the image pixels and real-world coordinates are
+possible via a simple linear transformation matrix defined by the user.  It
+is possible to overlap several images onto a single contour plot by
+specifying multiple image buffers on the command line, or to plot them into
+individual windows on the plot using special windowing keywords.
+
+<P>
+<#3135#>Setting Contour Levels:<#3135#>
+
+<P>
+Contour levels for the plot may specified in one of two ways.  In the
+first, the levels are explicitly set by the LEVELS keyword.  Up to 40
+levels may be specified in this way.  In the second method, the keyword LOW
+is used to set the lowest level of the plot, and the DIFF or RATIO keywords
+are used to set the other levels.  DIFF means that successive contours will
+be separated by the given difference; RATIO means that successive contours
+will be separated by the given ratio.
+
+<P>
+When multiple images are specified on the command line, use of these
+keywords sets the contour levels for ALL of the images.  A technique for
+plotting multiple contours on the screen or in hardcopy plots with
+<I>different</I> contouring levels is described under Advanced Techniques
+below.
+
+<P>
+The FID keyword establishes a ;SPMquot;fiducial;SPMquot; contour level for the plot. All
+contours above this fiducial level are plotted as normal, unbroken lines
+and all contours below this level are plotted as broken lines.  The
+fiducial contour itself is plotted with a heavy solid line to distinguish
+it.  The default value is FID=0.0, so that all negative contours will be
+dashed by default following the convention established by radio
+astronomers.
+
+<P>
+If the contour levels are not specified, the program computes its own in
+the following way.  If multiple images are given, the the program computes
+levels for each image <I>independently</I>.
+
+<P>
+The lowest contour is the mean of the image in the area being plotted.
+Subsequent contours are spaced 0.5 magnitudes (a factor of 1.583) apart, or
+5 contour levels per decade of intensity.  This turns out to be a useful
+default for a wide variety of astronomical applications. The mean is
+computed using every fifth pixel to save time; for small images with great
+variations in intensity across the image, the fifth-pixel mean will not be
+a good representation of the true mean, and so the default contours may not
+produce a good plot.  Use the MN command to find the true mean and set the
+contours by hand.
+
+<P>
+<#3138#>Contour Map Scaling:<#3138#>
+
+<P>
+By default, CONTOUR will assume nothing about the image pixel scale, and
+plot the axes of the contour map in pixel space, labeling the axes in rows
+and columns with orientation matching the appearance on the color image
+display.
+
+<P>
+The simplest scaling option is to specify the image pixel scale.  The SCALE
+keyword sets the scale of both axes in arcsec/pixel, and sets the origin to
+be the center of the portion of the image being mapped, or to the center
+defined by the CEN keyword.  If SCALE is omitted, the axes are displayed in
+pixel units.  The orientation of the axes is this: the units increase from
+right to left on the bottom of the graph, and from bottom to top along the
+left side.  This will be in the usual astronomical convention if north is
+at the top of the graph and east is at the left.  Use FLIP and/or ROTATE to
+get the image in this orientation.
+
+<P>
+A more sophisticated scaling option is available via the USER keyword. The
+USER keyword sets the scaling and labelling of each axis independently
+using the contents of the FITS header.  The axes are scaled according to:
+<BR>
+<tex2html_image_mark>#hanging3139#
+<BR> 
+X and Y axis labels are taken from the CTYPE1 and CTYPE2 cards
+respectively.  Any of these FITS cards may be changed (or defined) using
+the FITS or HEDIT commands.
+
+<P>
+The most general coordinate tranformation between the image's pixel grid
+(Cols,Rows) and ;SPMquot;world coordinates;SPMquot; (X,Y) may be performed using the ;SPMquot;TR=;SPMquot;
+option.  This allows the user to specify a general transformation matrix
+which includes possible rotation and shear terms.  The ;SPMquot;TR=;SPMquot; keyword
+requires 6 transformation matrix elements, given in the form:
+<BR>
+<tex2html_image_mark>#hanging3143#
+<BR>
+where:
+<BR>
+<tex2html_image_mark>#hanging3146#
+<BR>
+are the transformation equations.  X and Y are the ;SPMquot;world;SPMquot; coordinates in
+which you want the plot to appear, and C and R are the image Column and Row
+numbers.
+
+<P>
+The default scaling is equivalent to:  ;SPMquot;TR=(0.,1.,0.,0.,0.,1.);SPMquot;
+
+<P>
+The SCALE=s keyword is equivalent to: ;SPMquot;TR=(C0,s,0.0,R0,0.0,-s);SPMquot; where
+(C0,R0) is the image central pixel.
+
+<P>
+The USER keyword is equivalent to:
+;SPMquot;TR=(CRVAL1-CDELT1*CRPIX1,CDELT1,0.0,CRVAL2-CDELT2*CRPIX2,0.0,CDELT2);SPMquot;
+where the CXXXn are the relevant FITS cards (see USER above).
+
+<P>
+Be advised that this is an option for experts.
+
+<P>
+<#3150#>Contour Formatting Options:<#3150#>
+
+<P>
+Below are a number of options for changing the appearance of the contour
+lines themselves, but not affecting the actual contour levels.
+
+<P>
+EXACT tells the program to use a slower contour ;SPMquot;following;SPMquot; algorithm
+rather than the default ;SPMquot;fast;SPMquot; raster drawing algorithm.  This will result
+in somewhat rougher (though perhaps truer) contours, and it handles dashed
+lines far better.  In noisy cases, use of EXACT is not advised.
+
+<P>
+DASH draws contours for all images given as dashed lines (see LTYPE= below)
+
+<P>
+LWEIGHT=w: Changes the weight (line width) of the contours to W.  For
+Screen plots, W is taken to be a multiple of the default pen width.  For
+PostScript hardcopy plots, W is the width of the graphics pen in units of
+printers points.  Default is 1.0 for screen plots, and 0.5 for hardcopy
+plots.
+
+<P>
+LTYPE=l1,l2,...: Changes the line style (solid, dashed, etc) of the
+contours for a given image.  Multiple arguments are used to set different
+styles for each of the images on the command line (l1 for the first image,
+l2 for the second, etc).  There are 7 line styles available:
+
+<P>
+<DIV ALIGN="CENTER">
+<#3152#><B>Line-Type Codes</B><#3152#>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">LTYPE</TD>
+<TD ALIGN="CENTER">Style</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">0</TD>
+<TD ALIGN="CENTER">Solid</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">1</TD>
+<TD ALIGN="CENTER">Dotted</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">2</TD>
+<TD ALIGN="CENTER">Short Dash</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">3</TD>
+<TD ALIGN="CENTER">Long Dash</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">4</TD>
+<TD ALIGN="CENTER">Dot / Short Dash</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">5</TD>
+<TD ALIGN="CENTER">Dot / Long Dash</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">6</TD>
+<TD ALIGN="CENTER">Short Dash / Long Dash</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="CENTER">;SPMnbsp;</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+COLOR=c1,c1,...: Changes the line color of the contours for a given image,
+by analogy with the LTYPE keyword above.  The default color is white (1).
+At present only the 7 ;SPMquot;primary;SPMquot; graphics colors are available:
+
+<P>
+<DIV ALIGN="CENTER">
+<#3158#><B>Color Codes</B><#3158#>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Code</TD>
+<TD ALIGN="CENTER">Color</TD>
+<TD ALIGN="CENTER">Code</TD>
+<TD ALIGN="CENTER">Color</TD>
+</TR>
+<TR><TD ALIGN="CENTER">0</TD>
+<TD ALIGN="CENTER">background</TD>
+<TD ALIGN="CENTER">4</TD>
+<TD ALIGN="CENTER">Blue</TD>
+</TR>
+<TR><TD ALIGN="CENTER">1</TD>
+<TD ALIGN="CENTER">foreground</TD>
+<TD ALIGN="CENTER">5</TD>
+<TD ALIGN="CENTER">Yellow</TD>
+</TR>
+<TR><TD ALIGN="CENTER">2</TD>
+<TD ALIGN="CENTER">Red</TD>
+<TD ALIGN="CENTER">6</TD>
+<TD ALIGN="CENTER">Magenta</TD>
+</TR>
+<TR><TD ALIGN="CENTER">3</TD>
+<TD ALIGN="CENTER">Green</TD>
+<TD ALIGN="CENTER">7</TD>
+<TD ALIGN="CENTER">Cyan</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+<#3163#>Contour Plot Axis Formatting Options:<#3163#>
+
+<P>
+The following keywords allow you to change the format of the axes
+surrounding the contour map.
+
+<P>
+TITLE puts the object title (from the image header) over the contour map.
+This can be changed using either CH or HEDIT to suit your needs.
+
+<P>
+NOLABEL draws the axes with tick marks, but does not label the axes.
+
+<P>
+NOAXES draws the axes, but does not draw ticks or labels (e.g., plain box)
+
+<P>
+NOERASE prevents erasure of the screen before beginning a plot. This may be
+used to superimpose two contour plots for comparison.  NOERASE is ignored
+for hardcopy, but there are comparable tricks for overplotting different
+contours with different levels discussed under Advanced Techniques below.
+
+<P>
+<#3164#>Large Size and Multi-Window Contour Plots:<#3164#>
+
+<P>
+The following command can be used to change the position and size of the
+contour plots on the graphics area.  By default, a single contour axis
+window is drawn, with scaling set so as to draw the largest window on the
+screen (or paper) as possible and still preserve a 1:1 aspect ratio between
+the X and Y axes (e.g., it assumes square image pixels).
+
+<P>
+FULL draws a single plot, but without preserving a 1:1 aspect ratio.  This
+keyword is useful for plotting contours of long-slit spectra, for example.
+
+<P>
+NH=h, NV=v: These two keywords allow the user to divide the plotting area
+in to HxV windows, each of which can take a separate contour plot.  The
+window convention is the same as used in the LickMongo package.  For
+example: ;SPMquot;NH=2 NV=2;SPMquot; will divide the screen/paper in to 4 windows, 2x2 on
+the page.
+
+<P>
+NW=n (Single Image Contour Plotting Only): This keyword tells the contour
+program to put the current image into window number N, where windows are
+number in LickMongo fashion running left-to-right, and bottom-to-top
+starting in the lower left-hand corner of the graphics screen/page.  This
+keyword is only acknowledged if ONE image was given on the command line.
+To build up a multi-window plot with NW=, use the NOERASE or NOPRINT
+keywords (for screen <tex2html_ampersand_mark> hardcopy respectively -- see Advanced Techniqes
+below)
+
+<P>
+SUBMAR=sx,sy: By default, the windows specified with NH= and NV= have
+margins of white space between them to accommodate axis labels, numbers,
+titles, etc.  The amount of margin allowed is fixed automatically by the
+LickMongo plotting package, but the user can choose the margins with the
+SUBMAR command.  This works the same as the LickMongo ;SPMquot;SUBMARGINS;SPMquot;
+command/subroutine.  SX and SY are scaling factors of the default margin,
+thus SUBMAR=1,1 is the default state.
+
+<P>
+SUBMAR=0,0 will make the windows but together, with no margin between the
+axes.  Thus one can make a continuous grid of windows using this keyword.
+For example, a 2x3 grid of 9 windows with no independent axes would be
+drawn using: ;SPMquot;NH=2 NV=3 SUMBAR=0,0 NOLABEL;SPMquot; Where the NOLABEL keyword
+suppresses all axis labels, but draws tick marks.  Ticks could be
+suppressed by invoking ;SPMquot;NOAXES;SPMquot; in place of ;SPMquot;NOLABEL;SPMquot;
+
+<P>
+When multiple images have been specified on the command line, using the NH=
+and NV= keywords (without NW=) will have the following effects:
+
+ 
+<OL>
+<LI>If the number of images equals the number of windows (N=NH*NV),
+   then the first image will go in window 1, the second in window 2, and so
+   forth.  Remember that window 1 is in the lower LEFT corner, not the
+   upper left as with the Mongo WINDOW command.  The NW= keyword is ignored
+   All contours will have the same levels.  To have different levels is a
+   bit tricker, see Advanced Techniques below.
+
+<P>
+</LI>
+<LI>If the number of images is less than the number of windows, then a
+  warning to that effect is issued for your information, and the windows
+  are filled up until there are no more images.
+
+<P>
+</LI>
+<LI>If there are more images than windows, an error message is issued.
+</LI>
+</OL>
+
+<P>
+<#3167#>Contour Map Hardcopy:<#3167#>
+
+<P>
+The LickMongo plotting routines support a wide number of hardcopy devices.
+The default hardcopy device for your VISTA installation is indicated at
+startup, and may be changed (as appropriate) using the TERM command.  At
+most installations, this will be a PostScript laser printer (like the Apple
+LaserWriter).
+
+<P>
+HARD instructs the program to draw the contour map on a hardcopy device
+instead of on the graphics screen.  No plot appears on the terminal.  If
+used by itself without either the NOPRINT or FILE= keywords, the hardcopy
+plot will be directed to the default printer upon completion of the plot
+and no ;SPMquot;plotting file;SPMquot; will be retained on disk.
+
+<P>
+The following keywords ONLY work when used in conjunction with the HARD
+keyword:
+
+<P>
+LAND creates a hardcopy plot oriented in ;SPMquot;Landscape;SPMquot; mode (X-axis along the
+long-axis of the paper).  By default, contour plot hardcopy are given the
+;SPMquot;Portrait;SPMquot; orientation.
+
+<P>
+FILE=psfile: By default, HARD alone creates a scratch plotting file in a
+scratch disk area, and then deletes this file as soon as it is printed.
+Since PostScript files might be useful for embedding contour map figures in
+LaTeX or other wordprocessing program, or to send a contour map to others
+via email, this keyword creates a PostScript file named ;SPMquot;psfile;SPMquot; in the
+user's current working directory.  When the plot is completed, if the
+NOPRINT keyword is not given, the PostScript file will be closed and ready
+for printing.  If NOPRINT is given, the PostScript file is not closed.
+
+<P>
+NOPRINT suppresses closing and printing of the hardcopy file.  This allows
+the user to append successive plots the hardcopy file to facilitate
+building up a composite contour map (for example: multiple contour plots,
+with a different contour level set in each window).  NOPRINT is the
+hardcopy equivalent of the NOERASE keyword.
+
+<P>
+<#3168#>Advanced Techniques:<#3168#>
+
+<P>
+There are two main motivations behind the redesign of CONTOUR.  The first
+is to allow users to overlay 2 or more contour maps on each other in both
+screen and hardcopy mode.  The second is to allow the user to make a
+multi-window plot in which each image is in a separate window.  Limitations
+on the VISTA command-line make it difficult to give each image in the
+keyword list a different set of contour levels.  Thus, when multiple images
+are plotted (either in overlay or multi-window modes), all images are given
+the same contour levels.  To plot images with different contour levels
+requires that CONTOUR be executed multiple times.
+
+<P>
+For screen plots, this is straightforward.  The first contour is plotted
+using the CONTOUR program with only one image specified.  This erases the
+screen and draws the axes and contours.  Then for each subsequent image,
+CONTOUR is called with the NOERASE keyword so the previous contour map is
+not erased from the screen.  If a multi-window plot is being generated, the
+NW= keyword is used to make the next window on the screen.
+
+<P>
+For hardcopy, things are a bit trickier, requiring different actions for
+the first, middle, and last plots.  The first plot is made using the
+keywords HARD NOPRINT FILE=psfile, which opens and initializes the
+PostScript file name ;SPMquot;psfile;SPMquot; in the current working directory.  Subsequent
+plots, EXCEPT THE LAST PLOT, are also made using the same HARD NOPRINT
+FILE=psfile keywords.  For the LAST plot, only ;SPMquot;HARD FILE=psfile;SPMquot; is
+issued, so that when the last plot is finished, the PostScript file
+;SPMquot;psfile;SPMquot; is closed and now ready to be printed at the user's leisure by
+hand.
+
+<P>
+An example is a 2x3 (HxV) 6-panel contour plot, in which each of the 6
+images uses a different contour scaling.  We want to make a PostScript file
+named ;SPMquot;montage.ps;SPMquot; to contain the figure, so we can print it again later
+without having to regenerate it with CONTOUR each time (e.g., for a figure
+for a journal article).  The images are in buffers 1-6.  We want no axis
+labels or ticks, and for there be to be no white space between the plots.
+We also want the images to be oriented on the page so that the 3 vertical
+rows of 2 windows will be along the long-axis of the paper (;SPMquot;Portrait
+mode;SPMquot;).  It would go like this:
+
+<P>
+<PRE><tex2html_verbatim_mark>verbatim278#</PRE> 
+Notice that the last invocation of CONTOUR dropped the NOPRINT keyword.
+Also notice that the sequence of CONTOUR calls was uninterrupted.  This
+avoids the possibility that another graphics call will intervene, causing
+VISTA to forget that the file ;SPMquot;montage.ps;SPMquot; is already opened and
+initialized.
+
+<P>
+This same sequence of commands, without the ;SPMquot;HARD FILE=montage.ps;SPMquot; keyword
+and using NOERASE for ;SPMquot;CONTOUR 2 ...;SPMquot; through ;SPMquot;CONTOUR 6 ...;SPMquot; will allow
+you to ;SPMquot;preview;SPMquot; this hardcopy plot on the screen before making the file.
+
+<P>
+<#3171#>Examples:<#3171#>
+<BR>
+<tex2html_image_mark>#example3172#
+<BR>
+
+<P>

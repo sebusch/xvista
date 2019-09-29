@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ITV: Interact with the Image on the TV</TITLE>
+<META NAME="description" CONTENT="ITV: Interact with the Image on the TV">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00830000000000000000"></A>
+<A NAME="2634"></A>
+<A NAME="2635"></A>
+<BR>
+ITV: Interact with the Image on the TV
+</H1>
+
+<!-- linkto itv.html -->
+<BR>
+
+<BR>
+
+<P>
+ITV enables you to interactively examine an image displayed on the video
+display.  The mouse buttons and several keyboard keys are activated to
+perform functions when pressed:
+
+<P>
+<DIV ALIGN="CENTER">
+<B>Mouse Buttons</B>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">Button</TD>
+<TD ALIGN="LEFT">Function</TD>
+</TR>
+<TR><TD ALIGN="LEFT">LEFT</TD>
+<TD ALIGN="LEFT">ZOOM IN, centered on the cursor</TD>
+</TR>
+<TR><TD ALIGN="LEFT">MIDDLE</TD>
+<TD ALIGN="LEFT">ZOOM OUT, centered on the cursor</TD>
+</TR>
+<TR><TD ALIGN="LEFT">RIGHT</TD>
+<TD ALIGN="LEFT">PAN, move the pixel under the cursor to the center</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+<DIV ALIGN="CENTER">
+<B>Keyboard Commands</B>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Key</TD>
+<TD ALIGN="LEFT">Function</TD>
+</TR>
+<TR><TD ALIGN="CENTER">E</TD>
+<TD ALIGN="LEFT">EXIT ITV and return to VISTA (or resume procedure)</TD>
+</TR>
+<TR><TD ALIGN="CENTER">R</TD>
+<TD ALIGN="LEFT">RESTORE image to the original zoom/pan</TD>
+</TR>
+<TR><TD ALIGN="CENTER">+</TD>
+<TD ALIGN="LEFT">BLINK Forwards through the last 4 images.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">-</TD>
+<TD ALIGN="LEFT">BLINK Backwards through the last 4 images.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">P</TD>
+<TD ALIGN="LEFT">Find the PEAK pixel near the cursor &amp; jump the cursor there</TD>
+</TR>
+<TR><TD ALIGN="CENTER">V</TD>
+<TD ALIGN="LEFT">Find the LOWEST pixel ("Valley") near the cursor &amp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="LEFT">jump the cursor there</TD>
+</TR>
+<TR><TD ALIGN="CENTER">#</TD>
+<TD ALIGN="LEFT">"Power Zoom" zoom at the cursor to the maximum zoom factor</TD>
+</TR>
+<TR><TD ALIGN="CENTER">H</TD>
+<TD ALIGN="LEFT">Toggle between small and full-screen cross-hairs</TD>
+</TR>
+<TR><TD ALIGN="CENTER">F</TD>
+<TD ALIGN="LEFT">FREEZE/UNFREEZE the Zoom window.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">0-9</TD>
+<TD ALIGN="LEFT">Mark the pixel coordinates and store in VISTA</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="LEFT">variables Rn and Cn, where "n" is the number key hit</TD>
+</TR>
+<TR><TD ALIGN="CENTER">D</TD>
+<TD ALIGN="LEFT">Print selected pixel row, column, and value.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="LEFT">Load variables R and C with the location.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">]</TD>
+<TD ALIGN="LEFT">Clear boxes and stuff off the image display</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+The D key also loads the coordinates of the most recently selected pixel
+into VISTA variables R and C; the 0-9 keys load Rn and Cn, where n is the
+key struck.  If the image had to be compressed to fit in the display window
+(auto or manual dezoom), the main display will not show every pixel,
+although the magnifying glass window will, so choose the pixel in that
+window.
+
+<P>
+You also have control of the color map (upper &amp; lower contrast drag and
+color-map roll), see the X11 help page for details.
+
+<P>
+The ITV command is very useful in procedures for letting you use the D or
+0-9 keys to extract position information from the image of interest needed
+elsewhere within the procedure.  Recall that variables (or any arithmetic
+expression) may be used in place of a number in words of the form
+word=value.  Here is an example of a procedure which draws a contour map of
+a section of an image located by the cursor.  It draws at most a 51x51 box,
+but will draw a smaller section of an image if the cursor is placed near
+the edge of the frame.
+
+<P>
+<PRE>
+   ASK 'DISPLAY WHICH IMAGE &gt;&gt; ' BUF        ! Get number of image
+   MN $BUF; TV $BUF                         ! Display the image
+   SROW=SR[BUF] SCOL=SC[BUF]                ! Note start row/col
+   EROW=SR[BUF]+NR[BUF]-1                   ! Note end row
+   ECOL=SC[BUF]+NC[BUF]-1                   ! Note end column
+   PRINTF 'PLACE CURSOR ON CENTER OF THE REGION TO MAP'
+   PRINTF 'THEN HIT THE D KEY, FOLLOWED BY E'
+   ITV                                      ! Define center R and C
+   NRSHOW=51 NCSHOW=51 DEL=IFIX[NRSHOW/2]   ! Default size
+   LOROW=R-DEL HIROW=R+DEL                  ! Limits to box
+   LOCOL=C+DEL HICOL=C+DEL
+   IF LOROW&lt;SROW                            ! Edge adjustment
+      LOROW=SROW
+   END_IF
+   IF HIROW&gt;EROW
+      HIROW=EROW
+   END_IF
+   IF LOCOL&lt;SCOL
+      LOCOL=SCOL
+   END_IF
+   IF HICOL&gt;ECOL
+      HICOL=ECOL
+   END_IF
+   NRBOX=HIROW-LOROW+1 NCBOX=HICOL-LOCOL+1  ! Size of box
+   BOX 1 SR=LOROW SC=LOCOL NR=NRBOX NC=NCBOX
+   CONTOUR $BUF BOX=1
+   END
+</PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

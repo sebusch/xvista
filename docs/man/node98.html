@@ -1,0 +1,66 @@
+
+<H1><A NAME="SECTION00920000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="3930"><tex2html_anchor_invisible_mark></A><BR>
+BOX: Define a Box or Image Subsection
+</H1>
+<tex2html_verbatim_mark>rawhtml289#
+<BR>
+<tex2html_image_mark>#command3931#
+<BR>
+
+<P>
+VISTA can store the specifications for up to 20 boxes defining image
+sub-sections.  These parameters can be used by other commands (such as TV,
+WINDOW and PRINT) by including 'BOX=' in the command line, modifying these
+commands so they operate only on the designated subsection.
+
+<P>
+When a box is initially defined, the size of the box in both dimensions
+center must be specified; use both the NR and NC keywords, or for the case
+of a square box, the N= keyword may also be used.  If the origin or center
+is not given, the box is assumed to start at row 0 and column 0.  You may
+change the origin and size of the box later by entering only the changes on
+the command line.  All parameters not given on the command line are left
+unchanged.
+
+<P>
+By default, the VISTA boxes have fixed origins, so if you only change the
+box size, then the origin with be preserved. By using the CENT keyword,
+however, you can change this to a center based system, where the center of
+the box will be preserved. The CENT keyword acts as a toggle switch between
+the two modes - once it is set in one mode, it remains in that mode until
+explicitly changed by the user.
+
+<P>
+The INT command allows you to define boxes interactive on the video
+display. Follow the instructions given.
+
+<P>
+<#3956#>Examples:<#3956#>
+<BR>
+<tex2html_image_mark>#example3957#
+<BR>
+
+<P>
+<#3963#>Examples of changing the location of boxes.
+Suppose we have defined box 1 as in example 1 above.<#3963#>
+<BR>
+<tex2html_image_mark>#example3964#
+<BR>
+
+<P>
+The locations of the defined boxes can be found with the PRINT BOXES
+command.
+
+<P>
+All spectra have start row 0 and 1 row.  Thus, to define a box for use with
+spectra, use
+<BR>
+<tex2html_image_mark>#hanging3968#
+<BR>
+
+<P>
+You can display the boundaries of defined boxes on the television. See the
+command TVBOX.
+
+<P>

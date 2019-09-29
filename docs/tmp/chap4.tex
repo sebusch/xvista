@@ -1,0 +1,447 @@
+\chapter{VISTA Command Procedure Scripts}
+
+%
+% minor editing and reformatting
+% used verbatim environment extensively for example scripts
+% rwp/osu 98Jul27
+%
+
+\section{Introduction to Command Procedure Scripts}
+\begin{rawhtml}
+<!-- linkto procedure.html -->
+<!-- linkto procedures.html -->
+\end{rawhtml}
+
+\index{Procedure!Defined}
+\index{Procedure!Introduction to}
+\index{Procedure!Startup procedure}
+
+VISTA can store several commands in a list and execute them as a program.
+A list of such commands is termed a PROCEDURE.  The list is stored in a
+special buffer, called the 'procedure buffer'.
+
+Almost any VISTA command that has proper syntax can be used in a procedure.
+The basic commands for creating, storing, and modifying procedures are
+these:
+\begin{itemize}
+  \item[PEDIT\hfill]{edits the current procedure buffer.}
+  \item[WP\hfill]{stores the procedure buffer on the disk.}
+  \item[RP\hfill]{reads the procedure from disk.}
+  \item[SHOW\hfill]{displays the procedure buffer}
+  \item[GO\hfill]{begins execution of the procedure.}
+\end{itemize}
+
+There are several 'control commands' that effect the operation of a
+procedure.
+\begin{itemize}
+  \item[VERIFY\hfill]{executes a procedure line by line, to aid in debugging.}
+  \item[PAUSE\hfill]{pauses during execution of a procedure.}
+  \item[CALL\hfill]{runs a procedure as a subroutine.}
+  \item[RETURN\hfill]{returns from a procedure used as a subroutine.}
+  \item[DO, END\_DO\hfill]{define a loop in a program for execution a given
+       number of times,}
+  \item[GOTO\hfill]{jumps to another place in the procedure.}
+  \item[:\hfill]{defines a place to jump to in the procedure.}
+  \item[IF, END\_IF \hfill]{define a block of commands that are executed
+       only under certain conditions.}
+  \item[ELSE, ELSE\_IF\hfill]{control branching for branching that has many
+       options.}
+\end{itemize}
+
+This list serves not only as an introduction to those not familiar with
+procedures, but illustrates the flexibility that procedures give to VISTA
+programming.  A defined procedure eliminates the boredom of typing
+repetitive commands over and over, but it does much more than that: it
+greatly expands the functions of VISTA so that new applications do not
+always require new subroutines.  A familiarity with procedures will make
+your data reductions more efficient.
+
+\noindent{IMPORTANT:}\newline
+Do NOT put any of the flow-control statements (DO, IF, END\_DO, etc.) with
+other commands on a line.  They must appear separately.  Thus:
+\begin{verbatim}
+   DO I=1,10}
+   DO J=1,10}
+      (some stuff)}
+   END\_DO; END\_DO
+\end{verbatim}
+or similar constructions, will NOT work properly!
+
+As the VISTA program begins, it executes the procedure stored in the file
+defined by the environment variable V\_STARTUP.  For example, if you had
+defined V\_STARTUP through
+\begin{verbatim}
+   setenv V_STARTUP ./myprocs/myproc.pro
+\end{verbatim}
+\textit{before} running VISTA, then myprocs/myproc.pro will be executed as the
+program begins.  Typically, the startup procedure will contain definitions
+of aliases, the setting of symbol values, or the reading into buffers of
+repeatedly-used images.  This procedure is not saved in the procedure
+buffer as it is executed.
+
+\section{PEDIT: Edit the Procedure Buffer}
+\begin{rawhtml}
+<!-- linkto pedit.html -->
+\end{rawhtml}
+
+\begin{itemize}
+  \item[\textbf{Form: } PEDIT\hfill]{}
+\end{itemize}
+
+PEDIT loads the procedure buffer into a temporary file in your current
+directory, then runs a process which allows you to edit it with the default
+editor (usually vi).  If you exit the editor and save changes, the modified
+procedure is loaded back into the procedure buffer, but not executed.  If
+quit the editor without saving changes, the procedure buffer is left
+unchanged.
+
+On a UNIX system, you can use another editor by defining the environment
+variable VISUAL. For example, to use the vi editor, jus execute the
+following BEFORE running VISTA:
+\begin{verbatim}
+   setenv VISUAL vi
+\end{verbatim}
+A maximum number of 2500 lines is allowed in a procedure.  If you leave the
+editor with EXIT and your procedure contains more than 2500 lines, it is
+truncated and the last line is set to 'END'.  Also, each line is allowed a
+maximum length of 80 characters. You can have longer lines by using
+\htmladdnormallink{linecontinue.html}{line continuation} as described
+earlier.
+
+You may also define procedures (with a maximum length of 2500 lines) with
+the editor before running VISTA, and read them into the procedure buffer
+with RP or execute them with CALL.
+
+\section{STOP: Stop Procedure Execution}
+\begin{rawhtml}
+<!-- linkto stop.html -->
+\end{rawhtml}
+
+\index{Procedure!Ending execution}
+\begin{itemize}
+  \item[\textbf{Form: } STOP {['A message']}\hfill]{}
+\end{itemize}
+The STOP command causes a procedure to stop executing.  If the message is
+supplied, it will be typed on the terminal, otherwise a default message is
+typed.  A stack unwind is also produced if the stop occurs in a CALLed
+procedure.
+
+\section{END: End Procedure Execution}
+\begin{rawhtml}
+<!-- linkto end.html -->
+\end{rawhtml}
+
+\index{Procedure!Ending definition}
+\index{Procedure!Ending execution}
+\begin{itemize} 
+  \item[\textbf{Form: } END\hfill]{}
+\end{itemize}
+
+All procedures must end with END or RETURN.
+
+When this command is entered during a procedure definition it tells VISTA
+to leave the procedure-definition mode and to return to the
+command-execution mode.  The command is also saved in the procedure buffer
+and signals the end of the current procedure when it is executed.  If the
+procedure is executed as a subroutine, the END command, like RETURN (q.v.),
+tells VISTA to return to the calling procedure.
+
+
+\section{SHOW: Show the Current Procedure Buffer}
+\begin{rawhtml}
+<!-- linkto show.html -->
+\end{rawhtml}
+
+\index{Procedure!List}
+\index{Procedure!Print}
+\begin{itemize}
+  \item[\textbf{Form: } SHOW {[output redirection]}\hfill]{}
+\end{itemize}
+
+This command lists out the lines or commands held in the procedure buffer.
+The SHOW command takes no arguments.  The output may be redirected, as in
+\begin{itemize}
+  \item{SHOW $>$LP:}
+\end{itemize}
+
+\section{WP: Write a Procedure to Disk}
+\begin{rawhtml}
+<!-- linkto wp.html -->
+\end{rawhtml}
+
+\index{Procedure!Write to Disk}
+\index{Disk!Write procedure to}
+\begin{itemize}
+  \item[\textbf{Form: } WP filename\hfill]{}
+  \item[filename]{is the name of the file that will store the current procedure.}
+\end{itemize}
+
+Unless otherwise specified in 'filename', WP will write to the default
+directory for procedures, which may be displayed by the command PRINT DIR,
+and uses the default extension.  As an example, suppose the default
+procedure directory is /vista/procedure and the default extension is .pro
+
+\begin{itemize}
+  \item[WP medfly\hfill]{writes the current procedure to the file
+       vista/procedure/medfly.pro}
+  \item[WP /demo/medfly\hfill]{writes to /demo/medfly.pro}
+  \item[WP medfly.xyz\hfill]{writes to vista/procedure/medfly.xyz}
+\end{itemize}
+
+\section{RP: Read a Procedure from Disk}
+\begin{rawhtml}
+<!-- linkto rp.html -->
+\end{rawhtml}
+
+\index{Procedure!Read from disk}
+\index{Disk!Read procedure from}
+\begin{itemize}
+  \item[\textbf{Form: } RP filename\hfill]{}
+  \item[filename]{is the name of the file that holds the desired procedure.}
+\end{itemize}
+
+RP will read a maximum of 2500 lines, with a maximum of 80 characters per
+line, from the designated filename into the procedure buffer.  Unless
+otherwise specified in 'filename', RP will read from the default directory
+for procedures, which may be displayed by the command PRINT DIR, and uses
+the default extension.  As an example, suppose the default procedure is
+/vista/procedure and the default extension is .pro
+
+\noindent{ Examples:}
+\begin{itemize}
+  \item[RP medfly\hfill]{reads the contents of /vista/procedure/medfly.pro
+       into the procedure buffer.}
+  \item[RP /demo/medfly\hfill]{reads from /demo/medfly.pro}
+  \item[RP medfly.xyz\hfill]{reads from /vista/procedure/medfly.xyz}
+\end{itemize}
+
+\section{GO: Start Procedure Execution}
+\begin{rawhtml}
+<!-- linkto go.html -->
+\end{rawhtml}
+
+\index{Procedure!Execute}
+\index{Procedure!Run}
+\begin{itemize}
+  \item[\textbf{Form: } GO {[parameter1]} {[parameter2]} ...]{}
+  \item[parameter1,2,...]{are parameters passed to the procedure.}
+\end{itemize}
+GO tells VISTA to start executing the procedure held in its procedure
+buffer.  You may also supply parameters to the procedure on the command
+line.  The parameters must be evaluated using the PARAMETER command in the
+procedure.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[GO 10\hfill]{executes the procedure in the buffer,
+       passing the numeric parameter 10 to the procedure.}
+  \item[GO mydir/image\hfill]{execute the procedure, passing the
+        string parameter to the procedure.}
+\end{itemize}
+
+Earlier versions of VISTA allowed you to specify a number of times to
+execute a procedure, as in 'GO 3', which executed the current procedure
+three times.  This was installed in the earliest versions of VISTA, before
+there were DO loops.  This feature has been deleted from the version 3.
+The old version 2 form 'GO filename' has been eliminated, since this can
+now be done with the CALL command.
+
+\section{CALL: Call a Procedure as a Subroutine}
+\begin{rawhtml}
+<!-- linkto call.html -->
+\end{rawhtml}
+
+\index{Procedure!Jump to subroutine}
+\index{Procedure!Subroutine}
+\index{Subroutine!Calling}
+\begin{itemize}
+  \item[\textbf{Form: } CALL procedure\_filename {[parameter1]} {[parameter2]} ...\hfill]{}
+  \item[procedure\_filename]{is the name of a file holding a procedure.}
+  \item[parameter1,2,...]{are optional parameters passed to the called procedure.}
+\end{itemize}
+
+CALL tells VISTA to save the contents of its current procedure buffer, read
+in the desired procedure file, and begin execution at its first line.  The
+CALL command can be executed directly in the immediate input mode, or be
+used inside procedures to call other procedures.  In both cases, at the
+completion of the called procedure, VISTA will return properly to either
+the input mode or calling procedure.  VISTA will support up to 10 levels or
+subroutine calls.  If an error occurs while a called procedure is
+executing, VISTA will unwind and display the complete subroutine stack.
+
+A procedure is allowed a maximum length of 2500 lines, and each line is
+allowed a maximum length of 80 characters.  If your procedures or lines
+exceed this maximum, they will be truncated.
+
+Parameters can optionally be passed to the procedure.  These can be numeric
+or string parameters.  The parameters are evaluated by the procedure using
+the PARAMETER command.
+
+Examples:  Assume the default procedure directory is /vista/procedure
+and the default extension is .pro.
+\begin{itemize}
+  \item[CALL medfly\hfill]{executes /vista/procedure/medfly.pro}
+  \item[CALL /mydir/medfly\hfill]{executes /mydir/medfly.pro}
+  \item[CALL medfly.txt\hfill]{executes /vista/procedure/medfly.txt}
+  \item[CALL medfly kill\hfill]{executes /vista/procedure/medfly.pro
+passing it the parameter KILL}
+\end{itemize}
+
+\section{RETURN: Return from a Procedure Subroutine}
+\begin{rawhtml}
+<!-- linkto return.html -->
+\end{rawhtml}
+
+\index{Procedure!Return from subroutine}
+\begin{itemize}
+  \item[\textbf{Form: } RETURN\hfill]{}
+\end{itemize}
+
+This command tells VISTA that the execution of the current sub-procedure is
+complete and to return to any calling procedure or to immediate input mode
+as is appropriate.  This command is intended to allow a return from the
+procedure as a result of an IF test. In cases where no condition testing is
+needed, the final END command in the procedure buffer will tell VISTA that
+the procedure has completed.
+
+\noindent{Examples:}
+\begin{enumerate}
+  \item{Here is an example of a conditional exit from a procedure.
+   This procedure may be run with CALL or GO.
+  \begin{verbatim}
+     LOOP:
+        ASK 'Enter non-zero to process another image >> ' TEST
+        IF TEST=0
+           RETURN
+        END_IF
+         :
+         :
+     GOTO LOOP:
+  \end{verbatim}
+  }
+  \item{END may be used as return ONLY if it is the last command in 
+  the file. Thus a procedure like:
+  \begin{verbatim}
+     (commands)
+     END
+  \end{verbatim}
+  may be executed as a subroutine, but one that looks like:
+  \begin{verbatim}
+     IF TEST=0
+        END
+     END_IF
+  \end{verbatim}
+  will not work.  Use RETURN instead.
+}
+\end{enumerate}
+
+\section{PARAMETER: Pass Arguments to a Procedure}
+\begin{rawhtml}
+<!-- linkto parameter.html -->
+\end{rawhtml}
+
+\index{Procedure!Parameter Passing}
+\begin{itemize}
+  \item[\textbf{Form: } PARAMETER {[varname]} {[varname]} {[STRING=string\_var]} ...\hfill]{}
+\end{itemize}
+PARAMETER evaluate parameters passed to a procedure.  An example will show
+best how PARAMETER works.  Suppose the following command was typed:
+\begin{itemize}
+  \item{CALL TEST 2 X IMAGEFILE}
+\end{itemize}
+The parameter list portion of the command line is saved, i.e.  '2 X
+IMAGEFILE'.  The procedure TEST.PRO is then called.  TEST has in it the
+command
+\begin{itemize}
+  \item{PARAMETER BUFNUM FACTOR STRING=FILENAME}
+\end{itemize}
+BUFNUM and FACTOR are taken to be variable names and are associated with
+the first two parameters from the parameter list.  In effect it does the
+command SET BUFNUM=2 FACTOR=X.  Note that '2' and 'X' could have been any
+arithmetic expression.
+
+The STRING= keyword means that the third parameter is used as a literal
+string and the string variable name FILENAME is given the string value
+IMAGENAME, in effect doing the command:
+\begin{itemize}
+  \item{STRING FILENAME IMAGENAME}
+\end{itemize}
+
+If there are fewer parameters in the CALL than required in the PARAMETER
+command, the missing parameters are taken to be 0 or blank, as appropriate.
+
+Note that there is only one area in VISTA for saving the list of passed
+parameters, so the PARAMETER command should be executed before calling
+another procedure.
+
+\section{VERIFY: Verify (Trace) Procedure Execution}
+\begin{rawhtml}
+<!-- linkto verify.html -->
+\end{rawhtml}
+
+\index{Procedure!Line by line execution}
+\index{Procedure!Debugging}
+\begin{itemize}
+  \item[\textbf{Form: } VERIFY Y or VERIFY N\hfill]{}
+\end{itemize}
+VERIFY causes each line of the procedure to be shown on the terminal just
+prior to its execution, allowing you to watch the procedure work line by
+line.  The keyword 'Y' turns the display on and the keyword 'N' turns the
+display off.
+
+\section{DEF: Define a Procedure}
+\begin{rawhtml}
+<!-- linkto def.html -->
+\end{rawhtml}
+\index{Procedure!Defining}
+\begin{itemize} 
+  \item[\textbf{Form: } DEF [line\_number]\hfill]{}
+  \item[line\_number]{is the [optional] line number of the
+beginning of the new definition.}
+\end{itemize}
+
+Archaic command, use PEDIT instead.
+
+DEF tells VISTA to begin a procedure definition. It is mostly historical,
+as procedures can now be defined using a real editor with the PEDIT
+command. The command DEF will prompt you with a series of line numbers,
+beginning with the number specified in the command line.  If no number was
+given, the first command will be on line 1.  You are to specify a command
+for each line.  Type the command you want on that line, then hit RETURN.
+VISTA will check the command for proper syntax, and store it in the
+procedure buffer. Then VISTA will prompt you with the number of the next
+line.  Continue typing in commands until the entire procedure has been
+entered.  To tell VISTA that you have entered the entire procedure, type
+END or SAME (q.v.).  A maximum length of 2500 lines is allowed in a
+procedure, and each line is allowed a maximum length of 80 characters.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[DEF\hfill]{begins a procedure definition on line 1.}
+  \item[DEF 10\hfill]{begins a procedure definition on line 10.  
+       Commands on lines 1 through 9, if there are any, are preserved.}
+\end{itemize}
+
+\section{SAME: End Procedure Insertion and Keep Trailing Lines}
+\begin{rawhtml}
+<!-- linkto same.html -->
+\end{rawhtml}
+
+\index{Procedure!Ending definition}
+\begin{itemize} 
+  \item[\textbf{Form: } SAME\hfill]{}
+\end{itemize}
+
+Archaic command: see PEDIT
+
+When this command is entered during a procedure definition it tells VISTA
+to leave the procedure-definition mode and to return to the
+command-execution mode.  Unlike the END command, however, the SAME command
+tells VISTA to keep any lines that may have been defined after the
+insertion point, that is, the commands in the buffer following the
+insertion point are to be left the same as they were before.  The SAME
+command makes sense only when you are modifying previously defined
+procedures, and is not saved in the procedure buffer. It is also largely
+historical, as it is not needed if you use the PEDIT command to modify
+procedures.
+

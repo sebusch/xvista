@@ -1,0 +1,12 @@
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	logical         stilldown
+	integer         button
+	integer         xi, yi
+	real            xmid, ymid, xsiz, ysiz
+	real            box(5,2)
+	integer*2       foo(5,2)
+	common  /trkbut/        stilldown, button, box,
+     &                          xmid, ymid, xsiz, ysiz, xi, yi, foo

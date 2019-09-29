@@ -1,0 +1,1483 @@
+\chapter{Basic Image Processing}
+\begin{rawhtml}
+<!-- linkto improc.html -->
+\end{rawhtml}
+
+% checked most of these for keyword and function against basic
+%
+% some commands still have dicey help files, especially
+% LINCOMB, COLFIX, and PICCRS.
+%
+% Minor reformatting required in some cases, and made the list of
+% basic image processing commands below match the entries (and added
+% missing entries)
+%
+% rwp/osu - last check 98Aug25
+%
+
+VISTA provides the following commands for performing basic image
+processing:
+\begin{itemize}
+  \item[MERGE\hfill]{Merge Overlapping Images or Spectra}
+  \item[WINDOW\hfill]{Window (Crop) an Image to a Smaller Size}
+  \item[ROTATE\hfill]{Rotate an Image}
+  \item[FLIP\hfill]{Change the Orientation of an Image}
+  \item[BIN\hfill]{Compress (bin) an Image or Spectrum}
+  \item[SHIFT\hfill]{Shift an Image}
+  \item[CLIP\hfill]{Replace Pixels Outside an Intensity Range}
+  \item[COLFIX\hfill]{Fix Deferred Charge Columns in a CCD Image}
+  \item[SMOOTH\hfill]{Smooth an Image or Spectrum}
+  \item[ZAP\hfill]{Non-Interactive Image Median Filter}
+  \item[TVZAP\hfill]{Interactively Remove Pixels by Median Filtering}
+  \item[MEDIAN\hfill]{Compute Median of Several Images}
+  \item[BIGMEDIAN\hfill]{Compute Median of a Large Number of FITS Images}
+  \item[PICCRS\hfill]{Optimally Combine Frames with Outlier Rejection}
+  \item[SURFACE\hfill]{Fit a Plane or Second-Order Surface to an Image}
+  \item[SPLINE\hfill]{Replace Image or Spectrum by a Cubic Spline Fit}
+  \item[CROSS\hfill]{Cross-Correlate Images or Spectra}
+  \item[INTERP\hfill]{Interpolate Across Rows, Columns, or Masked Pixels}
+  \item[REGISTAR\hfill]{Register Images Using Field Star Positions}
+  \item[DSSCOORD\hfill]{Compute RA and Dec for Digitized Sky Survey Images}
+  \item[ATODSIM/ATODFIX\hfill]{Simulate/Fix WF/PC1 A/D Conversion Errors}
+  \item[LINCOMB\hfill]{Fit a Linear Combination of Images to an Image}
+  \item[BL\hfill]{Correct an Image for Baseline Subtraction Noise}
+\end{itemize}
+
+\section{MERGE: Merge Overlapping Images or Spectra}
+\begin{rawhtml}
+<!-- linkto merge.html -->
+\end{rawhtml}
+\index{Image!Merging}
+\index{Spectrum!Merging}
+\begin{itemize}
+  \item[\textbf{Form: }MERGE im1 im2 im3 im4 ... {[NOMATCH]}\hfill]{}
+  \item[im1]{is the first buffer to be used in the average,
+       and is also the destination buffer,}
+  \item[im2, im3, ...]{are the other images to be used in the average,}
+  \item[NOMATCH]{allows the merging of images whose pixels do not
+line-up exactly.}
+\end{itemize}
+
+MERGE will merge between 2 and 20 images or spectra into one image or
+spectrum, with the pixels in the overlapping regions being replaced with
+the average.  Merging is done in relative coordinate space (or "world"
+coordinates). The FITS cards CDELT1 and CDELT2 are checked to make sure that
+all of the images are on the same scale/pixel (to within +/- 0.01 pixels
+across the range of an image).  If this condition is met the images are
+then checked to make sure that the starting coordinates are an integral
+number of pixels away from each other (again to within 0.01 pixels).  If
+the NOMATCH keyword is used then this last check is not performed and any
+given pixel is added to the closest adjacent pixel in the "master" image.
+(This uses the NINT function in FORTRAN, and allows the user to avoid
+unnecessary interpolations in some cases.)
+
+\section{WINDOW: Window (Crop) an Image to a Smaller Size}
+\begin{rawhtml}
+<!-- linkto window.html -->
+\end{rawhtml}
+\index{Image!Make smaller}
+\index{Image!Cropping}
+\index{Image!Windowing}
+\begin{itemize}
+  \item[\textbf{Form: }WINDOW source BOX=n\hfill]{}
+  \item[source]{is the image being made smaller.}
+  \item[BOX]{tells VISTA what part of the old image to save.}
+\end{itemize}
+
+WINDOW is used to trim (or ``crop'') an image or spectrum within a
+specified ``window''.  The image in the 'source' buffer is 
+\textit{replaced} by the region enclosed within pre-defined BOX `n'. 
+If the specified box extends beyond the edges of the image, WINDOW will do
+nothing.  See BOX for defining regions of interest (boxes).
+
+Example: Let image 7 have rows numbered 0--500 and columns numbered 0--500.
+We want to chop out a 100 by 100 image, with the first row of the new image
+at 100, and the first column at 200.
+\begin{itemize}
+  \item{BOX 1 SR=100 SC=200 NR=100 NC=100}
+  \item{WIND 7 BOX=1}
+\end{itemize}
+
+Also see COPY.
+
+\section{ROTATE: Rotate an Image}
+\begin{rawhtml}
+<!-- linkto rotate.html -->
+\end{rawhtml}
+\index{Image!Rotate}
+\begin{itemize}
+  \item[\textbf{Form: }   ROTATE source {[LEFT]} {[RIGHT]} {[UD]} 
+       {[PA=degrees]} {[BOX=b]} \hfill]{}
+  \item{{[TRANSPOSE]} {[SINC]}}
+  \item[source]{the buffer containing the image to be rotated.}
+  \item[LEFT]{rotates the image LEFT (counterclockwise).}
+  \item[RIGHT]{rotates the image RIGHT (clockwise).}
+  \item[UD]{turns the image upside-down.}
+  \item[TRANSPOSE]{transposes the image.}
+  \item[PA=degrees]{rotates the image by the specified number of degrees.}
+  \item[BOX=b]{gives the size of the output image when the rotation is 
+       specified in degrees.}
+  \item[SINC]{uses 2-D sinc interpolation, rather than bilinear,
+       for general rotation.}
+\end{itemize}
+
+This command rotates an image.  The keywords LEFT, RIGHT and UD are used
+for simple rotations.  These operate on the entire image.  The directions
+LEFT or RIGHT or UD refer to the orientation of the image as seen on the
+image display or in a contour map.  Imagine the image drawn or a piece of paper
+for these rotations.  UD is the same as two LEFT or two RIGHT rotations
+done in sequence.  It does NOT produce the a result which can be done with
+FLIP. The keyword TRANSPOSE will transpose the image, i.e. change the
+columns into rows and vice versa; this is equivalent to a ROTATE LEFT plus
+a FLIP ROWS or a FLIP ROWS plus a ROTATE RIGHT.
+
+Use PA= to specify an arbitrary rotation in degrees.  PA=0 is vertical as
+seen on the television, with positive rotation angles corresponding to a
+counterclockwise rotation. A box may be specified, in which case the whole
+image will be rotated around the center of the box, then windowed to fit
+into the box.  The box coordinates should be specified in the ROTATED
+coordinate frame, not in the original frame. If no box is specified, a box
+the size and position of the whole image is assumed.  Note that in this
+case some corners may be cut off in the rotated image, while others may be
+filled with zeros. Arbitrary rotations require interpolation to be done on
+the data. The default method is bilinear interpolation, but higher accuracy
+2-D sinc interpolation will be used if the SINC keyword is given.
+
+Note that RIGHT and PA=90 (for example) are not equivalent.  The RIGHT
+keyword implies a simple shuffling around of the pixel values, while PA=90
+will actually attempt to interpolate the values.  Another difference lies
+in the way the resulting image is proportioned: PA=90 will result in an
+image with the same number of rows and columns as the original, but RIGHT
+will result in an image with the number of rows and columns reversed.
+\begin{itemize}
+  \item[ROTATE 4 LEFT\hfill]{Rotates all of image 4 90 degrees
+       in a counter-clockwise direction.}
+  \item[ROTATE 1 BOX=6 PA=145\hfill]{Rotates image 1 by 145 degrees and
+       keeps only the part of the rotated image which lies in box 6.}
+\end{itemize}
+
+\section{FLIP: Change the Orientation of an Image}
+\begin{rawhtml}
+<!-- linkto flip.html -->
+\end{rawhtml}
+\index{Image!Reverse rows or columns}
+
+\begin{itemize}
+  \item[\textbf{Form: }FLIP source {[ROWS]} {[COLS]}\hfill]{}
+\end{itemize}
+
+FLIP will 'flip' an image in either vertically (about rows) or horizontally
+(about columns).  FLIP is used, for example, to change the orientation of
+an image so that it matches the way it is viewed on the sky or on a finding
+chart, or to get the wavelength dispersion axis running the way you want
+before using MASH, etc..
+
+A flip in ROWS inverts the image from top to bottom as seen on the
+television.
+
+A flip in COLUMNS inverts the image from left to right.  
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[FLIP 3 ROWS\hfill]{Inverts image 3 top to bottom.}
+  \item[FLIP 3 COLS\hfill]{Inverts image 3 left to right.}
+\end{itemize}
+You can flip spectra around with FLIP COLS.  This is useful because, in
+those cases in which the dispersion does not run in the desired direction,
+it is faster to flip the spectrum rather than the image after MASH.  It
+does NOT make any sense to FLIP a wavelength-calibrated spectrum.
+\noindent{Examples:}
+\begin{itemize}
+  \item[FLIP 5 ROWS\hfill]{Flip image 5 about the central row.}
+  \item[FLIP 3 COLS\hfill]{Flip image 3 around the central column.}
+\end{itemize}
+
+\section{BIN: Compress (bin) an Image or Spectrum}
+\begin{rawhtml}
+<!-- linkto bin.html -->
+\end{rawhtml}
+\index{Image!Compress}
+\index{Compress!an image}
+
+\begin{itemize}
+  \item[\textbf{Form: }BIN source {[BIN=b]} {[BINR=br]} {[BINC=bc]} \hfill]{}
+  \item{{[SR=sr]} {[SC=sc]} {[NORM]}}
+  \item[source]{is the image being compressed}
+  \item[BIN=b]{compress rows and columns by integer factor 'b'}
+  \item[BINR=br]{specify row compression}
+  \item[BINC=bc]{specify column compression}
+  \item[SR=sr]{give starting row of 'source' to locate region
+       being compressed}
+  \item[SC=sc]{give starting column in 'source'}
+  \item[NORM]{output is average of pixel values instead of sum.}
+\end{itemize}
+
+BIN compresses images by integer factors.  Adjacent pixels are added
+together.
+
+Use BIN= to specify a single compression factor for both rows and columns,
+or use BINR and BINC to specify the compression for rows and columns
+individually.  For spectra, just use BIN.  Note that
+\begin{itemize}
+  \item[BINR\hfill]{gives the amount by which rows or compressed.  This
+       shortens each row, thus producing an image with
+       fewer columns in it.}
+  \item[BINC\hfill]{gives the amount by which columns are compressed.
+       This shortens each column, thus producing an image
+       with fewer rows in it.}
+\end{itemize}
+
+NORM makes the program AVERAGE adjacent pixels when compressing the image,
+instead of the default summing of pixel intensities.
+
+BSR and BSC specify the starting row and column, respectively, of the
+region being saved.  These are pixel locations in the original image.  They
+are used to compress and save only part of an image.
+
+The output image ALWAYS has starting row 0 and starting column 0.  It does
+not make sense to use BIN on a wavelength-calibrated spectrum.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[BIN 4 BIN=2\hfill]{compresses image 4 by a factor of 2
+       in rows and columns.  Adjacent pixels
+       are added.  The mean of the image will
+       be about 4 times the mean before
+       compression.}
+  \item[BIN 3 BINR=6\hfill]{shortens each row in image 3 by a 
+       factor of 6.}
+  \item[BIN 4 BIN=5 SR=200 SC=400\hfill]{
+       takes the part of the image running 
+       from row 200 to the end and from
+       column 400 to the end, and compresses
+       it by a factor of 2.  The pixels 
+       before row 200 and column 400 are
+       dropped from the image.}
+\end{itemize}
+
+\section{SHIFT: Shift an Image}
+\begin{rawhtml}
+<!-- linkto shift.html -->
+\end{rawhtml}
+\index{Image!Shift}
+
+\begin{itemize}
+  \item[\textbf{Form: }SHIFT source {[DC=f]} {[DR=f]} {[SINC]} {[NORM]} 
+       {[RMODEL=i]}\hfill]{}
+  \item[]{{[CMODEL=i]} {[MEAN]} {[BILINEAR]}}
+  \item[source]{tells SHIFT what image to work on,}
+  \item[DC=f]{shifts the image by f columns, and}
+  \item[DR=f]{shifts the image by f rows.}
+  \item[BILINEAR]{enables the bilinear interpolation option}
+  \item[SINC]{enables the sinc interpolation option}
+  \item[NORM]{attempts to conserve counts.}
+  \item[RMODEL=]{specifies a model for the row shift.}
+  \item[CMODEL=]{specifies a model for the column shift.}
+  \item[MEAN]{forces the mean shift of a model to be zero.}
+\end{itemize}
+
+SHIFT will translate the coordinate system of the 'source' image by 
+the amount specified in pixels.  
+
+The simplest use of SHIFT is to specify the amount of translation along
+each axis using the DR and/or DC keywords.  The routine first rounds the
+desired shift to the nearest pixel, and adjusts the variables specifying
+the image's origin. The routine then uses a flux conserving Lagrangian
+interpolation scheme (unless SINC or BILINEAR is specified in which case
+the sinc or bilinear interpolation option is activated) to move the image
+the remaining fraction of a pixel in the specified row and column
+directions.
+
+The NORM keyword is used to conserve counts in the shifted image when sinc-
+interpolation is used.  BEWARE! This may not operate they way you think (or
+want)!  If there is substantial noise in your data it will be trying to
+normalize the noise and will hence be multiplying by a rather arbitrary
+constant.
+
+The RMODEL= (or CMODEL=) keyword specifies a spectrum buffer which is used
+as a model for the row (or column) shift as a function of column (or row)
+number.  This allows more flexible shifts to be performed, and allows, for
+instance, the rectification of cross-dispersed spectral data.  Note that if
+you use SPECTROID or FINDPEAK to build the shift model, you must multiply
+the output of these routines by -1 in order to straighten it.  The complete
+interpolation is done, and the starting row and column of the image are not
+changed, when models are used.  Also, the MEAN keyword will force the mean
+shift to be zero, so that you don't risk shifting your data completely off
+of the image.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[SHIFT 1 DR=0.5\hfill]{shifts image 1 by 0.5 rows using
+     bilinear interpolation.}
+  \item[SHIFT \$IM DR=-0.2 DC=14.3\hfill]{shifts image IM (IM a variable)
+     by -0.2 rows, 14.3 columns.}
+  \item[SHIFT 4 RMODEL=3 MEAN  \hfill]{shifts image 4 according to the
+     model contained in spectrum 3.
+     The mean shift is forced to be zero.}
+\end{itemize}
+
+\textbf{Warning:} SHIFT can be used to shift an image so that its starting row
+or column is negative.  On some older routines this might lead to errors or
+crashes. After shifting an image, you may want to IMMEDIATELY window the
+image or reset the coordinates (see WINDOW and FIXHEAD, respectively), so
+that the starting row and column are greater than or equal to zero!
+
+\section{CLIP: Replace Pixels Outside an Intensity Range}
+\begin{rawhtml}
+<!-- linkto clip.html -->
+\end{rawhtml}
+\index{Image!Fixing Bad pixels}
+\index{Pixel!Eliminating negative}
+\index{Pixel!Changing value}
+
+\begin{itemize}
+  \item[\textbf{Form: } CLIP source {[MAX=f]} {[MIN=f]} {[VMAX=f]} {[VMIN=f]} 
+       {[BOX=n1,n2,...]}\hfill]{}
+  \item[]{{[MASK]} {[MASKONLY]} {[RAD=r]} {[PHOT=r]} {[VMASK=f]}}
+  \item[source]{the image or spectrum that CLIP works on.}
+  \item[MAX=n]{sets the level above which pixels are adjusted.}
+  \item[MIN=n]{sets the level below which pixels are adjusted.}
+  \item[VMAX=n]{replaces all pixels above MAX by 'n'.}
+  \item[VMIN=n]{replaces all pixels below MIN by 'n'.}
+  \item[MASK]{Performs the MASK function on the clipped pixels.}
+  \item[MASKONLY]{Performs the MASK function on the pixels which
+       would be clipped without actually clipping them.}
+  \item[VMASK=n]{replaces all masked pixels with n}
+  \item[RAD=r]{replaces all pixels within r pixels of a clipped pixel}
+  \item[PHOT=r]{replaces all pixels within r pixels of the location
+       on the VISTA internal photometry list}
+  \item[BOX=n1,n2...]{clips within boxes n1,n2, etc.}
+\end{itemize}
+
+CLIP will search through the 'source' image and replace all pixels with
+intensities above MAX with VMAX and all pixels below MIN with VMIN.  If
+VMIN and VMAX are not specified, they default to zero.
+
+If VMIN or VMAX are specified, but no MIN or MAX are not, the routine clips
+at the values given by VMIN or VMAX.  If neither MAX nor VMAX are
+specified, no upper level clipping will be performed.  Similarly, if
+neither MIN nor VMIN is specified, but MAX or VMAX is, no lower level
+clipping will be performed. 
+
+If no keywords are given, CLIP will set all negative pixels to
+zero. 
+
+You can use the 'BOX=n' keyword to only clip those portions of the image
+within box 'n'.  Multiple boxes can also be specified on the command line
+to clip within more than one region at a time.
+
+If the MASK keywords is given, a MASK is created (see the MASK command) of
+the pixels that are being clipped.  The related MASKONLY keyword will
+create a mask \textit{without} doing the actual clipping.  Masks can also
+be used for clipping with the VMASK=n keyword.  All masked pixels will be
+replaced with the value 'n' in this option. The various MASK options are
+useful with commands such as the SURFACE command that permit the use of
+image masks to tag certain pixels before a surface is fit to an image.
+Note, however, that not all commands recognize masks.
+
+If the RAD=r keyword is used, all pixels within r pixels of the selected
+pixels will be clipped to the specified value. If the PHOT=r keyword is
+used, all pixels within r pixels of all the locations on the current VISTA
+photometry list that satisfy the clipping criteria will be clipped to the
+values specified with VMAX= and VMIN=.  This is a way to clip and/or mask
+out stars on an image previously identified with the VISTA stellar
+photometry routines.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[CLIP 1 MAX=110. VMAX=100.\hfill]{replace all pixels in image 1
+       that are above 110 by 100.}
+  \item[CLIP 1 MIN=SKY VMIN=0.0\hfill]{replace all pixels below SKY
+       by 0.0.  SKY is a previously-defined variable.}
+  \item[CLIP 1 MAX=110. VMAX=100. MIN=SKY VMIN=0.0\hfill]{
+       does the same as examples 1 and 2 simultaneously.}
+  \item[CLIP 1 VMAX=100.\hfill]{replaces all pixels above 100 by 100.0}
+  \item[CLIP 1 VMAX=100. BOX=6\hfill]{does the same as example 4,
+       but only in box 6.}
+  \item[CLIP 1\hfill]{sets all negative pixels in image 1 to zero.}
+  \item[CLIP 1 MIN=40.\hfill]{sets all pixels below 40 with 0.0}
+  \item[CLIP 1 VMAX=1024.0 MASK\hfill]{clips pixels above 1024.0 to
+       1024.0 and loads the positions of the pixels onto the mask list.}
+  \item[CLIP 1 VMAX=1024.0 MASKONLY\hfill]{masks those pixels with values
+       above 1024.  Does not modify the image.}
+\end{itemize}
+
+\section{COLFIX: Fix Deferred Charge Columns in a CCD Image}
+\begin{rawhtml}
+<!-- linkto colfix.html -->
+\end{rawhtml}
+
+\begin{itemize}
+  \item[\textbf{Form: }  COLFIX source {[BOX=n]} {[SPLINE]} {[ROWS]} 
+       {[MAX=f]} {[SMOOTH]} {[MODE]}\hfill]{}
+  \item[source]{tells VISTA what image to work on}
+  \item[BOX=n]{only use the image within box n}
+  \item[SPLINE]{fit spline to deferred charge buffer}
+  \item[ROWS]{fix rows instead of columns}
+  \item[MAX=f]{Ignore pixels above this level}
+  \item[SMOOTH]{Median filter buffer}
+  \item[MODE]{Use modal estimator}
+\end{itemize}
+
+COLFIX will attempt to fix deferred charge columns (or rows) under
+the assumption that they can be fixed by additive corrections.  Under
+default operation, the routine finds the median of each column, and then
+generates corrections to each column such that they all have the same
+median.  The median is selected is a super-median, of median of the the
+original column medians.  A number of fixes are given for crowded images or
+those containing extended objects, where the median may be biased.  The
+SPLINE option fits a spline to the column medians in an attempt to preserve
+and slow trends originally in the data.  MAX sets an upper threshold to
+exclude bright pixels that may bias the median, and MODE attempts to revise
+the median by using the difference in value between the median and first
+quartile to exclude bright pixels in the last quartile.
+
+\section{SMOOTH: Smooth an Image or Spectrum}
+\begin{rawhtml}
+<!-- linkto smooth.html -->
+\end{rawhtml}
+\index{Image!Smoothing}
+
+\begin{itemize}
+  \item[\textbf{Form: }SMOOTH source {[FW=f]} {[FWC=f]} {[FWR=f]} 
+       {[BOXCAR]} {[RUNMEAN]} {[WID=]}\hfill]{}
+  \item[source]{is the object being smoothed,}
+  \item[FW=f]{sets the full width of the (Gaussian or boxcar)
+       smoothing function to be f pixels, and}
+  \item[FWC= and FWR=]{set the full width for the (Gaussian or boxcar)
+       smoothing function to have a different width in rows or columns.}
+  \item[BOXCAR]{convolve with a box function instead of a Gaussian.}
+  \item[RUNMEAN]{convolve with a box function, but using a
+       running-mean algorithm that is faster than the BOXCAR option. 
+       The results are identical for odd-sized boxes.}
+\end{itemize}
+
+SMOOTH will smooth or convolve the 'source' object with a 2D or 1D Gaussian
+or boxcar.  This is useful for reducing noise, enhancing low surface
+brightness features, or as the first step for looking for sharp features in
+an image (by subtracting the smoothed image from the original).  Specify the
+full-width-half-maximum (FWHM) of the Gaussian (boxcar) in pixels with the
+FW keyword. If desired, you can specify differing widths in the column or
+row directions with the FWC or FWR keywords.  To smooth the image in the
+column direction only, (each image row is convolved along its extent
+separately) just specify the width with the FWC keyword.  To smooth in the
+row direction only, (down the columns) just specify the FWR keyword. For
+Gaussian, the kernel will extend to WID*FWHM, where WID=3 by default,
+although this can be overridden with the WID= keyword.
+
+To convolve with a box, use the 'BOXCAR' word. Better yet, use the
+'RUNMEAN' word, which gives identical results much faster for odd-sized
+windows, but slightly different results for even-sized smoothing windows.
+BOXCAR may be removed in future versions, to be supplanted by RUNMEAN.
+
+The convolutions are done in the image domain and may be slow for large
+widths of the filter.  Edges are handled properly.  At this time, the
+FWHMs of the filters are limited to 33 pixel for the Gaussian and 99
+pixels for the boxcar.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[SMOOTH 2 FW=8.5\hfill]{Smoothes image 2 with a Gaussian having
+       full width 8.5 pixels.  The width is
+       the same in the row and column directions.}
+  \item[SMOOTH 2 FWR=8.5 FWC=8.0\hfill]{Smoothes image 2 with a Gaussian
+       having full width = 8.5 rows and 8.0 columns.}
+  \item[SMOOTH 5 FWR=6.2\hfill]{Smoothes each column individually with a
+       Gaussian having full width 6.2 rows.}
+  \item[SMOOTH 2 FW=5 BOXCAR\hfill]{Convolve with a box of size 5 pixels.}
+\end{itemize}
+
+Since 1-D spectra are treated the same as 2-D images with only one row, use
+the FWC= keyword when smoothing spectra.  Remember that the width of the
+smoothing kernel (Gaussian or Boxcar) is in units of PIXELS not Angstroms.
+
+\section{ZAP: Non-Interactive Image Median Filter}
+\begin{rawhtml}
+<!-- linkto zap.html -->
+\end{rawhtml}
+\index{Pixel!Removing bad}
+\index{Image!Median filter}
+
+\begin{itemize}
+  \item[\textbf{Form: }ZAP source {[SIG=f]} {[SIZE=s]} {[SIZE=r,c]} 
+       {[BOX=n]} {[TTY]} {[MASK]} {[SURGICAL]} {[COLS]} \hfill]{}
+  \item[source]{is the} image being worked on.
+  \item[SIZE=s]{sets the size (full width) of a square median
+       window around each pixel to be used in the median filter
+       computation.  Default is a 5x5 pixel square box.}
+  \item[SIZE=r,c]{sets the size of a rectangular median window
+       around each pixel to be 'r' rows by 'c' columns wide.  Default
+       is a 5x5 pixel square box}
+  \item[SIG=f]{specifies the rejection threshold in units
+       of the standard deviation within SIZE.  Default is 5}.
+  \item[BOX=n]{tells ZAP to work only on those parts of the image
+       within the specified box}.
+  \item[TTY]{print verbose output while zapping}
+  \item[MASK]{masks pixels rather than replacing them with median}
+  \item[SURGICAL]{only edit/mask the central pixel of the running
+       median window.  Default edits all pixels within the box that
+       meet exceed the filtering threshold.}
+  \item[COLS]{will ZAP each row, replacing all pixels on that row with the median}
+\end{itemize}
+
+ZAP will edit and/or mask high or low pixels in an image, or perform
+whole-image median filtering.  
+
+For each pixel, ZAP computes the mean, median, and standard deviation of
+all of the pixels within a 5x5 box centered on that pixel.  The SIZE
+keyword can be used to change the size and aspect ratio of this box.  Any
+pixels within this box deviate by more than 5-sigma (or f-sigma, using the
+SIG=f keyword) from the median are replaced by the median.  If the MASK
+keyword is given, the pixels are masked rather than replaced.  The 'BOX=n'
+keywords will limit ZAP's attention to that portion of the image within box
+'n'.
+
+ZAP will replace \textit{all} pixels within the current box that exceed the
+rejection threshold for the region centered on a particular pixel.  To only
+ZAP the pixel at the center of the current filtering window, use the
+SURGICAL keyword.
+
+If the SIG=0 keyword is given, zap will in effect median smooth the image
+within the window given by the size command, replacing all pixels by the
+median of them and their surroundings.
+
+ZAP is a rather drastic command that should be used with great care.  In
+general, ZAP is not a good way to clean an image of cosmic ray events,
+especially if the images of your objects have sharp cores (e.g., under- or
+critically-sample stellar images or emission lines).  In these cases, it is
+best to use the interactive TVZAP to edit the bad pixels in an image if
+there is a small number of these that may be handled interactively.  If
+cosmic rays are a big problem (e.g., like in HST images) and you have
+multiple images (e.g., CRSPLIT observations), you should use the MEDIAN,
+BIGMEDIAN, or PICCRS routines, as appropriate.  If your observing strategy
+(or the source of your images) did not allow use of multiple images for
+statistical cosmic-ray rejection, careful and judicious interactive
+cleaning using TVZAP is suggested over blind zapping using ZAP.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[ZAP 1\hfill]{Do the filtering with 5 by 5 square,
+       adjusting pixels that are 5 sigma away from the median.}
+  \item[ZAP 1 BOX=4\hfill]{does the same as example 1, but only in the
+       region defined by box 4.}
+  \item[ZAP 1 SIZE=7\hfill]{considers a 7 by 7 box at each pixel.}
+  \item[ZAP 5 SIZE=1,15\hfill]{considers a box that is 1 row by 15 columns
+       in size.}
+  \item[ZAP 1 TTY\hfill]{does the same as example 1, but shows the
+       coordinates of the zapped pixels on the screen.}
+\end{itemize}
+
+A related command is TVZAP, which allows you to select which pixels are to
+be zapped interactively using the TV cursor.  LZAP works with a list of
+known bad pixels.
+
+\section{TVZAP: Interactively Remove Pixels by Median Filtering}
+\begin{rawhtml}
+<!-- linkto tvzap.html -->
+\end{rawhtml}
+\index{TV!Use cursor to select bad pixels}
+\index{Zap!Remove bad pixels interactively}
+\index{Pixel!Removing bad pixels}
+
+\begin{itemize}
+  \item[\textbf{Form: }TVZAP {[SIG=f]} {[SIZE=s]} {[SIZE=r,c]} 
+       {[SEARCH=s]} {[TTY]} {[MASK]} {[SURGICAL]}\hfill]{}
+  \item[SIG=f]{specifies the rejection threshold in units
+       of the standard deviation within SIZE.  Default is 5}.
+  \item[SIZE=s]{sets the size (full width) of a square median
+       window around each pixel to be used in the median filter
+       computation.  Default is a 5x5 pixel square box.}
+  \item[SIZE=r,c]{sets the size of a rectangular median window
+       around each pixel to be 'r' rows by 'c' columns wide.  Default
+       is a 5x5 pixel square box}
+  \item[TTY]{print verbose output while zapping}
+  \item[MASK]{masks pixels rather than replacing them with median}
+  \item[SURGICAL]{only edit/mask the central pixel of the running
+       median window.  Default edits all pixels within the box that
+       meet exceed the filtering threshold.}
+\end{itemize}
+
+TVZAP works on the image that is loaded into the television.  It performs
+the ZAP operation (see HELP ZAP) on those pixels selected by the TV cursor.
+
+SIG=f and TTY have the same meaning as in ZAP.  SEARCH is used to select
+the size of the region which is median filtered.  The region is a square
+box of size 's', where 's' is the argument to the SEARCH word. 's' has a
+maximum size of 50.  If the word SEARCH is not given, the default is a 5 by
+5 box.  The MASK keyword is the same as for the ZAP command.
+
+The SURGICAL keyword means to test only the pixel directly beneath the
+cursor for zapping.  By default TVZAP (like ZAP or LZAP) will test 
+\textit{all} pixels within the current median window, and replace them
+with the median if they exceed the rejection threshold.
+
+After you type TVZAP, the cursor will appear on the screen.  The usual
+cursor keys (see ITV) will then be defined.  Other defined keys are:
+
+\begin{tabular}{cc}
+   Z&perform ZAP operation at position of cursor\\
+   E&exit from TVZAP\\
+   S&change size of box used in median filtering\\
+   T&change rejection threshold\\
+\end{tabular}
+
+Move the cursor, in turn, to the regions on the image you want zapped.  Hit
+the Z key each time.  The median filtering process will take place, and the
+program will tell you how many pixels have been zapped.
+
+\section{MEDIAN: Compute Median of Several Images}
+\begin{rawhtml}
+<!-- linkto median.html -->
+\end{rawhtml}
+\index{Image!Median of several images}
+\index{Median!of several images}
+
+\begin{itemize}
+  \item[\textbf{Form: }MEDIAN dest im1 im2 im3 {[im4 im5 ...]} {[TTY]} 
+       {[NOMEAN]}\hfill]{}
+  \item[dest]{is the buffer holding the median}
+  \item[im1 im2 ...]{are the input images for computing the median}
+  \item[TTY]{provide output of the progress of the computation.}
+  \item[NOMEAN]{tells the program not to scale each image by
+       its mean before taking the median}
+\end{itemize}
+
+MEDIAN loads the 'dest' buffer with the median of images im1, im2, im3, ...
+Each pixel in the destination image is the median of the corresponding
+pixels in the input images. Normally, the program scales each image to have
+the same mean before computing the median of the stack. If you wish to do
+the background determination and scaling yourself, you can suppress the
+auto-rescaling by using the NOMEAN keyword.
+
+Note that all input images must be in VISTA buffers. This prevents
+computing the median of very large numbers of images because of insufficient memory.  For
+this purpose, try the command BIGMEDIAN, which will median input disk FITS
+files and store the median in a VISTA buffer.
+
+At least 3 input images must be given.  None of the images can be in the
+same buffer as the output image.  All the images must have the same size
+and starting pixel.
+
+The program is useful for removing cosmic-ray hits from many exposures of
+the same object.  Make sure the location of the objects on the image
+(stars, location of spectrum, etc) are the SAME on ALL images!  Use SHIFT
+or ALIGN to align images before using MEDIAN.
+
+\noindent{Example:}
+\begin{itemize}
+  \item[MEDIAN 11 1 2 3 4 5 TTY\hfill]{Loads into buffer 11 the median 
+       of the images in buffers 1 through 5.}
+\end{itemize}
+
+\section{BIGMEDIAN: Compute Median of a Large Number of FITS Images}
+\begin{rawhtml}
+<!-- linkto bigmedian.html -->
+\end{rawhtml}
+\index{Image!Median of several images}
+\index{Median!of several images}
+
+\begin{itemize}
+  \item[\textbf{Form: }BIGMEDIAN dest LIST=file {[BIAS=file]} 
+       {[NOMEAN]}\hfill]{}
+  \item[dest]{is the buffer which will hold the median}
+  \item[LIST=file]{specifies the filename of a file which contains
+       names of individual FITS files to median. Optionally,
+       this file can contain normalization constants and
+       zero points for each individual file}
+  \item[BIAS=file]{specifies a FITS file with a bias frame to subtract
+       from each input image before performing the median}
+  \item[NOMEAN]{tells the program not to scale each image 
+       before taking the median}
+\end{itemize}
+
+BIGMEDIAN loads the 'dest' buffer with the median of images specified in
+the file given by the LIST=file keyword. The list file must contain the
+names of at least 3 images, in FITS format, with one image name specified
+per line of the input file. Optionally, the name of the file can be
+followed (on the same line) with a normalization constant and a zero point
+to be applied to each pixel in this input FITS file before the median is
+performed. For example, if the list file looks like this:
+\begin{itemize}
+  \item{image001.fits}
+  \item{image002.fits}
+  \item{image003.fits}
+\end{itemize}
+then the median of those frames will be taken from the raw input FITS
+values.  If the input file looks like this:
+\begin{itemize}
+  \item{image001.fits    1.   0.}
+  \item{image002.fits   20.   0.}
+  \item{image003.fits   20.   5.}
+\end{itemize}
+then the median will be taken of image001, (image002/20.), and
+(image003-5)/20.  Note that the specified zero point is SUBTRACTED from the
+image before computing the median; this makes it ideal to use for subtracting e.g. an
+overscan value.
+
+In addition, you can do a pixel-by-pixel bias subtraction for each frame in
+the input list if you specify a FITS bias frame to subtract with the
+BIAS=file keyword. In this case, the bias frame will be subtracted before
+the median is performed.
+
+The normalization of each frame can also be specified if there is a FITS
+card called MEAN in the FITS headers. If this card exists, the value of the
+card will be used to normalize the individual frames. Finally, if the
+NOMEAN keyword is specified, no normalization will be applied, regardless
+of the presence of a MEAN card or a value in the input list file.
+
+\section{PICCRS: Optimally Combine Frames with Outlier Rejection}
+\begin{rawhtml}
+<!-- linkto piccrs.html -->
+\end{rawhtml}
+\index{Image!Combination of several images}
+
+\begin{itemize}
+  \item[\textbf{Form: }PICCRS dest LIST=file {[BIAS=file]} {[RN=]} {[GAIN=]} 
+       {[TP=]} {[TN=]} {[SKY]}\hfill]{}
+  \item{{[TD=]} {[F=]} {[BSAT=]} {[BLANK=]} }
+  \item{{[NEG]} {[SIG]} {[FITS]} {[MASK]} {[MEDIAN]} {[MIN=]}}
+  \item[dest]{is the buffer which will hold the median}
+  \item[LIST=file]{specifies the filename of a file which contains
+       names of individual FITS files to median. Optionally,
+       this file can contain normalization constants and
+       zero points for each individual file}
+  \item[BIAS=file]{specifies a FITS file with a bias frame to subtract
+       from each input image before performing the median}
+  \item[RN=]{gives the readout noise to use in the noise computation}
+  \item[GAIN=]{gives the gain to use in the noise computation}
+  \item[TP=,TN=,TD=]{specify the thresholding parameter for primary events,
+                        adjacent neighbors, and diagonal neighbors}
+  \item[F=]{gives the fraction error parameter (see below) }
+  \item[BSAT=]{specifies the saturation value}
+  \item[BLANK=]{specifies the value of BLANK to use in output image}
+  \item[NEG]{tells PICCRS to test pixels with largest ABSOLUTE
+       deviation from mean first, rather than largest
+       POSITIVE deviation from mean}
+  \item[SIG]{has PICCRS load the output variance image instead of 
+       the mean image}
+  \item[WFPC]{specifies input files are WFPC, not FITS format}
+  \item[FITS]{specifies input files are FITS (default), not WFPC }
+  \item[MASK]{tells PICCRS to evaluate all masked pixels as if
+                        they were neighbor pixels}
+  \item[MEDIAN]{tells PICCRS to take the median of the stack rather
+                        than the weighted mean for the CR rejection ONLY}
+  \item[MIN=]{specifies the lowest good data value. NOTE: default=0,
+                        i.e. all negative pixels are considered to be bad}
+  \item[SKY]{tells PICCRS to read separate sky frames and subtract these
+            before combining, but uses sky to calculate variances}
+\end{itemize}
+
+NOTE!!! PICCRS can be a complicated program. Make sure to understand and
+check your results; we offer no guarantees. If your images are not
+well-registered, PICCRS won't work!
+
+PICCRS is a program originally written by Ed Groth at Princeton for the
+statistical removal of cosmic rays from HST WFPC data. It is useful,
+however, as an optimal combiner of frames with rejection of outlying
+pixels.  PICCRS works by going through each pixel in a stack of images.
+For each pixel, the value in each image is compared with the mean
+determined from all of the other images in the stack. Using the known noise
+properties of the detector, the pixel in question will be rejected if it
+falls outside some specified criterion. This continues through the entire
+stack. Finally, the weighted mean of all pixels not flagged is taken and
+placed in the output image.
+
+The input images are specified in a file given with the LIST= file, with
+format exactly like that of BIGMEDIAN. A mean and bias value can be
+specified in this input file. There is an optional fourth parameter which
+can be specified, unlike BIGMEDIAN, which is an output file name for each
+input file; if this name is given, the output file will be identical to the
+input file but all of the rejected pixels will be set to BLANK. The output
+file will be in WFPC format with a separate header and image file.
+
+By default the input files should be in FITS format, but WFPC input files
+can be used if the WFPC keyword is specified.
+
+IMPORTANT: To insure proper operation, the gain and readout noise must be
+correctly specified with the GAIN= and RN= keywords. The default values of
+GAIN=7.5 and RN=13 apply for WF/PC-1 data (NOT WFPC2). If desired,
+saturated pixels can be rejected using the BSAT=n keyword which specifies
+that all pixels larger than n will be considered bad on input. IMPORTANT:
+by default, all negative pixels are considered bad on input; you can change
+the lower boundary for bad pixels with the MIN=x keyword.
+
+Since the original idea of PICCRS was to reject cosmic rays, the program is
+designed to allow a less stringent rejection criterion for neighbors of
+pixels which deviate by a lot, to allow for the fact that cosmic rays often
+take up several pixels, and that pixels next to the brightest cosmic ray
+pixels are more likely to be part of the cosmic ray hit than any random
+pixel in the image.  Consequently, the algorithm goes through the image and
+rejects as "primary" cosmic rays those pixels above the threshold specified
+with the TP= keyword (default is 5 (sigma)), then neighbors of these pixels
+are tested with a lower threshold specified with the TN= (for adjacent
+neighbors) and TD= (for diagonal neighbors) keywords (defaults are 3
+(sigma) for both of these).
+
+The whole idea of PICCRS depends on the fact that the input images are all
+well registered; if this is not the case, then most of the objects,
+e.g. stars, will be rejected as deviant from the mean and your output image
+will be horribly incorrect. To account for very small errors in
+registration, the computed errors, against which the pixel deviations are
+tested for rejection, includes a "fudge" factor to increase the expected
+variance for an increased signal level; this helps prevent bright pixels in
+stars with slight misregistration from being rejected as cosmic rays. Note
+that if such pixels are rejected, the output image will not be
+photometrically correct. The variance computed by PICCRS is given by:
+\begin{verbatim}
+   variance(DN) = (rn/gain)**2 + (DN/GAIN) + (F*DN)**2
+\end{verbatim}
+where the first two terms are strictly correct and the last term is the
+fudge factor with variable parameter F. The default for F is 0.05, but this
+can be modified with the F= keyword; to turn off the fudge factor, set F to
+0, but make sure your (real) bright objects aren't getting clipped.
+
+ MEDIAN keyword.
+
+ BLANK= keyword
+
+ NEG keyword.
+
+\section{SURFACE: Fit a Plane or Second-Order Surface to an Image}
+\begin{rawhtml}
+<!-- linkto surface.html -->
+\end{rawhtml}
+\index{Image!Surface fit}
+\index{Image!Replace by best surface fit}
+
+\begin{itemize}
+  \item[\textbf{Form: }SURFACE source {[BOX=n]} {[PLANE]} {[SUB]} 
+       {[LOAD]}\hfill]{}
+  \item{{[DIV]} {[MASK]} {[NOZERO]} {[PIX=N]} (redirection)}
+  \item[source]{is the image to which the surface is being fit,}
+  \item[BOX=n]{tells VISTA to do the fit only in box 'n',}
+  \item[PLANE]{fits a plane, rather than a second order surface,}
+  \item[SUB]{has the program subtract the best-fit surface
+       from the original image,}
+  \item[DIV]{replaces the original image with itself divided by the 
+       best-fit surface,}
+  \item[MASK]{tells VISTA to ignore masked pixels, and}
+  \item[NOZERO]{suppresses rejection of pixels with zero value.}
+  \item[PIX=n]{uses every n'th pixel for speed}
+  \item[LOAD]{load variables with the surface fit}
+\end{itemize}
+
+SURFACE fits a second-order polynomial surface to the specified image, or
+to the subset of that image designated by the BOX keyword.  It fits to all
+pixels in the image or box, except those that have the value zero, or those
+masked with the MASK command. These two features allow you to mark out
+sections of an image that you do not want included in the fit.  Use the
+command CLIP to set pixels to zero.
+
+For speed, you can have the program find the best-fitting surface using
+every n-th pixel.  Use the PIX keyword for this. For example, if you say
+PIX=3, the surface is fit to the pixels in columns 0, 3, 6, 9, ... in rows
+0, 3, 6, 9...
+
+A polynomial expression for the fit is printed on the output device.  These
+coefficients may be loaded into variables with the LOAD keyword.
+
+The MASK keyword tells SURFACE to ignore masked pixels.  Otherwise, all
+pixels except those that have value zero are included in the FIT.  
+
+The NOZERO keyword will force SURFACE to fit \textit{all} pixels, including
+those that have value zero.  (This word is short for ``NO ZERO
+CHECKING''). 
+
+To fit a planar (instead of a second-order) surface, include the PLANE
+keyword.
+
+In its normal operation, the program replaces the image with the
+best-fitting surface.  To subtract the surface from the image, use the word
+SUB.  To divide the image by the surface, use the word DIV.  The best-fit
+surface is applied in the manner you specify to EVERY pixel, regardless
+what the PIX word says.
+
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[SURFACE 1\hfill]{replaces image 1 by the best-fitting
+       polynomial.  Pixels with value zero are not included in the fit.}
+  \item[SURFACE 1 NOZERO\hfill]{does the same as example 1, but this
+       time ALL pixels are included in the fit.}
+  \item[SURFACE 1 BOX=2\hfill]{does the fit only in BOX 2.}
+  \item[SURFACE 1 MASK\hfill]{fits the best second-order surface, ignoring
+       masked pixels.}
+  \item[SURFACE 1 SUB\hfill]{subtracts the best fitting surface from image 1.}
+  \item[SURFACE 1 PIX=5\hfill]{does the fit using every 25th pixel.}
+  \item[SURFACE 1 PIX=5 LOAD\hfill]{does the same as example 6, loading the
+       coefficients of the fit into variables.}
+\end{itemize}
+
+The LOAD keywords load the variables COEFF0, COEFFR, COEFFC, COEFFR2,
+COEFFC2, COEFFRC, MIDR, MIDC, where the surface that is fit satisfies the
+equation:
+\begin{verbatim}
+    SURFACE = COEFF0 + (ROW - MIDR) * COEFFR
+                     + (COL - MIDC) * COEFFC
+                     + (ROW - MIDR)^2 * COEFFR2
+                     + (COL - MIDC)^2 * COEFFC2
+                     + (ROW - MIDR) * (COL - MIDC) * COEFFRC
+\end{verbatim}
+The LOAD keyword is useful for locating the peak of cross-correlations.
+See the section CROSS for information.
+
+\section{SPLINE: Replace Image or Spectrum by a Cubic Spline Fit}
+\begin{rawhtml}
+<!-- linkto spline.html -->
+\end{rawhtml}
+\index{Spectrum!Fit spline to}
+\index{Image!Fit spline to rows or columns}
+
+\begin{itemize}
+  \item[\textbf{Form: } SPLINE source {[R=r1,r2,...]} {[C=c1,c2...]} 
+       {[W=w1,w2,...]}\hfill]{}
+  \item{{[AVG=a]} {[SUB]} {[DIV]}}
+  \item[source]{is the image or spectrum SPLINE works on}
+  \item[R=r1,r2,...]{replaces each column in the image 'source'
+       with the best spline through the knot points at rows r1,r2,...}
+  \item[C=c1,c2,...]{replaces each row in the image (or uncalibrated 
+       spectrum) 'source' with the best spline 
+       through the knot points at columns c1,c2,...}
+  \item[W=w1,w2,...]{replaces a wavelength calibrated spectrum
+       'source' by the best-fitting spline with knot
+       points at wavelengths w1,w2,...}
+  \item[AVG=a]{averages a pixels or Angstroms around the knots.}
+  \item[SUB]{subtracts the best fitting spline(s) from the 
+       rows or columns, instead of replacing by the spline.}
+  \item[DIV]{divides each row/column by the best fitting
+       spline, instead of replacing by the spline.}
+\end{itemize}
+
+SPLINE is used to fit splines to images or spectra.  When used with images,
+it replaces each row (or column) with splines fitted with designated
+columns (or rows) as knot points.  When used with (wavelength calibrated)
+spectra, it replaces the spectrum with the best fitting spline with
+designated columns (Angstroms) as knot points.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[SPLINE 11 W=5000,5500,6000,7000\hfill]{ replaces spectrum 11 with
+       the best-fitting spline.  Knot points are at 5000, 5500, 6000, 7000
+       Angstroms.}
+
+  \item[SPLINE 11 W=5000,5500,6000,7000 AVG=40\hfill]{ does the same as
+       example 1, but takes the average in 40 Angstrom bins around the
+       designated knot points.  The averages are used in the spline fit.}
+
+  \item[SPLINE 11 W=5000,5500,6000,7000 DIV\hfill]{ does the same ax
+       example 1, but divides the spectrum by the best fitting spline
+       instead of replacing by the spline.}
+
+  \item[SPLINE 11 C=20,40,100,300,500 AVG=10\hfill]{ this form is used for
+       spectra that are not wavelength calibrated.  It averages the
+       spectrum in 10 channel bins around columns 20, 40, ..., and replaces
+       the spectrum by the best fitting spline.}
+\end{itemize}
+
+
+Example using images:
+
+\begin{itemize}
+  \item[SPLINE 11 C=20,40,100,300,500 AVG=10\hfill]{ this command is the
+       same as example 4 above.  When applied to an image, it replaces each
+       row in the image by the spline which best fits that row. The knot
+       points are taken to be averages of the image intensity in 10 channel
+       bins around columns 20, 40,...}
+\end{itemize}
+
+\section{CROSS: Cross-Correlate Images or Spectra}
+\begin{rawhtml}
+<!-- linkto cross.html -->
+\end{rawhtml}
+\index{Image!Cross-correlation}
+
+\begin{itemize}
+  \item[\textbf{Form: }CROSS dest source1 source2 {[BOX=n]} {[RAD=r]} {[RADR=r]} {[RADC=c]} {[CORR]}\hfill]{}
+  \item[dest]{is the buffer in which the cross-correlation will be stored,}
+  \item[source1,source2]{are the images to cross-correlate,}
+  \item[BOX=n]{tells VISTA to use in box 'n',}
+  \item[RAD=r]{defines the radius of the resulting cross-correlation image 
+       (the image will run from row -r to row +r and from col -r to col +r).}
+  \item[RADC= RADR=]{To specify two different radii for the cross-
+       correlation.}
+  \item[CORR]{Compute instead of the cross-correlation (XC=<AB>), 
+              the correlation coefficient: (R=(XC-<A><B>)/SIG(A)*SIG(B))}
+\end{itemize}
+
+CROSS does a cross-correlation on two images, loading the resulting image
+into a third buffer.  This program is useful for registering two images or
+determining a shift between two spectra, for instance. It is usual practice
+to subtract an appropriate baseline from the images, usually the sky level
+for images and the continuum level for spectra. The RAD=r keyword defines
+the half-size of the cross-correlation image. If not specified the
+cross-correlation will be the same size as the first source image.
+However, a cross-correlation of a two-D image involves four nested DO
+loops, so it is advisable to use the RAD= keyword when possible so that two
+of the DO loops are short.  Often only the peak of the cross-correlation is
+of interest, so that the a very small radius may be specified (between 2
+and 5, say).  Spectra are automatically cross-correlated in one-dimension
+only.
+ 
+The CORR keyword makes the routine compute full correlation coefficients
+rather than just cross-correlations as a function of lag. This option
+involved about a factor of 3 more operations, so runs slower. It is
+important for radial velocities or displacements because the correlation
+peak tends to be more symmetric than the cross-correlation
+peak. Asymmetries in cross-correlation and in correlation arise because
+both are computed over a finite region.
+
+The peak of the cross-correlation image may be found using the SURFACE
+command with the LOAD keyword as in the following example, which
+cross-correlates two images, calculates the peak of the cross-correlation,
+and then shifts the two images into register:
+\begin{itemize}
+  \item{CROSS 3 1 2 RAD=3}
+  \item{ABX 3 HIGH\_COL=HC HIGH\_ROW=HR}
+  \item{BOX 1 CC=HC CR=HR N=3  (or possibly N=5 or larger if cross correlation
+             function is well behaved)}
+  \item{WINDOW 3 BOX=1}
+  \item{SURFACE 3 LOAD}
+  \item{DENOM=4*COEFFC2*COEFFR2-COEFFRC*COEFFRC}
+  \item{DELR=MIDR+(COEFFC*COEFFRC-2*COEFFR*COEFFC2)/DENOM}
+  \item{DELC=MIDC+(COEFFR*COEFFRC-2*COEFFR2*COEFFC)/DENOM}
+  \item{SHIFT 2 DR=DELR DC=DELC SINC}
+\end{itemize}
+
+\section{INTERP: Interpolate Across Rows, Columns, or Masked Pixels}
+\begin{rawhtml}
+<!-- linkto interp.html -->
+\end{rawhtml}
+\index{Mask!Interpolate across masked pixels}
+\index{Row!Interpolate across rows}
+\index{Column!Interpolate across columns}
+
+\begin{itemize}
+  \item[\textbf{Form: }INTERP imno {[BOX=b1,b2,...]} {[COL]} {[ROW]} {[ORD=n]} {[AVE=a]} {[MASK]}\hfill]{}
+  \item[imno]{is the buffer on which interpolation will be performed,}
+  \item[BOX=b1,b2,...]{is a list of boxes to be interpolated across,}
+  \item[COL]{interpolates across bad columns,}
+  \item[ROW]{interpolates across bad rows,}
+  \item[ORD=n]{specifies order of polynomial interpolation,}
+  \item[AVE=a]{specifies how many pixels on either side are to be averaged 
+       to provide the interpolation,}
+  \item[MASK]{interpolates across all masked pixels.}
+\end{itemize}
+
+INTERP may be used to remove bad portions of an image.  It works by
+replacing the bad pixels with a polynomial fit to several pixels on either
+side of the bad part.  It is an inherently one-dimensional interpolation,
+in that it will only interpolate either along a column or along a rows.
+Hence if you have a bad column you want to get rid of, specify the COL
+keyword.  If you need to replace a bad row, use ROW.  Note that ONE of
+these two keywords MUST be specified. The region across which the
+interpolation is done is specified by defining a box containing the
+region. A list of boxes may be given via the BOX= keyword, in case you want
+to remove a number of bad columns (or rows) from an image.  An alternate
+form uses the MASK keyword.  When this is used the program searches the
+image for the first masked pixel, continues until the next unmasked pixel,
+and interpolates across this region.  Then it proceeds until it finds the
+next masked pixel, and repeats the process until no more masked pixels have
+been found.  Note that the BOX= and MASK keywords are incompatible; use
+only one or the other.
+
+The order of the interpolation-polynomial is given with the ORD=n
+keyword. The default is ORD=0, so that the bad pixels are replaced simply
+by the average of the adjacent pixels. This works fine for flat images, but
+when interpolating across stars or spectra ORD=2 works much better (higher
+orders up to 6 are allowed but are rarely needed).  The user can change the
+number of pixels to be used in the fit by the AVE= keyword.  AVE pixels at
+each side of the bad region are used in the fit.  The value of AVE has to
+be at least (ORD+1)/2, if a smaller value is given, the order of the
+interpolation-polynomial will be reduced to the highest allowed order. The
+default value is AVE=1; in other words, replaces the bad pixels with the
+line (or the average if ORD=0) defined by the pair of adjacent pixels (one
+pixel on either side) of the bad region.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[INTERP 4 BOX=2,5,3 COL\hfill]{Boxes 2, 3, and 5 have been defined
+       to contain bad columns or sets of columns.  These boxes in image 4
+       will be replaced by the average of the their two adjacent columns.}
+
+  \item[INTERP 2 MASK ROW ORD=1\hfill]{Bad rows and/or pixels in image 2
+       which have been masked are to be removed by linear interpolation.}
+
+  \item[INTERP 17 BOX=3 COL AVE=4\hfill]{Bad columns in box 3 are to be
+       removed from image 17, at each row the bad columns will be replaced
+       by the average of the eight adjacent columns (four on either side).}
+
+  \item[INTERP 17 BOX=3 COL AVE=4 ORD=2\hfill]{Same as above but the bad
+       pixels will be replaced by a 2nd-order polynomial fit to the eight
+       adjacent columns at each row.}
+\end{itemize}
+
+\section{REGISTAR: Register Images Using Field Star Positions}
+\begin{rawhtml}
+<!-- linkto registar.html -->
+\end{rawhtml}
+\index{Image!Image Registration}
+
+\begin{itemize}
+  \item[\textbf{Form: } REGISTAR imbuf {[RADIUS=n]} {[DR=r]} {[DC=c]} 
+       {[RSHIFT=rs]} {[CSHIFT=cs]}\hfill]{}
+       \item{{[SINC]} {[REJECT=sigma]} {[LOG=xxx]} {[INT]}}
+  \item[imbuf]{buffer with image to be registered ("target image").}
+  \item[RADIUS]{size of the region used in the multiple centroiding.
+       (DEFAULT: fit on a 3 by 3 box)}
+  \item[DC, DR]{offsets to apply to the positions of the stars in the
+       reference list before calculating the relative shift.}
+  \item[RSHIFT,CSHIFT]{give limits on how far the centroid can deviate 
+       from the original position.}
+  \item[REJECT]{the threshold sigma level at which to reject stars. The
+       default is 4-sigma.}
+  \item[SINC]{use sinc interpolation. Default is 4-th order Lagrangian}
+  \item[LOG=xxx]{The name of a registration log file to open.  If it exists,
+       the results are appended.  }
+  \item[INT]{interactively control the iterations.}
+\end{itemize}
+
+REGISTAR will register (spatially align in 2-D) an image with respect to a
+common reference image by determining the mean row and column shifts
+between stars common to the target and reference images.  The positions of
+the reference stars must be pre-selected using the MARKSTAR command.
+REGISTAR is designed to allow simple interactive and batch-mode alignment
+of images.  For example, if you are going to "stack" a number of images of
+an object together into a single cumulative image, REGISTAR may be used to
+correct the images for small frame-to-frame shifts (usually due to guiding
+errors) before adding them together.  Other common uses are alignment of
+image pairs used for "on-band/off-band" emission-line imaging or
+photometric color maps, and aligning elements of an image mosaic before
+merging them into a single large image with the MERGE command.
+
+Before using REGISTAR, it is necessary to use the MARKSTAR command to
+create a "reference list" containing the positions of stars to be used as
+the common reference frame for the image registration.  To do this, one
+first chooses a single image from the set to act as the "reference image"
+and then uses MARKSTAR to mark all stars found in common between the frames
+to be registered.  The best strategy is to select stars which are neither
+too faint, too bright (especially not saturated stars), or too crowded to
+give a good centroid.  The list of reference star positions determined with
+the MARKSTAR command (also known in VISTA parlance as a "photometry file")
+is stored in an internal COMMON block.  This reference list will be used by
+all subsequent calls to the REGISTAR command.  However, if MARKSTAR is run
+again, or if another photometry file is loaded using the GET command, the
+reference list will be lost, and REGISTAR may produce spurious results.
+
+Once the reference list has been created with the MARKSTAR program, it may
+be stored on disk using the "SAVE PHOT=xxx" command, and later loaded into
+COMMON using the "GET PHOT=xxx" command.  This allows the user to
+pre-select stars interactively, then run REGISTAR on a large number of
+images in batch mode by reading in a prepared reference star list, or to
+repeat the registration procedure on other images sharing the same
+reference stars without having to repeat the selection process with
+MARKSTAR.  The user may also use the VISTA utilities for editing or
+updating a photometry file to change a predefined reference star list, and
+then repeat the registration procedure.  REGISTAR will not work without a
+photometry file loaded, either by MARKSTAR or GET.
+
+Image registration in previous versions of VISTA was accomplished using a
+combination of the interactive MARKSTAR command and the SHIFT command.
+However, this had the distinct disadvantage of precluding batch
+registration, and also made the procedure more cumbersome as MARKSTAR
+resets the coordinates of the stars in the photometry file each time it is
+run, causing the "fiducial" to change.  In addition, the user had to
+determine the sign of the relative offset, and feed it by hand to the SHIFT
+command.  With REGISTAR, the reference star list is fixed, and the shift is
+applied automatically.
+
+The positions of the individual reference stars are found by multiple
+centroiding.  Once the relative offset in rows and columns between the
+target image and the reference frame has been determined, the target image
+is then shifted and re-binned, using either 4th-order Lagrangian
+interpolation (default), or a somewhat slower but arguably more precise
+SINC interpolation scheme.  SINC interpolation should only be used on
+images which are well-sampled (or even oversampled), as it has a tendency
+to produce undesirable "ringing" artifacts in the presence of rapid changes
+in pixel-to-pixel intensity.  SINC interpolation should never be used with
+under-sampled star images.
+
+REGISTAR searches in the neighborhood of the reference star positions for
+those stars on the target image.  The maximum distance that REGISTAR will
+search in rows and columns is +/-3 pixels.  The search limits may be
+changed using the RSHIFT= and CSHIFT= keywords.  Setting the search size
+too large poses the danger of REGISTAR getting lost and grabbing the wrong
+stars, hot pixels, or cosmic ray events.  (It is a good idea to "clean"
+images of cosmic rays and hot pixels before attempting a registration; see
+ZAP and TVZAP for details).  Setting RSHIFT or CSHIFT too small runs the
+risk of missing the stars if the relative shift puts them outside the
+search box.
+
+If it is already known that the target image is shifted relative to the
+reference image by a large amount (e.g., you know that the target is
+shifted by at least 5 pixels in rows and -10 pixels in columns), this may
+be specified using the DR= and DC= keywords.  DR and DC need only be given
+to the nearest pixel or two.  Without a suitable offset, REGISTAR could get
+lost and either give up or give a spurious answer.
+
+When 5 or more reference stars are used, REGISTAR iterates to calculate the
+best mean shift between images by rejecting stars which give discrepant
+shifts.  The default rejection threshold is 4-sigma from the mean shift,
+but this may be changed using the "REJECT=" keyword.  Too small of a
+rejection threshold could eliminate valid stars, and too large could accept
+spurious centroids.  Once the mean shift calculation has converged,
+REGISTAR will print the shifts for each of the stars on the image, and the
+mean shift with an uncertainty (sigma).
+
+REGISTAR provides for interactive control of the shift calculation via the
+"INT" keyword.  This is especially useful in cases where the image quality
+or depth of the target image is not comparable to that of the reference
+image.  The "INT" keyword stops after each iteration and provides an
+opportunity for the user to change the weights of the stars used.  REGISTAR
+uses a normalized weighting scheme.  A weight of 0.0 (zero) is used to
+reject a star.  Similarly, a weight of 1.0 accepts a star.  With INT, the
+user determines when the registration solution has converged.  After
+accepting a shift, the image is then shifted to the common reference frame.
+
+After using REGISTAR, the target image should line up with the reference
+image to within the accuracy allowed by the image quality.  Most often this
+is limited by the frame-to-frame repeatability of the stellar PSF.
+
+REGISTAR includes a record keeping option available via the LOG keyword.
+This is useful for identifying problems after a long batch registration run
+of many images.  In addition, it has also proven useful as providing data
+to help track autoguider performance on a sequence of images.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[REGISTAR 2 RADIUS=2\hfill]{Register the image in buffer 2 with
+       respect to stars in the current photometry list, and restrict the
+       search for the stars to a 5x5 region around the fiducial centers.}
+
+  \item[REGISTAR 2 LOG=CIRCINUS \hfill]{Register the image in buffer 2 wrt
+       stars in the current photometry list and record the results in a
+       file called CIRCINUS.REG in the default data directory.}
+
+  \item[GET ORIONHA.PHO ; REGISTAR 3 REJECT=3\hfill]{ Read in the
+       previously defined photometry list called ORIONHA.PHO, and register
+       the image in buffer 3 relative to the stars in this file, adopting a
+       rejection threshold of 3 sigma for outlying centroid values.}
+
+  \item[REGISTAR 3 DR=4. INT\hfill]{Registar the image in buffer 3 wrt to
+       the stars in the current photometry list.  Image 3 is known to be
+       shifted at least 4 pixels relative to this list already.  Monitor
+       the iterations by hand.}
+\end{itemize}
+
+NOTE: At this time, a maximum of 100 stars are allowed to be used To change
+this, the parameter MAXSTAR must be changed in the REGISTAR and GETMEAN
+subroutines, both of which live in the same source code file.
+
+\section{DSSCOORD: Compute RA and Dec for Digitized Sky Survey Images}
+\begin{rawhtml}
+<!-- linkto dsscoord.html -->
+\end{rawhtml}
+
+\begin{itemize}
+  \item[\textbf{Form: } DSSCOORD imbuf {[PHOT]} {[P=(c,r)]} {[V=n]} {[TTY]} 
+       {[STANDARD]} {[redirection]}\hfill]{}
+  \item[imbuf]{buffer with the Digitized Sky Survey Image}
+  \item[PHOT]{use star coordinates in the currently active
+       photometry file (e.g., from MARKSTAR or GET PHOT='}
+  \item[P=(c,r)]{pixel coordinates on the image to be converted to
+       (RA,Dec)}
+  \item[V=n]{use Column and Row coordinates using VISTA variable
+       Cn and Rn (e.g., from the TV display cursor)}
+  \item[TTY]{Prompt for user input of pixel coordinates}
+  \item[STANDARD]{Also print standard coordinates (xi,eta)}
+\end{itemize}
+
+This routine will query the FITS header of an image extracted from the
+Digitized Sky Survey (DSS) CD-ROM set and convert pixel coordinates into
+equatorial coordinates (Right Ascension and Declination) in equinox J2000.0
+
+The coefficients of the astrometric plate solutions are stored in a number
+of FITS header keywords.  This program will read the coefficients and solve
+for the equatorial coordinates for any (C,R) location in the image.  To
+work, the image must be unprocessed.  That is, the image cannot be rotated,
+binned, shifted, flipped, or have any of the essential header keywords
+removed (especially the CNPIX1 and CNPIX2 cards).
+
+The PHOT keyword gets the star (x,y) pixel coordinates from the currently
+active photometry file, either entered using a program like MARKSTAR, or
+using the GET PHOT=fspec command.  This is the most convenient way to find
+coordinates for a large number of stars on a DSS image.  In general, using
+MARKSTAR RADIUS=1 gives good centroids, as the stellar images on the DSS
+images are slightly under-sampled.
+
+Alternatively, (RA,DEC) coordinates may be determined for any location in
+an image (not just for a stellar centroid) using either the P=, V=, or TTY
+keywords.  P=(col,row) returns the RA and DEC for a given column and row
+location (for either fractional or integer pixel locations).  V=n (n=0-9)
+gives the (RA,DEC) for the TV cursor location loaded with one of the number
+keys.  TTY will ask the user to enter the (x,y) coordinate(s) to be
+converted into (RA,DEC).
+
+The STANDARD keyword tells DSSCOORD to also printout the computed standard
+coordinates, (xi,eta), in arcseconds of the pixel location(s) of interest.
+These are useful for using the stellar centroids for finding approximate
+astrometric plate solutions for CCD or IR Array Images using stars common
+to your image and the DSS to define an approximate secondary reference
+frame.
+
+Coordinates derived from the DSS images are usually good to an arcsecond or
+so, which is to say sufficient for pointing and guide star selection, and
+for approximate astrometric calibration of CCD images to determine the
+pixel scale and field orientation (rotation relative to the cardinal axes).
+At this writing (December 1994), details of the DSS data set are still
+awaiting publication.  Future versions of this help file will elaborate as
+necessary.
+
+\section{ATODSIM/ATODFIX: Simulate/Fix WF/PC1 A/D Conversion Errors}
+\begin{rawhtml}
+<!-- linkto atodsim.html --> <!-- linkto atodfix.html -->
+\end{rawhtml}
+\index{WFPC!Simulate or fix WFPC A-D conversion errors}
+ 
+\begin{itemize}
+  \item[\textbf{Form: }ATODSIM imno FILE=name BIAS=bias\hfill]{}
+  \item[ATODFIX imno FILE=name BIAS=bias\hfill]{}
+  \item[imno]{is the image buffer}
+  \item[FILE=name]{Gives the name of the A/D bit error file.}
+  \item[BIAS=bias]{Specifies bias level to add (subtract)}
+\end{itemize}
+ 
+These routines is designed to simulate or fix the effects of A/D conversion
+errors in data obtained with the WF/PC1.  The basic algorithm that
+simulates the generation of errors is a direct software duplication of the
+A/D conversion process.  The pixels input are assumed to be analogue
+signals and must have a smooth and continuous distribution of floating
+values.  The A/D converter will translate these values into output integer
+DN by successively comparing the input signal with a decrementing power of 2
+series of voltages.  At any stage, if the input signal is greater than the
+comparison voltage, the appropriate bit is set in the output DN, and the
+reference voltage is subtracted from the signal before the next stage.  The
+WF/PC1 produces 12 bit DN, so the first bit tested will be the 2048 bit.  The
+1024 bit is then tested and so on.
+
+The errors in the WF/PC1 digitization process appear to occur during the
+reference voltage comparison, but not during the subsequent subtraction of
+the reference from the signal once the (possibly erroneous) bit has been
+set.  More specifically, the error model assumes that a bit-dependent error
+in the reference voltage occurs during the comparison that will cause
+improper setting of the corresponding bit in the output DN for signals
+within ``error value'' of the reference voltage.  Once the bit decision is
+made, however, the actual voltage subtracted from the signal for subsequent
+bit-tests is free from error (even though the decision to subtract it or
+not may be erroneous).  Errors in the reference voltages appear to be
+constant for a given WF/PC1 CCD at a given electronic bay temperature.
+Errors may be less than one DN, therefore, for proper simulation of the
+WF/PC1 A/D the input pixel MUST NOT BE PRESET TO INTEGER VALUES.  Default
+operation is to simulate A/D conversion errors.  The FIX keyword calls a
+routine that corrects the simulated image data for systematic errors
+introduced by the A/D converter.  This routine generates a lookup table
+that translates the observed DN value into a best estimate "correct" value.
+The output value will be floating.  The fix-up routine cannot correct for
+the variable-width DN bins produced by the A/D converter, thus histograms
+will still look funny.
+
+Both the simulator and fix-up routines require a file containing the
+reference voltage error in each bit.  The file is specified with the
+FILE=filename keyword.  By default, the error files are assumed to be in
+the DATA directory with a .ATD extension.  A given set of errors should be
+constant for a given WF/PC1 CCD at a given bay temperature.  The start and
+end of an example file is given below.
+
+\begin{tabular}{cc} 
+2048&4.50\\
+1024&4.50\\
+   .& .\\
+   .& .\\
+   .& .\\
+   4&-0.32\\
+   2&1.17\\
+   1&0.00\\
+\end{tabular}
+
+\section{LINCOMB: Fit a Linear Combination of Images to an Image}
+\begin{rawhtml}
+<!-- linkto lincomb.html -->
+\end{rawhtml}
+
+\begin{itemize}
+  \item[\textbf{Form: } LINCOMB source BUF=i1,i2,... {[BOX=box]} 
+       {[WBUF=wbuf]} {[LOAD]}\hfill]{}
+  \item{{[DIV]} {[SUB]} {[CONST=c]} {[SILENT]}}
+  \item[source]{is the image to fit}
+  \item[BUF=i1,i2,...]{gives the buffer numbers of the images to form
+       the linear combination}
+  \item[BOX=box]{operates only in BOX box}
+  \item[WBUF=buf]{uses buffer buf as weights for the fit}
+  \item[SUB]{subtracts the fit from the input image}
+  \item[DIV]{divides the image by the fit}
+  \item[LOAD]{load the fit coefficients into VISTA variables
+       L0, L1, L2, ...., errors into DL0, DL1, ..., and
+       unbiased standard deviation from fit into STDDEV}
+  \item[SILENT]{suppress terminal output}
+  \item[CONST=c]{do not fit the constant term, use c instead}
+\end{itemize}
+
+LINCOMB fits a linear combination of input images, stored in VISTA buffers
+to an image stored in another VISTA buffer. The user can load the
+coefficients of the fit into VISTA variables using the LOAD keyword. The
+default action is to replace the image to fit with the fitted image;
+however, the input image will be divided by the fit with the DIV keyword,
+or the fit will be subtracted from the input image with the SUB keyword.
+
+The default action is also to fit a constant term in addition to the
+specified input images. This can be overridden with the CONST= keyword,
+which will use the specified value as the constant term (use CONST=0 to
+eliminate constant term altogether).
+
+\section{BL: Correct an Image for Baseline Subtraction Noise}
+\begin{rawhtml}
+<!-- linkto bl.html -->
+\end{rawhtml}
+\index{Image!Baseline correction}
+\index{Image!Flattening}
+
+\begin{itemize}
+  \item[\textbf{Form: }BL source {[JUMP]} {[KEEP]} {[INVERT]}\hfill]{}
+  \item[source]{tells VISTA what image to work on.}
+  \item[JUMP]{implements detection of jumps in the baseline column.}
+  \item[KEEP]{leaves baseline column unchanged. Otherwise
+       baseline will be replaced by best fitting baseline.}
+  \item[INVERT]{reverse baseline process (if you goofed), only
+                will work properly if KEEP was specified during
+                original BL command.}
+\end{itemize}
+
+{\bf NOTE: This is an old Lick Observatory data-taking system command
+that is no longer valid (unless you have to reduce data taken before
+1990).  It is {\it not} the same as overscan subtraction.}
+
+BL removes the noise introduced through the digital baseline-restoration
+procedure used by the data collection program.  The last column of the CCD,
+called the 'baseline column' is not illuminated during an exposure.  Each
+pixel in this column determines the zero-level for the corresponding row in
+the rest of the chip, which is subtracted from each pixel in that row as
+the image is read off the chip into the data-taking system.  NOTE THAT THIS
+IS THE PROCEDURE IMPLEMENTED AT LICK OBSERVATORY, BUT NOT MOST OTHER
+PLACES!  Lick subtracts a row by row baseline value before storing the
+image at the telescope. If this is not done at your site, you should not
+use the BL command!  Write a procedure to do the appropriate bias and/or
+baseline subtraction using the information supplied by your data taking
+system.
+
+The baseline measurement is rather noisy, so when the zero-levels are
+subtracted, significant variations in level from one row to another are
+introduced.  The BL program corrects for this by fitting a straight line by
+least-squares to the values in the baseline column. The original baseline
+measurements are then added back into the image data and the mean baseline
+values evaluated from the linear least-squares fit are subtracted.  The
+best fit baseline is stored in the baseline column, unless the keyword KEEP
+is specified, in which case the original baseline is left in the baseline
+column.
+
+The baseline column can sometimes exhibit several jumps in level along its
+length.  BL detects these jumps, fitting a series of linear functions to
+the baseline column between these jumps.  To detect the jumps, thus fitting
+the entire column with more than one linear function, use the JUMP keyword.
+
+The BL procedure should be applied to every raw image before analysis or
+processing.
+

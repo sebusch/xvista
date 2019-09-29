@@ -1,0 +1,91 @@
+
+<H1><A NAME="SECTION0012140000000000000000">
+PICCRS: Optimally Combine Frames with Outlier Rejection</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml347#
+<A NAME="4897"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command4898#
+<BR>
+
+<P>
+NOTE!!! PICCRS can be a complicated program. Make sure to understand and
+check your results; we offer no guarantees. If your images are not
+well-registered, PICCRS won't work!
+
+<P>
+PICCRS is a program originally written by Ed Groth at Princeton for the
+statistical removal of cosmic rays from HST WFPC data. It is useful,
+however, as an optimal combiner of frames with rejection of outlying
+pixels.  PICCRS works by going through each pixel in a stack of images.
+For each pixel, the value in each image is compared with the mean
+determined from all of the other images in the stack. Using the known noise
+properties of the detector, the pixel in question will be rejected if it
+falls outside some specified criterion. This continues through the entire
+stack. Finally, the weighted mean of all pixels not flagged is taken and
+placed in the output image.
+
+<P>
+The input images are specified in a file given with the LIST= file, with
+format exactly like that of BIGMEDIAN. A mean and bias value can be
+specified in this input file. There is an optional fourth parameter which
+can be specified, unlike BIGMEDIAN, which is an output file name for each
+input file; if this name is given, the output file will be identical to the
+input file but all of the rejected pixels will be set to BLANK. The output
+file will be in WFPC format with a separate header and image file.
+
+<P>
+By default the input files should be in FITS format, but WFPC input files
+can be used if the WFPC keyword is specified.
+
+<P>
+IMPORTANT: To insure proper operation, the gain and readout noise must be
+correctly specified with the GAIN= and RN= keywords. The default values of
+GAIN=7.5 and RN=13 apply for WF/PC-1 data (NOT WFPC2). If desired,
+saturated pixels can be rejected using the BSAT=n keyword which specifies
+that all pixels larger than n will be considered bad on input. IMPORTANT:
+by default, all negative pixels are considered bad on input; you can change
+the lower boundary for bad pixels with the MIN=x keyword.
+
+<P>
+Since the original idea of PICCRS was to reject cosmic rays, the program is
+designed to allow a less stringent rejection criterion for neighbors of
+pixels which deviate by a lot, to allow for the fact that cosmic rays often
+take up several pixels, and that pixels next to the brightest cosmic ray
+pixels are more likely to be part of the cosmic ray hit than any random
+pixel in the image.  Consequently, the algorithm goes through the image and
+rejects as ;SPMquot;primary;SPMquot; cosmic rays those pixels above the threshold specified
+with the TP= keyword (default is 5 (sigma)), then neighbors of these pixels
+are tested with a lower threshold specified with the TN= (for adjacent
+neighbors) and TD= (for diagonal neighbors) keywords (defaults are 3
+(sigma) for both of these).
+
+<P>
+The whole idea of PICCRS depends on the fact that the input images are all
+well registered; if this is not the case, then most of the objects,
+e.g. stars, will be rejected as deviant from the mean and your output image
+will be horribly incorrect. To account for very small errors in
+registration, the computed errors, against which the pixel deviations are
+tested for rejection, includes a ;SPMquot;fudge;SPMquot; factor to increase the expected
+variance for an increased signal level; this helps prevent bright pixels in
+stars with slight misregistration from being rejected as cosmic rays. Note
+that if such pixels are rejected, the output image will not be
+photometrically correct. The variance computed by PICCRS is given by:
+<PRE><tex2html_verbatim_mark>verbatim348#</PRE>
+where the first two terms are strictly correct and the last term is the
+fudge factor with variable parameter F. The default for F is 0.05, but this
+can be modified with the F= keyword; to turn off the fudge factor, set F to
+0, but make sure your (real) bright objects aren't getting clipped.
+
+<P>
+MEDIAN keyword.
+
+<P>
+BLANK= keyword
+
+<P>
+NEG keyword.
+
+<P>

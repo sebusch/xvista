@@ -1,0 +1,344 @@
+
+<H1><A NAME="SECTION00870000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2731"><tex2html_anchor_invisible_mark></A><BR>
+IMPOST: Make a PostScript Hardcopy of an Image
+</H1>
+<tex2html_verbatim_mark>rawhtml273#
+<BR>
+<tex2html_image_mark>#command2732#
+<BR>
+<DL COMPACT>
+<DT><#8791#><#8756#><B>Form: </B> IMPOST imbuf <#2800#>[BOX=b]<#2800#> <#2801#>[Z=zero]<#2801#> <#2802#>[L=span]<#2802#> <#2803#>[CLIP]<#2803#> 
+       <#2804#>[POSITIVE]<#2804#> <#2805#>[TITLE]<#2805#><#8756#><#8791#></DT>
+<DD><#2806#><#2806#>
+  
+</DD>
+<DT><#8792#><#8757#><#2807#>[HIST=xxx]<#2807#> <#2808#>[LAND]<#2808#> <#2809#>[FOUR]<#2809#> <#2810#>[AXES]<#2810#> <#2811#>[COMMENT]<#2811#> <#2812#>[COMMENT=xxx]<#2812#>
+        <#2813#>[FILE=xxx]<#2813#> <#2814#>[OUT=xxx]<#2814#><#8757#><#8792#></DT>
+<DD><#2815#><#2815#>
+  
+</DD>
+<DT><#8793#><#8758#><#2816#>[SCALE=s]<#2816#> <#2817#>[CEN=r,c]<#2817#> <#2818#>[FLIP]<#2818#> <#2819#>[BAR=xxx]<#2819#> <#2820#>[NOBAR]<#2820#> <#2821#>[WIND=w,h]<#2821#> 
+        <#2822#>[ORIGIN=x,y]<#2822#> <#2823#>[PAGE=L,S]<#2823#><#8758#><#8793#></DT>
+<DD><#2824#><#2824#>
+  
+</DD>
+<DT><#8794#><#8759#><#2825#>[COPIES=n]<#2825#> <#2826#>[LARGE]<#2826#> <#2827#>[INFO]<#2827#> <#2828#>[INT]<#2828#> <#2829#>[MACRO=]<#2829#> <#2830#>[EPS]<#2830#><#8759#><#8794#></DT>
+<DD><#2831#><#2831#>
+  
+</DD>
+<DT><#8795#><#8760#>imbuf<#8760#><#8795#></DT>
+<DD><#2832#>The buffer containing the image to be printed.<#2832#>
+  
+</DD>
+<DT><#8796#><#8761#>BOX=b<#8761#><#8796#></DT>
+<DD><#2833#>Only print the region within the given box.<#2833#>
+  
+</DD>
+<DT><#8797#><#8762#>Z=zero <#8762#><#8797#></DT>
+<DD><#2834#>Zero point of the intensity mapping.<#2834#>
+  
+</DD>
+<DT><#8798#><#8763#>L=span <#8763#><#8798#></DT>
+<DD><#2835#>Span of the intensity mapping.  <#2835#>
+  
+</DD>
+<DT><#8799#><#8764#>CLIP<#8764#><#8799#></DT>
+<DD><#2836#>Prevent roll-over of the intensity mapping.<#2836#>
+  
+</DD>
+<DT><#8800#><#8765#>POSITIVE <#8765#><#8800#></DT>
+<DD><#2837#>Print the image intensities as White-on-Black.
+                   The default mapping is Black-on-White.<#2837#>
+  
+</DD>
+<DT><#8801#><#8766#>TITLE <#8766#><#8801#></DT>
+<DD><#2838#>Write the OBJECT name on the print (from the header).<#2838#>
+  
+</DD>
+<DT><#8802#><#8767#>HIST <#8767#><#8802#></DT>
+<DD><#2839#>Map image intensities using flat histogram equalization.<#2839#>
+  
+</DD>
+<DT><#8803#><#8768#>HIST=xxx<#8768#><#8803#></DT>
+<DD><#2840#>Map image intensities using other histogram scalings
+                  Options: (FLAT,SQRT,LOG).  ;SPMquot;HIST;SPMquot; = ;SPMquot;HIST=FLAT;SPMquot;<#2840#>
+  
+</DD>
+<DT><#8804#><#8769#>LAND <#8769#><#8804#></DT>
+<DD><#2841#>Output will appear in LANDSCAPE mode<#2841#>
+  
+</DD>
+<DT><#8805#><#8770#>FOUR <#8770#><#8805#></DT>
+<DD><#2842#>Use a 4 bit (16 level) gray scale rather than the
+               default 8 bit (256 level) gray scale.<#2842#>
+  
+</DD>
+<DT><#8806#><#8771#>AXES <#8771#><#8806#></DT>
+<DD><#2843#>Draw coordinates axes around the image.<#2843#>
+  
+</DD>
+<DT><#8807#><#8772#>COMMENT='xxx'<#8772#><#8807#></DT>
+<DD><#2844#>Add a comment line to the print.  Comments may be
+                       up to 64 characters long. <#2844#>
+  
+</DD>
+<DT><#8808#><#8773#>COMMENT <#8773#><#8808#></DT>
+<DD><#2845#>Prompt the user interactively for the comment line.<#2845#>
+  
+</DD>
+<DT><#8809#><#8774#>FILE=psfile<#8774#><#8809#></DT>
+<DD><#2846#>Direct the output into a file named ;SPMquot;psfile;SPMquot;.<#2846#>
+  
+</DD>
+<DT><#8810#><#8775#>OUT=psfile<#8775#><#8810#></DT>
+<DD><#2847#>(same as FILE=psfile)<#2847#>
+  
+</DD>
+<DT><#8811#><#8776#>SCALE=s <#8776#><#8811#></DT>
+<DD><#2848#>specify the pixel scale in units/pixel.<#2848#>
+  
+</DD>
+<DT><#8812#><#8777#>CEN=(r,c)<#8777#><#8812#></DT>
+<DD><#2849#>specify the image fiducial center in pixels for
+                  scaled coordinate axes (see SCALE=).<#2849#>
+  
+</DD>
+<DT><#8813#><#8778#>FLIP <#8778#><#8813#></DT>
+<DD><#2850#>flips image in rows (bottom-to-top raster order).<#2850#>
+  
+</DD>
+<DT><#8814#><#8779#>BAR='xxx' <#8779#><#8814#></DT>
+<DD><#2851#>Label the gray scale intensity bar with the string
+                    given.  Default bar label is ;SPMquot;Intensity;SPMquot;<#2851#>
+  
+</DD>
+<DT><#8815#><#8780#>NOBAR <#8780#><#8815#></DT>
+<DD><#2852#>Do not draw a gray scale intensity bar on the print.<#2852#>
+  
+</DD>
+<DT><#8816#><#8781#>INFO <#8781#><#8816#></DT>
+<DD><#2853#>Write in a line of auxiliary info on the print.<#2853#>
+  
+</DD>
+<DT><#8817#><#8782#>INT  <#8782#><#8817#></DT>
+<DD><#2854#>Puts user into interactive Mongo mode for labelling.<#2854#>
+  
+</DD>
+<DT><#8818#><#8783#>MACRO=macrofile<#8783#><#8818#></DT>
+<DD><#2855#> Executes Mongo macro file macrofile after drawing<#2855#>
+  
+</DD>
+<DT><#8819#><#8784#>Advanced Page Control<#8784#><#8819#></DT>
+<DD><#2856#><#2856#>
+  
+</DD>
+<DT><#8820#><#8785#>EPS<#8785#><#8820#></DT>
+<DD><#2857#>Make an Encapsulated PostScript file.<#2857#>
+  
+</DD>
+<DT><#8821#><#8786#>COPIES=n <#8786#><#8821#></DT>
+<DD><#2858#>Specify the number of copies to print if more than 1.<#2858#>
+  
+</DD>
+<DT><#8822#><#8787#>WIND=(w,h)<#8787#><#8822#></DT>
+<DD><#2859#>Specify the maximum size in inches of the window in 
+                    which IMPOST will try to print the image.<#2859#>
+  
+</DD>
+<DT><#8823#><#8788#>LARGE <#8788#><#8823#></DT>
+<DD><#2860#>Alternative to WIND=, will make the window as large as 
+                possible for the given paper size and orientation.<#2860#>
+  
+</DD>
+<DT><#8824#><#8789#>ORIGIN=(x,y)<#8789#><#8824#></DT>
+<DD><#2861#>Specify the origin of the plotting window in inches 
+                      from the lower left-hand corner of the paper.<#2861#>
+  
+</DD>
+<DT><#8825#><#8790#>PAGE=(L,S) <#8790#><#8825#></DT>
+<DD><#2862#>specify the physical size of the paper in inches.
+                     ;SPMquot;L;SPMquot; = long dimension, ;SPMquot;S;SPMquot; = short dimension.<#2862#>
+</DD>
+</DL>
+
+<P>
+IMPOST makes a hardcopy print of an image in PostScript format.  It
+is designed to be used just like the TV command, with very similar
+keywords. You can include extra information on the picture with the
+TITLE, AXES, COMMENT, INFO and related keywords.  These are discussed
+below.
+
+<P>
+IMPOST creates a PostScript file on disk.  This file will be located in the
+current directory (either where you started VISTA or under Unix versions of
+VISTA, the last directory you CD'd to).  By default this file will take the
+name ;SPMquot;image.ps;SPMquot;.  You can specify your own name for the file by using the
+FILE= or OUT= keywords.  Currently, this file is not automatically printed.
+From outside of VISTA (or from a spawned subprocess or C-shell), submit
+this to your printer as you would submit any other PostScript file (e.g.,:
+;SPMquot;lpr image.ps;SPMquot; on a Unix system, or ;SPMquot;$ print/queue=pslaser image.ps;SPMquot; on a
+VMS system).
+
+<P>
+Multiple copies can be made using the COPIES=n keyword.  The POSITIVE
+keyword makes white images on a black background; the default is to make
+black images on a white background.
+
+<P>
+Output from IMPOST, if prepared with care, is of the highest quality.
+IMPOST generated prints made on good quality paper or special ;SPMquot;stat;SPMquot; paper
+have been accepted for publication without re-photography required.
+
+<P>
+<#2864#>Intensity Scaling<#2864#>
+
+<P>
+IMPOST produces a hardcopy of an image by representing pixel intensities as
+an 8-bit halftone gray scale.  The optional keyword ;SPMquot;FOUR;SPMquot; will use a 4-bit
+(16-level) gray scale instead.  Although an 8-bit gray scale has 256 levels
+from white to black, on standard 300 dpi laser printers, only 32 levels are
+distinguishable.  The output is a PostScript file which may be sent to any
+standard PostScript hardcopy device.
+
+<P>
+The simplest intensity scaling is through use of the Z= and L= keywords
+like in the TV command.  These set the zero point (Z=ZERO) and intensity
+span (L=SPAN) of a ;SPMquot;linear;SPMquot; mapping from the actual image intensity in each
+pixel, IMG(r,c), to a displayed gray scale value between 0 and 255,
+INTENS(r,c), following the formula:
+<BR>
+<tex2html_image_mark>#hanging2865#
+<BR>
+With the FOUR option, the scale factor is 15 instead of 255, and
+INTENS(r,c) will take values from 0 to 15.
+
+<P>
+In this simple linear mapping, pixels with IMG(r,c) ;SPMlt;= ZERO will set
+INTENS(r,c)=0 (white) and pixels with IMG(r,c)=ZERO+SPAN will set
+INTENS(r,c)=255 (black).  If the CLIP keyword is used, then all values of
+IMG ;SPMgt; ZERO+SPAN are set black, otherwise, the color scale ;SPMquot;wraps;SPMquot; and above
+IMG=ZERO+SPAN, INTENS starts again at 0.  This continues modulo (255/SPAN)
+until all pixel intensity values are mapped.
+
+<P>
+The default mapping is an inverse (or ;SPMquot;negative;SPMquot;) scale, where the image is
+drawn as black against a white background.  If the optional keyword
+POSITIVE is given, then the intensities are mapped in a more ;SPMquot;normal;SPMquot; or
+;SPMquot;positive;SPMquot; scale in which the image is displayed as white against a black
+background, though the results with most laser printers is less than
+optimal.
+
+<P>
+The second scaling option is to map image intensities into an 8-bit gray
+scale using the distribution of pixel intensities in the image to provide a
+scaling in which all gray levels are equally present.  Such a scaling is
+called a ;SPMquot;Histogram Equalization;SPMquot;, and is used to bring up faint features
+without sacrificing more high-intensity features in the same image.  This
+is done using the HIST keyword.  Histogram equalization is a common
+technique in image processing, most notably it is used for making the
+high-contrast images that came from the Voyager and Viking space probes.
+Note that a simple one-to-one mapping of pixel intensities and gray level
+is lost, and such mapping should be used with caution.
+
+<P>
+If the Z= and L= keywords are used with HIST, then Z= is taken to be the
+lowest intensity value to be considered, and L= tells hist to ignore all
+intensities above Z+L when determining the histogram mapping.  The CLIP
+keyword is implicit with any histogram scaling option -- no rollover is
+permitted.
+
+<P>
+Additional histogram scaling options are available via the HIST=LOG and
+HIST=SQRT keywords.  HIST=LOG will map intensities by equalizing over
+logarithmic intervals.  This is useful when there is a very large range of
+intensities in the image, and you wish to emphasize the brighter regions
+without washing out fainter features.  The HIST=SQRT option will map
+intensities by equalizing over square-root intervals.  This represents a
+middle ground between the ;SPMquot;FLAT;SPMquot; histogram mapping described above (which
+enhances fainter regions) and the ;SPMquot;LOG;SPMquot; histogram mapping.
+
+<P>
+Some experimentation to determine the best option to use will undoubtably
+be required.  Images which are mostly background sky will usually not
+benefit from any form of histogram equalization, while images of extended
+objects in which the frame is more-or-less filled with ;SPMquot;object;SPMquot; will
+usually benefit.  By setting the zero point (Z=) to be above the image sky
+level, you can have the advantages of the histogram equalization scalings
+while still showing surrounding objects.
+
+<P>
+<#2868#>Labeling the Output<#2868#>
+
+<P>
+By default, IMPOST will only draw a box around the image and display a bar
+with the gray scale intensity range (0-255 or 0-15) in a box below the
+image.  You can add axes and labels using a variety of keywords provided.
+<BR>
+<tex2html_image_mark>#example2869#
+<BR>
+
+<P>
+<#2882#>Advanced Page Control<#2882#>
+
+<P>
+A number of optional keywords are provided which affect the physical size
+of the image as it appears on the page, its orientation, the number of
+copies printed etc.  These options may be used if IMPOST prints are
+intended for use in papers or dissertations, where precise specification of
+margins and the location and orientation of the image on the page are
+essential.  These keywords are described below:
+
+<P>
+<BR>
+<tex2html_image_mark>#example2883#
+<BR>
+
+<P>
+<#2891#>Advanced Notes:<#2891#>
+
+<P>
+IMPOST uses the LickMongo PostScript drivers to make the axes and labels.
+As such, while PostScript instructions generated by this program may be
+used to produce the image hardcopy on any PostScript device via an
+appropriate server, they do not fully conform to to the ;SPMquot;Encapsulated
+PostScript;SPMquot; structuring conventions described in the 'PostScript Language
+Program Design' Manual (Adobe Systems Incorporated 1988), or following the
+Version 2.0 EPS Specifications (Adobe Systems Inc. January 1989).  In
+future releases of LickMongo, this should be corrected (it is an artifact
+of the fact that the LickMongo PostScript drivers were written well before
+the standards were published).  Even so, with minor modifications, it
+should be possible to import images created with IMPOST into other
+encapsulated PostScript files (like those generated by TeX).
+
+<P>
+Images created with IMPOST have been displayed successfully on the X11/NeWS
+window system, on displayed PostScript devices, and transmitted
+electronically via both email and tcp/ip with no difficulties.
+
+<P>
+'PostScript' is a registered trademark of Adobe Systems Incorporated.
+
+<P>
+<#2892#>A Note About the Name:<#2892#>
+
+<P>
+IMPOST is the command formerly known as POSTIT until 1997 Nov 21, when the
+author (Rick Pogge) was made aware of a letter to his department chairman
+from the law firm of Arnold, White, <tex2html_ampersand_mark> Durkee.  This firm represents the
+Minnesota Mining <tex2html_ampersand_mark> Manufacturing Company (3M) in trademark and other
+intellectual property rights matters.  It seems after coming across a web
+version of the Prospero manual (a VISTA derivative written at OSU that
+incorporates POSTIT because it was written by Rick Pogge), they deemed our
+use of the word POSTIT as an infringment of the trademark of 3M for its
+famous yellow sticky notes, aka Post-It(tm) Notes that might potentially
+confuse people encountering the web version of our help pages.
+
+<P>
+While we disagree that anyone could possibly confuse the ubquitous yellow
+sticky notes manufactured by 3M with an obscure function embedded within an
+even more obscure advanced astronomical image processing package, the
+current legal climate of excessive litigiousness that serves only to
+trivialize intellectual property rights requires that we change the name.
+
+<P>

@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>SPECTROID: Map the Location of a Spectrum on an Image</TITLE>
+<META NAME="description" CONTENT="SPECTROID: Map the Location of a Spectrum on an Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001430000000000000000">
+SPECTROID: Map the Location of a Spectrum on an Image</A>
+</H1>
+
+<!-- linkto spectroid.html -->
+<A NAME="5699"></A>
+<A NAME="5700"></A>
+<BR>
+
+<BR>
+
+<P>
+SPECTROID produces a map of the location of a spectrum on an image.  This
+map is stored as a table of row (or column) numbers in a 1-dimensional
+image (like a spectrum) in one of the image buffers.
+
+<P>
+In the following description it is assumed that the length of the slit lies
+along a row (i.e., dispersion runs horizontally across the detector as
+viewed in the TV display).
+
+<P>
+SPECTROID calculates the centroid of the spectrum perpendicular to the
+direction of dispersion, with optional background subtraction.  Normally
+the centroid as a function of column number is then used as the center of a
+spectrum window and the spectrum is created by summing over the relevant
+pixels.  (Note that unlike in MASH, Lagrangian interpolation is used to
+account for fractional pixels in SPECTROID.). Look at command FINDPEAK for
+an alternative way to locate the position of an object along the
+dispersion.
+
+<P>
+With the NOMASH keyword the mashing feature is skipped, and the centroid as
+a function of column number will then be loaded into the destination
+buffer.  This centroid may be smoothed, filtered, fitted, or manipulated in
+any other manner to produce a MODEL to be used in reducing other spectra.
+It may also find uses for calibrating telescope flexure, checking grism
+alignment, etc. Having found the centroid, SPECTROID can then do a 'MASH'
+using the computed centroids to choose which pixels are summed to form the
+extracted spectrum.
+
+<P>
+The centroiding procedure must be given a reasonable starting estimate for
+the centroid.  This is done via the LOC= keyword, or if a model is supplied
+the value of the first pixel in the model spectrum will be used.  (If both
+a model and the LOC= keyword are specified the latter will be used.)
+Another option if a model is used is the DLOC= keyword, which will specify
+a relative row offset from the starting value of the model.
+
+<P>
+With the TAGALONG (or simply 'TAG') keyword the command will use a
+"following" algorithm in which a filtered mean of the last 15 centroids is
+used to guess the next centroid.  This allows the routine to follow almost
+any shape of spectrum with minimal information (just the beginning row).
+However, if there are regions in which the spectrum disappears the routine
+may get lost.
+
+<P>
+Another necessary piece of information is the window over which the
+centroid will be calculated.  This is given via the SP= or the SPW=
+keywords.  The SPW= keyword specifies a window width which will be
+symmetrically placed around the centroid.  Asymmetric windows may be
+specified via the SP=s1,s2 keyword.  In this case the two values must be
+specified relative to the centroid.  Hence SP=-3,5 will specify a window
+extending three rows above and five rows below the centroid.  Note that
+since the centroid will not in general be an integer the spectrum rows may
+be floating-point numbers as well.  Hence SP=-3.4,4.166158 or SPW=2.3 are
+legal formats.
+
+<P>
+If you want to specify a background to be subtracted (which will presumably
+be the usual procedure) you can use the BKW= and BK= keywords in the same
+fashion as the SPW= and SP= keywords. Rows common to both spectrum and
+background will be taken as spectrum as in MASH.
+
+<P>
+The MODEL= keyword may be used to specify a curvature model for the
+spectrum.  The value specified for this keyword is the buffer in which the
+model resides.  The model may be a smoothed version of a previously
+determined centroid, for example. If a model is specified and the NOSHIFT
+keyword is NOT, the command will find the centroid at each column of the
+spectrum using the specified spectrum and background regions.  The median
+shift between newly computed centroids and the model is found and this
+shift is added into the original model.  This revised model is then used to
+do the 'MASH' operation.
+
+<P>
+The NOSHIFT keyword will skip the original centroiding procedure and use
+the model as it is for the intensity extraction. Note that if the NOSHIFT
+keyword is specified then the MODEL= keyword must be used as well.
+
+<P>
+The FIT= keyword limits the region over which the median shift between
+model and calculated centroid is computed.  The two parameters passed via
+this keyword are the start- and end-column numbers over which the fit is
+done.
+
+<P>
+The MOMENTS keyword will load a 5 row image with the first five moments of
+the light distribution with respect to the model. The area (total counts)
+will be in row 0, the centroid in row 1, the variance, skewness, and
+kurtosis in rows 2, 3, and 4 respectively. This keyword proves useful for
+mapping focus changes along a spectrum, etc.
+
+<P>
+The TRACE keyword will provide some feedback on the centroiding process,
+via strategically placed TYPE statements in the subroutine. The output from
+this takes a while to print out, so use it with restraint.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

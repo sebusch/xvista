@@ -1,0 +1,59 @@
+
+<H1><A NAME="SECTION0016270000000000000000">
+CORRECT: Correct Photometry for Extinction and/or Transformations</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml497#
+<BR>
+<tex2html_image_mark>#command7847#
+<BR>
+
+<P>
+CORRECT applies photometric corrections to raw data to account for
+extinction and/or transformation terms.  It can act either on a number of
+types of stellar photometry files (e.g. standard DAOPHOT files or files
+that come from the MAGAVER| command), or internally on the surface
+brightnesses and magnitudes in the internal PROFILE common block. Besides
+the input data, the routine reads a file with the extinction and
+transformation coefficients. This file may be created using the FITSTAR
+command, or for more simple cases in which you wish to dictate the
+extinction and/or transformation coefficients, it may be created by the
+user by hand. See the FITSTAR help file for a description of this
+transformation (.trn) file.
+
+<P>
+When you run CORRECT, the routine will prompt for a transformation file
+name, unless you supply one with the TRN=trnfile keyword.  It will list the
+various lines in this file and ask you which transformation you wish to
+use; alternatively, you can pre-specify the line to use with the LINE=
+keyword. If you have observations in more than one color (in MAGAVER
+files), you will be asked which magnitude you wish to correct, and which
+colors to use for the color terms (or you can specify these with the
+COLCOL= keyword).  If you have observations in only one color, you will be
+asked if you wish to enter a standard color to use in the transformation
+equations, unless you have pre-specified this number using the COLOR=
+keyword. The routine will then proceed to apply the transformation
+equation(s).
+
+<P>
+If you are correct stellar magnitudes, you will be prompted for an input
+and output file name.  If you are using the PROF option, the internal
+counts in the PROFILE common block will be corrected.  The reduced PROFILE
+counts (or magnitudes) can be seen using the PRINT PROF <#7864#>[MAG]<#7864#>
+command. With the PROF option, several auxiliary value are computed, namely
+the concentration index (ratio of radii that include 25 and 75 percent of
+the light), the total magnitude (extrapolated for an exponential disk if
+one has been fit using the CPROF command), and the disk-to-total light
+ration (using the exponential fit if done). These values are loaded into
+the internal PROFILE FITS header, and also printed out with the PRINT PROF
+command.
+
+<P>
+NOTE: For the PROF option, the counts will be corrected for exposure time
+and the airmass computed. This requires that accurate values for EXPOSURE,
+RA, DEC, DATE-OBS, and the latitude are available. Since the PROFILE header
+is originally copied from the image header, these values should be
+available. If they are not, note that cards can be added and/or removed
+from the internal PROFILE header using the FITS, UNFIT, or HEDIT command
+with the PROF keyword instead of a buffer number.
+
+<P>

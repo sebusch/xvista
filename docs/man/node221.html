@@ -1,0 +1,28 @@
+
+<H1><A NAME="SECTION0016210000000000000000">
+MODPHOT: Modify Entries in a VISTA Photometry File</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml489#
+<A NAME="7743"><tex2html_anchor_invisible_mark></A>
+<A NAME="7744"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command7745#
+<BR>
+
+<P>
+MODPHOT allows you to change records in a photometry file. The program asks
+for the number of the record being changed. You can enter or change
+coordinates or identifying labels.  You can also delete records. You should
+use the command 'PRINT PHOT' (which can be redirected) to get a list of the
+record numbers before you call MODPHOT.
+
+<P>
+A word of warning: The program renumbers the photometry records if any are
+deleted.  So if you, for example, delete record 17, number 18 becomes 17,
+19 becomes 18, etc.
+
+<P>
+If you want to save changes made by the MODPHOT command, you must use the
+'SAVE PHOT=filename' command.
+
+<P>

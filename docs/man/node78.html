@@ -1,0 +1,35 @@
+
+<H1><A NAME="SECTION00790000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2357"><tex2html_anchor_invisible_mark></A><BR>
+STAT: Compute Statistics of Data in a File
+</H1>
+<tex2html_verbatim_mark>rawhtml250#
+<BR>
+<tex2html_image_mark>#command2358#
+<BR>
+
+<P>
+The STAT command can be used to determine information about the data values
+in an ASCII file.  For the MAX and MIN functions, the given expression is
+evaluated for each line in the file.  For the FIRST function, the
+expression is evaluated for the first line in the file and for the LAST
+function the expression is evaluated for the last line in the file.  The
+COUNT function merely counts the lines in the file. Remember that SKIP'ed
+lines (see the SKIP command) are never included in the calculations.  These
+STAT functions are not the same as the normal VISTA math functions and can
+not be included in other mathematical expressions.
+
+<P>
+The LOAD function allows the user to load data from an input ASCII file
+into a VISTA image buffer. Arithmetic operations may be performed on the
+input data before loading into the buffer. Simply specify the desired
+buffer and the arithmetic expression to load. The new buffer will
+automatically be created.
+
+<P>
+<#2372#>Examples:<#2372#>
+<BR>
+<tex2html_image_mark>#example2373#
+<BR>
+<tex2html_endfile>#./chap7.tex#
+<tex2html_file>#./chap8.tex#

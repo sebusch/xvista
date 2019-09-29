@@ -1,0 +1,39 @@
+
+<H1><A NAME="SECTION004100000000000000000">
+RETURN: Return from a Procedure Subroutine</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml119#
+
+<P>
+<A NAME="1314"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1315#
+<BR>
+
+<P>
+This command tells VISTA that the execution of the current sub-procedure is
+complete and to return to any calling procedure or to immediate input mode
+as is appropriate.  This command is intended to allow a return from the
+procedure as a result of an IF test. In cases where no condition testing is
+needed, the final END command in the procedure buffer will tell VISTA that
+the procedure has completed.
+
+<P>
+<#1319#>Examples:<#1319#>
+
+<OL>
+<LI><#1371#>Here is an example of a conditional exit from a procedure.
+   This procedure may be run with CALL or GO.
+  <PRE><tex2html_verbatim_mark>verbatim120#</PRE><#1371#>
+</LI>
+<LI><#1372#>END may be used as return ONLY if it is the last command in 
+  the file. Thus a procedure like:
+  <PRE><tex2html_verbatim_mark>verbatim121#</PRE>
+  may be executed as a subroutine, but one that looks like:
+  <PRE><tex2html_verbatim_mark>verbatim122#</PRE>
+  will not work.  Use RETURN instead.
+<#1372#>
+</LI>
+</OL>
+
+<P>

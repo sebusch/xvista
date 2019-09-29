@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>WPREP: Write a Record into a Batch Surface Photometry Prep-File</TITLE>
+<META NAME="description" CONTENT="WPREP: Write a Record into a Batch Surface Photometry Prep-File">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0015230000000000000000">
+WPREP: Write a Record into a Batch Surface Photometry Prep-File</A>
+</H1>
+
+<!-- linkto wprep.html -->
+<BR>
+
+<BR>
+
+<P>
+WPREP writes a record into a batch surface photometry preparation file
+opened using OPREP.  The data written in each record are as follows:
+
+<UL>
+<LI>SKY value (from VISTA variable SKY)
+</LI>
+<LI>max. radius for photometry (from variable RMAX)
+</LI>
+<LI>estimated HWHM for the PSF (from variable PSF)
+</LI>
+<LI>contents of the AXES block (from AXES)
+</LI>
+<LI>image header.
+</LI>
+</UL>
+
+<P>
+This information is formatted to be read by RPREP.  The file must have
+already been opened with write-access using the `OPREP W' command.
+
+<P>
+NOTE: You must compute the image parameters above ahead of time, either
+outside of VISTA or using the AXES command without the CORR option.
+
+<P>
+See Also:  OPREP, RPREP, CLPREP
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

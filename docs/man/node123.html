@@ -1,0 +1,46 @@
+
+<H1><A NAME="SECTION001230000000000000000">
+ROTATE: Rotate an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml336#
+<A NAME="4611"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command4612#
+<BR>
+
+<P>
+This command rotates an image.  The keywords LEFT, RIGHT and UD are used
+for simple rotations.  These operate on the entire image.  The directions
+LEFT or RIGHT or UD refer to the orientation of the image as seen on the
+image display or in a contour map.  Imagine the image drawn or a piece of paper
+for these rotations.  UD is the same as two LEFT or two RIGHT rotations
+done in sequence.  It does NOT produce the a result which can be done with
+FLIP. The keyword TRANSPOSE will transpose the image, i.e. change the
+columns into rows and vice versa; this is equivalent to a ROTATE LEFT plus
+a FLIP ROWS or a FLIP ROWS plus a ROTATE RIGHT.
+
+<P>
+Use PA= to specify an arbitrary rotation in degrees.  PA=0 is vertical as
+seen on the television, with positive rotation angles corresponding to a
+counterclockwise rotation. A box may be specified, in which case the whole
+image will be rotated around the center of the box, then windowed to fit
+into the box.  The box coordinates should be specified in the ROTATED
+coordinate frame, not in the original frame. If no box is specified, a box
+the size and position of the whole image is assumed.  Note that in this
+case some corners may be cut off in the rotated image, while others may be
+filled with zeros. Arbitrary rotations require interpolation to be done on
+the data. The default method is bilinear interpolation, but higher accuracy
+2-D sinc interpolation will be used if the SINC keyword is given.
+
+<P>
+Note that RIGHT and PA=90 (for example) are not equivalent.  The RIGHT
+keyword implies a simple shuffling around of the pixel values, while PA=90
+will actually attempt to interpolate the values.  Another difference lies
+in the way the resulting image is proportioned: PA=90 will result in an
+image with the same number of rows and columns as the original, but RIGHT
+will result in an image with the number of rows and columns reversed.
+<BR>
+<tex2html_image_mark>#example4631#
+<BR>
+
+<P>

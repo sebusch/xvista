@@ -1,0 +1,42 @@
+
+<H1><A NAME="SECTION001720000000000000000">
+TEMPLATE: Generate an Image from a User-Supplied Profile</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml510#
+<A NAME="8243"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command8244#
+<BR>
+
+<P>
+TEMPLATE generates either a Gaussian (GAUSS), exponential disk (EXP),
+Hubble (HUB), or deVaucouleurs (DEV) template from an input profile spectrum
+originally calculated using the CUT or PROFILE command.  The Eccentricity,
+Position Angle of the brightness profile stored in the spectrum, and the
+Position Angle of the Major axis are all stored in a common block and
+generally need not be reloaded using the appropriate keywords.  These
+keywords permit the user to ;SPMquot;fine tune;SPMquot; the fit in the event that the
+loaded parameters are not ideal.  The actual nonlinear least squares fit to
+the appropriate brightness law is carried out for spectrum points n1
+through n2 using the FIT= keyword.  This permits, for example, fitting an
+exponential disk to the outer portions of the brightness profile while
+leaving the central (perhaps bulge) component alone.  At this time only one
+surface brightness law at a time can be fit.
+
+<P>
+N.B.The user must have an image with the same characteristics (size, etc.)
+as the template already in the destination buffer.  This image will of
+course be overwritten by the generated template.  The SUB keyword permits
+the subtraction of the generated template from the image already in the
+destination buffer.
+
+<P>
+<#8266#>Example:<#8266#>
+<BR>
+<tex2html_image_mark>#example8267#
+<BR>
+
+<P>
+See Also: CUT, DEVAUC
+
+<P>

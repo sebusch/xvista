@@ -1,0 +1,67 @@
+
+<H1><A NAME="SECTION001610000000000000000">
+DAOPHOT: A Stellar Photometry Package</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml467#
+<A NAME="7489"><tex2html_anchor_invisible_mark></A>
+<A NAME="7490"><tex2html_anchor_invisible_mark></A>
+
+<P>
+Starting in VISTA Version 4, the package DAOPHOT, written by Peter Stetson
+(Dominion Astrophysical Observatory), has been included to facilitate image
+interaction and a common file storage system. Generally, the original
+DAOPHOT commands have been changed as little as possible. Consequently,
+many of the fancy features of VISTA cannot be interfaced with the DAOPHOT
+routines.  For example, DAOPHOT images always have origin (1,1) while VISTA
+can handle arbitrary image limits. For the most part, however, the
+interface is straightforward to use. All of the DAOPHOT routines which
+require a file with image data in standalone DAOPHOT now require a buffer
+number with the image in memory. All of the photometry output data is
+stored in disk files exactly as DAOPHOT always stores it. See the DAOPHOT
+manual for all the details. Not all of the DAOPHOT routines are
+implemented.
+
+<P>
+We have found that interfacing DAOPHOT with VISTA is extremely convenient
+because several command line interfaces were created. In many routines,
+keywords have been implemented for the DAOPHOT commands that require
+keyboard input, facilitating running things in procedures and batch. In
+addition, a facility has been provided for providing hard wired default
+file names for use with the DAOPHOT routines. If the various photometry
+files (.COO, .AP, .MAG, .GRP, .NST, etc.) are previously specified with the
+DAOFILES command, the DAOPHOT routines will not prompt the user for
+entries, but will rather use the appropriate file as specified with the
+DAOFILES command. This is immensely useful for writing VISTA procedures to
+do whole chunks of the reduction process as painlessly as possible.
+
+<P>
+The version of DAOPHOT which is included in VISTA is an adaptation of
+Stetson's 1987 version of the code. Subsequently, Stetson has made
+modifications to the standard distribution of DAOPHOT which are NOT
+included in the VISTA package. In addition, some modification of the
+original DAOPHOT code was necessary to make it work inside of VISTA.
+Several new options were added as well by Jon Holtzman. Because of these
+facts, Stetson can NOT be help responsible for any results that come out of
+the VISTA/DAOPHOT routines. From extensive use of the code, we feel the
+routines are reliable, but this cannot be absolutely guaranteed. We are
+very grateful to Peter Stetson for allowing us to incorporate his code.
+
+<P>
+If you wish to use a Stetson's up-to-date version of DAOPHOT, contact him
+for the source code, and simply use VISTA to write out the data in some
+format which the standalone DAOPHOT can read.
+
+<P>
+Any questions about the VISTA/DAOPHOT routines should be addressed to the
+VISTA distributors and not to Stetson. Publications using the VISTA/DAOPHOT
+routines should give credit both to VISTA and to Stetson but remember, he
+cannot be help responsible for the results.
+
+<P>
+I leave the full description of all the DAOPHOT commands to the DAOPHOT
+manual. Here, I summarize the available DAOPHOT commands (HELP is available
+for these in a very limited way): OPTIONS, FIND, PHOTOMETRY, GROUP, PSF,
+PEAK, NSTAR, SUB* MONITOR, NOMONITOR, SORT, OFFSET, SELECT, APPEND, DAOSKY,
+and DUMP.
+
+<P>

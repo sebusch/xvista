@@ -1,0 +1,232 @@
+
+<H1><A NAME="SECTION00810000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2525"><tex2html_anchor_invisible_mark></A>
+<A NAME="2526"><tex2html_anchor_invisible_mark></A>
+<A NAME="2527"><tex2html_anchor_invisible_mark></A>
+<A NAME="2528"><tex2html_anchor_invisible_mark></A>
+<A NAME="2529"><tex2html_anchor_invisible_mark></A>
+<A NAME="2530"><tex2html_anchor_invisible_mark></A>
+<A NAME="2531"><tex2html_anchor_invisible_mark></A>
+<A NAME="2532"><tex2html_anchor_invisible_mark></A><BR>
+Introduction to the X11 Image Display
+</H1>
+<tex2html_verbatim_mark>rawhtml261#
+
+<P>
+VISTA provides a set of basic image display and interaction commands for
+X11 windows.  The following commands setup and communicate with the display
+window.  For more information see their individual help files.
+<BR>
+<tex2html_image_mark>#example2533#
+<BR> 
+A number of other commands (e.g., MARKSTAR) will also interact with the
+display for specific purposes, such as measuring image profiles.
+
+<P>
+The first time the TV command is given, VISTA opens an Image Display
+window on the console, and loads a color map as well as displaying the
+image. A ;SPMquot;Zoom;SPMquot; window is also opened that shows a magnified section of
+the image under the current cursor location (a kind of ;SPMquot;magnifying
+glass;SPMquot;).
+
+<P>
+Once an image has been displayed, the Display window will accept
+interaction asynchronously of commands in the VISTA command window,
+provided that a wait for input, or any other I/O is not pending.  To
+interact with the image, simply move the mouse onto the display window.
+The current pixel location of the cursor will be displayed in a frame at
+the base of the image display along with the pixel intensity.  The arrow
+keys are used for find control (one pixel at a time) of the cursor
+position.
+
+<P>
+The following mouse buttons and keyboard keys are active while the mouse
+is located on the image display:
+
+<P>
+<DIV ALIGN="CENTER">
+<#2541#><B>Mouse Buttons</B><#2541#>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">Button</TD>
+<TD ALIGN="LEFT">Function</TD>
+</TR>
+<TR><TD ALIGN="LEFT">LEFT</TD>
+<TD ALIGN="LEFT">ZOOM IN, centered on the cursor</TD>
+</TR>
+<TR><TD ALIGN="LEFT">MIDDLE</TD>
+<TD ALIGN="LEFT">ZOOM OUT, centered on the cursor</TD>
+</TR>
+<TR><TD ALIGN="LEFT">RIGHT</TD>
+<TD ALIGN="LEFT">PAN, move the pixel under the cursor to the center</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+<DIV ALIGN="CENTER">
+<#2547#><B>Keyboard Commands</B><#2547#>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Key</TD>
+<TD ALIGN="LEFT">Function</TD>
+</TR>
+<TR><TD ALIGN="CENTER">R</TD>
+<TD ALIGN="LEFT">RESTORE image to the original zoom/pan</TD>
+</TR>
+<TR><TD ALIGN="CENTER">+</TD>
+<TD ALIGN="LEFT">BLINK Forwards through the last 4 images.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">-</TD>
+<TD ALIGN="LEFT">BLINK Backwards through the last 4 images.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">P</TD>
+<TD ALIGN="LEFT">Find the PEAK pixel near the cursor <tex2html_ampersand_mark> jump the cursor there</TD>
+</TR>
+<TR><TD ALIGN="CENTER">V</TD>
+<TD ALIGN="LEFT">Find the LOWEST pixel (;SPMquot;Valley;SPMquot;) near the cursor <tex2html_ampersand_mark> jump the cursor there</TD>
+</TR>
+<TR><TD ALIGN="CENTER">#</TD>
+<TD ALIGN="LEFT">;SPMquot;Power Zoom;SPMquot; zoom at the cursor to the maximum zoom factor</TD>
+</TR>
+<TR><TD ALIGN="CENTER">H</TD>
+<TD ALIGN="LEFT">Toggle between small and full-screen cross-hairs</TD>
+</TR>
+<TR><TD ALIGN="CENTER">F</TD>
+<TD ALIGN="LEFT">FREEZE/UNFREEZE the Zoom window.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">0-9</TD>
+<TD ALIGN="LEFT">Mark the pixel coordinates and store in VISTA</TD>
+</TR>
+<TR><TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">variables Rn and Cn, where ;SPMquot;n;SPMquot; is the number key hit</TD>
+</TR>
+<TR><TD ALIGN="CENTER">]</TD>
+<TD ALIGN="LEFT">Clear boxes and stuff off the image display</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+Other commands may use additional keys, but this set is always available.
+
+<P>
+The ITV command is still useful in procedures for making VISTA wait for
+pixels to marked on the screen.  If ITV or any other VISTA routine is
+waiting for screen input, the the INPUT status light is lit (which
+otherwise says ASYNC).  ITV can also be used to print out pixel values in
+the VISTA window or for marking up features on the display with boxes or
+circles.
+
+<P>
+When VISTA is CPU bound (busy doing an intensive calculation), the display
+will be put into a wait state before any interactive commands to the
+display or ``damage'' from other windows can be serviced.  A note for
+programmers: CPU intensive routines should have the LOOPDISP call inserted
+into them to permit occasional servicing of display window events.  See the
+VISTA Programmer's Guide for details.
+
+<P>
+<#2552#><B>Color Bar Adjustment:</B><#2552#>
+
+<P>
+If you place the mouse on the color bar, these commands are available
+to adjust the contrast of the image:
+<BR>
+<tex2html_image_mark>#example2553#
+<BR> 
+The position of the mouse cursor displays the range of intensities
+represented by that color.
+
+<P>
+Pressing the R key while the mouse is on the color bar restores the
+original color map (undoing any change of the contrast or ;SPMquot;roll;SPMquot; changes
+made with the mouse buttons).
+
+<P>
+<#2558#><B>X-Windows Resources:</B><#2558#>
+
+<P>
+The properties of the TV display window are defined by Resource variables
+that can be customized by making appropriate entries in your .Xdefaults
+file.  The resource variables are of the form:
+<PRE><tex2html_verbatim_mark>verbatim262#</PRE>
+where ;SPMquot;xvista;SPMquot; is the resource name.
+
+<P>
+<DIV ALIGN="CENTER">
+<#2562#><B>Vista Display Resource Variables</B><#2562#>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">Resource</TD>
+<TD ALIGN="LEFT">Description</TD>
+<TD ALIGN="LEFT">Default</TD>
+</TR>
+<TR><TD ALIGN="LEFT">xvista.maxwidth</TD>
+<TD ALIGN="LEFT">Max width of displayed images</TD>
+<TD ALIGN="LEFT">1024</TD>
+</TR>
+<TR><TD ALIGN="LEFT">xvista.maxheight</TD>
+<TD ALIGN="LEFT">Max height of displayed images</TD>
+<TD ALIGN="LEFT">865</TD>
+</TR>
+<TR><TD ALIGN="LEFT">xvista.resize</TD>
+<TD ALIGN="LEFT">Auto-resize the window on display</TD>
+<TD ALIGN="LEFT">1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">of large images up to the max size.</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">1=auto-resize [default]</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">0=no auto-resize</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">xvista.autozoomout</TD>
+<TD ALIGN="LEFT">Automatically zoom out images larger</TD>
+<TD ALIGN="LEFT">0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">than the max size so that the whole</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">image is visible.</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">0 = no zoom out [default]</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">1 = auto zoom out</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">xvista.zoomsample</TD>
+<TD ALIGN="LEFT">Selects the de-zoom algorithm</TD>
+<TD ALIGN="LEFT">1</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">1 = fast pixel-sampling [default]</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">0 = slower pixel-binning</TD>
+<TD ALIGN="LEFT">;SPMnbsp;</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+The following are recommended values to place in your .Xdefaults file:
+<PRE><tex2html_verbatim_mark>verbatim263#</PRE>
+These will keep the TV window from obscuring too much of the screen, and
+enable the fastest auto zoom mode.
+
+<P>
+Note that for changes to the .Xdefaults file to take effect, you either
+have to log out and log back in again (brute force), or load the changes to
+your .Xdefaults file with the Unix ;SPMquot;xrdb -load;SPMquot; command.
+
+<P>

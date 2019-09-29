@@ -1,0 +1,378 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>IMPOST: Make a PostScript Hardcopy of an Image</TITLE>
+<META NAME="description" CONTENT="IMPOST: Make a PostScript Hardcopy of an Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00870000000000000000"></A>
+<A NAME="2738"></A>
+<BR>
+IMPOST: Make a PostScript Hardcopy of an Image
+</H1>
+
+<!-- linkto impost.html -->
+<BR>
+
+<BR>
+<DL COMPACT>
+<DT><B>Form: </B> IMPOST imbuf [BOX=b] [Z=zero] [L=span] [CLIP] 
+       [POSITIVE] [TITLE]</DT>
+<DD>
+  
+</DD>
+<DT>[HIST=xxx] [LAND] [FOUR] [AXES] [COMMENT] [COMMENT=xxx]
+        [FILE=xxx] [OUT=xxx]</DT>
+<DD>
+  
+</DD>
+<DT>[SCALE=s] [CEN=r,c] [FLIP] [BAR=xxx] [NOBAR] [WIND=w,h] 
+        [ORIGIN=x,y] [PAGE=L,S]</DT>
+<DD>
+  
+</DD>
+<DT>[COPIES=n] [LARGE] [INFO] [INT] [MACRO=] [EPS]</DT>
+<DD>
+  
+</DD>
+<DT>imbuf</DT>
+<DD>The buffer containing the image to be printed.
+  
+</DD>
+<DT>BOX=b</DT>
+<DD>Only print the region within the given box.
+  
+</DD>
+<DT>Z=zero </DT>
+<DD>Zero point of the intensity mapping.
+  
+</DD>
+<DT>L=span </DT>
+<DD>Span of the intensity mapping.  
+  
+</DD>
+<DT>CLIP</DT>
+<DD>Prevent roll-over of the intensity mapping.
+  
+</DD>
+<DT>POSITIVE </DT>
+<DD>Print the image intensities as White-on-Black.
+                   The default mapping is Black-on-White.
+  
+</DD>
+<DT>TITLE </DT>
+<DD>Write the OBJECT name on the print (from the header).
+  
+</DD>
+<DT>HIST </DT>
+<DD>Map image intensities using flat histogram equalization.
+  
+</DD>
+<DT>HIST=xxx</DT>
+<DD>Map image intensities using other histogram scalings
+                  Options: (FLAT,SQRT,LOG).  "HIST" = "HIST=FLAT"
+  
+</DD>
+<DT>LAND </DT>
+<DD>Output will appear in LANDSCAPE mode
+  
+</DD>
+<DT>FOUR </DT>
+<DD>Use a 4 bit (16 level) gray scale rather than the
+               default 8 bit (256 level) gray scale.
+  
+</DD>
+<DT>AXES </DT>
+<DD>Draw coordinates axes around the image.
+  
+</DD>
+<DT>COMMENT='xxx'</DT>
+<DD>Add a comment line to the print.  Comments may be
+                       up to 64 characters long. 
+  
+</DD>
+<DT>COMMENT </DT>
+<DD>Prompt the user interactively for the comment line.
+  
+</DD>
+<DT>FILE=psfile</DT>
+<DD>Direct the output into a file named "psfile".
+  
+</DD>
+<DT>OUT=psfile</DT>
+<DD>(same as FILE=psfile)
+  
+</DD>
+<DT>SCALE=s </DT>
+<DD>specify the pixel scale in units/pixel.
+  
+</DD>
+<DT>CEN=(r,c)</DT>
+<DD>specify the image fiducial center in pixels for
+                  scaled coordinate axes (see SCALE=).
+  
+</DD>
+<DT>FLIP </DT>
+<DD>flips image in rows (bottom-to-top raster order).
+  
+</DD>
+<DT>BAR='xxx' </DT>
+<DD>Label the gray scale intensity bar with the string
+                    given.  Default bar label is "Intensity"
+  
+</DD>
+<DT>NOBAR </DT>
+<DD>Do not draw a gray scale intensity bar on the print.
+  
+</DD>
+<DT>INFO </DT>
+<DD>Write in a line of auxiliary info on the print.
+  
+</DD>
+<DT>INT  </DT>
+<DD>Puts user into interactive Mongo mode for labelling.
+  
+</DD>
+<DT>MACRO=macrofile</DT>
+<DD> Executes Mongo macro file macrofile after drawing
+  
+</DD>
+<DT>Advanced Page Control</DT>
+<DD>
+  
+</DD>
+<DT>EPS</DT>
+<DD>Make an Encapsulated PostScript file.
+  
+</DD>
+<DT>COPIES=n </DT>
+<DD>Specify the number of copies to print if more than 1.
+  
+</DD>
+<DT>WIND=(w,h)</DT>
+<DD>Specify the maximum size in inches of the window in 
+                    which IMPOST will try to print the image.
+  
+</DD>
+<DT>LARGE </DT>
+<DD>Alternative to WIND=, will make the window as large as 
+                possible for the given paper size and orientation.
+  
+</DD>
+<DT>ORIGIN=(x,y)</DT>
+<DD>Specify the origin of the plotting window in inches 
+                      from the lower left-hand corner of the paper.
+  
+</DD>
+<DT>PAGE=(L,S) </DT>
+<DD>specify the physical size of the paper in inches.
+                     "L" = long dimension, "S" = short dimension.
+</DD>
+</DL>
+
+<P>
+IMPOST makes a hardcopy print of an image in PostScript format.  It
+is designed to be used just like the TV command, with very similar
+keywords. You can include extra information on the picture with the
+TITLE, AXES, COMMENT, INFO and related keywords.  These are discussed
+below.
+
+<P>
+IMPOST creates a PostScript file on disk.  This file will be located in the
+current directory (either where you started VISTA or under Unix versions of
+VISTA, the last directory you CD'd to).  By default this file will take the
+name "image.ps".  You can specify your own name for the file by using the
+FILE= or OUT= keywords.  Currently, this file is not automatically printed.
+From outside of VISTA (or from a spawned subprocess or C-shell), submit
+this to your printer as you would submit any other PostScript file (e.g.,:
+"lpr image.ps" on a Unix system, or "$ print/queue=pslaser image.ps" on a
+VMS system).
+
+<P>
+Multiple copies can be made using the COPIES=n keyword.  The POSITIVE
+keyword makes white images on a black background; the default is to make
+black images on a white background.
+
+<P>
+Output from IMPOST, if prepared with care, is of the highest quality.
+IMPOST generated prints made on good quality paper or special "stat" paper
+have been accepted for publication without re-photography required.
+
+<P>
+Intensity Scaling
+
+<P>
+IMPOST produces a hardcopy of an image by representing pixel intensities as
+an 8-bit halftone gray scale.  The optional keyword "FOUR" will use a 4-bit
+(16-level) gray scale instead.  Although an 8-bit gray scale has 256 levels
+from white to black, on standard 300 dpi laser printers, only 32 levels are
+distinguishable.  The output is a PostScript file which may be sent to any
+standard PostScript hardcopy device.
+
+<P>
+The simplest intensity scaling is through use of the Z= and L= keywords
+like in the TV command.  These set the zero point (Z=ZERO) and intensity
+span (L=SPAN) of a "linear" mapping from the actual image intensity in each
+pixel, IMG(r,c), to a displayed gray scale value between 0 and 255,
+INTENS(r,c), following the formula:
+<BR>
+
+<BR>
+With the FOUR option, the scale factor is 15 instead of 255, and
+INTENS(r,c) will take values from 0 to 15.
+
+<P>
+In this simple linear mapping, pixels with IMG(r,c) &lt;= ZERO will set
+INTENS(r,c)=0 (white) and pixels with IMG(r,c)=ZERO+SPAN will set
+INTENS(r,c)=255 (black).  If the CLIP keyword is used, then all values of
+IMG &gt; ZERO+SPAN are set black, otherwise, the color scale "wraps" and above
+IMG=ZERO+SPAN, INTENS starts again at 0.  This continues modulo (255/SPAN)
+until all pixel intensity values are mapped.
+
+<P>
+The default mapping is an inverse (or "negative") scale, where the image is
+drawn as black against a white background.  If the optional keyword
+POSITIVE is given, then the intensities are mapped in a more "normal" or
+"positive" scale in which the image is displayed as white against a black
+background, though the results with most laser printers is less than
+optimal.
+
+<P>
+The second scaling option is to map image intensities into an 8-bit gray
+scale using the distribution of pixel intensities in the image to provide a
+scaling in which all gray levels are equally present.  Such a scaling is
+called a "Histogram Equalization", and is used to bring up faint features
+without sacrificing more high-intensity features in the same image.  This
+is done using the HIST keyword.  Histogram equalization is a common
+technique in image processing, most notably it is used for making the
+high-contrast images that came from the Voyager and Viking space probes.
+Note that a simple one-to-one mapping of pixel intensities and gray level
+is lost, and such mapping should be used with caution.
+
+<P>
+If the Z= and L= keywords are used with HIST, then Z= is taken to be the
+lowest intensity value to be considered, and L= tells hist to ignore all
+intensities above Z+L when determining the histogram mapping.  The CLIP
+keyword is implicit with any histogram scaling option - no rollover is
+permitted.
+
+<P>
+Additional histogram scaling options are available via the HIST=LOG and
+HIST=SQRT keywords.  HIST=LOG will map intensities by equalizing over
+logarithmic intervals.  This is useful when there is a very large range of
+intensities in the image, and you wish to emphasize the brighter regions
+without washing out fainter features.  The HIST=SQRT option will map
+intensities by equalizing over square-root intervals.  This represents a
+middle ground between the "FLAT" histogram mapping described above (which
+enhances fainter regions) and the "LOG" histogram mapping.
+
+<P>
+Some experimentation to determine the best option to use will undoubtably
+be required.  Images which are mostly background sky will usually not
+benefit from any form of histogram equalization, while images of extended
+objects in which the frame is more-or-less filled with "object" will
+usually benefit.  By setting the zero point (Z=) to be above the image sky
+level, you can have the advantages of the histogram equalization scalings
+while still showing surrounding objects.
+
+<P>
+Labeling the Output
+
+<P>
+By default, IMPOST will only draw a box around the image and display a bar
+with the gray scale intensity range (0-255 or 0-15) in a box below the
+image.  You can add axes and labels using a variety of keywords provided.
+<BR>
+
+<BR>
+
+<P>
+Advanced Page Control
+
+<P>
+A number of optional keywords are provided which affect the physical size
+of the image as it appears on the page, its orientation, the number of
+copies printed etc.  These options may be used if IMPOST prints are
+intended for use in papers or dissertations, where precise specification of
+margins and the location and orientation of the image on the page are
+essential.  These keywords are described below:
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+Advanced Notes:
+
+<P>
+IMPOST uses the LickMongo PostScript drivers to make the axes and labels.
+As such, while PostScript instructions generated by this program may be
+used to produce the image hardcopy on any PostScript device via an
+appropriate server, they do not fully conform to to the "Encapsulated
+PostScript" structuring conventions described in the 'PostScript Language
+Program Design' Manual (Adobe Systems Incorporated 1988), or following the
+Version 2.0 EPS Specifications (Adobe Systems Inc. January 1989).  In
+future releases of LickMongo, this should be corrected (it is an artifact
+of the fact that the LickMongo PostScript drivers were written well before
+the standards were published).  Even so, with minor modifications, it
+should be possible to import images created with IMPOST into other
+encapsulated PostScript files (like those generated by TeX).
+
+<P>
+Images created with IMPOST have been displayed successfully on the X11/NeWS
+window system, on displayed PostScript devices, and transmitted
+electronically via both email and tcp/ip with no difficulties.
+
+<P>
+'PostScript' is a registered trademark of Adobe Systems Incorporated.
+
+<P>
+A Note About the Name:
+
+<P>
+IMPOST is the command formerly known as POSTIT until 1997 Nov 21, when the
+author (Rick Pogge) was made aware of a letter to his department chairman
+from the law firm of Arnold, White, &amp; Durkee.  This firm represents the
+Minnesota Mining &amp; Manufacturing Company (3M) in trademark and other
+intellectual property rights matters.  It seems after coming across a web
+version of the Prospero manual (a VISTA derivative written at OSU that
+incorporates POSTIT because it was written by Rick Pogge), they deemed our
+use of the word POSTIT as an infringment of the trademark of 3M for its
+famous yellow sticky notes, aka Post-It(tm) Notes that might potentially
+confuse people encountering the web version of our help pages.
+
+<P>
+While we disagree that anyone could possibly confuse the ubquitous yellow
+sticky notes manufactured by 3M with an obscure function embedded within an
+even more obscure advanced astronomical image processing package, the
+current legal climate of excessive litigiousness that serves only to
+trivialize intellectual property rights requires that we change the name.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

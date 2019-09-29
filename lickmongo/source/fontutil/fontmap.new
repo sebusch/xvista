@@ -1,0 +1,389 @@
+NUMFONT 4     There are 4 fonts defined by this fontmap file
+VLINE -16 -9 0 12 16    Vertical font metric information for
+H 2199  <sp>                    Complex Roman
+H 2214  !
+H 2217  "       Second
+H 2275  #
+H 2274  $
+H 2271  %
+H 2272  &
+H 2216  '       Prime
+H 2221  (
+H 2222  )
+H 2219  *
+H 2232  +
+H 2211  ,
+H 2231  -
+H 2210  .
+H 2220  /
+H 2200  0
+H 2201  1
+H 2202  2
+H 2203  3
+H 2204  4
+H 2205  5
+H 2206  6
+H 2207  7
+H 2208  8
+H 2209  9
+H 2212  :
+H 2213  ;
+H 2241  <
+H 2238  =
+H 2242  >
+H 2215  ?
+H 2273  @
+H 2001  A
+H 2002  B
+H 2003  C
+H 2004  D
+H 2005  E
+H 2006  F
+H 2007  G
+H 2008  H
+H 2009  I
+H 2010  J
+H 2011  K
+H 2012  L
+H 2013  M
+H 2014  N
+H 2015  O
+H 2016  P
+H 2017  Q
+H 2018  R
+H 2019  S
+H 2020  T
+H 2021  U
+H 2022  V
+H 2023  W
+H 2024  X
+H 2025  Y
+H 2026  Z
+H 2223  [
+H 2280  \
+H 2224  ]
+H 2247  ^
+H 0736  _
+H 2218  `       Degree
+H 2101  a
+H 2102  b
+H 2103  c
+H 2104  d
+H 2105  e
+H 2106  f
+H 2107  g
+H 2108  h
+H 2109  i
+H 2110  j
+H 2111  k
+H 2112  l
+H 2113  m
+H 2114  n
+H 2115  o
+H 2116  p
+H 2117  q
+H 2118  r
+H 2119  s
+H 2120  t
+H 2121  u
+H 2122  v
+H 2123  w
+H 2124  x
+H 2125  y
+H 2126  z
+H 2225  {
+H 2229  |
+H 2226  }
+H 2246  ~
+0       <del>   <---NOT ACCESSIBLE FROM MONGO
+VLINE -16 -9 0 12 16    Vertical font metric information for
+MG  32  <sp>
+H 0744  !       Club
+H 0741  "       Spade
+H 0742  #       Heart
+H 0745  $       Shamrock
+H 0746  %       Fleur de Lis
+H 2276  &       Paragraphoh (Section)
+H 2236  '       Dot Product
+H 2281  (       Sun
+H 2284  )       Earth
+MG  42  *       X (times) USED IN SCIENTIFIC NOTIATION! [skinnier than Hershey]
+H 2233  +       Plus or Minus
+H 2245  ,       Variation (Proportional to)
+H 2234  -       Minus or Plus
+H 0743  .       Diamond
+H 2237  /       Quotient (Divided by)
+H 2750  0       Complex Script
+H 2751  1       Complex Script
+H 2752  2       Complex Script
+H 2753  3       Complex Script
+H 2754  4       Complex Script
+H 2755  5       Complex Script
+H 2756  6       Complex Script
+H 2757  7       Complex Script
+H 2758  8       Complex Script
+H 2759  9       Complex Script
+H 2268  :       Integral
+H 2269  ;       Circuit Integral
+H 2243  <       Equal or Less (Less than or Equal)
+H 2240  =       Identity (Equal)
+H 2244  >       Equal or More (Greater than or Equal)
+H 2239  ?       Inequality (Not Equal)
+H 2380  @       G Clef (Trebel Clef)
+H 2273  A       At
+H 2270  B       Infinity
+MG  67  C       Cent    [Solidus & Complex Roman c raised 2 units]
+H 2030  D       Delta
+H 2260  E       Element
+H 2047  F       Phi
+H 2029  G       Gamma
+H 0908  H       US Highway
+H 1230  I       Double Bar (small parallel)     [Complex Roman Small]
+H 2266  J       Nabla (Del)
+MG  75  K       Tensor Product  [NOT Hershey, X & Circle]
+H 2037  L       Lambda
+H 2262  M       Up Arrow
+H 2264  N       Down Arrow
+H 2381  O       F Clef (Bass Clef)
+H 2042  P       Pi
+H 2034  Q       Theta
+H 0909  R       Interstate
+H 2044  S       Sigma
+H 0738  T       Perpendicular   [shorter than Hershey]
+H 2046  U       Upsilon
+MG  86  V       Aangstrom       [NOT Hershey]
+H 2050  W       Omega
+H 2040  X       Xi
+H 2049  Y       Psi
+MG  90  Z       h-bar           [NOT Hershey]
+H 2277  [       Dagger
+MG  58  \       Integral
+H 2278  ]       Double-Dagger
+H 2292  ^       Comet
+H 2261  _       Right Arrow
+H 2267  `       Radical
+H 2127  a       alpha
+H 2128  b       beta
+H 2148  c       chi
+H 2130  d       delta
+H 2184  e       epsilon         [Hershey variant epsilon]
+H 2186  f       phi             [Hershey variant phi]
+H 2129  g       gamma
+H 2133  h       eta
+H 2135  i       iota
+MG 106  j       Partial Derivative      [NOT in Hershey?!]
+H 2136  k       kappa
+H 2137  l       lambda
+H 2138  m       mu
+H 2139  n       nu
+H 2141  o       omicron
+H 2142  p       pi
+H 2185  q       theta           [Hershey variant theta]
+H 2143  r       rho
+H 2144  s       sigma
+H 2145  t       tau
+H 2146  u       upsilon
+H 0677  v       script l (ell)  [differs from original in MONGO]
+H 2150  w       omega
+H 2140  x       xi
+H 2149  y       upsilon
+H 2132  z       zeta
+H 2227  {       Left Elbow (Bra)
+H 2230  |       Double Bar
+H 2228  }       Right Elbow (Ket)
+H 2263  ~       Left Arrow
+0       <del>   <---NOT ACCESSIBLE FROM MONGO
+VLINE -16 -9 0 12 16    Vertical font metric information for
+H 0699  <sp>            English Gothic (EG) and Script Font
+H 3501  !       EG A    [Hershey Gothic English]
+H 3502  "       EG B
+H 3503  #       EG C
+H 3504  $       EG D
+H 3505  %       EG E
+H 3506  &       EG F
+H 3507  '       EG G
+H 3508  (       EG H
+H 3509  )       EG I
+H 3510  *       EG J
+H 3511  +       EG K
+H 3512  ,       EG L
+H 3513  -       EG M
+H 3514  .       EG N
+H 3515  /       EG O
+H 3516  0       EG P
+H 3517  1       EG Q
+H 3518  2       EG R
+H 3519  3       EG S
+H 3520  4       EG T
+H 3521  5       EG U
+H 3522  6       EG V
+H 3523  7       EG W
+H 3524  8       EG X
+H 3525  9       EG Y
+H 3526  :       EG Z
+MS  59  ;       backward hyphen [NOT in Hershey]
+H 2291  <       Moon
+H 2292  =       Comet
+H 2293  >       Star
+H 2294  ?       Ascending Node
+H 2295  @       Descending Node
+H 2551  A       [Hershey Complex Script]
+H 2552  B
+H 2553  C
+H 2554  D
+H 2555  E
+H 2556  F
+H 2557  G
+H 2558  H
+H 2559  I
+H 2560  J
+H 2561  K
+H 2562  L
+H 2563  M
+H 2564  N
+H 2565  O
+H 2566  P
+H 2567  Q
+H 2568  R
+H 2569  S
+H 2570  T
+H 2571  U
+H 2572  V
+H 2573  W
+H 2574  X
+H 2575  Y
+H 2576  Z
+H 0869  [       Bell
+0       \
+H 0870  ]       Palm
+H 0871  ^       Pine
+H 0872  _       Oak
+H 0873  `       Willow
+H 0651  a       [Hershey Simplex Script]
+H 0652  b
+H 0653  c
+H 0654  d
+H 0655  e
+H 0656  f
+H 0657  g
+H 0658  h
+H 0659  i
+H 0660  j
+H 0661  k
+H 0662  l
+H 0663  m
+H 0664  n
+H 0665  o
+H 0666  p
+H 0667  q
+H 0668  r
+H 0669  s
+H 0670  t
+H 0671  u
+H 0672  v
+H 0673  w
+H 0674  x
+H 0675  y
+H 0676  z
+H 0735  {       Lozenge
+H 0767  |       Thunderstorm
+H 0768  }       Hurricane
+H 2190  ~       mystery symbol
+0       <del>   <---NOT ACCESSIBLE FROM MONGO
+VLINE -16 -9 0 12 16    Vertical font metric information for
+H 0699  <sp>                    Simplex Roman Font
+H 0714  !
+H 0717  "
+H 0733  #
+H 0719  $
+H 2271  %
+H 0734  &
+H 0731  '
+H 0721  (
+H 0722  )
+H 0728  *
+H 0725  +
+H 0711  ,
+H 0724  -
+H 0710  .
+H 0720  /
+H 0700  0
+H 0701  1
+H 0702  2
+H 0703  3
+H 0704  4
+H 0705  5
+H 0706  6
+H 0707  7
+H 0708  8
+H 0709  9
+H 0712  :
+H 0713  ;
+H 2241  <
+H 0726  =
+H 2242  >
+H 0715  ?
+H 2273  @
+H 0501  A
+H 0502  B
+H 0503  C
+H 0504  D
+H 0505  E
+H 0506  F
+H 0507  G
+H 0508  H
+H 0509  I
+H 0510  J
+H 0511  K
+H 0512  L
+H 0513  M
+H 0514  N
+H 0515  O
+H 0516  P
+H 0517  Q
+H 0518  R
+H 0519  S
+H 0520  T
+H 0521  U
+H 0522  V
+H 0523  W
+H 0524  X
+H 0525  Y
+H 0526  Z
+H 2223  [
+H 2280  \
+H 2224  ]
+H 2247  ^
+H 0736  _
+H 2252  `
+H 0601  a
+H 0602  b
+H 0603  c
+H 0604  d
+H 0605  e
+H 0606  f
+H 0607  g
+H 0608  h
+H 0609  i
+H 0610  j
+H 0611  k
+H 0612  l
+H 0613  m
+H 0614  n
+H 0615  o
+H 0616  p
+H 0617  q
+H 0618  r
+H 0619  s
+H 0620  t
+H 0621  u
+H 0622  v
+H 0623  w
+H 0624  x
+H 0625  y
+H 0626  z
+H 2225  {
+H 2229  |
+H 2226  }
+H 2246  ~
+0       <del>   <---NOT ACCESSIBLE FROM MONGO

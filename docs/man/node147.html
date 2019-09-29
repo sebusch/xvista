@@ -1,0 +1,27 @@
+
+<H1><A NAME="SECTION001330000000000000000">
+POWERS: Generate a Power Spectrum (Periodogram Estimate)</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml370#
+<BR>
+<tex2html_image_mark>#command5543#
+<BR>
+
+<P>
+POWERS generates the periodogram power spectrum estimate from the 1D or 2D
+fourier transform of a real image. The periodogram estimate is just a way
+to normalize the power spectrum such that Parseval's theorem holds
+(i.e. the sum of all the power terms equals the mean squared amplitude of
+the transform).
+
+<P>
+POWERS only operates on fourier transforms generated with VISTA command
+FFT. If you want to generate the power spectrum from a more general
+complex image (p.e. an image synthesized with command CMPLX) which is
+supposed to be the fourier transform of a real image, use command CABS to
+get the modulus of the transform and multiply it by itself (with MULT not
+CMULT since the modulus of a complex image is real). The periodogram
+estimate and the modulus-squared are basically identical (they may only
+differ in the 0th and Nyquist frequencies).
+
+<P>

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>FINDSHIFT: Compute Relative Shifts Between Two Spectra</TITLE>
+<META NAME="description" CONTENT="FINDSHIFT: Compute Relative Shifts Between Two Spectra">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0014180000000000000000">
+FINDSHIFT: Compute Relative Shifts Between Two Spectra</A>
+</H1>
+
+<!-- linkto findshift.html -->
+<BR>
+
+<BR>
+
+<P>
+FINDSHIFT computes the relative shift between two spectra.  Given two
+spectra (1 row images), it computes SHIFT, the number pixels that the
+second (shifted) spectrum would have to be shifted to match (in the least
+squared sense) the first (template) spectrum. The user can selected a
+spectral region for the chi-squared computation. The algorithm solves the
+interpolation problem, so the command provides accurate fractional shifts.
+
+<P>
+Since the algorithm minimizes the difference in counts, results are more
+accurate if the spectra are normalized to have the same number of counts
+within the spectral region of interest. The algorithm looses sense if the
+spectra are very different.
+
+<P>
+If two images are given (more than one row), a single row will be
+considered for the shift calculation, the template's starting row is the
+default row, but can be changed with the 'ROW=' keyword.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

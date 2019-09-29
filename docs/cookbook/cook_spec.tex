@@ -1,0 +1,445 @@
+%
+%  VISTA Cookbook;  Spectral Image Reduction Chapter (6 for now)
+%
+%  Last Revision:  1988 August 30
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:sp___
+%
+
+
+%\documentstyle {manual}
+%
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+%
+%\begin{document}
+%\setcounter{chapter}{5}
+
+\chapter{Spectral Data Reduction}
+
+\section{Basic Techniques}
+
+This section describes the basic techniques used to reduce long-slit
+spectroscopy like that obtained by the Cassegrain spectrographs and the
+non-echelle coud\'e spectrographs.  Only the most basic procedures are
+considered here, with the following section serving to cover more advanced
+reduction techniques and details which will not generally affect the average
+user.  It is recommended, however, that even casual users at some point read
+the advanced section so that they can be sure that they are not missing some
+technique which is important for them.
+
+The main command of interest in spectral reduction is the \comm{MASH} command,
+which takes a two-dimensional long-slit image and creates a one-dimensional
+spectrum from a section of it.  Before this is done, of course, the usual
+treatment of baselining and flat-fielding the two-dimensional image must be
+applied (described in the beginning of this manual).  The form of the
+\comm{MASH} command is:
+\begin{command}
+ \item MASH dest src SP=s1,s2 BK=b1,b2 COLS SKY=s REFLAT
+\end{command}
+\noindent
+There are some other keywords which might prove useful --- see the manual for
+details.  The \comm{SP=s1,s2} keyword specifies the columns (or rows) which
+define the object spectrum.  More than one \comm{SP=} keyword can be used to
+co-add several regions of spectrum, but in general only one region is
+specified at a time.  The \comm{BK=b1,b2} keyword specifies the background to
+be scaled and removed from the spectrum.  Usually this contains sky which must
+be removed but even in coud\'e spectra, where there may not be a large sky
+contribution, there is often a constant background across most of the CCD
+which should be removed.  More than one background region can and often is
+specified, usually on either side of the spectrum region.  The \comm{MASH}
+command is somewhat clever about the \comm{SP=} and \comm{BK=} windows. If a
+given column (or row) is specified in {\it both} \comm{SP=} and \comm{BK=}
+keywords then the spectrum designation is given priority and it is used only
+as a spectrum column (or row).  This allows the user to use a form like :
+\begin{command}
+ \item MASH 10 1 SP=314,324 BK=284,354 REFLAT SKY=11 COLS
+\end{command}
+\noindent
+where the background specified in the single \comm{BK=} keyword will actually
+define two background regions, columns $284-313$ and $325-354$, straddling the
+spectrum.
+
+Before we describe the other keywords a word is in order about how best to
+locate the spectrum and background regions.  A simple \comm{PLOT} command
+using the \comm{RS=} keyword (or the \comm{CS=} keyword if the spectrum runs
+along rows) will usually do the trick. From this the columns at which the
+spectrum become visible above the background can be determined, and the
+regions where the background is relatively flat can similarly be found.  Note
+that depending on the application different criteria for the spectrum rows
+might be used.  Some users prefer to define the spectrum ``window'' when the
+crosscut through the object's spectrum has risen to 10\% of its peak value,
+but the individual user will have to determine what is best for his or her
+needs.
+
+Now back to the other \comm{MASH} keywords.  The \comm{COLS} keyword tells
+\comm{MASH} that the spectrum lies along columns; otherwise \comm{MASH}
+assumes that the spectrum lies along rows on the CCD.  The \comm{REFLAT}
+keyword is optional.  It tells \comm{MASH} to use a parabolic fit to each
+background row (or column) instead of simply taking an average.  This usually
+improves the subtraction of bright, narrow night sky lines, but occasionally
+\comm{REFLAT} will actually make things worse.  This can happen, for example,
+if two narrow but widely separated background windows are being used.  In such
+a case it is clear that a parabola is not well-constrained in the region
+between the backgrounds, where presumably it is most critical to the spectrum
+subtraction.  Also note that \comm{REFLAT} modifies the original image by
+dividing each row (or column) by the parabolic fit to that row's background
+pixels.  The \comm{SKY=} keyword is used to place the {\it background}
+spectrum into a buffer.  This can then be used by the \comm{SKYLINE} command
+to remove first order wavelength shifts induced by spectrograph flexure.
+
+\subsection{Wavelength Calibration}
+
+Another important step in the reduction is the wavelength calibration of the
+spectrum.  Very high-precision calibration may rely on rather ``exotic''
+techniques such as absorption cells in the light path, Edsel-Butler
+interference bands, etc.  These will not be discussed here, nor in the
+advanced techniques section, as they are the realms of radial velocity experts
+and others.  Ordinarily, the user will have one or more exposures of
+wavelength calibration lamps, usually containing some gas or gases like
+mercury, helium, argon, neon, iron, thorium, and so on. These images must be
+reduced to spectra using the \comm{MASH} command, although in general there is
+no need to flat-field the image, and no background specification is used in
+the \comm{MASH} command.  An example of a wavelength calibration spectrum is
+shown in
+Figure~\ref{fig:wavecal}.
+
+\begin{figure}[t]
+   \centering
+   \vspace{4.0in}
+   \caption[]{\label{fig:wavecal} An example of a wavelength calibration
+	      image.}
+\end{figure}
+
+With one or more of these calibration spectra available we are ready to try to
+identify the lines.  It is assumed that an appropriate wavelength list has
+already been written into a disk file (see the manual for how to do this if a
+list does not already exist for you), and that you have a rough idea as to the
+dispersion and central wavelength of the spectra.  Then use the \comm{LINEID}
+command:
+\begin{command}
+   \item LINEID 10 FILE=wavelist CEN=5760 DISP=4 TTY INT
+\end{command}
+\noindent
+where ``wavelist'' is the wavelength line list file, 5760 {\AA} is the
+approximate central wavelength in this hypothetical case, and 4 {\AA} is the
+dispersion.  The routine will try to identify the lines in the spectrum using
+the specified central wavelength ($\pm 100$ pixels) and the specified
+dispersion ($\pm 5$\%).  The \comm{TTY} keyword prints out the final line
+identifications, while the optional \comm{INT} keyword allows the user to edit
+the line list, removing lines that the program misidentifies and adding lines
+that it misses.  The line identification is usually quite automatic and
+doesn't require the interactive line list editing, but difficult cases can
+occur and can require substantial user intervention.  Note that if two or more
+sets of different wavelength calibration spectra are to be used there are two
+ways to combine the fits.  The first is simply to add the spectra together and
+do a \comm{LINEID} on the summed calibration spectrum.  The other is to use
+multiple \comm{LINEID}s and after the first one use the \comm{ADD} keyword to
+each new \comm{LINEID} command to append the new line list to the previous
+one.
+
+Now that \comm{LINEID} has provided a list of identified lines with their
+expected wavelengths and observed pixel values the \comm{WSCALE} command fits
+a polynomial to these points to provide the actual wavelength calibration. The
+form is:
+\begin{command}
+   \item WSCALE 10 ORD=3 INT
+\end{command}
+\noindent
+where \comm{ORD=3} specifies a polynomial of order 3 (i.e. a cubic) and
+\comm{INT} allows the interactive manipulation of line weights.  The
+particular circumstances of a set of wavelength calibration spectra will
+determine the order of the fit which the user wants to use, although the
+program limits this to less than 8. When in doubt, start at a higher order
+(for instance 5) and see if the highest order terms in the fit are
+significant, using the uncertainties in each parameter which are calculated
+and printed in \comm{WSCALE}. If these terms are not significant then you may
+lower the order of the fit and try another \comm{WSCALE}.  On the other hand,
+for cases in which there is a paucity of calibration lines in one or more
+regions of the spectrum it may be more prudent to use a lower-order fit so
+that where the polynomial is poorly constrained the high-order terms do not
+send it into large oscillations.  The user will have to make his or her own
+decision in the end.
+
+\comm{WSCALE} contains a (rather conservative) automatic line-rejection
+feature, but it is usual to use the \comm{INT} keyword to remove lines that
+are not fit well.  The \comm{WSCALE} command will print out a list of the
+lines, their weights in the fits and the residuals from the polynomial fit.
+Then it will ask for a line to be changed (specified by an index number so
+that you don't have to type in the whole wavelength) and then the new weight
+to give that line. A weight of zero will completely remove the line from the
+fit. Entering ``$-1$'' for the line index to change will either return the
+routine to make a new fit with the altered line weights, or if no line weights
+were changed then it will assume that you are finished and will calculate the
+reverse fit (i.e. pixel as a function of wavelength instead of vice versa).
+Note that it is actually the {\it reverse} fit which is used by the
+\comm{ALIGN} command (discussed below) which re-bins the data onto a linear or
+logarithmic wavelength scale.  Once a satisfactory fit has been attained the
+wavelength calibration spectrum must be saved, as the coefficients of the fit
+are stored in the header of the spectrum that was specified in the
+\comm{WSCALE} command.  To copy these coefficients from the calibration
+spectrum to another uncalibrated spectrum use the \comm{COPW} command (e.g.
+\comm{COPW 12 10}).
+
+\subsection{Linearizing the Wavelength Scale}
+
+Quite often the user wishes to re-bin his or her data onto a linear (or
+logarithmic in some cases) wavelength scale.  This is done via the
+\comm{ALIGN} command.  There are a number of options in \comm{ALIGN} which
+will not be covered here; the user should look over the help manual for
+details.  It should be mentioned here that \comm{ALIGN} also converts the data
+from counts to counts per second per Angstrom, unless the \comm{NOFLUX} keyword
+is specified. Always keep this in mind, because often seeming ``bugs'' which
+change the scale of spectra can be traced to this feature of \comm{ALIGN}.
+Also note that, as mentioned above, \comm{ALIGN} uses the {\it reverse}
+wavelength fit (i.e. pixel as a function of wavelength).
+
+More immediately relevant options include the \comm{LGI} keyword. By default
+interpolation is done with a sinc interpolation scheme which more or less
+preserves the frequencies in the data.  But many users find that the sinc
+technique leads to oscillations often called ``ringing,'' common to many
+Fourier-based routines.  To avoid this the \comm{LGI} keyword invokes a
+4-point, flux-conserving Lagrangian interpolation.  The other available
+keywords in \comm{ALIGN} allow the user to remove (or put in) a velocity or
+redshift, a shift in pixel space, and other special features.
+
+If the \comm{SKY=} keyword in \comm{MASH} is being used to find a first-order
+correction to the wavelength calibration by using the night-sky lines then the
+spectrum buffer containing the sky should be \comm{ALIGN}'ed and the
+\comm{SKYLINE} command used:
+\begin{command}
+   \item ALIGN 12 LGI
+   \item SKYLINE 10 12
+\end{command}
+\noindent
+assuming that the sky is contained in buffer 12 and the spectrum to be
+adjusted is in buffer 10.  \comm{SKYLINE} looks for a few night-sky lines,
+mostly in the yellow part of the spectrum, and compares their observed
+wavelengths with their expected wavelengths.  A mean shift from these
+night-sky lines is calculated and the starting wavelength of the object's
+spectrum is adjusted.
+
+\subsection{Flux Calibration and Extinction Correction}
+
+Once a wavelength scale has been associated with a spectrum (whether or not it
+has been \comm{ALIGN}'ed) the \comm{EXTINCT} command can be used to correct
+for the atmosphere's extinction.  The extinction curve appropriate for Mount
+Hamilton is the default, but other extinction curves (e.g. for CTIO) may be
+available.  This command then converts observed flux (or counts) to flux (or
+counts) above the Earth's atmosphere.
+
+At the Cassegrain focus users are very often concerned with determining an
+absolute flux calibration of their spectra.  This is usually done by observing
+a flux standard and \comm{MASH}'ing, \comm{ALIGN}'ing, and correcting its
+spectrum for atmospheric correction as usual.  Then the command
+\comm{FLUXSTAR} can be used to create what is called a ``flux curve,'' which,
+when multiplied by an extracted, extinction-corrected spectrum of an object,
+will yield a flux-calibrated spectrum.  The \comm{FLUXSTAR} command is of the
+form:
+\begin{command}
+   \item FLUXSTAR 14 FEIGE56 SYSC
+\end{command}
+\noindent
+where 14 is the buffer containing the flux standard, \comm{FEIGE56} is the
+file name containing the monochromatic magnitudes of the flux points (see the
+help manual for how to set one of these up if necessary), and \comm{SYSC}
+tells the program to create a particular type of flux curve.  There are three
+types of flux curves which can be created.  The \comm{SYSB} keyword (also the
+default if no option is specified) takes the flux points and calculates the
+correction (known flux divided by measured counts) at each point within the
+spectrum.  A spline is then fit through the flux points and the resulting
+smooth curve is the correction curve (called the ``flux curve'').  Note that
+the spectrum buffer which is specified in the \comm{FLUXSTAR} command is
+replaced by the flux curve, so you may want to copy the standard star spectrum
+to another buffer before using this command.  Now any extracted spectrum can
+be multiplied by this curve to obtain the ``fluxed'' spectrum of the object.
+Some of the strong atmospheric absorption bands in the near-infrared (the A-
+and B-bands) are saturated (optically thick) and hence they are not removed by
+sky subtraction like most other night-sky features.  To first order they can
+be removed using the \comm{SYSC} option, which clips out those parts of the
+spectrum in the standard star containing the A- and B-bands and splices them
+into the spline flux curve.  An example of this is shown in
+Figure~\ref{fig:fluxcal}.   This technique works to a certain extent but the
+strengths of these bands varies with the O$_2$ content along the
+line-of-sight, and this can change rapidly from point to point in the sky and
+from one moment to the next.
+
+\begin{figure}[t]
+   \centering
+   \vspace{4.0in}
+   \caption[]{\label{fig:fluxcal} Example of Flux Curve.}
+\end{figure}
+
+More sophisticated techniques are discussed in the advanced section.  The
+\comm{SYSA} option is a little-used option which essentially uses the entire
+standard star spectrum, inverts it, and then uses the \comm{SYSB} spline fit
+to normalize it. Hence some of the features in the standard star spectrum are
+retained (inverted) in the flux curve. The usefulness of this option is very
+limited and it will not be discussed further. The choice of flux stars and
+techniques for taking the data is discussed further in the next section.
+
+\section{Advanced Techniques}
+
+\subsection{Flat-Field Notes}
+
+The treatment of flat-fields also requires some discussion.  There are two
+types of effects which the flat-fielding procedure is expected to remove.  The
+first, most important effect is the pixel-to-pixel variation in sensitivity.
+The second type of effect is more global, lower frequency variation in
+sensitivity which might be due to actual quantum efficiency variations, blaze
+functions, interference fringes, vignetting, etc.  It should be stressed that
+the pixel-to-pixel variation is usually the most important effect to account
+for with a flat-field, because there is usually some other technique such as
+using a flux curve which will remove the lower frequency patterns.  In this
+sense it is sometimes desirable to actually {\it remove} the low frequency
+variations in the flat-field and retain only the pixel-to-pixel effects.  This
+technique is called flat-field normalization, and is most often done {\it
+along} the dispersion direction.  A \comm{MASH} may be used to obtain the
+shape of the flat-field along the dispersion direction, which may then be
+smoothed or fit with a spline or polynomial.  This smoothed spectrum is then
+\comm{STRETCH}'ed into an image and the original flat-field is divided by this
+smoothed version.
+
+The \comm{EXTRACT} command discussed below actually requires a normalized flat
+field, because that is the most straightforward way of keeping track of the
+actual number of electrons which have fallen into any given pixel. Procedures
+which calculate the quantum efficiency of the spectrograph also often use a
+normalized flat.  Another use is when filters have been used in the flat-field
+(usually to suppress the red end of the spectrum and get a more color-balanced
+spectral shape) which have rather high frequency structure in their spectral
+shape.  However, {\it care must be exercised}! There are real low-frequency
+effects which you probably {\it don't} want to remove, such as interference
+fringes in the near-IR and certain efficiency effects in gratings. For
+instance, the grating efficiency as a function of wavelength is dependent on
+the {\it polarization} of the light striking the grating, and often this
+efficiency has frequencies in it which are too high to be properly removed by
+the flux curve.  This is also an appropriate place to mention that when trying
+to retain the highest accuracy with grating spectrographs, it is probably a
+good idea to avoid using some standard stars like Hiltner 102 which are also
+highly polarized.  The flux measured will depend to a small extent on the
+interaction between the polarized starlight and the grating's intrinsic
+polarization, and hence on the spectrograph's orientation.
+
+\subsection{\comm{MASH} alternatives: \comm{SPECTROID} and \comm{EXTRACT}}
+
+While \comm{MASH} is the most commonly used method of changing a 2-D long-slit
+image into a one-dimensional spectrum, there are a couple of alternatives.
+The most useful of these is the \comm{SPECTROID} command, which performs two
+functions.  First it will calculate the centroid of the spectrum, using a
+spectrum window and a set of background window specifications.  If the
+\comm{NOMASH} keyword is used then the command will return this centroid as a
+function of column number as the spectrum.  (Note that \comm{SPECTROID} only
+works when the spectrum runs across rows, so the \comm{ROTATE} command may
+have to be used to place the image into the proper orientation first.)  This
+centroid can be valuable by itself or it can be used, smoothed or as is, as a
+``model'' for a fainter spectrum on another image. An example of a centroid is
+shown in Figure~\ref{fig:centroid}.  Users have thought up many uses for this
+command.
+
+\begin{figure}[t]
+   \centering
+   \vspace{4.0in}
+   \caption[]{\label{fig:centroid} An example of a centroid derived from the
+      \comm{SPECTROID} command with the \comm{NOMASH} keyword.}
+\end{figure}
+
+If the \comm{NOMASH} keyword is {\it not} used then the command will continue,
+and using the centroid as a function of column which the program has already
+calculated it will extract the spectrum as specified in the command line.  In
+contrast with \comm{MASH}, \comm{SPECTROID} interpolates for fractional
+pixels. It is useful for many things, most obviously for extracting spectra
+which are tilted or curved across the CCD.  It is the main utility used in the
+echelle reduction because of this capability.  It is also useful for mapping
+distortions.  (Use a night-sky line or a wavelength calibration line as a
+``spectrum'' to get an idea of the curvature of these perpendicular to the
+dispersion direction.)  It can calculate the distribution of a particular
+emission line along the length of a slit, and it can even be used to calculate
+higher order moments of the light distribution as a function of column number,
+using the \comm{MOMENTS} keyword.
+
+Another command of perhaps more limited usefulness is the \comm{EXTRACT}
+command.  This is an ``optimal extraction'' routine patterned after that by
+Keith Horne (see {\it Publ. A.S.P.}, {\bf 98}, 609) and is used for extracting
+very low signal-to-noise spectra which are dominated by shot noise from the
+sky.  It works best for continuum sources rather than pure emission-line
+sources.  \comm{EXTRACT} has a number of useful features, and uses the gain
+and readout noise of the CCD to estimate the expected noise for each pixel in
+the original image.  Because of this it requires a normalized flat-field
+(discussed above) so that the number of counts will be approximately conserved
+during the flat-fielding.  \comm{EXTRACT} has the ability to automatically
+reject points from the operation, if they are farther away from the
+parametrized fit than is expected from the calculated uncertainty in each
+pixel.  This feature includes rejection of points from the spectrum itself,
+something which is not easy to do with the \comm{ZAP} command in many cases.
+
+The algorithm which \comm{EXTRACT} uses is beyond the scope of this cookbook,
+but in brief it parametrizes the point spread function (PSF) using
+polynomials.  It also parametrizes the background with polynomials, and should
+a point fall more than a certain tolerance away from its respective fit (using
+the calculated uncertainty) then it is rejected and the fit is repeated.
+Because of the way in which the parametrization is done there are limitations
+to the use of \comm{EXTRACT}.  In particular highly tilted spectra cannot be
+correctly extracted with this command, although highly creative use of the
+\comm{SHIFT} command with a model may allow the user to ``fake it.''  Also, it
+is known that the polynomial parametrization of the PSF is not very accurate
+with high flux levels, and hence any spectrum which is well-exposed should be
+created with \comm{MASH} or \comm{SPECTROID}. The value of \comm{EXTRACT} in
+improving the signal-to-noise in a spectrum is only manifest in {\it very}
+faint spectra, those less than 5\% of the night sky, and hence it is not used
+very often.
+
+\subsection{Spatial Distributions and 2-D Distortion Corrections}
+
+One of the nice features of long-slit spectroscopy is the ability to map out
+the intensity of a particular line or other feature as a function of position
+along the slit.  To do this simply treat the line as a spectrum and the slit
+direction as the dispersion direction.  Then \comm{MASH} or \comm{SPECTROID}
+can be used to extract the spatial distribution of the feature.
+
+The \comm{SPECTROID} command can also be used in its \comm{NOMASH} mode to map
+out the center of a line along the slit, which may be useful, for example, in
+showing the velocity of a feature as a function of position along the slit.
+It can also be used to map the distortions of the instrument along both the
+dispersion and the slit directions.  But no one but Jesus knows how to do
+this.
+
+\subsection{``Re-fluxing'' and ``Atmospheric Correctors''}
+
+The normal observing procedures usually do not allow for a particularly
+accurate absolute flux calibration because of slit losses and differential
+atmospheric refraction.  The former effect is by far the larger, and does not
+adversely affect the {\it relative} flux calibration, and hence line ratios.
+Normally observers are not overly concerned with the absolute flux levels, as
+long as the relative levels are accurate. However, there are observing
+techniques which allow quite accurate absolute fluxing of objects.  In general
+the observer must take a spectrum of the object using a ``normal'' slit width
+to retain spectral resolution.  But then a shorter, ``wide-slit'' observation
+can be taken in which the slit width is increased to a size which will
+encompass the total flux from the object.  The division of the smoothed
+wide-slit spectrum by the smoothed normal spectrum yields a
+wavelength-dependent slit loss correction.  This technique is often called
+``re-fluxing.''  In this case the flux standards taken throughout the night
+must also be taken with a wide slit to assure that all of {\it their} light
+has entered the slit.
+
+As mentioned above there are certain night sky absorption features which are
+not easily removed from the spectrum with normal sky subtraction techniques.
+In particular, the water vapor content of the atmosphere changes dramatically
+from hour to hour along one line of sight through the atmosphere, as well as
+from one line of sight to another.  Hence, atmospheric correction of these
+water absorption features is often done using a star which has few lines in
+the spectral region of interest and which is as nearby in the sky as possible
+to the object to be corrected.  The spectrum of this ``atmospheric standard''
+must be taken close in time to the object's spectrum to assure accurate
+results.
+
+%\end{document}
+%\end

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>AUTOMARK: Locate Stars Automatically in an Image</TITLE>
+<META NAME="description" CONTENT="AUTOMARK: Locate Stars Automatically in an Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0016170000000000000000">
+AUTOMARK: Locate Stars Automatically in an Image</A>
+</H1>
+
+<!-- linkto automark.html -->
+<A NAME="7608"></A>
+<A NAME="7609"></A>
+<BR>
+
+<BR>
+
+<P>
+AUTOMARK finds objects on an image, storing their positions in a photometry
+file.  It works this way: 
+
+<UL>
+<LI>the program first finds all local peaks in the image
+   that have values between those given in RANGE.  
+</LI>
+<LI>at each of these peaks, it computes a centroid in a box
+   of size (2 * rad - 1).  These centroids are the locations
+   of the stars on the image.
+</LI>
+<LI>if this location falls within DMIN pixels of an already
+           marked star, it is rejected. The default value for DMIN is 1.
+</LI>
+</UL>
+REJECT is used to reject stars that are near masked pixels.  See MASK for
+instructions on masking pixels. RADIUS should be set to a value that is
+near the FWHM of the stars in pixels.  REJECT should be at least 3 times
+RADIUS.  REJECT=0 (or REJECT not given) means that stars will be found all
+over the image.  Default values are RADIUS=2 and REJECT=0.
+
+<P>
+The centroiding algorithm will recompute the centroid using a shifted
+region if the last centroid falls off the middle of the centroiding
+region. If it does not converge within 6 iterations, it does not mark the
+object. The maximum number of iterations can be changed with the NITER=n
+keyword. Also, you can force the program to find something by using the
+FORCE keyword, in which case the routine will use the last centroid
+computed, regardless of whether it has converged or not - be cautious with
+this!
+
+<P>
+Note that this program will find high points in an image which are not
+stars.  It will center on galaxies, cosmic ray hits, etc.  The program was
+designed for moderately crowded images with few defects - images for which
+the number of stars is much larger than the number of defects.  Use MASK to
+mark cosmic ray hits, bad columns, galaxies, etc.
+
+<P>
+If no RANGE of peak values is given, the program will center on peaks with
+heights between 0 and 1.0E10.  If only one value is given, it will find
+peaks with values from that given upwards to 1.0E10.
+
+<P>
+AUTOMARK appends to the current photometry file, if there is one.  If the
+keyword NEW is given, it creates a new list.
+
+<P>
+Object ID numbers which will be output into DAOPHOT files using the SAVE
+DAO= or SAVE COO= command can be specified with the ID= or OBSNUM
+keywords. Using ID=id associates the first detection with the number 'id',
+then subsequent detections have 'id' incremented by one.  The observation
+number (from the FITS header value OBSNUM) will be coded into the ID number
+if the OBSNUM keyword is specified.
+
+<P>
+Example: 
+<BR>
+
+<BR>
+A 'local peak' is defined as a pixel for which ALL 8 adjacent pixels (left,
+right, top, bottom, and the 4 diagonals) have lower values.
+
+<P>
+Here is a procedure which masks pixels larger than a certain value, then
+finds the stars.  This rejection of bright stars can be used to eliminate
+saturated stars.  The program also masks the edge pixels so that stars too
+close to the borders of the image are not found.
+
+<P>
+<PRE>
+  PRINTF 'PROCEDURE FINDALLSTARS'                       ! PRINT HEADER.
+  PRINTF 'THIS PROCEDURE FINDS ALL STARS ON AN IMAGE.'
+  ASK         'USE WHICH IMAGE                             &gt;&gt; ' I
+  ASK         'WHAT IS THE BRIGHT LIMIT FOR STARS          &gt;&gt; ' BRIGHT
+  ASK         'WHAT IS THE FAINT  LIMIT FOR STARS          &gt;&gt; ' FAINT
+  ASK         'AVOIDANCE RADIUS FOR MASKED/EDGE PIXELS     &gt;&gt; ' REJECT
+  ASK         'RADIUS FOR COMPUTATION OF CENTROID          &gt;&gt; ' RAD
+  STRING OPT '?TYPE NEW TO START A NEW LIST, OR HIT RETURN &gt;&gt; ' OPT
+  UNMASK! CLEAR MASK LIST
+  !  Insert here a call for masking pixels other than the edges.
+  ER=SR[I]+NR[I]-1 EC=SC[I]+NC[I]-1                 ! FIND END ROW, COLUMN
+  MASK R=SR[I] R=ER C=SC[I] C=EC                    ! MASK EDGES
+  CLIP $I MASKONLY VMAX=BRIGHT                      ! MASK BRIGHT STARS
+  AUTOMARK $I RADIUS=RAD REJECT=REJECT RANGE=FAINT,BRIGHT {OPT}
+  END
+</PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

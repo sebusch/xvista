@@ -1,0 +1,42 @@
+This is a micro-attempt to describe where all these colormap files originated.
+===============================================================================
+The following files were a part of the Lick Vista Version 3 color directory
+on the VMS systems.  This directory listing gives some idea when they were
+created.  Note that this shows them in the .CLR form, which was the only
+format stored on the VMS systems.  Most of these were designed for old-style
+frame buffers which displayed a single image at a time.  Accordingly, they
+have 256 entries.  Often the first and last colors are unusual in expectation
+that the cursor will be using those colors.
+
+BLUE.CLR;1                2  29-MAY-1987 19:30
+BW.CLR;1                  2  21-FEB-1986 00:00
+BW2.CLR;1                 2  23-AUG-1987 15:59
+GREEN.CLR;1               2  29-MAY-1987 19:30
+IBW.CLR;1                 2   6-OCT-1982 12:26
+LOGBW.CLR;1               2  13-FEB-1984 07:58
+NEWIBW.CLR;1              2  31-MAY-1987 21:11
+OLDRAIN.CLR;1             2   4-SEP-1982 14:16
+PRISM.CLR;1               2  20-AUG-1984 00:00
+RAIN.CLR;1                2   8-AUG-1989 15:24
+RED.CLR;1                 2  29-MAY-1987 19:30
+STAR.CLR;1                2  23-FEB-1983 00:00
+TEMPER.CLR;1              2  24-FEB-1983 00:00
+TEST.CLR;1                2  24-SEP-1983 00:00
+TEST1.CLR;1               2  16-APR-1984 00:00
+TEST2.CLR;1               2  16-APR-1984 00:00
+TODBW.CLR;1               2  23-JUN-1983 00:00
+TWODMAP.CLR;1             2  22-APR-1984 00:00
+WRB.CLR;1                 2   5-AUG-1982 00:00
+WRBB.CLR;2                2   8-AUG-1989 15:24
+WRMB.CLR;2                2   7-AUG-1982 12:28
+WYGB.CLR;1                2  18-JUN-1983 00:00
+-------------------------------------------------------------------------------
+The colormaps "COLOR" and "CONTOUR" existed from early 8-bit framebuffer days
+on the data-acquisition systems on Mt. Hamilton.
+-------------------------------------------------------------------------------
+The colormap "MONGO" was generated on-the-fly by an algorithm in the Mongo
+display driver for the AED512.  Comments in the code imply that it was
+"taken from" Wilson A. Hoffman.
+-------------------------------------------------------------------------------
+Anybody else knowing the history of these colormaps is welcome to tell it.
+===============================================================================

@@ -1,0 +1,78 @@
+	SUBROUTINE CROSS(XP,YP,XQ,YQ,X1,X2,Y1,Y2,XC,YC,XD,YD,OK)
+C Return segment XC,YC,XD,YD where the segment XP,YP,XQ,YQ crosses the
+C box X1,Y1,X2,Y2. Set OK to FALSE if never in the box.
+C It is assumed that X1 < X2 and Y1 < Y2.
+c       Modified by De Clarke July 18 1984 according to suggestions made
+c       by Richard Stover to take out the boundary calculation error.
+	LOGICAL OK
+	XC = XP
+	YC = YP
+	XD = XQ
+	YD = YQ
+c       This following IF clause was moved from down below and changed.
+	IF((XC.GE.X1.AND.XC.LE.X2.AND.YC.GE.Y1.AND.YC.LE.Y2) .OR.
+     &     (XD.GE.X1.AND.XD.LE.X2.AND.YD.GE.Y1.AND.YD.LE.Y2)) THEN
+	    OK = .TRUE.
+	ELSE
+	    OK = .FALSE.
+	    RETURN
+	ENDIF
+C Cross left bdy?
+c       IF((XC-X1)*(XD-X1).LT.0) THEN
+	IF((XC .LT. X1) .OR. (XD .LT. X1)) THEN
+	    Y = YC + (YD-YC)*(X1-XC)/(XD-XC)
+	    IF(XC-X1.GT.0) THEN
+		XD = X1
+		YD = Y
+	    ELSE
+		XC = X1
+		YC = Y
+	    ENDIF
+	ENDIF
+C Cross right bdy?
+c       IF((XC-X2)*(XD-X2).LT.0) THEN
+	IF((XC .GT. X2) .OR. (XD .GT. X2)) THEN
+	    Y = YC + (YD-YC)*(X2-XC)/(XD-XC)
+	    IF(X2-XC.GT.0) THEN
+		XD = X2
+		YD = Y
+	    ELSE
+		XC = X2
+		YC = Y
+	    ENDIF
+	ENDIF
+C Cross bottom bdy?
+c       IF((YC-Y1)*(YD-Y1).LT.0) THEN
+	IF((YC .LT. Y1) .OR. (YD .LT. Y1)) THEN
+	    X = XC + (XD-XC)*(Y1-YC)/(YD-YC)
+	    IF(YC-Y1.GT.0) THEN
+		YD = Y1
+		XD = X
+	    ELSE
+		YC = Y1
+		XC = X
+	    ENDIF
+	ENDIF
+C Cross top bdy?
+c       IF((YC-Y2)*(YD-Y2).LT.0) THEN
+	IF((YC .GT. Y2) .OR. (YD .GT. Y2)) THEN
+	    X = XC + (XD-XC)*(Y2-YC)/(YD-YC)
+	    IF(Y2-YC.GT.0) THEN
+		YD = Y2
+		XD = X
+	    ELSE
+		YC = Y2
+		XC = X
+	    ENDIF
+	ENDIF
+
+c       This has been moved up top...
+c       IF(XC.GE.X1.AND.XC.LE.X2.AND.YC.GE.Y1.AND.YC.LE.Y2 .AND.
+c       1  XD.GE.X1.AND.XD.LE.X2.AND.YD.GE.Y1.AND.YD.LE.Y2) THEN
+c           OK = .TRUE.
+c       ELSE
+c           OK = .FALSE.
+c       ENDIF
+
+	RETURN
+	END

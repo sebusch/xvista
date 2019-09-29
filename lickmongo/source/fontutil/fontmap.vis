@@ -1,0 +1,7 @@
+NUMFONT 6     There are 6 fonts defined by this fontmap file
+include 'simroman.fmp'
+include 'visgreek.fmp'
+include 'crtscrpt.fmp'
+include 'mgotonry.fmp'
+include 'comitalc.fmp'
+include 'comroman.fmp'

@@ -1,0 +1,103 @@
+
+<H1><A NAME="SECTION00890000000000000000">
+RPLOT: Radial Intensity Plot of an Object in an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml275#
+<BR>
+<tex2html_image_mark>#command2990#
+<BR>
+
+<P>
+This program makes a simple radial intensity plot of a section of an image.
+If the object is a star, it shows a mean point-spread function profile.  An
+interactive version that works off the TV display is available via the
+TVRPLOT command.
+
+<P>
+The radial intensity plot is formed by finding the radius to all points
+within a given box around the specified location and plotting intensity
+versus radius.  Each point making up the plot is from a single pixel; no
+interpolation is done.  The effect is to produce an azimuthally wrapped
+(not averaged) plot of intensity.  For example, if doing RPLOT on the image
+of a star, if that star is round, then a fairly clean radial point-spread
+function profile, will be plotted.  If the star is elliptical (due to bad
+guiding or focus), the radial brightness profile will be a fuzzy cloud of
+points.
+
+<P>
+The center of the radial plot may be specified in one of two ways:
+
+<OL>
+<LI><#3014#>The center is as defined in the AXES common block.  You
+        must have run the AXES command on the image before invoking
+        RPLOT.<#3014#>
+</LI>
+<LI><#3015#>The center is specified on the command line using the CEN= keyword.<#3015#>
+</LI>
+</OL>
+
+<P>
+Centers may be integer or fractional pixel values, but the size of the
+search region will be truncated to integer pixel intervals.
+
+<P>
+The interactive routine, TVRPLOT, allows the user to select the center of
+the radial plot with the interactive display cursor on the currently
+displayed image (see TVRPLOT).  A hardcopy plot may be generated using the
+HARD keyword.
+
+<P>
+NOERASE suppresses erasing of the plotting window, allowing you to
+superimpose subsequent radial plots on top of each other.  
+
+<P>
+LOG will plot the logarithm of the intensity as a function of radius.
+
+<P>
+COLOR=c changes
+the color of the points plotted.  The default color is white (1).  At
+present only the 7 ;SPMquot;primary;SPMquot; graphics colors are available:
+
+<P>
+<DIV ALIGN="CENTER">
+<#3018#><B>Color Codes</B><#3018#>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Code</TD>
+<TD ALIGN="CENTER">Color</TD>
+<TD ALIGN="CENTER">Code</TD>
+<TD ALIGN="CENTER">Color</TD>
+</TR>
+<TR><TD ALIGN="CENTER">0</TD>
+<TD ALIGN="CENTER">background</TD>
+<TD ALIGN="CENTER">4</TD>
+<TD ALIGN="CENTER">Blue</TD>
+</TR>
+<TR><TD ALIGN="CENTER">1</TD>
+<TD ALIGN="CENTER">foreground</TD>
+<TD ALIGN="CENTER">5</TD>
+<TD ALIGN="CENTER">Yellow</TD>
+</TR>
+<TR><TD ALIGN="CENTER">2</TD>
+<TD ALIGN="CENTER">Red</TD>
+<TD ALIGN="CENTER">6</TD>
+<TD ALIGN="CENTER">Magenta</TD>
+</TR>
+<TR><TD ALIGN="CENTER">3</TD>
+<TD ALIGN="CENTER">Green</TD>
+<TD ALIGN="CENTER">7</TD>
+<TD ALIGN="CENTER">Cyan</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+Colors may be used in conjunction with NOERASE to overlay two different
+radial profiles, using the colors to distinguish them.
+
+<P>
+<#3023#>Examples:<#3023#>
+<BR>
+<tex2html_image_mark>#example3024#
+<BR>
+
+<P>

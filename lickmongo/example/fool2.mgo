@@ -1,0 +1,10 @@
+expand 1
+limits 0 10 0 10
+erase
+box
+grid 1
+xlabel an optical illusion
+expand 50
+relocate 5 5
+ptype 40 1
+dot

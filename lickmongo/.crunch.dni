@@ -1,0 +1,4 @@
+#!/bin/csh
+setenv  UNIXROOT        /usr/tmp/lick
+setenv  VMSROOT         'crunch::sys$sysdevice:[users.mongo.lick'
+setenv  VMSUSER         mongo

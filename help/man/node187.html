@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>SECTOR: Surface Photometry of Star Clusters or Complex Objects</TITLE>
+<META NAME="description" CONTENT="SECTOR: Surface Photometry of Star Clusters or Complex Objects">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0015110000000000000000">
+SECTOR: Surface Photometry of Star Clusters or Complex Objects</A>
+</H1>
+
+<!-- linkto sector.html -->
+<A NAME="6998"></A>
+<BR>
+
+<BR>
+
+<P>
+SECTOR measures the brightness distribution of a star cluster or any other
+extended object by adding up the flux in a set of circular isophotal rings.
+Errors in brightness in any ring are calculated by dividing the ring into
+eight angular sectors and intercomparing the individual sector results.
+The final profile is saved in the MULT block, and can be saved or gotten
+with the MULT keyword in the SAVE or GET commands, printed in the PRINT
+command, or plotted with the PLOT command.  The object can also be
+reconstructed with the RENUC command.
+
+<P>
+The center should be found first with the AUTOCEN or AXES command.  The C
+keyword can be used to override the default center.  Isophotes increase
+linearly from the center at first, and are spaced by the lin entry with the
+RAD keyword.  When a geometric increment given by the geo entry gives a
+larger spacing, it is used to space the outer isophotes.  The radii used
+are at the radii at which the area of the isophotal rings is evenly
+divided.  Pixels can be excluded from the calculation by setting them to
+zero.
+
+<P>
+See Also: PROFILE, ANNULUS, AXES
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

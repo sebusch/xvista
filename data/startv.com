@@ -1,0 +1,6 @@
+alias tv 'tv clip'
+alias postit 'postit clip'
+alias cop 'copy'
+alias at 'rd dst'
+alias plot 'plot hist'
+alias comb 'combine gain=7.5 rn=13 neff=3.5'

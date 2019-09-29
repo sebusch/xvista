@@ -1,0 +1,42 @@
+% single font putlabel macro
+%
+/SimPutLabelDict 20 dict def
+/stringparm { /textstr exch def
+newpath 0 0 moveto
+([) true charpath flattenpath pathbbox
+/ury exch def /urx exch def /lly exch def
+/llx exch def /ybot lly def /ycap ury def
+/ytop 15. lly add def
+/ycen ury 2. div def
+textstr stringwidth
+pop /xwid exch def } def
+%
+/xjust{/xj exch def
+/xj xj 1. add def /xj xj neg def
+/xoff xj xwid mul def
+/xoff xoff 2. div def } def
+%
+/yjust{ /yj exch def
+yj -2 eq {/yoff ybot neg def} if
+yj -1 eq {/yoff 0 def} if
+yj  0 eq {/yoff ycen neg def} if
+yj  1 eq {/yoff ycap neg def} if
+yj  2 eq {/yoff ytop neg def} if } def
+%
+/putlabel { SimPutLabelDict begin
+/textstr exch def
+/expand exch def /rot exch def
+/yj exch def /xj exch def
+/ylab exch def /xlab exch def
+gsave
+xlab ylab translate
+rot rotate
+expand expand scale
+textstr stringparm
+xj xjust
+yj yjust
+0 0 moveto
+xoff yoff rmoveto
+textstr show
+grestore end } def
+%

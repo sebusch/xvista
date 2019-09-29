@@ -1,0 +1,39 @@
+
+<H1><A NAME="SECTION006100000000000000000">
+FITS: Insert/Edit a FITS Header Card</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml226#
+
+<P>
+<A NAME="1952"><tex2html_anchor_invisible_mark></A>
+<A NAME="1953"><tex2html_anchor_invisible_mark></A>
+<A NAME="1954"><tex2html_anchor_invisible_mark></A>
+<A NAME="1955"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1956#
+<BR>
+Use one of these forms to insert a new FITS header card into the image
+header, or to change the value of an existing FITS header card.  If you
+specify the optional PROF keyword rather than a buffer number, the new
+header card will be inserted into the internal PROFILE header (see PROFILE
+and SAVE PROF).  The FITS keyword name may be no longer than 8 characters.
+
+<P>
+Except for two special cases, a FITS card already in the header with the
+same name will be replaced.  The two exceptions are CHAR=COMMENT and
+CHAR=HISTORY, which will always add a new COMMENT or HISTORY card,
+respectively, to the header.  
+
+<P>
+The float_value for the FLOAT keyword should be a floating point constant
+or an arithmetic expression.  The integer_value for the INT keyword should
+be an integer constant or an arithmetic expression whose result will be
+rounded to the nearest integer.
+
+<P>
+<#1969#>Examples:<#1969#>
+<BR>
+<tex2html_image_mark>#example1970#
+<BR>
+
+<P>

@@ -1,0 +1,21 @@
+
+<H1><A NAME="SECTION001680000000000000000">
+NSTAR: DAOPHOT NSTAR Command</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml474#
+<BR>
+<tex2html_image_mark>#command7545#
+<BR>
+
+<P>
+Fits stars in buffer im simultaneously using groups created by GROUP.
+Requires an input PSF file and an input GROUP file, which will be prompted
+for, or can be specified with the DAOFILES PSF=psffile GRP=grpfile
+command. The output file can be given with the DAOFILES PRO=outfile
+command, or it will be prompted for. The NCLIP= keyword allows the user to
+set the number of iterations required in NSTAR before pixels which do not
+seem to fit will have the weights reduced.  The standard value of NCLIP in
+VISTA is 5. In Stetson's version of DAOPHOT, NCLIP effectively has the
+value of 1 (although this may depend on the exact version of DAOPHOT).
+
+<P>

@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>COMBINE: Combine Photometry Files using Magnitudes and/or Distances</TITLE>
+<META NAME="description" CONTENT="COMBINE: Combine Photometry Files using Magnitudes and/or Distances">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0016230000000000000000">
+COMBINE: Combine Photometry Files using Magnitudes and/or 
+        Distances</A>
+</H1>
+
+<!-- linkto combine.html -->
+<BR>
+
+<BR>
+
+<P>
+COMBINE takes a reference file and a data file, both in DAOPHOT style, and
+merges them, matching stars by position and magnitude. There are two main
+modes. The first produces a .MER file which has the magnitudes from both
+frames, the difference, and lots of other informations. The second mode,
+used when the CMB= keyword is used, produces a file which has the positions
+and magnitudes of both frames. This file can be rerun through COMBINE to
+add more frames. This is used to combine multiple observations of a given
+set of stars. The first mode is useful only for comparing 2 frames. It is
+largely historical.
+
+<P>
+It is strongly suggested that both files be sorted from brightest to
+faintest before running. Files can be specified by REF=file and DAT=file,
+or will be prompted for. They must have star number, column position, row
+position, and brightness in the first 4 columns. The brightness will be
+assumed to be in magnitudes if the file has extension .NST, .TST., or .COM,
+or if the keyword REFMAG is specified.
+
+<P>
+Stars will be based on a matching criteria of magnitudes and/or distance,
+with the maximum magnitude difference specified by MAG=maxm and the maximum
+position difference by DIST=maxd. Either criterion can be shut off by
+supplying a very large value. The defaults are infinity magnitudes and
+1. pixel for maxm and maxd. Several passes may be made through the
+reference with successively less stringent matching criteria in distance by
+specifying several distance criteria with the DIST=d1,d2,... keyword.
+
+<P>
+If the REF keyword is specified, the coordinates of objects in each frame
+will be transformed according to transformations loaded in the header using
+the REGISTER command. Alternatively, use the OFFSET command to transform
+the coordinates before running COMBINE.
+
+<P>
+The output in the first mode is a .MER file with a variety of information, 
+as follows, by column: 
+
+<P>
+<DIV ALIGN="CENTER">
+Contents of the .MER File: 
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Column</TD>
+<TD ALIGN="LEFT">Parameter</TD>
+<TD ALIGN="CENTER">Column</TD>
+<TD ALIGN="LEFT">Parameter</TD>
+</TR>
+<TR><TD ALIGN="CENTER">1</TD>
+<TD ALIGN="LEFT">True mag</TD>
+<TD ALIGN="CENTER">9</TD>
+<TD ALIGN="LEFT"><IMG
+ WIDTH="14" HEIGHT="24" ALIGN="MIDDLE" BORDER="0"
+ SRC="img154.png"
+ ALT="$-$">2 sigma</TD>
+</TR>
+<TR><TD ALIGN="CENTER">2</TD>
+<TD ALIGN="LEFT">Obs mag</TD>
+<TD ALIGN="CENTER">10</TD>
+<TD ALIGN="LEFT">true frac dist</TD>
+</TR>
+<TR><TD ALIGN="CENTER">3</TD>
+<TD ALIGN="LEFT">diff</TD>
+<TD ALIGN="CENTER">11</TD>
+<TD ALIGN="LEFT">obs. magnitude error</TD>
+</TR>
+<TR><TD ALIGN="CENTER">4</TD>
+<TD ALIGN="LEFT">obs. row</TD>
+<TD ALIGN="CENTER">12</TD>
+<TD ALIGN="LEFT">position error</TD>
+</TR>
+<TR><TD ALIGN="CENTER">5</TD>
+<TD ALIGN="LEFT">obs. col</TD>
+<TD ALIGN="CENTER">13</TD>
+<TD ALIGN="LEFT">chi</TD>
+</TR>
+<TR><TD ALIGN="CENTER">6</TD>
+<TD ALIGN="LEFT">true cnts</TD>
+<TD ALIGN="CENTER">14</TD>
+<TD ALIGN="LEFT">sharp</TD>
+</TR>
+<TR><TD ALIGN="CENTER">7</TD>
+<TD ALIGN="LEFT">true S/N</TD>
+<TD ALIGN="CENTER">15</TD>
+<TD ALIGN="LEFT">niter</TD>
+</TR>
+<TR><TD ALIGN="CENTER">8</TD>
+<TD ALIGN="LEFT">2 sigma</TD>
+<TD ALIGN="CENTER">16</TD>
+<TD ALIGN="LEFT">DAOPHOT star number</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+To do the noise estimates properly, one must specify the sky value with
+SKY=, gain with GAIN=, readout noise(electrons) with RN=, NEFF=. To
+accommodate tests with the same reference file at various levels, we have
+the keywords FACT=f, which specifies a multiplier to be applied to the
+reference counts, and NORM=n, which specifies a 0 point. These default to 1
+and 0 (for DAOPHOT magnitudes), respectively.
+
+<P>
+With the COMB or COMB= option, we will produce a new version of the
+reference file, with additional columns for matched information from the
+data file. This can be rerun through COMBINE as the reference file to get
+yet another set of matched observations, etc., up to six times.
+
+<P>
+With the PLOT option, will produce a plot of REF MAG vs. DELTA MAG and a
+histogram of matched and unmatched stars as a function of magnitude. With
+the MER option, this plot is made directly from a previously existing .MER
+file, if the matching has already been done previously (e.g., in batch).
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

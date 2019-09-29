@@ -1,0 +1,161 @@
+LickMongo Installation Instructions
+Last Update: 1996 June 23 
+
+   In what is below, /mypath/ is the path to where you will install the
+   software, and "machine" is the flavor of machine you are on, where:
+
+   machine = solaris for Sun Sparcs running Solaris 4.x (aka: SunOS 5.x)
+           = sun4 for Sun Sparcs running SunOS 4.x
+           = osf1axp for DEC Alphas running OSF1
+
+   The raw source distribution is ~3Mb, and requires ~4Mb total
+   with all binaries and libraries.  Only Sun4, Solaris, DEC Alpha, and
+   Linux are fully supported at present, but hooks are in place for other
+   architectures, but you are mostly on your own with those.
+
+
+1) Unpacking
+
+   You need to unpack the source-only distribution into the directory
+   tree where you wish to install LickMongo.  The tar file (tape or 
+   compressed tar via anonymous ftp) will create a lickmongo/
+   directory tree with the source code.
+
+
+   a) tape distribution:
+
+        % cd /mypath/
+        % tar xvf /dev/nrst? 
+        
+      (replace ? by the tape device ID). 
+
+   b) ftp compressed tar distribution (file pvtar.Z)
+
+        % cd /mypath/
+        % zcat lmtar.Z | tar xvf -
+
+      Don't remove lmtar.Z until you are sure things work.
+
+        
+2) Installing LickMongo
+
+
+*********************************
+IMPORTANT STUFF BEFORE YOU START!
+
+You *must not be root* when installing LickMongo.  The best thing to do is
+to setup a separate "maintenance" account with login name "mongo", to allow
+a non-root user to maintain the package.  The reason for this is
+LickMongo's autoconfiguring make file, which needs to be able to execute
+programs in ./, a security problem for root-level users.
+
+The second major source of first-time problems is that the mongo user
+account is often configured with the wrong path, so that ./ is not the
+first item in the PATH.  Further, you must make sure that all paths to
+compilers and their libraries are correct for your site.
+
+*********************************
+
+   To build LickMongo on your system, you need to work in the source/
+   directory:
+
+        % cd /mypath/lickmongo/source
+
+   You need to modify the file Config.machine.  The only lines that
+   should need modification are to replace "/path/" with whatever /mypath/
+   above is.  These point to the LickMongo auxillary libraries.
+
+        % cp Config.machine Config.machine.old
+        % <your-favorite-editor> Config.machine
+
+   Now clear out any stale executables or libraries
+
+        % make clean
+        % rm make.barf (may already be gone)
+
+   And build the package
+
+        % make >& make.barf &
+
+   This takes about 10-20 minutes on a Sparc 5/10 class machine.  Examine
+   "make.barf" for errors,
+
+	% grep -i error make.barf
+
+   will help you find most compiler and loader errors.
+
+   Try running the mongo it built
+
+        % mongo.machine
+
+   do the following
+
+        * term 11
+        * expand 2
+        * box
+
+   It should be able to find the local binary font tables, open an X11
+   window and draw a box with oversized labels.
+
+   If it works, install it:
+
+        % make install
+
+   The executable (mongo.machine) and libraries (libmgo.machine.a)
+   will reside in /mypath/lickmongo/
+
+
+3) Troubleshooting:
+   
+   If it cannot open an X11 window, it could not find the X11 libraries,
+   see and then execute the .../source/Xwhere csh script and modify the make
+   file appropriately after determining what search strategy finds
+   the X libraries.  If your sysadmin has followed standard practice
+   (e.g., windows as installed with Solaris or SunOS by the factory),
+   this will be unnecessary.  If your sysadmin has gotten clever, you
+   may need to play around.  Once you have done make, go back to
+   the installation at top again (after modifying Config.machine)
+
+   If it cannot find the font tables, if on a big-endian machine (Sparcs)
+   do the following
+
+        % cd /mypath/lickmongo
+        % cp fonts.big/* .
+
+   If on a small-endian machine (Alpha) do
+        
+        % cd /mypath/lickmongo
+        % cp fonts.ltl/* .
+
+   And then 
+
+        % cd source
+        % mongo.machine
+
+   and try the test again with the repaired fonts.
+
+
+4) System Installation:
+
+   On some systems, you will want mongo and its libraries to be globally
+   accessible to all users.  This is best done by installing appropriate
+   symbolic links as follows:
+
+   In /usr/local/bin:
+
+	ln -s /mypath/lickmongo/mongo.machine mongo
+
+   which makes an executable object, "/usr/local/bin/mongo"
+
+   In /usr/local/lib:
+
+	ln -s /mypath/lickmongo/libmgo.machine.a libmgo.a
+
+   which makes a linkable library: "/usr/local/lib/libmgo.a"
+
+   These are suggestions, some sites use different conventions for
+   local binaries and libraries added onto their basic systems.
+
+   A man-page, mongo.l, is available for installation under your
+   local man pages, but is somewhat out of date.
+

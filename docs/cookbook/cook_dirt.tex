@@ -1,0 +1,355 @@
+%
+%  VISTA Cookbook;  Chapter X.  Dirty Tricks
+%
+%  Began:  1988 August 9
+%
+%  Last Revision:  1988 August 31
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:dirt
+%
+
+
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+%
+%\begin{document}
+
+\chapter{Dirty Tricks}
+
+The VISTA plotting routines are as general as we could make them, and as a
+result, there is a wide range of possibilities.  Many of these take the form
+of what we call ``dirty tricks'' --- little hooks that can enhance the
+appearance of a plot, without trying to re-write huge sections of code to add
+custom features.  These are some of our favorites.  Be warned, however, that
+this is genuine ``black belt'' stuff.
+
+\section{User Defined Axes for Plots}
+
+The \comm{USER} keyword in the \comm{PLOT} command may be used to make custom
+scalings and labelling of the user coordinates.  They work by way of the
+coordinate cards provided in the FITS header.  These cards are as follows, one
+set for each axis (row and columns):
+\begin{verbatim}
+      For Columns:  CRVAL1, CRPIX1, CDELT1, CTYPE1
+
+         For Rows:  CRVAL2, CRPIX2, CDELT2, CTYPE2
+\end{verbatim}
+The internal coordinates of any image are the so-called ``pixel'' coordinates,
+simply: Columns and Rows.  Images displayed by VISTA are always in pixel
+coordinates by default (except for wavelength calibrated spectra).  The user
+may define coordinates which have some physical meaning (like angular measure
+in arcseconds or wavelength in angstroms).  These are called ``world
+coordinates'' or ``physical coordinates'' (in the sense that their units have
+some meaning in the world outside the machine).  The transformation between
+``world'' and ``pixel'' coordinates is through the FITS header cards shown
+above.  The tranformation equations are:
+\begin{verbatim}
+      X(world) = CRVAL1 + CDELT1*(Column - CRPIX1)
+
+      Y(world) = CRVAL2 + CDELT2*(Row - CRPIX2)
+\end{verbatim}
+Where X and Y axes correspond to Columns and Rows respectively. In general,
+the FITS coordinate cards correspond to:
+\begin{verbatim}
+      CRVALn  =  Origin along Axis n in World Coordinates
+      CRPIXn  =  Origin along Axis n in Pixel Coordinates
+      CDELTn  =  Scaling Factor giving relation between
+                 Pixels and World Coordinates
+      n=1 for columns
+      n=2 for rows
+\end{verbatim}
+
+The units of the world coordinates are identified by the \comm{CTYPE1} and
+\comm{CTYPE2} FITS header cards for Columns and Rows respectively.  These
+contain character strings which give the units.  The units of the pixel data
+itself (\eg\ pixel intensities) are given by the \comm{BUNIT} FITS header
+card.
+
+Confusing?  How about an example.  You have a 2-D image in which Columns are
+oriented East towards West in the sky (RA), and Rows are along North towards
+South (Dec).  After some processing, the image pixels measure flux in
+millijanskys (mJy) at 2 microns.  You want to plot profiles of the image of
+the object (a planetary nebula) through the center along both RA (by plotting
+along Row 128), and Dec (by plotting along Column 67).  The pixel scale in
+both rows and columns is 0\arcsecpoint54/pixel, and you want the origin to be
+the central star of the planetary, which is at \comm{(C,R)=(67,128)}.  The
+transformation equations between image pixels (C,R) and world coords (RA,Dec)
+is then:
+\begin{verbatim}
+      RA = 0.0 - 0.54*(C - 67)
+     Dec = 0.0 - 0.54*(R - 128)
+\end{verbatim}
+Note that because RA increases from West to East, and column number increases
+in the opposite direction, the scale factor is $-0.54$ rather than $+0.54$.
+Since the Row number increase North to South (top to bottom), the scale factor
+is $-0.54$ as for columns.  This means that the necessary FITS coordinate
+cards you must load are:
+\begin{verbatim}
+      CRVAL1 = 0.0        CRVAL2 = 0.0
+      CRPIX1 = 67         CRPIX2 = 128
+      CDELT1 = -0.54      CDELT2 = -0.54
+\end{verbatim}
+And, to get the units to be plotted right, you would load these units cards
+into the header:
+\begin{verbatim}
+      CTYPE1 = 'Right Ascension (arcsec)'
+      CTYPE2 = 'Declination (arcsec)'
+      BUNIT = 'Flux (mJy)'
+\end{verbatim}
+
+Since the units cards are used for keeping track of the image internally
+to VISTA, you need to proceed with a little caution.  Suppose the
+image of interest is in Buffer 1.  We want to copy it into Buffer 2
+and then start monkeying with the FITS cards to get our plots.  Use the
+following procedure:
+
+\begin{command}
+      \item COPY 2 1
+      \item FITS 2 FLOAT=CRVAL1 0.0
+      \item FITS 2 FLOAT=CRPIX1 67.
+      \item FITS 2 FLOAT=CDELT1 -0.54
+      \item FITS 2 FLOAT=CRVAL2 0.0
+      \item FITS 2 FLOAT=CRPIX2 128.
+      \item FITS 2 FLOAT=CDELT2 -0.54
+      \item FITS 2 CHAR=CTYPE1 'Right Ascension (arcsec)'
+      \item FITS 2 CHAR=CTYPE2 'Declination (arcsec)'
+      \item FITS 2 CHAR=BUNIT 'Flux (mJy)'
+      \item COPY 2 2
+\end{command}
+
+The FITS cards for the pixel-to-world coordinate transformations have all been
+loaded.  The command \comm{COPY 2 2} makes VISTA happy again, as it now knows
+where the image is.  Now, make the plots, first along RA (Columns), then along
+Dec (Rows):
+
+\begin{command}
+      \item PLOT 2 R=128 USER
+      \item PLOT 2 C=67 USER
+\end{command}
+
+In order to be as general as possible, I chose an example in which both axes
+of the image were changed.  If the image was a spectrum (1-D image), then you
+would only have changed the \comm{CRVAL1}, \comm{CRPIX1}, \comm{CDELT1},
+\comm{CTYPE1}, and \comm{BUNIT} cards in the FITS header. In the example
+given, I've used familiar angular coordinates.  They could just as easily have
+been microns along a slit and angstroms of wavelength perpendicular to it.
+There are no limitations to the transformation or the units, except that the
+transforms be linear in one and only one pixel coordinate (true, there is a
+FITS card called \comm{CROTAn} which handles rotations of the given axis, but
+VISTA doesn't handle them in its current incarnation).
+
+It is important to note that VISTA uses the FITS header cards in a somewhat
+non-standard way internally.  This is discussed in detail in Appendix D.  The
+bottom line of this and related dirty tricks which deal with changing these
+particular FITS cards is to be very circumspect.  A little lack of caution,
+and VISTA could crash out from under you --- most often with a fatal virtual
+memory error (VMS will tell you, Unix will just have it wink out of existance
+with a ``bus error, core dumped'' message).
+
+%------------------------------------------------------
+
+\section{Putting Labels on Plots}
+
+The \comm{INT} keyword of the \comm{PLOT} command puts you temporarily into
+the interactive MONGO command environment, with the specified plotting data
+loaded into the X and Y plotting arrays.  Thus, you can have the full power of
+MONGO to make a custom plot at your disposal, without the intermediary of
+having to write the data (somehow) into a 2 column text file of X and Y points
+and then leaving VISTA.
+
+The interactive MONGO prompt is an asterisk ($\ast$).  Once you have the MONGO
+prompt, you can enter all valid interactive MONGO commands. To leave
+interactive MONGO and return to VISTA, type the \comm{END} command.
+
+The X and Y data are pre-loaded by the \comm{PLOT} subroutine.  Pre-prepared
+MONGO macros may be read in using the MONGO command \comm{READ}; do not use
+the \comm{INPUT} command.
+
+There are a number of ways to put labels on a plot once you are in the
+interactive MONGO command level.  The \comm{PUTLABEL} command is the best way,
+specifying the location of the label with \comm{RELOCATE}. For example:  you
+wish to label the H$\alpha$\ and H$\beta$\ emission lines in a spectrum of a
+planetary nebula (with no redshift).  The spectrum is in buffer 10, and you
+want the plot to run from 4000 to 7000\AA, with the lowest intensity at 0.0,
+and the highest intensity autoscaled.  The labels are to be centered over the
+lines.  To do this, you would issue the following sequence of VISTA and MONGO
+commands.  The VISTA commands are indicated with the \comm{GO:} prompt, and
+the MONGO commands with the \comm{*} prompt.
+
+The first pass is to only plot on the screen to get the location of the
+labels right.  The second pass, you repeat the relocate and putlabels
+that gave the best results, this time blind (\ie\ you don't see a plot
+or the results of the plot), and the hardcopy is generated.
+
+\begin{verbatim}
+
+            GO: PLOT 10 XS=4000 XE=7000 MIN=0. INT
+
+            * RELOCATE 4861 1.5E-15
+            * PUTLABEL 5 H\gb
+            * RELOCATE 6563 5.0E-15
+            * PUTLABEL 5 H\ga
+              .
+              .
+         (iterate until the labels look right)
+              .
+              .
+            * END
+
+   (now, do it again, but make a hardcopy)
+
+            GO: PLOT 10 XS=4000 XE=7000 MIN=0. INT HARD
+            * RELOCATE 4861 1.5E-15
+            * PUTLABEL 5 H\gb
+            * RELOCATE 6563 5.0E-15
+            * PUTLABEL 5 H\ga
+            * END
+
+            GO:
+
+\end{verbatim}
+
+While in interactive MONGO, you can erase the screen, re-scale the plot, put
+down your own axis labels and so forth, as if you had read in the data from a
+external file using the \comm{XCOLUMN} and \comm{YCOLUMN} commands in MONGO.
+If you are on a terminal with an interactive cursor, then you can use the
+\comm{CURS} command in MONGO to make placing the labels faster.  The
+possibilites are virtually endless.
+
+If you are unfamiliar with the MONGO package, a copy of the Lick MONGO User's
+Manual has been provided with the VISTA distribution package, and should be
+available from your VISTA custodian.
+
+%------------------------------------------------------
+
+\section{Plotting RA and DEC on Contour Maps}
+
+The \comm{CONTOUR} command also has a \comm{USER} keyword, but since this
+necessitates fooling with FITS header cards used as internal array index
+pointers by VISTA, some care must be taken to avoid crashing VISTA.  The use
+of the FITS header cards is identical to that described above for user defined
+coordinates on plots.  Consider the planetary nebula example from above.  We
+now wish to make a contour map with the origin on the central star centroid
+which has been found to be at \comm{(C,R)=(67.2,127.9)}, and with contours
+spaced every 2 mJy beginning at 1 mJy.  The image is in Buffer 1.  Copy it
+into Buffer 2, and load the appropriate FITS cards as follows:
+\begin{command}
+      \item COPY 2 1
+      \item FITS 2 FLOAT=CRVAL1 0.0
+      \item FITS 2 FLOAT=CRPIX1 67.2
+      \item FITS 2 FLOAT=CDELT1 -0.54
+      \item FITS 2 FLOAT=CRVAL2 0.0
+      \item FITS 2 FLOAT=CRPIX2 127.9
+      \item FITS 2 FLOAT=CDELT2 -0.54
+      \item FITS 2 CHAR=CTYPE1 'Right Ascension (arcsec)'
+      \item FITS 2 CHAR=CTYPE2 'Declination (arcsec)'
+      \item COPY 2 2
+\end{command}
+above, and then type the following command:
+\begin{command}
+      \item CONTOUR 2 LOW=1. DIFF=2. USER TITLE
+\end{command}
+to make the contour map.  An example of a contour map (not of a planetary
+nebula) made this way with VISTA can be found in Pogge (1988, {\it Ap.J.},
+{\bf 328}, 519).  A simple proof that a VISTA dirty trick is potentially
+acceptable by the editor of the {\it Ap.J.}!
+
+%------------------------------------------------------
+
+\section{Preparing Images with Boxes and Scale Bars}
+
+Color photography of the images displayed on the color monitor can make very
+nice, impressive slides for presentation.  A few simple hooks were built-in to
+the \comm{TV} command to give users some latitude in preparing images for
+display.  Actual tricks for photographing off the monitor are not discussed as
+we cannot seem to get a consensus among the photographers at Lick about how to
+do it.  The only common points are: (a) all agree to use color slide film,
+ASA100, and (b) to use a long focal length lens so that the curvature of the
+monitor screen doesn't make the edges go out of focus.  Beyond that advice,
+you're pretty much on your own as to technique.
+
+Few things are more irritating than to have a speaker show slide after slide
+of objects without some identifying label.  Great stuff, to be sure, but what
+is the name of that object?  Also, most images don't have scale bars. So
+someone has to interrupt with ``what is the image scale we're looking at?''.
+The problem here is one of proper form.  You've been staring at these images
+for months.  You know them by name and the image details intimately. But,
+don't forget that (1) your audience has probably never seen these objects
+before, (2) isn't necessarily up on their names, (3) doesn't know a thing
+about your instrument (like image scale), and (4) isn't going to know any of
+it because you told them before flashing up the slide.  Put it all up in front
+of them so they can see it for themselves, and it will be greatly appreciated.
+
+Built into VISTA's \comm{TV} command are two keyword called \comm{TITLE} and
+\comm{TOP} which facilitate putting up image titles.  \comm{TITLE} puts the
+object title (FITS header OBJECT card) on the TV display, without plotting the
+tickmarks or numbers along the axes. \comm{TOP} puts the label over the image,
+rather than below it (which is default).  It's nice to have a box (border)
+around the image, but the axis ticks and labels giving pixel numbers cause too
+much clutter.  Face it AEDs don't do so hot with axis labels despite our best
+efforts unless the image is really big. The trick here is to have a border
+around the image without the ticks.  This is accomplished using the
+\comm{TVBOX} command.  How about an example.
+
+Suppose you want to display the image in Buffer 1 with a border around it and
+the title ``A Cool Galaxy'' centered over the image. Let's say that the image
+zero and span are `0.0' and `1200.0' respectively, and you want to use the
+inverse black and white color map (photonegative), and clip the colormap
+roll-over.  You would do this as follows:
+\begin{command}
+      \item CH 1 'A Cool Galaxy'
+      \item TV 1 Z=0.0 L=1200.0 CF=IBW CLIP TITLE TOP
+      \item BOX 1 SR=SR[1] SC=SC[1] NR=NR[1] NC=NC[1]
+      \item TVBOX BOX=1
+\end{command}
+We're using \comm{TVBOX} with a box which exactly surrounds the image
+displayed to make our border for us.  The keywords \comm{TITLE TOP} on the
+\comm{TV} command tell VISTA to display the image without axis ticks and
+labels, with the image title centered over the top of the image.  Note that it
+was necessary to change the object title to our desired title using the
+\comm{CH} command before displaying the image.
+
+A scale bar, say one indicating 10\arcsec\ on the sky would be nice too, it
+gives your viewer and idea of the size.  In Appendix B, a short command
+procedure called ``BAR'' has been given which will draw a scale bar on the
+image for you.  Put this procedure into a file called ``BAR.PRO'' in your
+procedure directory.  Since we are clipping the image color scale with the
+\comm{TV} command at \comm{L=1200.0}, we will set the ``intensity'' of the bar
+to be 1199.0 (1200--1).  Pick a place for the bar to start (it will be drawn
+to the right of the place you pick) in rows and columns. I'm going to pick
+ROW=300, COL=18.  For the image in question, 10 arcseconds on the sky
+corresponds to 17 pixels on the image.  Use this procedure to draw the bar
+into the image, and redisplay the image.  BAR will ask for the place to draw
+the bar, its length, and its intensity.  NOTE:  BAR will change data values in
+the image, not just draw on the screen.  Best thing to do is copy the image
+into another buffer before hitting it with BAR.
+
+\begin{verbatim}
+      GO: COPY 2 1
+      GO: CALL BAR
+      IMAGE NUMBER ? : 2
+      PUT BAR IN WHAT IMAGE ROW ? : 300
+      STARTING COLUMN ? : 18
+      LENGTH ? : 17
+      INTENSITY VALUE ? : 1199.
+      GO: TV 2 Z=0.0 L=1200.0 CF=IBW CLIP TITLE TOP
+      GO: BOX 2 SR=SR[2] SC=SC[2] NR=NR[2] NC=NC[2]
+      GO: TVBOX BOX=2
+\end{verbatim}
+
+Now, if this is what you want, get your camera and shoot away.
+
+%------------------------------------------------------
+
+
+%\end{document}
+%\end

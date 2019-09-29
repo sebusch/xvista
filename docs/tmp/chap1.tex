@@ -1,0 +1,620 @@
+\chapter{Introduction}
+
+%
+% minor reformatting and editing
+% added use of verbatim environment for some examples.
+% rwp/osu 98Jul26
+%
+
+\section{The VISTA Program}
+\begin{rawhtml}
+<!-- linkto vista.html -->
+\end{rawhtml}
+
+VISTA is an interactive image and spectral reduction and analysis package
+developed at the Lick Observatory.  It is a package which is designed to
+allow efficient reduction and analysis of astronomical observations.
+
+Many other such packages exist. Some possible advantages of VISTA are that
+the routines are primarily memory-based, leading to relatively fast
+execution, routines are command-line driven using optional keywords for
+easy use, and a convenient display interface. Perhaps most importantly, it
+is relatively easy to add new commands/features into VISTA or to modify
+existing ones, once one becomes familiar with the programming
+structure. VISTA is programmed predominantly in FORTRAN.  An introductory
+programmers guide to VISTA is available from
+\htmladdnormallink{http://astro.nmsu.edu/~holtz/vista} 
+{http://astro.nmsu.edu/~holtz/vista}.
+
+This is the manual for VISTA version 5.0, released July 1998.  For
+information on how to obtain the VISTA package and/or how to install it on
+your system, check the URL
+\htmladdnormallink{http://astro.nmsu.edu/~holtz/vista} 
+{http://astro.nmsu.edu/~holtz/vista} or see Appendix A of this manual.
+
+We wish to note that no one officially supports Vista, so we cannot
+guarantee any of the results. All problems, comments, etc. should be
+addressed to the Vista distributor (holtz@nmsu.edu), and, although we
+cannot guarantee a response, we generally try to help.
+
+The manual for VISTA is fairly extensive, with many examples for commands.
+Many sections of the manual give examples of procedures, showing how a
+particular command can be combined with others to create common
+data-reduction operations.
+
+\section{A Brief History of VISTA}
+\begin{rawhtml}
+<!-- linkto origins.html -->
+\end{rawhtml}
+
+VISTA was originally developed by Richard J. Stover and Tod R. Lauer (now
+at NOAO) in 1982 at the University of California, Santa Cruz for use on the
+UC Lick Observatory VAX/VMS systems.  The original intent was to support
+reduction and analysis of data acquired with the first generation of CCD
+detectors coming into use at Lick at that time.  Tod Lauer added much of
+the first surface photometry routines (based in part on routines developed
+by Steve Kent).  The development of VISTA ran roughly in parallel with the
+development of the NOAO IRAF package, but the latter effort was supported
+on a greater scale and intended to be used by a wider community at the
+National Observatories.  VISTA was originally only to support the observing
+activities at the University of California at Lick Observatory, but as
+students and postdocs from UC began to diffuse out into the community,
+VISTA followed.  It has since been modified, augmented, improved and
+otherwise messed with continually since then, primarily by former graduate
+students and postdocs at UC Santa Cruz/Lick Observatory during the 1980s.
+
+Version 3 was started in 1985 and was primarily the work of Don Terndrup
+(now at Ohio State) and Richard Stover (UCO/Lick), with contributions by
+Robert ("BF") Goodrich (Keck), Michael De Robertis (York University) ,
+Jesus Gonzalez (UNAM), Jon Holtzman (NMSU), and Rick Pogge (Ohio State).
+It incorporated most of the spectroscopic reduction routines that are now
+part of VISTA, and introduced the first generation of stellar photometry
+programs.
+
+Version 4 of VISTA was largely the work of Jon Holtzman, and in addition to
+fixing yet more bugs, the primary effort was to port the package to UNIX
+operating system.  Several new features were also included, such as the
+capacity for better image interaction on Unix workstations using first
+SunView then X windows, PostScript image and plot hardcopy, an embedded
+version of the DAOPHOT photometry package (written by Peter Stetson at DAO,
+who graciously provided the code and allowed its inclusion within VISTA),
+Fourier transform routines, some new surface photometry routines, some
+routines for computing and applying extinction and transformation
+coefficients, etc.  Many of the new routines, including the SUN video
+routines and the fast image arithmetic came from Tod Lauer.  John Tonry
+(UH) provided basics for implementing the X11 video routines, while Steve
+Allen (UCO/Lick) provided the X11 graphics drivers for LickMongo.  Rick
+Pogge wrote the PostScript image and graphics drivers.  Jeff Willick
+(Stanford) and Stephane Courteau (DAO) provided some new surface photometry
+routines.  The LickMongo package was incorporated into a distribution
+version, so VISTA no longer needed a separate standalone plotting package
+to be installed.  Some features were turned off in Version 4: Many of the
+old stellar photometry routines were supplanted by the DAOPHOT versions,
+the old LINE and VTEC commands which were device specific have been
+discontinued, and VISTA no longer uses the PGPLOT plotting package.
+
+Version 5 incorporates yet more bug fixes and new capabilities. It also has
+been modified to run under the Linux operating system on personal
+computers. This version of VISTA has been routinely run on Sun, DEC, and
+Linux workstations. The support for VMS workstations, however, has been
+discontinued, and we only support image and graphical display in the common
+X-windows environment.  The manual has been converted to TeX, which allows
+exporting it in HTML format for WWW browsing using LaTeX2HTML.
+
+The master version of VISTA is currently maintained by Jon Holtzman at New
+Mexico State University and is available via anonymous FTP and the WWW. See
+the appendices for details on how to obtain and install the package.
+
+\section{VISTA Basics}
+\begin{rawhtml}
+<!-- linkto basics.html -->
+\end{rawhtml}
+\index{Image}
+\index{Image Processing}
+\index{Spectrum}
+\index{Buffer}
+\index{Data Files}
+\index{Row Numbering}
+\index{Column Numbering}
+
+The VISTA program was originally designed to reduce data produced by
+astronomical CCD imagers, but has found use for the analysis of any digital
+imaging array data, including astronomical IR Arrays, Radio Maps, and X-Ray
+images.  Any image array is referred to generically as an ``IMAGE'' in
+VISTA.  An image is a 2-D array of floating-point numbers that represent
+the data value at a given picture-element or ``pixel'' in the image plane.
+The general term for manipulation of these numbers is \textit{image
+processing}.  VISTA provides the user with a set of interactive commands
+issued either at the keyboard or from a list of commands called a
+\textit{procedure script} that can be executed like a mini program in
+written in the VISTA interactive command language.  In practice, VISTA can
+be used to process any digital images, not just astronomical images,
+although many of the routines in VISTA are specialized for astronomical
+data analysis (e.g., spectrophotometry or stellar photometry).
+
+A digital image, whatever the source, is coded as a a rectangular array of
+'picture elements' or \textit{pixels}.  Each pixel has both a location and
+a value; it is the array of values that constitutes an image.  The location
+of a pixel is specified by its \textit{row} and \textit{column}
+coordinates.  Rows and columns are numbered continuously from some starting
+value, usually zero or one. (Thus an image with 400 rows and 350 columns
+may have the rows numbered from 1 to 399 and the columns numbered from 1 to
+349).  The starting row or column may start at some other value, for
+example, the numbering may run from 100 to 499.  When an image is
+displayed, a convention is adopted for how rows and columns run; generally
+columns increase from left to right, but various packages differ in how
+they display rows.  By default, the VISTA convention is for the origin to
+refer to the displayed \textit{upper left} corner of the image; you can use
+the FLIP keyword with the TV command to have the origin fall in the lower
+left. Neither way guarantees that your image will appear in ``sky
+orientation''; this depends on the optics in the system and the way that
+the CCD is read out at the telescope.
+
+It is convenient to refer to images by a label or name, rather than having
+to refer to each of the pixels individually.  For this reason, the VISTA
+program has several \textit{buffers} (reserved blocks of memory) for the
+storage of images.  VISTA allows the use of up to one hundred image
+buffers, although the actual number of buffers that may be filled at any
+given time depends on the sizes of the images and the amount of memory
+available on your system.  An image is referred to by the number of the
+buffer that holds it, with buffer numbers running from 1 to 100.
+
+Additional information about each image is stored in an associated
+\textit{header}, also stored in memory.  The header is structured on
+the FITS header format, and contains a table of values describing the
+properties of the image, including the image dimensions and data format,
+observing information, etc.  These are always associated with an image and
+are automatically copied or adjusted if the image itself is copied or
+adjusted.  
+
+A \textit{spectrum} is a one-dimensional array of numbers representing the
+amount of light at each wavelength interval from an astronomical object.  A
+CCD used for spectroscopy does not produce a spectrum directly; rather, it
+records a two-dimensional image of the spread-out light behind the slit and
+grating.  This image is later converted (''mashed'') into a spectrum.
+Spectra are stored in the same buffers that are used for images.  A
+spectrum is an image with one row.
+
+Various VISTA programs produce data sets that are neither images nor
+spectra.  The buffers for the storing of these data are not referred to by
+number, usually because there is only one of each type.  These data can be
+saved on the disk (with the SAVE command), retrieved (with GET) or
+displayed (PRINT).
+
+A very important feature of VISTA is \textit{procedures}.  These are lists
+of commands that are executed as a group.  There is a special buffer for
+storing procedures, and they may be saved on the disk for repeated
+use. Various conditional and looping ability is available in procedures,
+allowing repetitive tasks to be easily executed.
+
+VISTA also has \textit{variables}, which are symbolic names for numerical
+values or character strings.  Using variables in procedures greatly expands
+the power of VISTA, by allowing the user to write complex
+programs. However, VISTA is not a fully flexible programming language; it
+does not have full array capabilities (although the image buffers
+themselves can be used as one or two dimensional arrays). The command
+parsing is also not highly sophisticated.
+
+VISTA has adopted the Flexible Image Transport System (FITS) format for all
+images (although we can read a variety of related image formats, FITS is
+preferred).  A complete description of the FITS format may be found at the
+FITS Support Office Home Page at the NASA Goddard Space Flight Center
+(\htmladdnormallink{http://fits.gsfc.nasa.gov/}{http://fits.gsfc.nasa.gov/}).
+
+\section{VISTA Command Syntax}
+\begin{rawhtml}
+<!-- linkto commands.html -->
+\end{rawhtml}
+\index{Commands!Types}
+\index{Commands!Syntax}
+\index{Commands!Keywords}
+\index{Keywords!Defined}
+
+VISTA works by calling various subroutines from a set of libraries. You
+tell VISTA what to do by entering commands.
+
+Commands come in several types.  The simplest commands, such as 'QUIT'
+(which halts VISTA) work on no data and only operate in one way. Commands
+that manipulate images or spectra have an 'object' that the command
+operates on.  You should always specify the object immediately after the
+command.  An example of this is 'ZAP 1' which performs the ZAP operation
+(q.v.) on image number 1. More complicated commands have 'keywords' that
+control their operation.  Keywords allow you to tailor the operation of the
+command to suit your needs. An example of a command with keywords is
+\begin{itemize}
+   \item{BOX 2 CC=100 CR=123 NC=100 NR=25}
+\end{itemize}
+Keywords can appear in any order on the command line. The allowed keywords
+for any command can be found by entering the command name followed by a
+'?'; e.g.  BOX ? will list all the allowed keywords for the BOX command.
+
+All of the objects and keywords for a command must appear on the same line
+as the command.  The command name ALWAYS comes first.  Several commands may
+be placed on a single line, separated by semicolons.  An example of this
+is:
+\begin{itemize}
+   \item{COPY 3 1; TV 3 BOX=1; CONTOUR 3 BOX=1}
+\end{itemize}
+
+Command lines are split by the VISTA parser into individual words.  The
+parsing uses blank spaces to separate words, with the consequence that you
+\textbf{cannot} put blank spaces within a word/keyword. For example, the
+simple arithmetic statement:
+\begin{itemize}
+   \item{a=b+3}
+\end{itemize}
+will not work if there are any embedded blank spaces. Strings can have
+embedded blank spaces if the entire string in enclosed in single quotation
+(') marks.
+
+A command can be extended over more than one line by using the character
+$|$ at the end of the line.  Type HELP EXTEND if you are at a terminal for
+more information about this feature.  This information is also in section 2
+of this manual.
+
+Any character can appear on the command line, but characters after the
+first occurrence of ! in a command are ignored.  The ! is the VISTA
+'comment character', providing a way to label individual commands.  Here is
+an example of a command with a comment:
+\begin{itemize}
+   \item{SUBTRACT 1 CONST=40.3  ! Subtract 40.3 from image 1.}
+\end{itemize}
+Commenting commands is very handy in procedures. 
+
+Buffer numbers always take the form of integer constants.  These are used
+to denote buffers that store the images and spectra.  They must not have a
+decimal point: for example, '1' is an integer constant, while '1.' is not.
+A very important exception to this rule is the '\$' construction which
+allows you to use variables to denote objects.  See OBJECT (type HELP
+OBJECT if you are on a terminal) for information.
+
+Keywords come in several types:
+\begin{enumerate}
+   \item REAL CONSTANTS: These are numbers containing a decimal point
+         (e.g., '3.14'), and are used as input to programs that require a
+         numeric value as a parameter.  An example of a command with a real
+         constant in it is
+	 \begin{verbatim}
+	   TV 2 1024.0
+	 \end{verbatim}
+
+\item WORDS: These are single or multiple words without an
+      '=' sign in them.  Most words turn on or off options in the programs.
+      An example is:
+      \begin{verbatim}
+         CONTOUR 1 DASH NOERASE
+      \end{verbatim}
+      IMPORTANT: Sometimes you will want to consider several words as a
+      unit.  Multiple words used in this way must be enclosed in single
+      quotes.  An example is the CHANGE command, which changes the name of
+      an image.  If you wanted the new name to be a single word, you could
+      say:
+      \begin{verbatim}
+         CHANGE 3 NGC5128
+      \end{verbatim}
+      but if the new name has several words in it, you would need quotes,
+      so:
+      \begin{verbatim}
+         CHANGE 3 'NGC5128 - through clouds '
+      \end{verbatim}
+
+\item KEYWORD VALUES.  These are combinations of keywords and
+      arithmetic constants, and are used to pass values to VISTA
+      subroutines, where needed.  Keyword values have the form
+      'WORD=value': i.e., a keyword immediately followed by an equal sign,
+      immediately followed by a constant.  The constant can be either
+      explicit or symbolic, for example, these two command lines:
+      \begin{verbatim}
+         SHIFT 1 DR=2.3
+         SHIFT 1 DR=INCR
+      \end{verbatim}
+      do the same thing, provided INCR has the value 2.3.  You can also use
+      arithmetic expressions following the '=' sign, as in 
+      \begin{verbatim}
+         SHIFT 1 DR=INCR+3.2
+      \end{verbatim}
+
+\end{enumerate}
+
+VISTA takes the command line, and splits it up into several lists: a list
+of integers, a list of floating-point numbers, and a list of character
+strings.  The programs in VISTA examine these lists to decide what to do.
+
+Most commands check the input line to make sure that every word you give is
+something the command knows about.  If you type an unknown command, you
+will receive an error message, and the command that you are trying to
+execute will not run.
+
+More information about command syntax can be found in section 2 of this
+manual.
+
+\section{VISTA and Disk Files}
+\begin{rawhtml}
+<!-- linkto files.html -->
+\end{rawhtml}
+
+\index{Directories,Specifying directories for images, etc.}
+\index{Procedure,Startup procedure}
+
+Many VISTA commands read from or write to the disk, and therefore require
+filenames. The program has defined several default directories and
+extensions for the various types of files that VISTA uses: for example,
+images are stored in one directory, spectra in a second, procedures in a
+third, etc. Unless you specify otherwise, VISTA will automatically search
+in certain directories for images, spectra, etc., and will assume that the
+files have standard extensions.  You can view these default directories
+with the VISTA command PRINT DIRECTORIES.
+
+An example of a default directory is this: The WD command writes an image
+to disk with a filename specified in the command.  Assume the default
+directory for images is /vista/ccd/ and the default file extension for
+images is .CCD.  The command
+\begin{itemize}
+   \item[WD 2 m15\hfill]{}
+\end{itemize}
+writes the image in buffer 2 to the file /vista/ccd/m15.fits You can
+override the default locations any time: for example
+\begin{itemize}
+   \item[WD 2 /demo/m15\hfill]{writes to /demo/m15/m15.fits}
+   \item[WD 2 m15.xyz\hfill]{writes to: /vista/ccd/m15.xyz}
+   \item[WD 2 /demo/m15.xyz\hfill]{writes to: /demo/m15.xyz}
+\end{itemize}
+
+The default directories are established when the VISTA program is run by a
+subroutine called INITIAL.  That subroutine has a standard list of
+directories and extensions that it loads into a common block for use by
+other subroutines. The default directories can be changed by the user in
+two ways:
+
+\begin{enumerate}
+   \item Use the SETDIR command from within VISTA
+
+   \item Every user can set up his/her own set of default directories using
+         environment variables. The appropriate environment variables to
+         modify are:\newline
+\begin{tabular}{ll}
+   Variable    & Directory for \\ \hline
+   V\_CCDIR    & Images \\
+   V\_PRODIR   & Procedures \\
+   V\_SPECDIR  & Spectra \\
+   V\_FLUXDIR  & Flux calibrations \\
+   V\_LAMBDIR  & Wavelength calibrations \\
+   V\_COLORDIR & TV color files \\
+   V\_DATADIR  & Data files. \\
+   V\_DAODIR   & DAOPHOT files. \\ \hline
+\end{tabular}
+
+An example is:
+\begin{verbatim}
+   setenv V\_CCDIR /demo/ccd/
+\end{verbatim}
+Remember, you must execute these setenv commands BEFORE starting VISTA.
+
+\end{enumerate}
+
+\section{Running VISTA}
+\begin{rawhtml}
+<!-- linkto startv.html -->
+\end{rawhtml}
+
+\index{VISTA,Running VISTA}
+
+The VISTA program is generally stared with the command
+\begin{itemize}
+   \item[xvista\hfill]{}
+\end{itemize}
+assuming that it has been installed somewhere which is found in your
+command path.
+
+VISTA will respond with a 'welcome' message and a prompt. The welcome
+message, if it is long, comes out a screen at a time.  Hit 'return' at the
+end of each page to keep reading a message.  Hit anything else to go on.
+The program will then give you a prompt ( GO: ). The prompt tells you that
+the program is ready to execute a command. Type a command you want, and hit
+RETURN.  When the command is completed, the prompt will reappear.  If you
+type a command that VISTA does not recognize, it will say so.
+
+VISTA is a rather large program, you may need access to a reasonably large
+amount of physical and virtual memory.
+
+On startup, VISTA can also be instructed to run a designated procedure.
+This is a convenient feature which allows you to customize your VISTA
+environment.  Use the environment variable V\_STARTUP to specify the name
+of the file containing the procedure you want executed as the program
+begins.  Typically this procedure will define aliases or set the values of
+variables.  Read the section on procedures (HELP PROCEDURE) for more
+information.
+
+Some additional symbols which also can (or need to ) be defined in
+environment variables for use on startup:
+\begin{itemize}
+   \item{V\_HELPDIR     (directory with helpfiles)}
+   \item{V\_LATITUDE (latitude in degrees)}
+   \item{V\_LONGITUDE (longitude in degrees)}
+   \item{V\_SYSTEM (where to find dosystem file needed to spawn UNIX commands)}
+\end{itemize}
+
+\section{HELP: The VISTA Online Help Facility}
+\begin{rawhtml}
+<!-- linkto help.html -->
+\end{rawhtml}
+
+\begin{itemize}
+   \item[\textbf{Form: } HELP {[subjects]} {[output redirection]}\hfill]{}
+   \item[subjects]{are the subjects for which information is requested}
+\end{itemize}
+
+HELP is used to get information about commands and topics, or to produce a
+hardcopy manual for reference.  A command is, of course, a process that can
+be executed directly by VISTA.  A topic is a set of information about some
+aspect of VISTA.  For example, this information appears under the command
+'HELP', while introductory material about procedures is found under the
+topic 'Procedures'.
+
+The simplest form of the command is HELP with no arguments.  This form of
+the command will produce on your terminal a list of the the major
+categories of VISTA commands (e.g., INTRODUCTION, IMAGE PROCESSING,
+SPECTROSCOPY, etc.)  The program then will display the names of the
+commands under each category.  After that, you can get help on a particular
+command or topic by typing its name -- the names are shown on the terminal.
+
+To get information on a particular command or topic, type HELP followed by
+the name of the command or topic.  If you want help on several subjects,
+type them all on the command line.  The words should be separated with
+blanks, as is usual with VISTA commands. Three examples are:
+\begin{itemize}
+   \item[HELP SUBTRACT \hfill]{information on the command SUBTRACT}
+   \item[HELP ZAP FITSTAR \hfill]{information on ZAP, AND FITSTAR.}
+   \item[HELP Photometry \hfill]{information on photometry.}
+\end{itemize}
+
+The first line of information about commands contains a line beginning with
+'Form: ', which spells out the syntax of that command in detail.  Following
+this are more detailed explanations of the workings of that command.  These
+paragraphs form an example of an entry readable by the HELP command.
+Important: Keywords listed in square brackets (as [ALL], above) are
+OPTIONAL; they modify the operation of the command, if desired, but need
+not be specified under all circumstances.
+
+The output of this program can be redirected. (The output redirection
+mechanism is described in the section 'REDIRECT' -- type HELP REDIRECT if
+you are on a terminal.)  
+
+New to Version 4.2 is the capability to run the HELP program standalone.
+This is particularly useful in a workstation environment where you may wish
+to have one window dedicated to the VISTA HELP. This program is named
+vistahelp; check with your local VISTA manager for its location.
+
+
+\noindent{Examples}
+\begin{itemize}
+   \item[HELP MASH\hfill]{Sends the information on 'MASH'
+        to your terminal.}
+   \item[HELP MASH $>$MASH.XXX\hfill]{Sends the information on 'MASH'
+        to the file MASH.XXX}
+\end{itemize}
+
+If there are several commands or topics which begin with a pattern given on
+the command line, the helpfiles for all those commands will be printed.
+For example,
+\begin{itemize}
+   \item{HELP CO}
+\end{itemize}
+will list the help files for COPY, COPW, CONTINUE, CONTOUR, and any other
+commands which begin with the letters 'CO'.  Exception: If there are
+several commands which begin with the pattern you give, but the pattern
+matches exactly the name of one command or topic, only the match will be
+printed.  For example, HELP PRINT will give you information on PRINT only,
+even though there is another command (PRINTF) which begins with the same
+pattern.
+
+The character '?' can be used as a abbreviation for the HELP command.  See
+the section '?' in the manual (or type 'HELP ?' if you are on a terminal.)
+
+\section{Useful Commands for the Beginner}
+\begin{rawhtml}
+<!-- linkto simpcmd.html -->
+\end{rawhtml}
+
+\index{Commands, Useful commands for the beginner}
+\index{Introduction, Useful commands for the beginner}
+
+Here are some commands often used in image processing.  Read these sections
+of the HELP manual first:
+
+\begin{itemize}
+   \item[WD\hfill]{write an image to disk}
+   \item[RD\hfill]{read an image from disk}
+   \item[BUF\hfill]{show which images are in the buffers}
+   \item[MN\hfill]{compute average of an image}
+   \item[TV\hfill]{display an image on the television}
+   \item[PLOT\hfill]{plot a row, column or spectrum}
+   \item[CONTOUR\hfill]{produce a contour plot of an image}
+   \item[MASH\hfill]{extract a spectrum from an image}
+\end{itemize}
+
+\section{QUIT: Stopping VISTA}
+\begin{rawhtml}
+<!-- linkto quit.html -->
+\end{rawhtml}
+
+\index{VISTA,Stop}
+\index{Stopping VISTA}
+\begin{itemize}
+   \item[\textbf{Form: } QUIT\hfill]{}
+\end{itemize}
+
+This command stops VISTA, returning the user to command level.  This
+command is executed immediately. The contents of all image buffers are
+lost.
+
+If you are running VISTA as part of a command procedure, make sure you put
+QUIT as the last command line before the next command.
+
+\section{VISTA News}
+\begin{rawhtml}
+<!-- linkto oldnews.html -->
+\end{rawhtml}
+\index{Help, List recent changes to program or other news}
+
+\begin{itemize}
+  \item[\textbf{Form: } NEWS\hfill]{}
+\end{itemize}
+
+NEWS prints the current message of the day, and all the accumulated
+messages of the day during the recent past.  The output is displayed a
+screen at a time.  At the end of each page, hit 'return' to continue, or
+anything else to stop.
+
+\section{TERM: Specify or Change the Graphics Terminal Type}
+\begin{rawhtml}
+<!-- linkto term.html -->
+\end{rawhtml}
+\index{Terminal, Specifying default graphics terminal type}
+\index{Display, Specifying graphics terminal type}
+
+\begin{itemize}
+   \item[\textbf{Form: } TERM {[TERMINAL=vterm]} {[HARDCOPY=vhard]}\hfill]{}
+
+   \item[(none)]{Prompt user for graphics display terminal type to use.
+        Hardcopy devices must be changed explicitly using HARDCOPY= below.}
+
+   \item[TERMINAL=vterm]{Makes default graphics display terminal for plots
+        the device corresponding to LickMongo "vterm" device code}
+
+   \item[HARDCOPY=vhard]{Makes default hardcopy device for plots the device
+        corresponding to on of the VHARD device codes.  Typing HARDCOPY=0
+        will give the user the hardcopy code menu and prompt for the
+        desired option.}
+\end{itemize}
+
+The default VISTA graphics device is an X11 window that will be created
+automatically when the first graphics commands are used.  VISTA uses the
+LickMongo package for all vector graphics (line plots, contour maps, etc.)
+and PostScript hardcopy.
+
+If you are using VISTA from a terminal that does not support X11 graphics
+(e.g., from an old VT100 terminal or over a modem from a PC running a
+Tektronix emulator), you can change the default terminal type used
+for screen graphics using the TERM command.
+
+Issuing TERM without an argument will print a menu and prompt the
+user for the device type.
+
+TERM is called by the VISTA program on startup and sets the default
+graphics device for the session.  This may be changed at any time
+during a session with the TERM command, but the default is hardwired
+into the program at compile time, and any changes will be forgotten
+during the next VISTA session unless you put a TERM command with
+the necessary keywords in your startup procedure file.
+
+Hardcopy devices must be changed explicitly with the HARDCOPY= keyword.  If
+no command line argument is given, then the user will be allowed to change
+the terminal type only.
+
+The default Hardcopy device for VISTA is Adobe PostScript files.  All PS
+output from VISTA conforms to the PostScript standard and will produce
+output on any PostScript device.  Encapsulated PS output is produced by
+some commands (usually via an EPS keyword), and conforms to the Adobe EPS
+Level 2.0 structuring conventions.
+

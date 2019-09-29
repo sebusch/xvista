@@ -1,0 +1,82 @@
+
+<H1><A NAME="SECTION00170000000000000000">
+HELP: The VISTA Online Help Facility</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml54#
+
+<P>
+<BR>
+<tex2html_image_mark>#command167#
+<BR>
+
+<P>
+HELP is used to get information about commands and topics, or to produce a
+hardcopy manual for reference.  A command is, of course, a process that can
+be executed directly by VISTA.  A topic is a set of information about some
+aspect of VISTA.  For example, this information appears under the command
+'HELP', while introductory material about procedures is found under the
+topic 'Procedures'.
+
+<P>
+The simplest form of the command is HELP with no arguments.  This form of
+the command will produce on your terminal a list of the the major
+categories of VISTA commands (e.g., INTRODUCTION, IMAGE PROCESSING,
+SPECTROSCOPY, etc.)  The program then will display the names of the
+commands under each category.  After that, you can get help on a particular
+command or topic by typing its name -- the names are shown on the terminal.
+
+<P>
+To get information on a particular command or topic, type HELP followed by
+the name of the command or topic.  If you want help on several subjects,
+type them all on the command line.  The words should be separated with
+blanks, as is usual with VISTA commands. Three examples are:
+<BR>
+<tex2html_image_mark>#example174#
+<BR>
+
+<P>
+The first line of information about commands contains a line beginning with
+'Form: ', which spells out the syntax of that command in detail.  Following
+this are more detailed explanations of the workings of that command.  These
+paragraphs form an example of an entry readable by the HELP command.
+Important: Keywords listed in square brackets (as [ALL], above) are
+OPTIONAL; they modify the operation of the command, if desired, but need
+not be specified under all circumstances.
+
+<P>
+The output of this program can be redirected. (The output redirection
+mechanism is described in the section 'REDIRECT' -- type HELP REDIRECT if
+you are on a terminal.)  
+
+<P>
+New to Version 4.2 is the capability to run the HELP program standalone.
+This is particularly useful in a workstation environment where you may wish
+to have one window dedicated to the VISTA HELP. This program is named
+vistahelp; check with your local VISTA manager for its location.
+
+<P>
+<#179#>Examples<#179#>
+<BR>
+<tex2html_image_mark>#example180#
+<BR>
+
+<P>
+If there are several commands or topics which begin with a pattern given on
+the command line, the helpfiles for all those commands will be printed.
+For example,
+<BR>
+<tex2html_image_mark>#hanging184#
+<BR>
+will list the help files for COPY, COPW, CONTINUE, CONTOUR, and any other
+commands which begin with the letters 'CO'.  Exception: If there are
+several commands which begin with the pattern you give, but the pattern
+matches exactly the name of one command or topic, only the match will be
+printed.  For example, HELP PRINT will give you information on PRINT only,
+even though there is another command (PRINTF) which begins with the same
+pattern.
+
+<P>
+The character '?' can be used as a abbreviation for the HELP command.  See
+the section '?' in the manual (or type 'HELP ?' if you are on a terminal.)
+
+<P>

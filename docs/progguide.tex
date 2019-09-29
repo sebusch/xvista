@@ -1,0 +1,1456 @@
+\input lyxtex
+\raggedright
+\mediumtype
+\singlespace
+\tolerance=11000
+
+\def\V{\bf VISTA \rm}
+\def\Vns{\bf VISTA\rm}
+\def\Sskip{\yyskip}
+\def\hang{\hangindent 0.25in \hangafter 0}
+\def\hhang{\hangindent 1.25in \hangafter 1}
+
+
+\noindent{I. Overview}
+
+\noindent{II. Philosophy}
+
+\noindent{III. VISTA, operating systems, and directory structure}
+
+\noindent{IV. How VISTA works}
+
+\noindent{V. Writing new subroutines}
+
+\noindent{VI. How to add a new subroutine to VISTA}
+
+\noindent{VII. VISTA's programming utilities}
+
+\noindent{VIII. VISTA programming in C}
+
+\noindent{IX. Image I/O and file formats}
+
+\noindent{X. The VISTA helpfile}
+
+\noindent{XI. Tailoring VISTA to your own needs}
+
+\noindent{Appendix 1. VISTA include files}
+
+\noindent{Appendix 2. Part of the command tree}
+
+\noindent{Appendix 3. A sample program}
+
+\noindent{Appendix 4. A sample from the help file}
+
+\noindent{Appendix 5. List of \V commands and subroutines}
+
+\Sskip
+
+\centerline {\bf I.  Overview\rm}
+
+\vskip 0.125in
+	The \V {\it Programmers' Guide} explains the basic operation
+of the program \Vns, the philosophy that guided its development, and
+the procedure for modifying subroutines or adding new ones. It 
+presents a list of common
+utilities used by the various subprograms, and a set of instructions
+for tailoring \V to your own needs. 
+
+	The beginner to \V programming has the task of learning the
+operation of the program from a user's point of view, then learning
+the intricacies of the code itself.  We realize this requires some
+effort (one cannot learn all about it in a day), but we believe that
+it is not too difficult for the average astronomer learned in FORTRAN
+and experienced with \V as a user. This {\it Guide} will, we hope,
+ease the first steps toward a thorough knowledge of the program. We note
+that although the bulk of the program is written in FORTRAN, that we
+have tried to provide sufficient information and utilities to allow the
+C programmer to add routines as well.
+
+	We think that one of the greatest virtues of \V is its accessibility
+to the scientist who wants to understand the details of how routines
+operate and to be able to make changes and add new routines.  Consequently,
+unlike other image processing packages, we strongly encourage users to
+learn about the programming structure of \V and become programmers! If you
+have questions about how various routines work, it's really quite easy to
+go in and look for yourself what the code does, and we encourage this.
+
+\Sskip
+\centerline {\bf II. Philosophy\rm}
+ 	
+\vskip 0.125in
+	\V is an interactive system of routines for the manipulation
+of one- and two-dimensional image data. It handles reduction,
+processing, and display of images, surface photometry, stellar
+photometry, and basic reduction of spectra. It also provides features
+to make the program easy to use, and to handle complex or repetative
+problems. 
+
+	The main program is a simple and fairly general command
+interpreter that is independent of most of the details of the
+subroutines.  New routines
+can be added to the program at any time, with a minimum of effort.
+
+	To futher define principles of operation, we identify some of
+\Vns's basic features. 
+
+\hang
+\noindent{\hbox to 0.25in {1.}}\V is a {\it command-driven} system,
+which requires the user to enter commands which are interpreted by the
+program. \it Menu systems\rm , on the other hand, present lists of
+available programs, asking the user to select from this list the ones
+desired. In \V it is the user's responsibility to know what to do and
+how to do it. It has the
+advantage that it permits the greatest flexibility and does not
+``shoehorn'' the user into a strict or tedious operation procedure.
+The disadvantage is that it requires a somewhat greater effort from
+the user to learn the operation of the program. (The \V manual and
+the \it VISTA Cookbook \rm gives instructions.) 
+
+\noindent\hangindent 0.25in \hangafter 0
+Available routines are called up by their command names.  The user
+specifies any additional information needed to modify or control the
+command with keywords. Routines ask questions only when vital
+information is missing from the command line. The user is not pestered
+with excessive queries, selection of options, etc. The commands work
+cleanly with as little interaction as possible, and have sensible
+default responses for missing non-essential information. In some
+cases, of course, interactive commands are desirable; they are limited
+to those that really need run-time decisions.  If possible,
+interactive input is kept as a keyword activated function. In the
+routines using an extensive input list, that list is in the form of a
+disk file whose name can be specified by a keyword. If a task is too
+complex to be easily accomplished by a single routine, it is broken
+into several routines. 
+
+\noindent
+\hangindent 0.25in \hangafter 0
+\V attempts to minimize the protocol needed to operate commands. Most
+keywords can be entered in any order, and reasonable default values
+are given for unspecified keywords.  The program can also execute operating
+system commands (in VMS or UNIX), 
+allowing the user to manage or edit data files 
+during a reduction session. 
+
+\hang
+\noindent{\hbox to 0.25in {2.}}The flexibility of \V is increased by
+its \it procedures\rm , (which are lists of commands to be executed as
+a program) plus special commands which control the flow of the
+procedure.  The program
+contains a command language complete with control flow, condition
+testing, manipulation of symbols, user-defined subroutines, and data
+input. Procedures allow the user to configure \V to handle complex or
+repetative tasks. This helps to eliminate tedium and to reduce the
+need to add new software to the program. Before adding new routines,
+carefully consider whether your task can be done using existing routines
+inside a (possibly complicated) procedure. We have been consistently
+impressed by the power of procedures.
+
+\hang
+\noindent{\hbox to 0.25in {3.}}\V is ``user friendly.'' All routines
+are designed to protect the operator from basic errors and issue
+simple but informative messages when non-recoverable mistakes occur.
+The routines are written to anticipate or survive runtime software
+errors, such as variable overflow, division by zero, or read/write
+errors in files. A session with \V can go on for several hours, so an
+error in the software that causes the program to crash can result in
+the loss of a significant amount of labor. 
+ 
+\hang
+\noindent{\hbox to 0.25in {4.}}
+\V supports a detailed \it helpfile \rm system. The user can request
+information on a command or subject while running the program, or
+print out the whole helpfile as a user's manual.  The format of the
+helpfile is discussed below. 
+
+	The \V software is written in standard FORTRAN-77, with several
+routines (particularly those which handle memory addressing) in C.
+The code is reasonably well documented, and
+(it is hoped) can be easily understood by someone needing to dig into
+\V to add new routines or to examine a program's operation. We have
+found that one can do a better job with a data reduction system if one
+is working with a clear understanding of how it functions. It is \it
+imperative \rm that new code be clearly documented.  Routines that
+operate as a ``black box'' cause confusion and uncertainty when they
+need to be changed. 
+
+\Sskip
+\centerline {\bf III.  VISTA, operating systems, and directory structure\rm}
+
+\centerline{\it i. Operating systems}
+
+	\V was originally written to operate under the VAX/VMS operating
+system. As such, it took advantage of many features in VMS FORTRAN that are
+not supported under the FORTRAN-77 standard.  In 1988, the program was
+substantially reworked so that it would run in a UNIX environment (on a
+Sun workstation).  Since that time, the main VISTA source code has been
+designed to reside on a UNIX system.  All of the code is now written so
+that it can be run through the C preprocessor, allowing the master routines
+to be customized so they can run on any machine that supports FORTRAN-77 and
+C; for more details, see section {\it iii} below.  
+To date, VISTA has been run successfully on Sun Workstations (3/50,
+3/110, 4/110, 4/260, and 4/280), DecStations (3100 and 5000) a well as on
+various machines running VMS (Vax 11/750, Vax 11/780 ,Microvax II). 
+It should also work on
+other UNIX workstations - we just have not yet had the opportunity to try it.
+We have found that porting the code to a new machine usually uncovers a few
+minor problems, but that these can be easily resolved.
+
+	This programmer's guide is aimed primarily at people operating
+\V in a UNIX environment. Generally, making changes on a VMS system are
+very similiar to making them on a UNIX system.  The directory structure
+is identical under both operating systems, so if you are working on a VMS
+system, the programmers guide should still prove very useful - you just
+need to make the translations from UNIX lingo - e.g. directories in the
+programmers guide are written as  lickvista/source/base/  rather than
+[lickvista.source.base], and the FORTRAN routines are called   routine.F
+on UNIX rather than routine.for on VMS.
+
+\centerline{\it ii. Directory structure}
+
+	For information on how to install the VISTA package, see the
+Appendices of the VISTA help manual, or the AAA... files located in the
+top level directory of the VISTA distribution. The VISTA package should
+have been successfully installed before attempting to make any modifications.
+
+     	The main subdirectory, after unloading the files, will be
+called lickvista.  From here on, the lickvista subdirectory will be known as
+the top level VISTA directory. 
+
+    The top level VISTA directory contains a set of VISTA subdirectories, 
+some information files, and a symbolic link vistalink.
+
+    The subdirectory hierarchy under this top level directory is as follows:
+                       
+          /ccd/          Default directory for images. Contains some images
+                          to use for demos and checks. These images can (should)
+                          be deleted if you're not going to look at them.
+
+          /color/         Default directory for color files. Contains a bunch
+			  of color on distribution. There is a program called
+			  makecolor to convert the ASCII .col files into
+			  the binary files needed for the specific machines.
+			  This conversion should be automatically performed
+			  by the makefile.
+
+          /data/          Default directory for a variety of types of data
+                          files. Contains a few small files on distribution
+                          which you could leave there and might find useful.
+
+	  /doc/           Directory containing documentation. Here lives the
+			  VISTA help manual (which can also be made while
+			  running VISTA with the HELP ALL command), plus the
+			  TeX source for this programmers guide, plus a
+			  compressed PostScript version of the programmers
+			  guide, plus the appendices to the programmers guide.
+
+	  /export/	  Directory containing three programs useful for 
+			  exporting VISTA to a VMS machine.  These two programs
+			  are 1) a program to write ANSI-formatted tapes
+			  on a Unix machine.  These are suitable for use with
+			  the VMS COPY command.  2) a program to pack up entire
+			  Unix directory trees on tape and then unpack them
+			  upon transfer to a VMS machine. 3) a program called
+			  vmsbackup which is able to read VMS backup tapes
+			  on a UNIX system.
+
+          /help/          Directory with the helpfiles. The master helpfile
+                          is helpfile.hlp. There is a program called makehelp
+                          which splits this file into smaller .HLP files, 
+                          which are accessed by VISTA. To change the help files,
+                          you must change helpfile.hlp, remove the *.HLP files,
+                          then rerun makehelp. The helpfiles will be created
+			  automatically using the VISTA makefile.
+			  Also contains the program vistahelp, which is a
+			  standalone program to access the VISTA help files.
+
+          /procedure/     Default directory for procedures. Contains some
+                          possibly interesting procedures on distribution.
+
+          /source/    This is the top level source directory. This directory
+                          contains the main top level VISTA program, called
+                          vista.F, the object libraries that VISTA
+                          will use to relink, the actual VISTA executable,
+                          the makefile which is used to make the entire VISTA,
+                          as well as a variety of auxiliary files, and a
+                          series of subdirectories with the source:
+
+                  /base/     Contains most of the VISTA command level programs,
+				for handling getting commands, procedures,
+				I/O of VISTA data files, etc.
+
+		  /image/    Contains the basic image processing programs.
+
+                  /starphot/ Contains the stellar photometry programs
+
+		  /surfphot/ Contains the surface photometr programs
+
+		  /spectra/  Contains the spectral reduction programs
+
+		  /simulate/ Contains programs for making simulated images.
+
+		  /misc/     Contains a few miscellaneous programs.
+
+		  /user/     Subdirectory for local user routines, if any.
+
+                  /include/  Contains the include files (.INC) and the
+                               .PGM files which contain various parts of
+                               the command tree which are INCLUDED in vista.F
+
+                  /parser/   Contains low level stuff for command parser.
+
+                  /sysdep/   Contains stuff only used on one system or another.
+
+                  /tape/     Contains the tape routines source, for both SUN
+                               and VMS.
+
+                  /utility/  Contains lower level routines.
+
+                  /display/  Contains routines used to talk with various
+                               video devices.
+
+          /spectra/       Default directory for spectral data. Contains files
+                          with line lamp lists (.wav files) and with data
+                          for flux standards (.flx files). These are needed
+                          for the wavelength and flux calibration routines.
+
+\centerline{\it iii. Makefiles and how things work}
+
+\centerline{a. UNIX systems}
+
+	For the VISTA programmer, the main directory is lickvista/source.
+This is where the main program, vista.F, exists, along with the master
+makefile, plus the executable and the object libraries. Also found here
+are the Vista.(machine) files which contain the C-preprocessor flags for
+various machines.
+
+	The compilation and linking of VISTA code works as follows. In the 
+lickvista/source directory, there exists a shell script called make. When
+you type make, this script senses what type of machine you are on and
+sets various flags for the compiler and the linker. It assigns your machine
+type to the environment variable MACHINE. It then passes control to the
+UNIX utility make, which in turn looks at the VISTA makefile and does
+the compilation and linking. The VISTA makefile simply goes through each
+subdirectory, checks for routines which have been modified in each, 
+compiles these routines and inserts them in the appropriate object library
+file in lickvista/source, then links the main program with the object
+libraries and necessary system libraries.
+
+	Each VISTA routine starts with the C-preprocessor line 
+\#include ''Vista.h''.  The makefiles in each subdirectory create a symbolic
+link called Vista.h to the appropriate Vista.(\$MACHINE) file in 
+lickvista/source.   All of the relevant C-preprocessor variables are set
+in the Vista.(\$MACHINE) file.
+
+	Note that on Sun systems, two different image display systems are
+supported, SunView and X11. On other UNIX systems, only X11 is supported.
+We strongly recommnend that you use the X11 display system, even on Sun
+Workstations, as Sun has announced that the SunView system will not be
+indefinitely supported.  To construct a version of VISTA using X11, the
+makefiles currently require that you type:  make xvista, rather than just
+make, which will by default construct a SunView version. You will also
+need to go into the appropriate lickvista/source/Vista.(\$MACHINE) file
+and make sure that the variables X11 and SUNVIEW are appropriately
+defined/undefined. For more information
+on this, see Appendix B in the help manual, or the file AAAUNIXINSTALL. 
+
+	Also, note that VISTA uses the LickMONGO package for plotting. 
+LickMONGO must be successfully installed before compiling VISTA. Again,
+see Appendix B in the help manual for more information.
+
+	Consequently, once everything is properly set upt,
+all you need to do to compile/link a new version of \V
+is go to the lickvista/source subdirectory and type: make xvista
+(or just make for a SunView version). This will create a new executable
+in lickvista/source/nvista.  If you then type: make install, you will
+create a hard link call lickvista/source/vista to the executable. (We
+use the temporary file nvista just in case other users are using the
+old executable while you are compiling a new version.)
+
+\centerline{b. VMS systems}
+
+	For the VISTA programmer, the main directory is [lickvista.source].
+This is where the main program, vista.for, exists, along the the
+executable and object libraries.
+
+	VMS does not support makefiles, but we have developed a command
+file which essentially acts as a makefile.  It is located in the 
+[lickvista] subdirectory and is called MAKEVMS.COM.  This command file 
+goes through each subdirectory and compiles all routines which have a date
+that is more recent than than of the file LIBRARY.DAT. When finished with
+each subdirectory, it creates a new version of LIBRARY.DAT with the current
+date.  All object modules are then inserted into the appropriate object
+library, and then deleted.
+
+	Consequently, to compile/link a new version of \V, all you need
+to do is @MAKEVMS.  This will create an executable called 
+[lickvista.source]nvista.exe.   This file can then be renamed to VISTA.EXE.
+
+\Sskip
+\centerline {\bf IV.  How VISTA Works\rm}
+
+\Sskip
+\centerline {\it i) The top level\rm}
+
+\vskip 0.125in
+	The main program is called lickvista/source/vista.F.  It
+handles all the communciation with the user and with the subroutines.
+It works as follows: 
+
+\hang 
+\noindent{\hbox to 0.25in {1.}}The program calls several subroutines which
+extablish much of the flow control for \Vns : INITIAL establishes file
+directories and translates logical symbols.  INITCOMMANDS sets up command
+abbreviation.  INSTALLFUNC defines mathematical functions used on variables or
+arithmetic statements.  ESCAPE establishes control-C as an interrupt. 
+
+\hang
+\noindent{\hbox to 0.25in {2.}}The program then explicitly initializes
+variables and logicals which control its flow. 
+
+\hang
+\noindent{\hbox to 0.25in {3.}}A command is received, either
+from the user's terminal or from the procedure buffer, through the
+subroutine GETCOM (located in lickvista/source/base/getcom.F).  The
+logical variable GO is set to .FALSE. 
+
+\hang
+\noindent{\hbox to 0.25in {4.}}The command line is separated
+into the command word, other character strings, integers, and
+real numbers. These pieces are loaded into common blocks which
+the subroutines can read.  The commons are declared in the file
+vistalink.INC, which will be discussed later. 
+
+\hang
+\noindent{\hbox to 0.25in {5.}}The program then reads through
+the \it command tree\rm , which specifies the number of images or spectra
+needed for each command, their sizes, and the name of the subroutine to which
+the program will later branch.
+Subroutines which do not require images or spectra set GO to
+.TRUE. and immediately jump to the subroutine for execution. Those that need
+images or spectra set a variable which tells how many are needed, leaving GO to
+be .FALSE.  No jump to a subroutine takes place immediately. 
+
+\hang
+\noindent{\hbox to 0.25in {6.}}If the command requires an image,
+vista.F attempts to find the required image with the routine GETIMAGE.  If
+they are not there, an error condition results, and the program returns to step
+3. If all is well, the variable GO is set .TRUE. 
+
+\hang
+\noindent{\hbox to 0.25in {7.}}The program makes a \it second \rm pass through
+the command tree.
+When it enounters the current command in the tree, it calls the subroutine
+listed there, passing as arguments the desired images or spectra, and their
+sizes. 
+
+\Sskip
+\centerline {\it ii) How images are stored in \V\rm}
+
+\vskip 0.125in
+\V uses dynamic memory allocation, which permits users to connect images of any
+size. The memory needed to store an image or a spectrum is not reserved at
+compilation time with a DIMENSION statement or its equivalent.  Rather, it is
+requested from the operating system at run-time with a call to the C
+routine malloc through the subroutine CREATEIM. When the user desires to
+open up a new buffer, CREATEIM is called, and the required amount of
+memory is allocated for both the image header and the image data. The
+addresses of the image header and image data are stored in arrays which
+are accessible to all subroutines through the include file imagelink.inc.
+Generally, most routines do NOT access the image addresses directly.  The
+normal way for a routine to access data is to have the main program vista.F
+get the address of the desired buffer through the routine GETIMAGE, then
+passes this address to the subroutine. For FORTRAN subroutines, the address
+of the address of the image is passed through an intermediate C subroutine,
+which then passes along the address of the image to the FORTRAN subroutine,
+where it can then be accessed normally as if a data array was passed to
+the subroutine.
+
+   For the C programmer, the image adresses and information can be accessed
+through external structures declared in the include file imagelink.h.
+When programming in C, there is no need to go through an intermediate
+subroutine; simply note that the VISTA command tree always passes information
+by address (since it is written in FORTRAN). For the special case of images,
+the VISTA command tree passes a pointer to the address of the image (i.e.
+a pointer to a pointer).
+
+Section iv) discusses the \it
+command tree, \rm where most of the image handling details are treated, and
+describes the manner in which subroutines refer to images.
+		
+\Sskip
+\centerline {\it iii) Command parsing\rm}
+
+\vskip 0.25in
+	The command line is parsed by repeated calls to subroutine
+DISSECT (located in lickvista/source/utility/dissect.F). 
+This subroutine breaks the line into individual words,
+examines those words, and returns their values, whether they be
+integer constants (a number with no decimal point or the values of
+certain variables), floating point constants (containing a decimal
+point), or alpha-numeric character strings. The various components of
+the command line are stored in common blocks defined in vistalink.INC.
+The first word of the command line is assumed to be the command name,
+and is stored in the character string COM. The values of integer words
+are stored in the array IBUF, that of reals in the array CONST, and
+alpha-numeric words in the character array WORD. Each of these arrays
+has fifteen elements, so \V can accept at most fifteen of each type of
+word on the command line.
+The number of elements stored in IBUF, CONST, and WORD are saved
+in the variables NINTS, NFLTS, and NWORD.
+Subroutines which are called from the \V
+command tree can examine and use the values stored in IBUF, CONST, and
+WORD by including vistalink.inc among their declarations.
+The include files are discussed in more detail in Appendix 1. 
+
+   For the C programmer, the command line information can be accessed
+through external structures if you include the file vistalink.h in your
+subroutine.
+
+\Sskip
+\centerline {\it iv) The command tree\rm}
+
+\vskip 0.125in
+	The command tree is a long series of IF, ELSE IF, ELSE IF,
+..., END IF statements, which test the command entered from the
+terminal or from the procedure buffer.  If no images are needed, the
+logical GO is set to .TRUE., and program jumps immediately to the
+subroutine which executes the desired command. Routines which require
+images or spectra set the variable NEEDIM, which specifies the number
+of images or spectra that are passed to the subroutine.  The value of
+this variable is set to zero at the top of the tree, so it does not
+need to be reset if no images or spectra are being sent to a
+subroutine. 
+
+	An exerpt from the command tree is shown as Appendix 2. The
+commands are not actually in this order in vista.F;  we have
+rearranged them for illustration.  The rules for calling images are as
+follows:
+
+\hang
+\noindent{\hbox to 0.25in {1.}}If no images or spectra are required by
+the command, the subroutine is immediately called. This is illustrated
+in Appendix 2 by the first few commands in the command tree.  Note
+that several commands may call the same subroutine. 
+
+\hang
+\noindent{\hbox to 0.25in {2.}}If images or spectra are
+required, the call to the subroutine is preceded by {IF\ (GO)}. 
+NEEDIM is set, telling how many images or spectra are needed,
+and where they are.  NEEDIM can have the values -2, -1, 0, 1, 2.
+
+\hang
+\noindent{\hbox to 0.25in {3.}}The call to a subroutine can pass
+either one or two images.  The location (memory address) of the
+beginning of the first image or spectrum is stored in LOCIM, with row
+numbers running from IMSR to IMER, and columns from IMSC to IMEC.
+The second image or spectrum (if there is one) has memory address in
+LOCB with rows running from JMSR to JMER, and column numbers running
+from JMSC to JMEC.  In Appendix 2, the subroutines AVERAGE and SKY
+pass the parameters for one image.
+
+\hang
+\noindent{\hbox to 0.25in {4.}}One of the images passed to the
+subroutine may be already stored in the image display system. The
+location of this image is the value of LOCTV, with row numbers running
+from IMTVSR to IMTVER, and column numbers running from IMTVSC to
+IMTVEC. 
+
+\hang
+\noindent{\hbox to 0.25in {5.}}If only the television image is sent to
+the subroutine, NEEDIM is set to -1.  If the television image \it and
+\rm another image or spectrum is being sent, NEEDIM is set to -2. The
+other image is located at the value of LOCIM.  
+
+	The command tree in vista.F is broken into several INCLUDE
+calls to other files that hold part of the tree. This is simply for
+ease of organization. In particular, new or modified subroutine calls
+should be placed in the file lickvista/source/include/user.pgm. This
+is described more extensively below.
+
+\vskip 0.5in
+\Sskip
+\centerline {\bf V. Writing new subroutines\rm}
+
+\vskip 0.125in
+\centerline {\it i) Is a new routine needed?\rm}
+
+\vskip 0.125in
+	\V is designed so that users can add new programs easily,
+tailoring the program to individual needs.  It is important, however,
+that new programs not be added at such a pace that \V becomes
+unmanageably large, or added without regard to programs already there.
+Every consideration should be given to ways of accomplishing one's
+tasks that do not require the writing of a new subroutine. 
+Specifically: 
+	
+\hang
+\noindent{\hbox to 0.25in {1.}}Can the task be done with \V
+procedures?  The procedures were designed to be as flexible as
+possible, with conditional branching, loops, etc.  Also recall that
+operating system commands can be executed directly from \Vns.
+
+\hang
+\noindent{\hbox to 0.25in {2.}}Can an existing program be modified by
+adding a new keyword to the command?  It may be that a new operation
+is merely a variation on another routine.  Those variations are easily
+handled with keywords. 
+
+\hang
+\noindent{\hbox to 0.25in {3.}}Is the new task so similar (either in
+concepts or actual algorithms) to an existing subroutine that,
+although it will be run with a new command, the new code can be
+included in an existing subroutine?  That subroutine can then be
+modified to test which command called it, branching accordingly. 
+
+\Sskip
+\centerline {\it  ii) Programming style\rm}
+
+\vskip 0.125in
+	The subroutines in \V have mostly been written in a style which
+we hope makes the programs readable.  
+We hope that programs written for public versions of \V be
+written in as similar a style as possible
+to preserve the readability of the program. 
+
+\hang
+\noindent{\hbox to 0.25in {1.}}Use comments extensively!  The program
+should explain itself to the reader.  We have found that printing the
+FORTRAN in upper case, and the comments in capitals and lower case
+helps one to read the program better. We have avoided the use of in-line
+comments since they are not supported in the FORTRAN-77 standard.
+
+\hang
+\noindent{\hbox to 0.25in {2.}}Use logical variables to denote
+conditions.  Do NOT use the value of integers or reals for this
+purpose, if you can avoid it. 
+
+\hang
+\noindent{\hbox to 0.25in {3.}}Avoid the statement GOTO and branching
+to numbered lines. 
+
+\hang
+\noindent{\hbox to 0.25in {4.}}Use the form DO ... CONTINUE
+to delimit DO-loops.  DO ... END DO is not supported by the FORTRAN-77
+standard. Indent the code inside each loop.
+
+\hang
+\noindent{\hbox to 0.25in {5.}}Use IF-blocks (IF ... END IF) to
+delimit sections of code exectued under some condition.  \V programs
+are often a series of IF-blocks which test logical variables. Avoid
+IF-tests which branch to numbered lines. 
+
+\hang
+\noindent{\hbox to 0.25in {6.}}Label important variables with a comment
+describing their use.  This should be done the first time a variable
+is mentioned in the code, and especially for the variables in common
+blocks. 
+
+\hang
+\noindent{\hbox to 0.25in {7.}}Remember that FORTRAN does not guarantee
+that the values of variables in a subroutine will remain the same
+after the program returns from that
+subroutine. If saving the values can avoid
+some repetative calculations, use the FORTRAN SAVE statement. 
+
+\hang
+\noindent{\hbox to 0.25in {8.}}Make good use of ``white space'' (i.e.,
+blanks and tabs). FORTRAN ignores \it all \rm space or tab characters.
+Use blank lines to separate the code into convenient, easily
+understood sections. Use blank characters to separate variable names
+from arithmetic operators. 
+
+\hang
+\noindent{\hbox to 0.25in {9.}}Use variable names of sufficient
+length and descriptiveness so that the use of each variable is
+reasonably clear from its name. Use only standard characters in variable
+names, so the code can run on a variety of different machine types.
+
+	These standards, if carefully followed, will produce legible
+code in a style consistent with current practice, but will leave room
+for variations in individual programmer's style and taste. 
+
+\vskip 0.25in
+\Sskip
+\centerline {\it iii)  Subroutine structure}
+
+\vskip 0.125in
+	As mentioned above, the main program delivers only images or
+spectra with the call to the subroutine.  The other information
+necessary to interpret a command is contained in the common blocks in
+'vistalink.inc', which is discussed in Appendix 1.
+
+	All programs should check for legal keywords
+at the start of the routine. 
+Keyword checking is accomplished through calls to the
+subroutines KEYINIT, KEYDEF, and KEYCHECK.  
+The first subroutine has
+no arguments, serving only to initialize a list of allowed keywords
+which will be passed through KEYDEF.  KEYDEF contains one argument,
+which is a character string holding an allowed keyword. KEYCHECK is a
+logical function, returning .FALSE. if there is some unknown keyword
+on the line.  The use of these functions is illustrated in Appendix 3,
+which presents a sample program. 
+
+	Next, the contents of WORD, CONST, etc., are checked to find
+the conditions under which the program is being run.  The appropriate
+logical variables are set, and then the program begins its execution.
+Buffer specifiers are loaded into the IBUF array before execution of
+the subroutine begins. 
+
+	It is customary, when testing the contents of WORD, to avoid
+any processing of the options within the IF-block itself. Rather, the
+tests merely set logical variables or error conditions which are later
+tested.  Besides clearly separating testing and processing, this
+postponement may speed the subroutine's operation by beginning
+computations only if all required information is present. 
+
+	Finally, the routine performs its desired task.
+
+\Sskip
+\centerline {\it iv)  Referring to images}
+
+	FORTRAN passes data to subroutines in a manner termed {\it call
+by reference}, which simply means that the {\it address} of a
+variable or of the first entry in an array is sent to the subroutine,
+rather than the values of those quantities. When an image is needed by
+a subroutine, the address of the beginning of the array is stored as
+the value of an integer. When passed to a subroutine, the {\it value}
+of that integer is required.  Since FORTRAN-77 does not support pointer
+variables, the address value is passed to the desired subroutine through
+an intermediate subroutine written in C. This subroutine only receives the
+arguments, then passes them straight on to the FORTRAN subroutine, except
+for the address, which is passed by value to the routine. In \V, all of 
+these intermediate C subroutines are found in a file called cmemory.c.
+The convention has been to call the C subroutine with the same name as
+the FORTRAN subroutine, except prefixed by the letters 'cc'.
+
+For example, the command MN, which computes the mean of a (section of)
+and image, is called by:
+
+\vskip 0.15in
+	CALL CCAVERAGE(LOCIM,IMSR,IMER,IMSC,IMEC)
+
+\vskip 0.15in
+Here the value of LOCIM is the address of the image
+for which the mean is being computed.  (Row numbers run from IMSR
+to IMER, and column numbers from IMSC to IMEC.) FORTRAN passes pointers
+(address values) to all of these variables.
+
+The C subroutine ccaverage looks like the following:
+
+ccaverage(locim,imsr,imer,imsc,imec)
+
+int *locim, *imsr, *imer, *imsc, *imec;
+
+{
+
+  average(*locim,imsr,imer,imsc,imec):
+
+}
+
+which simply passes the pointers to the actualy AVERAGE subroutine,
+except for the image (for which was passes a pointer to the desired address).
+For the image, the C subroutine passes on the address of the image 
+rather than the pointer to this address.
+
+The subroutine takes the passed argument (an address) and uses it
+to point to the start of an array (here called A):
+
+\vskip 0.15in
+	SUBROUTINE AVERAGE(A,IMSR,IMER,IMSC,IMEC)
+
+	REAL*4 A(IMSC:IMEC,IMSR:IMER)
+	
+\vskip 0.15in
+	The array A is declared as a two-dimensional array, with first
+index spanning the range from IMSC to IMEC, and the second running
+from IMSR to IMER.  Note that the column numbers come {\it first} in
+the declaration.  This type of declaration (arrays having starting
+indices different from 1) simplifies the code by making the array
+indices (what the program uses) identical to the row and column
+numbers (what the \V user uses.)  Note also that images are REAL*4
+arrays. 
+
+	Information about the properties of an image is stored in
+common blocks defined in imagelink.inc, which is discussed in
+Appendix 1. 
+
+\Sskip
+\centerline {\it v) Image headers}
+
+	Image and spectrum headers are in the FITS format:  up to 720
+``cards'' of 80 characters each, with each card containing a keyword 
+defining a quantity of the image, and a numerical or character 
+argument following.  The memory to hold these headers 
+is dynamic.  As in image handling, the address of the header 
+must be passed to subroutines for those routines to access the 
+header.  In UNIX, character strings are passed by address. The addresses
+of the headers are stored in array which can be accessed through the 
+include file imagelink.inc, exactly as the image data.
+In VAX FORTRAN, character strings are passed by 
+descriptors, which are BYTE arrays, 8 bytes in length.  An array of 
+these descriptors is stored in imagelink.inc.
+
+\Sskip
+\centerline {\it vi)  The work arrays}
+	
+	\V provides a scratch array of size $256^2$ REAL*4's to handle
+temporary storage of variables.  The common block is named WORK. It is
+prefered that you use the common block to store intermediate values,
+rather than creating new arrays, to minimize the amount of memory
+that \V allocates at run time.  The common block is used by many \V
+programs, so it will have garbage in it which must be cleared out at
+the beginning of any program that uses WORK. 
+
+	There is also a work array TEMPHEAD which can hold a 
+CHARACTER*57600 string.  This is the maximum allowed size of image and spectrum 
+headers (see below) and is to be used for direct manipulation of 
+header information.
+
+\Sskip
+\centerline {\it vii) Missing information and other errors}
+
+	\V commands should contain all the information a subroutine
+needs to have to run properly. It is quite common, though, for a user
+to forget an important keyword, or to make typing errors in the
+command.  Therefore, {\it all} programs must have some way of
+detecting missing information and either notifying the user of this
+lack or requesting the desired information. 
+
+	We remind the
+programmer that {\it run-time errors in a program must not cause \V \it
+to crash!}  Two common errors and their fixes are: 
+
+\hang
+\noindent{\hbox to 0.25in {1.}}An attempt to open a file that does not
+exist can be corrected for by using the IOSTAT keyword in the FORTRAN
+OPEN statement. 
+
+\hang
+\noindent{\hbox to 0.25in {2.}}A read-error in a diskfile or from the
+terminal can be fixed by using the ERR keyword in the READ statement. 
+
+	\V subprograms usually return as soon as errors are detected.
+To signal that the command was not completed successfully, the logical
+variable XERR is set .TRUE. 
+
+	Some programs can be halted when control-C is typed on
+the terminal.
+\V arranges things so that when control-C is entered on the
+keyboard a special subroutine is immediately run which
+sets the logical variable NOGO to .TRUE.
+The state of NOGO can be tested at
+any point in the program and commands which choose to do
+so may return when NOGO is found to be .TRUE.. The variable NOGO is
+accessed through the include file vistalink.inc.
+	
+\Sskip
+\centerline {\it viii) The output and error channels}
+
+	\V provides an output-redirection mechanism, whereby data
+written to FORTRAN unit olu (defined as unit 44 in the file redirect.F,
+and passed to subroutines through the include file vistalink.inc)
+can be sent (1) to the user's terminal, (2)
+to a file, or (3) to the lineprinter.  The syntax for this redirection
+is given on the command line and is handled by the main program.  The
+subroutines do not see this redirection. Use unit olu for long output
+to the terminal (tables, etc.) which the user might want saved. 
+All WRITE's to unit olu should include the ERR= construction because
+of the possibility of errors when output is redirected to disk files.
+If you use this output redirection mechanism, make sure to include
+the file vistalink.inc in your subroutine.
+
+	Error messages should be sent directly to the terminal
+with a `PRINT *,...' statement. 
+
+\Sskip
+\centerline {\it ix) Other considerations}
+
+	When writing a \V program, as when writing any computer
+program on any machine, one must take care to minimize the memory
+required by the program, and to reduce the run-time by proper use of
+loops and subroutine calls. Program wisely!
+
+\Sskip
+\centerline {\it x) A sample \V program}
+
+	Appendix 3 contains a copy of average.F, which illustrates 
+much of the common conventions of \V programs:  (1) the routine handles
+an image; (2) the command line is checked for incorrect 
+keywords at the start of the subroutine; (3) options are turned on/off
+during keyword checking, and calculation is postponed until everything 
+is acceptable.
+
+\Sskip
+\centerline {\bf VI. How to add a subroutine to VISTA\rm}
+
+\vskip 0.125in
+	In this section, we describe how to add a subroutine to \V or
+modify an existing subroutine. We assume that you have already compiled
+and linked the distribution version of \V ( and LickMONGO); for instructions
+on how to do this, see the AAAUNIXINSTALL.TXT file or Appendix B in the
+help manual.
+
+	There are two possibilities for modifying/adding routines.
+If you are the system curator of \V and wish to change routines for all
+users, you will be making the modifications in the vista directory tree.
+If you wish to create your own private version of \V in your own
+directory tree and not have you changes accessible to everyone on the
+system, it is easy to do so. To make your own personal version:
+
+\hang
+\noindent{\hbox to 0.25in {1.}} Find out the name of the
+full directory path of the
+top level lickvista subdirectory (e.g. /usr/local/lickvista). 
+
+\hang
+\noindent{\hbox to 0.25in {2.}} In your own area, create yourself a vista
+subdirectory and change your working directory to put yourself there.
+
+\hang
+\noindent{\hbox to 0.25in {3.}} Execute the file whatever/lickvista/user.csh
+This will ask you for the full path name of the lickvista subdirectory. Enter
+it without the trailing slash.  The user.csh file will then create for you
+a user subdirectory and copy over the necessary makefiles for you to make
+your own version.  You can then follow the instructions below for creating
+a new version of \V.  The only difference is that you will be entering:
+make myxvista or make myvista instead of make xvista or make vista.
+
+	Parallel with the instructions below are a set of examples.
+In these examples, we show how to add the program AVERAGE to \Vns.
+
+\Sskip
+\centerline {\it i) Adding a new subroutine\rm}
+
+\vskip 0.125in
+\hang
+\noindent{\hbox to 0.25in {1.}}Write the subroutine.  It will be
+helpful if you debug it as much as possible before trying to add it to
+\Vns, perhaps by running key sections of the routine as a separate
+program. Make the name of the file holding the program the same as the
+name of the subroutine itself, if possible.  For example, the
+subroutine AVERAGE is found in average.F.  If you are running on a 
+UNIX system, remember to put the C-preprocessor line \#define Vista.h
+at the top of your subroutine.  The filename of your subroutine should
+have extension .F so that it is properly recognized as a file to C-preprocess.
+
+\hang
+\noindent{\hbox to 0.25in {2.}}IMPORTANT:  Check that the name you
+have chosen for your subroutine does not already exist in VISTA. This
+is probably most easily accomplished by checking the list of subroutines
+in Appendix 5 of this guide. Alternatively, check the contents of the
+object libraries in lickvista/source.
+
+\hang
+\noindent{\hbox to 0.25in {3.}} Move your file into the 
+lickvista/source/user subdirectory, or your own user subdirectory if
+you are making a private version. Edit the makefile there, and add the
+name of your subroutine in 3 places: the lines which say OBJS=, LOBJS=,
+and VMSCODE=.  Follow the examples shown there. NOTE: if you are writing
+a C subroutine, don't add the name to the VMSCODE line.
+
+\hang
+\noindent{\hbox to 0.25in {4.}}Compile the program by typing: make
+when located in the lickvista/source/user (or your own user) subdirectory.
+If the program
+does not compile successfully, fix the problems in it, and try again.
+
+\hang
+\noindent{\hbox to 0.25in {5.}}Add the call to the subroutine to the
+command tree. This is easily accomplished by modifying the file
+lickvista/source/user/user.pgm, which is automatically included in
+the main level VISTA program. At an
+appropriate place in the command tree, add (in this case, since the
+subroutine requires an image)
+
+\yyskip
+	\ \ \ \ \ \ \ \ \ \ ELSE IF (COM .EQ. `somestring') THEN
+
+	\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NEEDIM = somenumber
+
+	\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ IF (GO) CALL SUBROUTINENAME
+
+Some examples are given in the user.pgm file. If your routine gets an
+image passed to it, you will need to call a C subroutine which will
+do the pointer translations that are required. In this case make the
+call to a routine called   CCSUBROUTINENAME. See (6) below for how
+to make this entry in the lickvista/source/user/user.c file.
+
+\hang
+\noindent{\hbox to 0.25in {6.}}Go to the lickvista/source subdirectory, 
+and enter:   touch vista.F.  This will assure that the main level program
+will get recompiled, including your new entry in the command tree.
+
+\hang
+\noindent{\hbox to 0.25in {6.}}If your routine passes an image address,
+you will need to make a corresponding C routine that translates the pointer
+to this address which FORTRAN passes to the value of the address itself,
+which your subroutine wants.  This is easily accomplished by adding
+an entry in the file lickvista/source/user/user.c.  This file contains
+the C translation routines. Follow the example there. Basically, the
+C routines simply receive the arguments, and pass them straight back to
+your routine, with exception of the argument which has the address of the
+address of the data. For this argument, the C routines passes the address
+of the data.
+
+\yyskip
+\hang
+\noindent{\hbox to 0.25in {7.}}Link \Vns.  From the lickvista/source
+subdirectory, execute the command:
+
+\yyskip
+	make xvista   (to make an X11 version), or
+
+	make          (to make a SunView version).
+
+If you are making a private version, from your top level vista directory, type:
+\yyskip
+	make myxvista (to make an X11 version called xvista), or
+
+	make myvista (to make a SunView version called vista)
+
+\hang
+\noindent{\hbox to 0.25in {8.}}Debug your program in the \V system. 
+If it does not work, return to step 1. If it seems to
+work, make sure that it works under all circumstances. Try omitting
+keywords, running it with varying image sizes and origins, etc. 
+
+\hang
+\noindent{\hbox to 0.25in {9.}}Find the helpfile lickvista/help/helpfile.hlp
+Add a new entry according to the
+pattern of entries already there.  Place your new entry near those for
+programs that have similar operation.  Make your entry a {\it 
+complete} set of instructions for the user. Run the program
+lickvista/help/makehelp which processes helpfile.hlp into smaller
+helpfiles which the \V command HELP reads. (This takes about a
+minute or so.) On a UNIX system, you will need to delete all files in
+the lickvista/help subdirectory with
+suffix  .HLP (in capitals, beware: DON'T DELETE FILES WITH LOWERCASE 
+extensions!!!
+
+\Sskip
+\centerline {\it ii) Modifying an existing subroutine\rm}
+
+\vskip 0.125in
+	Here we again use AVERAGE as an example.
+
+\hang
+\noindent{\hbox to 0.25in {1.}}Copy the appropriate subroutine to
+the lickvista/source/user subdirectory and make changes to the
+subroutine. Leave the old version where you found it - the link list
+is ordered such that it should use your modified version even when the
+old one still exists. Make your modifications.
+
+\hang
+\noindent{\hbox to 0.25in {2.}}Compile the program by typing: make
+when located in the lickvista/source/user subdirectory.
+If the program does not compile successfully, fix the 
+problems in it. If the program compiles properly, continue to step 3. 
+
+\hang
+\noindent{\hbox to 0.25in {3.}}Link \Vns.  From the lickvista/source
+subdirectory, execute the command:
+
+\yyskip
+	make xvista   (to make an X11 version), or
+	make          (to make a SunView version).
+
+\hang
+\noindent{\hbox to 0.25in {4.}}Debug your program in the \V system. 
+If it does not work, return to step 1. 
+If it seems to
+work, make sure that it works under all circumstances. Try omitting
+keywords, running it with varying image sizes and origins, etc. 
+
+\yyskip
+\hang
+\noindent{\hbox to 0.25in {5.}}If the instructions for operating the
+new version of the subroutine are different from old instructions,
+modify the appropriate entry in the helpfile. 
+
+\vskip 0.125in
+\Sskip
+\centerline {\bf VII. VISTA'S programming utilities\rm}
+
+\vskip 0.125in
+There are a number of useful utilities in \V which are
+summarized below. For more information you should consult the the
+source code. These should be examined by those writing new
+routines; all the routine described below are found in the
+lickvista/source/utility subdirectory. 
+
+\Sskip
+\centerline  {\it i) Textstring, keyword, and parsing utilities\rm}
+
+\vskip 0.125in
+	These utilities handle much of the work of the \V command
+interpreter, and hence are responsible for much of the ``feel'' of the
+system.  They permit the user to talk to the routines in a flexible
+format, and handle the input and output of text strings. The most
+important utility is ASSIGN, which handles the task of interpreting
+keyword assignments, and is therefore used by most of the high level
+routines.  FILEDEF is used by routines which work directly with disk
+files.  VARIABLE allows routines to pass back scalar results to the
+user level.  The best way to understand the operation of these subroutines
+is by example -- look at some existing code which makes use of them.
+
+\hhang
+\noindent{\hbox to 1.25in {ASSIGN}}is used to parse keywords of the
+form KEYWORD=EXPRESSION, returning the numerical value of the
+expression.  Since the user routinely specifies parameters to the
+subroutines with keywords of this form, ASSIGN is called very often. 
+ASSIGN can be found in lickvista/source/utility/assign.F
+
+\hhang \noindent{\hbox to 1.25in
+{ASSIGNV}}works just like ASSIGN, except that it will calculate the
+values of a list of expressions assigned to a keyword.  This permits
+the user to pass several values to a routine with one keyword.  ASSIGNV
+can be found in lickvista/source/utility/assignv.F
+For an
+example of ASSIGNV, see code for the MASH command, which can be found
+in lickvista/source/spectra/mash.F
+
+\hhang
+\noindent{\hbox to 1.25in {DISSECT}}is the parser used by \V to break
+a line of text into seperate alphanumeric words, integers, and
+floating numbers.  It is used heavily by the \V interpreter and by
+other routines which must parse complex strings of text.  DISSECT can
+be found in lickvista/source/utility/dissect.F
+
+\hhang
+\noindent{\hbox to 1.25in {FILEDEF}}is used by all routines which use
+diskfiles. It takes file names given and tacks on default directories
+and extensions if they are missing from the supplied name. FILEDEF can
+be found in lickvista/source/utility/dissect.F
+
+\hhang
+\noindent{\hbox to 1.25in {NUMCHAR}}is a function which returns the
+number of characters in a string. It can be found in 
+lickvista/source/utility/numchar.F
+
+\hhang
+\noindent{\hbox to 1.25in {VSTRCPY}}copies character strings. 
+It is found in lickvista/source/utility/strcpy.F
+
+\hhang
+\noindent{\hbox to 1.25in {UPPER}}is a function which converts
+character strings to upper case and returns the number of
+characters in the string.  This routine allows \V to process
+lower and upper case entries in the same way.  UPPER is an 
+INTEGER FUNCTION, so don't forget to declare UPPER as in integer 
+in a routine which calls it.
+
+\hhang
+\noindent{\hbox to 1.25in {VARIABLE}}permits the user to define
+variables with the SET and ASK commands, and for routines to load
+scalar results into variables for access by the user or other
+routines. 
+
+\Sskip
+\centerline  {\it ii) Image and spectrum array utilities\rm}
+
+\vskip 0.125in
+	\V uses these utilities to get virtual memory from the system,
+pass the addresses of image and spectra arrays to the high level
+routines, and to rearrange portions of the arrays. The most important
+utilities are GETBOX and MASK.  The former allows routines to process
+a subsection of an image, while the latter enables routines to ignore
+parts of an image. For the most part, the other utilities are not
+commonly used by subroutines, but are used by \V itself to get memory
+for new images or spectra, and to connect the memory to the high level
+routines. These utilities will be needed, however, in routines which
+generate new images or spectra from old ones, handle more than two
+images or spectra at once or which only process images or spectra as
+an option selected within the routine itself. 
+
+\hhang
+\noindent{\hbox to 1.25in {COPIO}}copies one 2D array to another with
+a possible offset.  COPIO takes as arguments the addresses of the
+two arrays, plus their dimensions. The subroutine CCCOPIO takes the
+pointer to the address of the destination array, and the address of the
+source array. The subroutine CC1COPIO takes pointers to the addresses of
+BOTH arrays, and the subroutine CC2COPIO takes the address of the destination
+array, and a pointer to the address of the source array.
+
+\hhang 
+\noindent{\hbox to 1.25in {CREATEIM}}is used by \V to setup and
+get the virtual memory needed for new images and spectra. CREATEIM must
+get passes a loaded FITS header, which specifies the image dimensions and
+the header to load, plus an image specifier to tell the routine which
+buffer number to create the array in.
+CREATEIM looks for the image specifier in the IBUF array;  it needs to
+know which image specifier to use (for example:  create an image using
+the second image specifier on the command line.) It then calculates
+the amount of memory needed for the image array and attempts to get it
+from the system. If successful, it loads the parameters of the new
+image into the common blocks held in the IMAGELINK include file. 
+
+\hhang
+\noindent{\hbox to 1.25in {GETBOX}}is used by all routines which
+have the option of processing a subset of an image within a
+user-defined BOX rather than the whole image.  The GETBOX utility
+compares the size and origin of the image to that of the desired
+box, and returns the origin and number of the rows and columns of
+the image to be processed. 
+
+\hhang
+\noindent{\hbox to 1.25in {GETIMAGE}}is used by \V to pass the
+addresses of the image arrays to the high level routines. It also
+loads a list of parameters describing the images into a common
+block for easy access by the routines. GETIMAGE looks on the
+command line to find which image buffers to pass to the routine.
+GETIMAGE should only be used in routines where the top level command
+tree cannot pass
+the addresses to the routine, such as routines that must operate
+on three or more images at once, or routines that only process
+images as an option (such as the PRINT and PLOT commands). 
+
+\hhang
+\noindent{\hbox to 1.25in {MASK}}tests if a given pixel within an
+image is ``masked out,'' (i.e., to be ignored in a calculation). 
+
+\Sskip
+\centerline  {\it iii) FITS header routines\rm }
+
+\vskip 0.125in
+	\V uses FITS headers to contain the information and
+parameters associated with images, spectra, and other data. A
+FITS header is a long character string which contains a set of
+keywords to identify various parameters, such as the size of an
+image, its label, date of observation, etc., and the values of
+the parameters.  \V uses the utilities below to look up, set, or
+print out the values of the various parameters stored in the
+header. For more information, see a FITS manual. 
+
+\hhang
+\noindent{\hbox to 1.25in {GETHEAD}}is a package of three functions,
+IHEAD, FHEAD, and CHEAD which look up and return integer, floating,
+and character parameters, respectively,  held in a FITS header.  Note
+that \V already provides the high level routines with the sizes and
+origins of the images and spectra. 
+
+\hhang
+\noindent{\hbox to 1.25in {GETHJD}}reads the FITS header and 
+calculates various parameters of the observation, including the
+heliocentric Julian date, the air mass, etc.  All routines which
+need such information should use GETHJD.
+This routine assumes specific Lick (or CTIO) FITS cards are present
+and may need to be modified for other institutions.
+
+\hhang
+\noindent{\hbox to 1.25in {HEADER}}prints out a formatted image 
+header.
+
+\hhang
+\noindent{\hbox to 1.25in {HEADSET}}is a package of three utilities,
+INHEADSET, FHEADSET, and CHEADSET to load integer, floating and
+character parameters, respectively, into a FITS header. 
+
+\Sskip
+\centerline  {\it iv) Mathematical utilities\rm }
+
+\vskip 0.125in
+	There is no standard mathematical library that \V uses, nor is
+there a well defined set of routines that handle the computational
+needs of the higher level reduction routines.  There are, however, a
+few common problems which are handled by these utilities: 
+
+\hhang
+\noindent{\hbox to 1.25in {BIN}}contains a number of routines for
+doing random-access 2D image interpolation.  The different routines
+trade off various degrees of speed for numerical accuracy. 
+
+\hhang
+\noindent{\hbox to 1.25in {FINDCENT}}finds the centroid of an object
+in an image. 
+
+\hhang
+\noindent{\hbox to 1.25in {GNLLS}}is a general routine for handling
+non-linear least squares fitting of functions. 
+
+\hhang
+\noindent{\hbox to 1.25in {MEDIAN}}uses a quick-sort algorithm to find
+the median of a 1D array. 
+
+\hhang
+\noindent{\hbox to 1.25in {SINCGEN}}is used for high-accuracy 1D
+interpolation. 
+
+\hhang
+\noindent{\hbox to 1.25in {SOLVE}}solves a linear system of equations.
+
+\Sskip
+\centerline  {\it v) Graphics\rm}
+
+\vskip 0.125in
+	\V uses the LickMONGO package for its graphics.  See the LickMONGO
+help manual for further information.
+
+\Sskip
+\centerline  {\it vi) Miscellaneous\rm}
+
+\hhang
+\noindent{\hbox to 1.25in {WAIT}}tells the VAX to put \V in
+hibernation for a specified period of time.  It is used to avoid tying
+up the CPU by routines running in loops waiting for asynchronous input.
+
+\Sskip
+\centerline {\bf VIII. VISTA programming in C}
+
+   How to pass characters - UNIX and VMS.  Memory addressing. Etc...
+
+\Sskip
+\centerline {\bf IX. Image I/O and file formats\rm}
+
+\centerline{i. Image data file formats}
+
+\centerline{ii. Other data file formats}
+
+\noindent{a. Surface photometry (PROFILE) files}
+
+\noindent{b. Surface photometry (MULT) files}
+
+\noindent{c. Stellar photometry (DAOPHOT) files}
+
+\noindent{d. Stellar photometry (PHO) files}
+
+\noindent{e. Aperture photometry files}
+
+\noindent{f. Line ID files}
+
+\noindent{g. Mask files}
+
+\Sskip
+\centerline {\bf X. The VISTA helpfile\rm}
+
+\vskip 0.125in
+	It is extremely important that each command have complete
+operating instructions in the helpfile.  The instructions should be up
+to date, reflecting the current operation of the command. No addition
+or modification to \V is complete until the corresponding changes are
+made in the instructions. 
+
+	Appendix 4 shows a section from the helpfile containing
+instructions for the operation of the subroutine AVERAGE, which is run
+by the command MN.  When making changes to the helpfile, follow the
+pattern displayed in this appendix. 
+
+	The HELP program reads the file line by line.  If the line
+begins with one of the special characters :, ., \{, or /, the program
+interprets the line in a special way.  Otherwise, the line is assumed
+to be instructions, and is displayed to the user as it is written in
+the file. 
+
+	The symbol : designates a \it subject\rm.  The \V
+commands are arranged according to these subjects.  Examples are
+``Spectroscopy,'' ``Stellar Photometry,'' etc.  The line
+following a subject definition must be a command definition. 
+
+	Lines beginning with `.' denote \it commands \rm or \it
+major topics\rm . The period is immediately followed by one word
+(which is the topic), a single space, and several words that make
+up a title for that command.  The user can receive information on
+a command or major topic by issuing the \V command `HELP topic'. 
+Several commands can share the same text.  The text in Appendix 4
+is displayed for the commands `HELP ADD', `HELP SUBTRACT', `HELP DIVIDE',
+and `HELP MULTIPLY' . 
+
+	Following the command definition are several labels which
+are used only in the production of the index for a complete
+listing of the helpfile.  '/' denotes an entry in the index, and
+'//' a sub-entry that will appear under the first.  The index
+entry and sub-entry must appear on the same line.  Either can
+have more than one word. 
+
+	The line $\$ $PAUSE halts output directed to the terminal
+until the user hits RETURN. This breaks the text into convenient
+screenfuls.  A screenful of text should contain no more than 20 
+lines, so that a message can appear at the bottom of the screen.
+
+	Lines that begin with \{\  are printed only when the output
+of the HELP program is sent to the user's terminal. If the information
+is being directed to a file or sent to the lineprinter, 
+these lines do not appear.  Make sure that a screenful of text 
+delimited by $\$$PAUSE counts these lines!
+
+\Sskip
+\centerline {\bf XI. Tailoring VISTA to your own needs\rm}
+
+\vskip 0.125in
+	This section reviews some techniques for adjusting \V to suit
+your particular applications.
+
+\Sskip
+\centerline {\it i) Deleting routines\rm}
+
+	\V is a large program, containing quite a variety of
+subroutines for image processing and analysis.  It may be that
+you will never need certain subroutines for your applications.
+You would then want to reduce the size of \Vns, making it contain
+only what you want.  The procedure for deleting subroutines is:
+
+\hang
+\noindent{\hbox to 0.25in {1.}}Select the routine you want to delete
+from \Vns, and find the call to that routine in one of the files
+composing the command tree. 
+
+\hang
+\noindent{\hbox to 0.25in {2.}}``Comment out'' the statements in
+the command tree pertaining to that command:  i.e., put `C' or
+`!' at the beginning of those statements, thus turning them into
+FORTRAN comment lines.  It is preferable that you comment out the
+lines, rather than delete them, because you might want to restore
+the command someday. Note that if you are commenting out commands which
+pass images, that you will also need to go into the file 
+lickvista/source/base/cmemory.c and comment out the corresponding cc
+routine.
+
+\hang
+\noindent{\hbox to 0.25in {3.}}Recompile and relink VISTA.
+
+\Sskip
+\centerline {\it ii) Default directories\rm}
+
+	\V keeps a list of directories and file extensions for various
+images, spectra, or data files kept on the disk.  It automatically
+searches in these directories unless overridden by the user. 
+
+	The directory list is created by the subroutine INITIAL, which
+is executed when \V is first run.  It reads a set of environment
+variables (UNIX) or DCL logical names (VMS)
+which specify the directories.  If these logical names are defined, \V
+takes them as the names of the default directories.  If they are not
+defined, the program uses the directory structure defined by the
+variable \_VistaDir in the Vista.(\$MACHINE) file.
+File extensions cannot be defined in this way, but may be changed
+while VISTA is running with the command SETDIR. 
+
+	The environment variable names which INITIAL tries to translate are
+(the underscores become dollar signs for VMS logicals):
+
+\yskip
+\centerline {\vbox{
+\halign{#\hfill & #\hfill \cr
+V\_CCDIR & images \cr
+V\_PRODIR & procedures \cr
+V\_SPECDIR & spectra \cr
+V\_FLUXDIR & flux calibrations \cr
+V\_LAMBDIR & wavlength calibrations \cr
+V\_COLORDIR & color files for TV \cr
+V\_DATADIR & data files \cr
+V\_HELPDIR & the help file \cr
+}}}
+
+\yskip
+	Use the UNIX command setenv or the
+DCL command DEFINE to define these logical names.
+
+	The names of the default directories are stored in common
+blocks defined in CUSTOMIZE.INC.  In addition, \V tries to translate
+V\_STARTUP, which defines a file containing a procedure to be run
+automatically as the program begins.  Also the symbols V\_LONGITUDE
+and V\_LATITUDE may be used to set the location of the observatory
+at which images were taken.  The longitude and latitude are expressed
+in decimal degrees. 
+
+\par\vfill\end 

@@ -1,0 +1,8 @@
+#!/bin/csh
+foreach file ($*)
+  rm -f ll
+  grep linkto $file | awk '{printf("ln -fs '$file' %s\n",$3)}' >ll
+  csh ll
+end
+'rm' -f manindex.html
+ln -fs `grep CONTENT=\"Index\" node*.html | awk -F: '{print $1}'` manindex.html

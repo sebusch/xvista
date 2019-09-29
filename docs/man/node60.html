@@ -1,0 +1,38 @@
+
+<H1><A NAME="SECTION00650000000000000000">
+COPY: Copy an Image between Buffers</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml221#
+
+<P>
+<A NAME="1833"><tex2html_anchor_invisible_mark></A>
+<A NAME="1834"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1835#
+<BR>
+
+<P>
+COPY copies the image in buffer 'source' to the buffer 'dest'. The header
+associated with the source image is also copied.  NOTE THAT THE DESTINATION
+BUFFER COMES FIRST ON THE COMMAND LINE!  The syntax of the copy command is:
+<BR>
+<tex2html_image_mark>#hanging1843#
+<BR>
+
+<P>
+<#1846#>Examples:<#1846#>
+<BR>
+<tex2html_image_mark>#example1847#
+<BR>
+
+<P>
+The related command, WINDOW, is used to trim (``crop'') an image or
+spectrum.
+
+<P>
+If you copy wavelength-calibrated spectra, you should copy the
+<I>entire</I> spectrum.  You should not use BOX= with wavelength-calibrated 
+spectra.  If you do, the wavelength scale of the spectrum after the COPY
+could end up incorrect.
+
+<P>

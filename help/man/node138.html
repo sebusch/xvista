@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>INTERP: Interpolate Across Rows, Columns, or Masked Pixels</TITLE>
+<META NAME="description" CONTENT="INTERP: Interpolate Across Rows, Columns, or Masked Pixels">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0012180000000000000000">
+INTERP: Interpolate Across Rows, Columns, or Masked Pixels</A>
+</H1>
+
+<!-- linkto interp.html -->
+<A NAME="5040"></A>
+<A NAME="5041"></A>
+<A NAME="5042"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+INTERP may be used to remove bad portions of an image.  It works by
+replacing the bad pixels with a polynomial fit to several pixels on either
+side of the bad part.  It is an inherently one-dimensional interpolation,
+in that it will only interpolate either along a column or along a rows.
+Hence if you have a bad column you want to get rid of, specify the COL
+keyword.  If you need to replace a bad row, use ROW.  Note that ONE of
+these two keywords MUST be specified. The region across which the
+interpolation is done is specified by defining a box containing the
+region. A list of boxes may be given via the BOX= keyword, in case you want
+to remove a number of bad columns (or rows) from an image.  An alternate
+form uses the MASK keyword.  When this is used the program searches the
+image for the first masked pixel, continues until the next unmasked pixel,
+and interpolates across this region.  Then it proceeds until it finds the
+next masked pixel, and repeats the process until no more masked pixels have
+been found.  Note that the BOX= and MASK keywords are incompatible; use
+only one or the other.
+
+<P>
+The order of the interpolation-polynomial is given with the ORD=n
+keyword. The default is ORD=0, so that the bad pixels are replaced simply
+by the average of the adjacent pixels. This works fine for flat images, but
+when interpolating across stars or spectra ORD=2 works much better (higher
+orders up to 6 are allowed but are rarely needed).  The user can change the
+number of pixels to be used in the fit by the AVE= keyword.  AVE pixels at
+each side of the bad region are used in the fit.  The value of AVE has to
+be at least (ORD+1)/2, if a smaller value is given, the order of the
+interpolation-polynomial will be reduced to the highest allowed order. The
+default value is AVE=1; in other words, replaces the bad pixels with the
+line (or the average if ORD=0) defined by the pair of adjacent pixels (one
+pixel on either side) of the bad region.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

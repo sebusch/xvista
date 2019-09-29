@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>PLOT3D: Make a 3-D Perspective (mesh) Plot</TITLE>
+<META NAME="description" CONTENT="PLOT3D: Make a 3-D Perspective (mesh) Plot">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION008140000000000000000">
+PLOT3D: Make a 3-D Perspective (mesh) Plot</A>
+</H1>
+
+<!-- linkto plot3d.html -->
+<BR>
+
+<BR>
+
+<P>
+PLOT3D (also THREED or 3D) makes a 3 dimensional perspective plot of the
+specified buffer. The viewing altitude and aziumuth can be specified with
+the ALT= and AZ= terminal; if unspecified, they default to 45 and 225
+degrees, respectively. The vertical scale is done automatically, but can be
+overridden by use of the ZFAC and ZOFF keywords. See the Mongo manual for
+more details. NOERASE prevents erasure of the screen before making the
+plot. HARD generates hardcopy.
+
+<P>
+The 3-D plots that LickMongo makes can take a long time to draw.  Once the
+plot starts, there is no way to stop it until it is completed.
+Consequently, we suggest that you only use it on small sections of images,
+smaller than 100 x 100 pixels. The BOX= keyword makes it easy to select
+small image sections. If you enter an image larger than 100x100, the
+program will confirm that you really wish to continue before doing so.
+
+<P>
+Some control over the vertical relief plotted is possible using the ZFAC
+and ZOFF keywords.  These affect how the minimum and maximum data values
+are fit inside the virtual cube being plotted.  By changing these by hand,
+you can enhance or depress the vertical stretch of the plot (ZFAC) and move
+the plot up and down vertically within the plotting window (ZOFF).
+
+<P>
+If these are too arcane for you, then SCALE can be used instead to tweak
+the defaults computed by the routine from the data values, where SCALE=1 is
+equivalent to accepting the defaults, SCALE1 will increase relief, and
+SCALE1 will depress relief.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

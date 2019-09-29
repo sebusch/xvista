@@ -1,0 +1,28 @@
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       Common block used for communication between various readata routines
+c                       the user has set these limits on the line of the file
+c                       nline(0) is where the user's string marking the
+c                                beginning of the interesting data was.
+c                       nline(1) is where the user's first line is; it may
+c                                be offset by nline(0) from true BOF
+c                       nline(2) is where the user's last line is; it may
+c                                be offset by nline(0)
+	integer         nline(0:2)
+c                       the internal data array passed in via subroutine mongo
+c                       was said by the user to be have these dimensions
+	integer         nrow, ncol
+c                       are we using the internal data array which was passed
+c                       in via subroutine mongo?
+	logical         internal
+c                       what character in a datafile is the first one to read?
+c                       all chars left of it are skipped by a skipchars command
+	integer         scol
+c                       is there a data file currently open for read?
+	logical         fopen
+c                       max compiled size of data arrays
+	integer         maxlin
+	common  /readata/       nline, nrow, ncol, internal, scol,
+     &                          fopen, maxlin

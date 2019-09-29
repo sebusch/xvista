@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>PSF: DAOPHOT PSF Command</TITLE>
+<META NAME="description" CONTENT="PSF: DAOPHOT PSF Command">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001660000000000000000">
+PSF: DAOPHOT PSF Command</A>
+</H1>
+
+<!-- linkto psf.html -->
+<BR>
+
+<BR>
+
+<P>
+Creates a DAOPHOT style PSF from specified stars in buffer <I>im</I>. 
+The program
+will prompt for stars to use unless they are specified with the STARS=
+keyword. If this keyword is used, the stars will automatically be accepted
+(no user final verification) unless the INT keyword is also
+specified. The program will prompt for an input aperture magnitude file and
+an output PSF file name unless these have been previously specified with
+the DAOFILES MAG=magfile PSF=psffile command.
+
+<P>
+A DAOPHOT PSF consists of two parts: an analytic function and a lookup
+table of residuals to this function. Splitting the PSF in this fashion allows
+for more accurate interpolation and representation of the PSF to arbitary
+pixel centering. The analytic part of the PSF is numerically integrated to
+high accuracy at any desired pixel centering, and the residuals are 
+numerically interpolated and then added to the analytic function.
+
+<P>
+The choice of analytic function is set using the IPSFMODE option. The default
+mode, IP=1, uses a Gaussian aligned along rows and columns of the image (but
+with different FWHM in rows and columns). Other values of IPSFMODE are still
+in test stage.
+
+<P>
+For use the the PSF fitting routines, it is often advantageous from the point
+of computing speed to precompute the pixel-integrated PSF at a grid of 
+subpixel locations, and then interpolate within this grid. Such a grid
+can be created using the DAOLIB command, and then referenced during the
+PSF-fitting routine using the IPSFMODE=0 option.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

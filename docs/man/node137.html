@@ -1,0 +1,46 @@
+
+<H1><A NAME="SECTION0012170000000000000000">
+CROSS: Cross-Correlate Images or Spectra</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml352#
+<A NAME="5005"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command5006#
+<BR>
+
+<P>
+CROSS does a cross-correlation on two images, loading the resulting image
+into a third buffer.  This program is useful for registering two images or
+determining a shift between two spectra, for instance. It is usual practice
+to subtract an appropriate baseline from the images, usually the sky level
+for images and the continuum level for spectra. The RAD=r keyword defines
+the half-size of the cross-correlation image. If not specified the
+cross-correlation will be the same size as the first source image.
+However, a cross-correlation of a two-D image involves four nested DO
+loops, so it is advisable to use the RAD= keyword when possible so that two
+of the DO loops are short.  Often only the peak of the cross-correlation is
+of interest, so that the a very small radius may be specified (between 2
+and 5, say).  Spectra are automatically cross-correlated in one-dimension
+only.
+
+<P>
+The CORR keyword makes the routine compute full correlation coefficients
+rather than just cross-correlations as a function of lag. This option
+involved about a factor of 3 more operations, so runs slower. It is
+important for radial velocities or displacements because the correlation
+peak tends to be more symmetric than the cross-correlation
+peak. Asymmetries in cross-correlation and in correlation arise because
+both are computed over a finite region.
+
+<P>
+The peak of the cross-correlation image may be found using the SURFACE
+command with the LOAD keyword as in the following example, which
+cross-correlates two images, calculates the peak of the cross-correlation,
+and then shifts the two images into register:
+<BR>
+<tex2html_image_mark>#hanging5021#
+<BR>
+
+<P>

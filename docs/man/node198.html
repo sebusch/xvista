@@ -1,0 +1,36 @@
+
+<H1><A NAME="SECTION0015220000000000000000">
+RPREP: Read a Record from a Batch Surface Photometry Prep-File</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml456#
+<BR>
+<tex2html_image_mark>#command7104#
+<BR>
+
+<P>
+RPREP reads a record from a batch surface photometry preparation file
+opened using OPREP.  These files contain the following information (one
+record per image):
+
+<UL>
+<LI><#7108#>SKY value (into VISTA variable SKY)<#7108#>
+</LI>
+<LI><#7109#>max. radius for photometry (into variable RMAX)<#7109#>
+</LI>
+<LI><#7110#>estimated HWHM for the PSF (into variable PSF)<#7110#>
+</LI>
+<LI><#7111#>contents of the AXES block (into AXES)<#7111#>
+</LI>
+<LI><#7112#>image header (ignored by this routine).<#7112#>
+</LI>
+</UL>
+
+<P>
+This information must already have been written into the prep-file using
+the WPREP.  OPREP opens the file, which must have already been opened
+read-only using the `OPREP R' command
+
+<P>
+See Also:  OPREP, WPREP, CLPREP
+
+<P>

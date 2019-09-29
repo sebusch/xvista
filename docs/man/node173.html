@@ -1,0 +1,80 @@
+
+<H1><A NAME="SECTION0014210000000000000000">
+FQUO: Fit a Broadening Function to a Fourier Quotient Spectrum</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml414#
+<BR>
+<tex2html_image_mark>#command6180#
+<BR>
+
+<P>
+FQUO fits the broadening Gaussian that when convolved with a template
+minimizes least-squares from a given spectrum. The input buffers must hold
+already the 1-d Fourier transforms of the template and the data spectra
+(use command FFT with the keyword ONEDIM), so the user can do his own
+personal recipe to prepare the data before the FFT (de-trending,
+edge-masking, etc) using other VISTA commands like ROWPOLY. The data buffer
+is replaced by the fit, the Fourier transform of the properly scaled,
+broadened and shifted template.
+
+<P>
+By default (MODE=2) the least-squares minimization is performed comparing
+directly the data A with the convolution (product in Fourier space) of the
+template B and the broadening Gaussian G. If MODE=1 is used instead, the
+least-squares are minimized comparing the Fourier-quotient A/B with G.
+
+<P>
+The three parameters to fit are the so called gamma-parameter (G), the
+velocity dispersion (S), and the relative velocity (V) with respect to the
+template. Since this is a non-linear fit, the user must give a first guess
+for these parameters. The amplitude G of the Gaussian estimates a relative
+line-strength, the width S measures a relative broadening, and any relative
+shift shows up in the displacement V of the Gaussian. The template and the
+data should normally be in a logarithmic wavelength scale (command ALIGN
+with keyword log) before they are transformed in Fourier space. In this
+case, the units for the broadening S and the shift V are km/sec. Otherwise
+(data not in equally-spaced velocity bins before FFT), S and V will be
+measured in units that are given by the next combination of the value of
+the fits card CDELT1 and the speed of light: (1.0e-10)*CDELT1/C.
+
+<P>
+The initial guess can be given in three ways. Keywords G=, S=, V=, and
+GUESS=g,s,v, give the guessed values directly in the command line. Keyword
+GUESS=buf reads these values from buffer 'buf', where buf contains in
+column 1 the guess for gamma, in column 2 the guess for sigma, and in
+column 3 the guess for V. GUESS=buf is particularly useful with multi-row
+spectra (long-slit) or when taking previous results saved with the keyword
+LOAD=buf.
+
+<P>
+Sometimes one or more of the parameters are known a priori and do not want
+be be fitted. In these cases, the user can FIX a parameter at its input
+value with keywords FIXG, FIXS and/or FIXV.
+
+<P>
+The user can constrain the fit parameters parameters to be within certain
+limits with keywords G=g,mng,mxg, S=s,mns,mxs, and/or V=v,mnv,mxv. For
+example S=s,mns,mng will be fitting Sigma taking value 's' as first guess
+and keeping the fitted sigma between values 'mns' and 'mxs'. When only two
+values are specified in the keyword, like S=mns,mxs, the fit will be
+performed taking the average value as first guess and still constraining
+the final fit parameter within the limiting values.
+
+<P>
+Keywords KS=ks and KE=ke, can be used to limit the fit within Fourier
+wave-numbers ks to ke. Keyword WBUF=buf can be used to apply different
+weights to different wave-numbers according to the values in buffer 'buf'.
+
+<P>
+The data, template and weight images can have a single row (1-d
+spectroscopy) or any combination of one ore more rows (long-slit
+spectroscopy). If the template (weight) is a single row image, it will be
+used to fit all the rows of the data image. Otherwise the template
+(weights) will be the taken from the corresponding row in the data
+buffer. When the template (weights) image does not cover all the data rows,
+the template (weights) will be 'extrapolated' using the first or last row
+of the template (weights) image. Normally all the rows of the data image
+will be fit but the user can limit the fit to a single row with Keyword
+ROW=r (ignored in 1-D spectroscopy).
+
+<P>

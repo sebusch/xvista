@@ -1,0 +1,194 @@
+The package known as Lick Mongo is based upon the package called MONGO 1983.1
+which was originally assembled by John Tonry.  Let no one doubt the fact
+that MONGO was created by John Tonry.
+*******************************************************************************
+Lick Mongo is distributed by
+University of California Observatories/Lick Observatory (UCO/LO)
+in accordance with a letter of understanding between UCO/LO and
+John L. Tonry.
+
+Under the terms of the agreement, UCO/LO is able to distribute Lick Mongo
+to other sites which can provide evidence of a valid MONGO license.
+Information on how to obtain a valid MONGO license can be obtained from
+John L. Tonry by email to jt@antares.mit.edu or by writing to him at
+MIT 6-204
+Cambridge, MA  02139
+
+Details regarding the acquisition of Lick Mongo may be obtained by sending
+an email message to mongo@helios.ucsc.edu or by writing to
+Lick Mongo
+Software Group
+UCO/Lick Observatory
+University of California
+Santa Cruz, CA 95064
+*******************************************************************************
+Numerous additions and modifications have been made to the original code.
+The package known as Lick Mongo has existed since 1987, and as its name implies
+Lick Mongo is the code as it exists at the UC Observatories/Lick Observatory.
+The changes have been made by more than a dozen different individuals who
+were based at various state and private institutions all over the world.
+
+At this time it is very difficult to determine exactly which code originated
+with which author at which site.  The individual functions and subroutines
+will be edited to add authorship comments as best as can be reconstructed.
+There are some routines which are not derived from John Tonry in any way.
+These sections of code will be split out into separate files which will
+be housed in a separate directory of code.
+
+There are undoubtedly individuals or institutions other than those listed
+below who hold copyright to some portions of the code.  Information
+regarding the nature of such copyrights is welcomed for inclusion into
+future distributions of this code.
+
+In the mean time, the following copyrights do apply to the code.
+*******************************************************************************
+Much of the source code in the Lick Mongo package is derived from the original
+MONGO 1983.1 code.  This applies especially to the code which forms the
+interactive command interpreter.
+This code falls under the following copyright:
+C
+C  Copyright (c) 1983 John L. Tonry
+C  All Rights Reserved
+C
+*******************************************************************************
+Some of the source code in the Lick Mongo package is derived from work
+done at UC Santa Cruz, Lick Observatory, University of California
+Observatories, and UC Berkeley by employees in the course of their duties.
+As such, these segments of code fall under the following copyright:
+C
+C  Copyright (c) 1992 The Regents of the University of California
+C
+C  Different portions of Lick Mongo are covered by different copyrights.
+C  Based on licensing agreements executed between UCO/Lick Observatory and
+C  John L. Tonry, those sections of code supplied by or derived from code
+C  supplied by Tonry are copyright John L. Tonry.  Those sections of code
+C  developed by employees of the University of California, in the course
+C  of their employment, using University funding or facilities are copyright
+C  the Regents of the University of California.  Those sections of code
+C  developed by graduate students as part of their student assignments
+C  or research endeavors would normally belong to the individual student.
+C
+C  The present Copyright Policy of the University of California is
+C  imprecise on the question of copyright ownership of software developed
+C  by graduate students who are also University employees.  It is also
+C  imprecise regarding copyright ownership of software which was developed
+C  by non-employee graduate students using University-funded computing
+C  facilities.  UCO/Lick has attempted to obtain from the University
+C  a more definitive written statement of policy on these issues, but so
+C  far the various offices contacted have only agreed that this is a
+C  "gray area."  Given this situation, UCO/LO has elected to assert a
+C  joint copyright notice in those sections of code which fall into this
+C  gray area, e.g.:
+C
+C  Copyright (c) 1991 JohnDoe and/or the Regents of the University of California
+C
+C  In so doing, UCO/LO is asserting that the relevant sections of code are
+C  copyrighted.  Such code is thus subject to the restrictions imposed
+C  by the additional text incorporated in such copyright notices.
+C
+*******************************************************************************
+Some of the source code in the Lick Mongo package is derived from original
+work done by Richard W. Pogge.  Most of the PostScript device driver code
+and some other code falls under the following copyright:
+C
+C  Copyright (c) 1991 Richard W. Pogge
+C
+C  Permission is granted to anyone to make or distribute verbatim copies
+C  of this source code as received, in any medium, provided that the
+C  copyright notice and permission notice are preserved, and that the
+C  distributor grants the recipient permission for further redistribution
+C  as permitted by this notice.  Permission is granted to modify this
+C  source code or any portion of it under the terms above, provided that
+C  the nature of the modification is documented in the source with this
+C  notice, and that all rights as permitted by this notice are granted
+C  to subsequent recipients for similar modification of the source code.
+C
+C  Development of the LickMongo PostScript drivers was supported in part
+C  by NSF Grant AST86-11457.  The author feels that support by federal funds
+C  granted to perform research in the public trust entails a moral obligation
+C  to make any products resulting from such research freely available to
+C  all interested persons, provided that such subsequent use does not deny
+C  the right of free use to others.
+C
+C  Modification of this copyright notice is forbidden.
+C
+*******************************************************************************
+Some of the source code in the Lick Mongo package is derived from original
+work done by Philip A. Pinto.  The color code in the X11 device drivers and
+the interactive command line startup code falls under the following copyright:
+C
+C  Copyright (c) 1991 Philip A. Pinto
+C
+C  Permission is granted to anyone to make or distribute verbatim copies
+C  of this source code as received, in any medium, provided that the
+C  copyright notice and permission notice are preserved, and that the
+C  distributor grants the recipient permission for further redistribution
+C  as permitted by this notice.  Permission is granted to modify this
+C  source code or any portion of it under the terms above, provided that
+C  the nature of the modification is documented in the source with this
+C  notice, and that all rights as permitted by this notice are granted
+C  to subsequent recipients for similar modification of the source code.
+C
+C  The author feels that support by federal funds
+C  granted to perform research in the public trust entails a moral obligation
+C  to make any products resulting from such research freely available to
+C  all interested persons, provided that such subsequent use does not deny
+C  the right of free use to others.
+C
+C  Modification of this copyright notice is forbidden.
+C
+*******************************************************************************
+Some of the source code in the Lick Mongo package is derived from original
+work done by Steven L. Allen.  Specifically covered by this are the makefiles,
+the "make" files, and the CPP #include files which allow the code to be
+automatically portable to so many different operating systems.  Such code
+falls under the following copyright:
+C
+C  Copyright (c) 1991 Steven L. Allen
+C
+C  Permission is granted to anyone to make or distribute verbatim copies
+C  of this source code as received, in any medium, provided that the
+C  copyright notice and permission notice are preserved, and that the
+C  distributor grants the recipient permission for further redistribution
+C  as permitted by this notice.  Permission is granted to modify this
+C  source code or any portion of it under the terms above, provided that
+C  the nature of the modification is documented in the source with this
+C  notice, and that all rights as permitted by this notice are granted
+C  to subsequent recipients for similar modification of the source code.
+C
+C  The author feels that portability of software is of sufficient importance
+C  that schemes like the one used in Lick Mongo should be applied to other
+C  codes (subject, of course, to the constraints of any existing copyrights).
+C  All persons are encouraged to use similar schemes for the purpose
+C  of freeing other software packages from the bondage of a single platform.
+C
+*******************************************************************************
+
+Most of the fund-granting agencies which may have sponsored the work that
+generated the various bits of code are lost in antiquity.  Trying to list all
+of them would produce a list far more incomplete than the above copyright list.
+
+*******************************************************************************
+
+    THERE IS NO WARRANTY FOR THIS PROGRAM, TO THE EXTENT PERMITTED BY
+    APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE
+    COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS"
+    WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING,
+    BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+    FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY
+    AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM PROVE
+    DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR
+    CORRECTION.
+
+    IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+    WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+    REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
+    DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
+    DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
+    (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
+    INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
+    THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER
+    OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+*******************************************************************************
+

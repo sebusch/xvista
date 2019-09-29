@@ -1,0 +1,96 @@
+
+<H1><A NAME="SECTION00630000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="1801"><tex2html_anchor_invisible_mark></A>
+<A NAME="1802"><tex2html_anchor_invisible_mark></A>
+<A NAME="1803"><tex2html_anchor_invisible_mark></A>
+<A NAME="1804"><tex2html_anchor_invisible_mark></A>
+<A NAME="1805"><tex2html_anchor_invisible_mark></A>
+<A NAME="1806"><tex2html_anchor_invisible_mark></A><BR>
+SETDIR: Set the VISTA Default Directories and File Extensions
+</H1>
+<tex2html_verbatim_mark>rawhtml219#
+<BR>
+<tex2html_image_mark>#command1807#
+<BR>
+
+<P>
+SETDIR sets the default directories and extensions of files storing images,
+spectra, color maps, etc.  You can see the default values with the command
+PRINT DIRECTORIES.  See the section FILES (type HELP FILES if you're on a
+terminal) for information about default directories and extensions.  See
+also the command CD to change the current working directory (./) on a UNIX
+system.
+
+<P>
+The DIR word gives the default directory for the type of object specified
+by the code, and the EXT word gives the extension for that type of object.
+An example of a default extension is that for '.fits' for images.  An
+example of a default directory is 'ccd/spec' for spectra.  You must specify
+either the directory or the extension or both with SETDIR. If the extension
+is not blank, it must include a period as its first character: For example,
+'.xyz' is a valid extension, while 'flk' is not.
+
+<P>
+The 'code' gives the directory which is being set or changed. The code is
+derived from the type of object in the directory you are specifying.  You
+must type at least the first two letters of the code:
+
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">Directory</TD>
+<TD ALIGN="LEFT">Code</TD>
+<TD ALIGN="LEFT">Abbrev</TD>
+<TD ALIGN="LEFT">Notes</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Images</TD>
+<TD ALIGN="LEFT">IMAGES</TD>
+<TD ALIGN="LEFT">IM</TD>
+<TD ALIGN="LEFT">(user defined, usually ./)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Spectra</TD>
+<TD ALIGN="LEFT">SPECTRA</TD>
+<TD ALIGN="LEFT">SP</TD>
+<TD ALIGN="LEFT">(archaic, use IMAGES)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Procedures</TD>
+<TD ALIGN="LEFT">PROCEDURES</TD>
+<TD ALIGN="LEFT">PR</TD>
+<TD ALIGN="LEFT">(user defined)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Data Files</TD>
+<TD ALIGN="LEFT">DATA</TD>
+<TD ALIGN="LEFT">DA</TD>
+<TD ALIGN="LEFT">(user defined, usually ./)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">DAOPHOT files</TD>
+<TD ALIGN="LEFT">PHOTOMETRY</TD>
+<TD ALIGN="LEFT">PH</TD>
+<TD ALIGN="LEFT">(user defined)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Flux calibration files</TD>
+<TD ALIGN="LEFT">FLUX</TD>
+<TD ALIGN="LEFT">FL</TD>
+<TD ALIGN="LEFT">(assigned by system)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Wavelength files</TD>
+<TD ALIGN="LEFT">WAVE</TD>
+<TD ALIGN="LEFT">WA</TD>
+<TD ALIGN="LEFT">(assigned by system)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Color maps</TD>
+<TD ALIGN="LEFT">COLOR</TD>
+<TD ALIGN="LEFT">CO</TD>
+<TD ALIGN="LEFT">(assigned by system)</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+Examples: Suppose you see with PRINT DIR that the default directory for CCD
+spectra is ccd/spec and the default extension is '.fits'
+<BR>
+<tex2html_image_mark>#example1821#
+<BR>
+
+<P>

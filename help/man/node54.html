@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>EOF: Execute On End-Of-File (EOF)</TITLE>
+<META NAME="description" CONTENT="EOF: Execute On End-Of-File (EOF)">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00570000000000000000">
+EOF: Execute On End-Of-File (EOF)</A>
+</H1>
+
+<!-- linkto eof.html -->
+
+<P>
+<A NAME="1600"></A>
+<A NAME="1601"></A>
+<BR>
+<IMG
+ WIDTH="10" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img106.png"
+ ALT="\begin{command}
+\item[\textbf{Form: } EOF VISTA\_command\hfill]{}
+\item[VISTA\_command]{is any valid VISTA command.}
+\end{command}">
+<BR>
+EOF tells VISTA to execute the given VISTA command whenever an end of file
+is encountered in an OPEN'ed ASCII data file. See the OPEN and READ
+commands for information on how to use ASCII data files. The command can be
+any VISTA command but is quite often a GOTO command.  VISTA_command can
+not contain multiple commands separated by semicolons.
+
+<P>
+
+<OL>
+<LI>
+<PRE>
+  EOF GOTO WHEREVER
+  Any number of procedure lines...
+  WHEREVER:
+  The next commands to be executed after an end-of-file.
+</PRE>
+</LI>
+<LI>
+<PRE>
+  EOF EOF_FLAG=1
+  Sets the VISTA variable EOF_FLAG to 1 upon an end-of-file.
+</PRE>
+</LI>
+</OL>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>BIN: Compress (bin) an Image or Spectrum</TITLE>
+<META NAME="description" CONTENT="BIN: Compress (bin) an Image or Spectrum">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001250000000000000000">
+BIN: Compress (bin) an Image or Spectrum</A>
+</H1>
+
+<!-- linkto bin.html -->
+<A NAME="4661"></A>
+<A NAME="4662"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+BIN compresses images by integer factors.  Adjacent pixels are added
+together.
+
+<P>
+Use BIN= to specify a single compression factor for both rows and columns,
+or use BINR and BINC to specify the compression for rows and columns
+individually.  For spectra, just use BIN.  Note that
+<BR>
+
+<BR>
+
+<P>
+NORM makes the program AVERAGE adjacent pixels when compressing the image,
+instead of the default summing of pixel intensities.
+
+<P>
+BSR and BSC specify the starting row and column, respectively, of the
+region being saved.  These are pixel locations in the original image.  They
+are used to compress and save only part of an image.
+
+<P>
+The output image ALWAYS has starting row 0 and starting column 0.  It does
+not make sense to use BIN on a wavelength-calibrated spectrum.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

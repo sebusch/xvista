@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Output Redirection</TITLE>
+<META NAME="description" CONTENT="Output Redirection">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00220000000000000000">
+Output Redirection</A>
+</H1>
+
+<!-- linkto redirect.html -->
+
+<P>
+<A NAME="421"></A>
+<A NAME="422"></A>
+<A NAME="423"></A>
+
+<P>
+Many (but not all!) programs that produce large amounts of information may
+have their output REDIRECTED by the user.  The output from these programs
+normally goes to the terminal, but instead can be written to a file or to
+the line-printer.
+
+<P>
+To redirect the output, you use the '' or '<IMG
+ WIDTH="14" HEIGHT="22" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.png"
+ ALT="$&#187;$">' constructions at the
+end of a valid command.  A single  will write the output to a new file
+(overwriting one if it already exists).  A <IMG
+ WIDTH="14" HEIGHT="22" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.png"
+ ALT="$&#187;$"> will append to an existing
+file, or create a new file if the named file does not exist. If you use the
+output redirection 'lp:', then the output will be printed on your
+printer (using the lpr command to the default printer).
+
+<P>
+Recall that you cannot have any spaces in a word on the command line; this
+applies to output direction as well. Do not put a space after the  and
+before your file name!
+
+<P>
+Examples:
+
+<P>
+<BR>
+<IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img21.png"
+ ALT="\begin{example}
+\item[PRINT PHOT $&gt;$first.lis\hfill]{Prints the contents of a
+...
+...e 'help.xxx', if it exists. If it does not,
+the file is created.}
+\end{example}">
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

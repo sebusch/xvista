@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>FLUX: Flux Calibrate a Spectrum</TITLE>
+<META NAME="description" CONTENT="FLUX: Flux Calibrate a Spectrum">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0014130000000000000000">
+FLUX: Flux Calibrate a Spectrum</A>
+</H1>
+
+<!-- linkto flux.html -->
+<A NAME="5990"></A>
+<BR>
+
+<BR>
+
+<P>
+FLUX applies a standard star flux curve to a spectrum, replacing raw
+counts/sec/Angstrom (output from ALIGN) with fluxes in F-Lambda units
+(ergs/sec/cm/Angstrom).  The flux calibration is taken from a standard
+star flux curve computed using the FLUXSTAR command.  
+
+<P>
+FLUX will work on spectra that do not have exactly the same wavelength
+scale as the flux curve by fitting a spline to the flux curve, and then
+applies that spline fit to the spectrum.
+
+<P>
+If your spectrum has exactly the same wavelength scale as the flux curve,
+either because the flux standards were taken with the same spectroscopic
+setup as the star being fluxed, or because the spectra have been made to
+have the same scale with ALIGN, then you may flux calibrate the object
+spectrum simply by multiplying the spectrum by the flux curve with MULTIPLY
+command.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

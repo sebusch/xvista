@@ -1,0 +1,43 @@
+
+lynx: unpack doconfigure ../lynx2-8/lynx.$(MACHINE) install-clean
+
+unpack: 
+	(cd ../lynx ; gunzip lynx2-8a.tar.gz)
+	(cd .. ; tar xvf lynx/lynx2-8a.tar)
+	(cd ../lynx ; gzip lynx2-8a.tar)
+	touch unpack
+
+doconfigure: datefile.$(MACHINE)
+
+../lynx2-8/lynx.$(MACHINE):
+	(cd ../lynx2-8 ; make -k)
+
+install-clean:
+	rm -f ../bin/lynx.$(MACHINE)
+	-mv ../lynx2-8/lynx ../lynx2-8/lynx.$(MACHINE)
+	cp ../lynx2-8/lynx.cfg ../help/
+	ln -s ../lynx2-8/lynx.$(MACHINE) ../bin/lynx.$(MACHINE)
+	(cd ../lynx2-8 ; make -k clean)
+
+datefile.$(MACHINE):
+	rm -f datefile* ./configure.vista
+	echo "#!/bin/sh" >./configure.vista
+	echo "CC=$(CC)" >>./configure.vista
+#	tail +2l ../lynx2-8/configure >>./configure.vista
+	tail --lines=+2 ../lynx2-8/configure >>./configure.vista
+	chmod a+x configure.vista
+	mv configure.vista ../lynx2-8
+	(cd ../lynx2-8 ; ./configure.vista --libdir $(PWD))
+	date > datefile.$(MACHINE)
+
+clean:
+	rm -rf ../lynx2-8
+	rm -f *.dvi *.log *.aux *.idx unpack
+
+man-html:
+	latex2html -no_navigation -info " " -address " " man
+
+man-ps:
+	latex man
+	dvips man
+

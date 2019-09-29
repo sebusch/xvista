@@ -1,0 +1,116 @@
+
+<H1><A NAME="SECTION00830000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2627"><tex2html_anchor_invisible_mark></A>
+<A NAME="2628"><tex2html_anchor_invisible_mark></A><BR>
+ITV: Interact with the Image on the TV
+</H1>
+<tex2html_verbatim_mark>rawhtml266#
+<BR>
+<tex2html_image_mark>#command2629#
+<BR>
+
+<P>
+ITV enables you to interactively examine an image displayed on the video
+display.  The mouse buttons and several keyboard keys are activated to
+perform functions when pressed:
+
+<P>
+<DIV ALIGN="CENTER">
+<#2634#><B>Mouse Buttons</B><#2634#>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">Button</TD>
+<TD ALIGN="LEFT">Function</TD>
+</TR>
+<TR><TD ALIGN="LEFT">LEFT</TD>
+<TD ALIGN="LEFT">ZOOM IN, centered on the cursor</TD>
+</TR>
+<TR><TD ALIGN="LEFT">MIDDLE</TD>
+<TD ALIGN="LEFT">ZOOM OUT, centered on the cursor</TD>
+</TR>
+<TR><TD ALIGN="LEFT">RIGHT</TD>
+<TD ALIGN="LEFT">PAN, move the pixel under the cursor to the center</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+<DIV ALIGN="CENTER">
+<#2640#><B>Keyboard Commands</B><#2640#>
+<BR><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Key</TD>
+<TD ALIGN="LEFT">Function</TD>
+</TR>
+<TR><TD ALIGN="CENTER">E</TD>
+<TD ALIGN="LEFT">EXIT ITV and return to VISTA (or resume procedure)</TD>
+</TR>
+<TR><TD ALIGN="CENTER">R</TD>
+<TD ALIGN="LEFT">RESTORE image to the original zoom/pan</TD>
+</TR>
+<TR><TD ALIGN="CENTER">+</TD>
+<TD ALIGN="LEFT">BLINK Forwards through the last 4 images.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">-</TD>
+<TD ALIGN="LEFT">BLINK Backwards through the last 4 images.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">P</TD>
+<TD ALIGN="LEFT">Find the PEAK pixel near the cursor <tex2html_ampersand_mark> jump the cursor there</TD>
+</TR>
+<TR><TD ALIGN="CENTER">V</TD>
+<TD ALIGN="LEFT">Find the LOWEST pixel (;SPMquot;Valley;SPMquot;) near the cursor <tex2html_ampersand_mark></TD>
+</TR>
+<TR><TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">jump the cursor there</TD>
+</TR>
+<TR><TD ALIGN="CENTER">#</TD>
+<TD ALIGN="LEFT">;SPMquot;Power Zoom;SPMquot; zoom at the cursor to the maximum zoom factor</TD>
+</TR>
+<TR><TD ALIGN="CENTER">H</TD>
+<TD ALIGN="LEFT">Toggle between small and full-screen cross-hairs</TD>
+</TR>
+<TR><TD ALIGN="CENTER">F</TD>
+<TD ALIGN="LEFT">FREEZE/UNFREEZE the Zoom window.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">0-9</TD>
+<TD ALIGN="LEFT">Mark the pixel coordinates and store in VISTA</TD>
+</TR>
+<TR><TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">variables Rn and Cn, where ;SPMquot;n;SPMquot; is the number key hit</TD>
+</TR>
+<TR><TD ALIGN="CENTER">D</TD>
+<TD ALIGN="LEFT">Print selected pixel row, column, and value.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">;SPMnbsp;</TD>
+<TD ALIGN="LEFT">Load variables R and C with the location.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">]</TD>
+<TD ALIGN="LEFT">Clear boxes and stuff off the image display</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+The D key also loads the coordinates of the most recently selected pixel
+into VISTA variables R and C; the 0--9 keys load Rn and Cn, where n is the
+key struck.  If the image had to be compressed to fit in the display window
+(auto or manual dezoom), the main display will not show every pixel,
+although the magnifying glass window will, so choose the pixel in that
+window.
+
+<P>
+You also have control of the color map (upper <tex2html_ampersand_mark> lower contrast drag and
+color-map roll), see the X11 help page for details.
+
+<P>
+The ITV command is very useful in procedures for letting you use the D or
+0--9 keys to extract position information from the image of interest needed
+elsewhere within the procedure.  Recall that variables (or any arithmetic
+expression) may be used in place of a number in words of the form
+word=value.  Here is an example of a procedure which draws a contour map of
+a section of an image located by the cursor.  It draws at most a 51x51 box,
+but will draw a smaller section of an image if the cursor is placed near
+the edge of the frame.
+
+<P>
+<PRE><tex2html_verbatim_mark>verbatim267#</PRE>
+
+<P>

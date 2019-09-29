@@ -1,0 +1,45 @@
+
+<H1><A NAME="SECTION001250000000000000000">
+BIN: Compress (bin) an Image or Spectrum</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml338#
+<A NAME="4654"><tex2html_anchor_invisible_mark></A>
+<A NAME="4655"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command4656#
+<BR>
+
+<P>
+BIN compresses images by integer factors.  Adjacent pixels are added
+together.
+
+<P>
+Use BIN= to specify a single compression factor for both rows and columns,
+or use BINR and BINC to specify the compression for rows and columns
+individually.  For spectra, just use BIN.  Note that
+<BR>
+<tex2html_image_mark>#example4673#
+<BR>
+
+<P>
+NORM makes the program AVERAGE adjacent pixels when compressing the image,
+instead of the default summing of pixel intensities.
+
+<P>
+BSR and BSC specify the starting row and column, respectively, of the
+region being saved.  These are pixel locations in the original image.  They
+are used to compress and save only part of an image.
+
+<P>
+The output image ALWAYS has starting row 0 and starting column 0.  It does
+not make sense to use BIN on a wavelength-calibrated spectrum.
+
+<P>
+<#4677#>Examples:<#4677#>
+<BR>
+<tex2html_image_mark>#example4678#
+<BR>
+
+<P>

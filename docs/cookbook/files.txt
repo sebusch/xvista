@@ -1,0 +1,25 @@
+
+Directory SYS$USER:[CCDEV.COOKBOOK]
+
+AAAREADME.TXT;1                 1   1-SEP-1988 16:48
+COOK_2D.TEX;16                120  31-AUG-1988 12:39
+COOK_APPA.TEX;19               76  31-AUG-1988 13:49
+COOK_APPB.TEX;10               29  31-AUG-1988 14:26
+COOK_APPC.TEX;7                20  31-AUG-1988 13:47
+COOK_BASIC.TEX;8               54  31-AUG-1988 13:05
+COOK_DIRT.TEX;4                33  31-AUG-1988 13:13
+COOK_HAM.TEX;33                65  31-AUG-1988 12:40
+COOK_INTRO.TEX;23              21   1-SEP-1988 09:19
+COOK_MASTER.AUX;10             36   1-SEP-1988 09:19
+COOK_MASTER.DVI;2             647   1-SEP-1988 09:19
+COOK_MASTER.TEX;9               6  31-AUG-1988 16:33
+COOK_MASTER.TOC;10             19   1-SEP-1988 09:19
+COOK_SPEC.TEX;7                52  31-AUG-1988 12:39
+COOK_TUTOR.TEX;15              53  31-AUG-1988 15:50
+FILES.TXT;1                     0   1-SEP-1988 16:49
+MAN12.STY;10                   13   6-JUN-1988 12:42
+MANUAL.STY;4                   14   6-JUN-1988 13:08
+STUFF.KATE;1                   34  18-MAY-1988 12:51
+THESISMAC.TEX;14                9  13-MAR-1988 12:18
+
+Total of 20 files, 1302 blocks.

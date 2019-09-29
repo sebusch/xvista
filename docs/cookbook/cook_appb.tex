@@ -1,0 +1,413 @@
+%
+%  VISTA Cookbook;  Sample VISTA Command Procedures (Appendix B)
+%
+%  Began:  1988 August 9
+%
+%  Last Revision:  1988 August 30
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:proc
+%
+
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+%\def \hitkey#1 {$\langle${\tt #1}$\rangle$\/}
+%
+%\begin{document}
+
+\chapter{Sample VISTA Command Procedures}
+
+This chapter is a short collection of simple VISTA command procedures, some of
+which pertain to image processing tasks mentioned in the text. The point is
+not to give a detailed account of how to make and use VISTA procedures, but to
+archive some of our favorites.  The best way to learn how to write VISTA
+procedures is by imitation.  These examples should suffice quite nicely.  They
+range from rather simple (almost trivial) to a little involved.  It would help
+if you were familiar with the VISTA Help Manual, and had it handy to explain
+what is going on.  Consider these as exercises for the reader to figure out.
+There is no particular order.  Enjoy!
+
+%------------------------------------------------------
+
+\section{A Sample STARTUP Procedure}
+
+This is the startup file of one of the authors.  It defines a number of
+convenient command aliases.
+
+\begin{verbatim}
+      SETDIR IM DIR=SCRATCH:
+      SETDIR SP DIR=SCRATCH:
+      ALIAS TV    'TV NOLABEL CLIP'
+      ALIAS COP   'COPY'
+      ALIAS CL    'CLEAR'
+      ALIAS RT    'RT NOMEAN'
+      ALIAS TBOX  'TVBOX'
+      ALIAS ZAPIT 'TVZAP SIG=2'
+      ALIAS RAIN  'COLOR CF=RAIN'
+      ALIAS WRMB  'COLOR CF=WRMB'
+      ALIAS BW    'COLOR CF=BW'
+      ALIAS IBW   'COLOR CF=IBW'
+      ALIAS WTF   'WT BITPIX=32'
+      ALIAS WT    'WT BITPIX=16'
+      ALIAS WD    'WD FULL'
+      ALIAS RS    'RD SPEC'
+      ALIAS WS    'WD SPEC FULL'
+      END
+\end{verbatim}
+
+%------------------------------------------------------
+
+\section{Interpolate across known bad columns}
+
+This is a short procedure to interpolate across known blocked columns on the
+TI 500$\times$500 CCD in use on the 1-meter Nickel Telescope at Mt. Hamilton.
+It is also an example of the use of the \comm{PARAMETER} command which allows
+procedures to be ``called'' like subroutines from within VISTA without reading
+them in.  For example, to interpolate out the bad columns on an image in
+Buffer 5, you would issue the VISTA command:
+
+\begin{command}
+      \item CALL BADCOL 5
+\end{command}
+
+\noindent and away go the columns.
+
+\begin{verbatim}
+!
+!  BADCOL.PRO   Remove major blocked columns on TI 500X500
+!
+PARAMETER IMNO
+BOX 9  SR=280 SC=405 NR=220 NC=5
+BOX 10 SR=412 SC=445 NR=88  NC=5
+INTERP $IMNO BOX=9,10 COL
+BOX 9  SR=0   SC=29  NR=500 NC=2
+BOX 10 SR=410 SC=47  NR=90  NC=1
+INTERP $IMNO BOX=9,10 COL
+BOX 9  SR=334 SC=190 NR=166 NC=1
+BOX 10 SR=117 SC=360 NR=383 NC=2
+INTERP $IMNO BOX=9,10 COL
+BOX 9  SR=80  SC=227 NR=420 NC=1
+BOX 10 SR=1   SC=411 NR=499 NC=1
+INTERP $IMNO BOX=9,10 COL
+END
+\end{verbatim}
+
+%------------------------------------------------------
+
+\section{Prepare Summed Flats}
+
+This procedure will read in a set of flat-field images from tape and add them
+together to make a single, summed flat.  The user is prompted for the tape
+unit number, the file number on tape of the first flat and the file number of
+the last flat.  All flat fields between these will be summed, and the result
+put in Buffer 1.  It is a good example of simple use of the \comm{ASK} command
+to prompt for input, the \comm{PRINTF} to print responses at the user, and
+of the use of a \comm{DO/END\_DO} loop.
+
+\begin{verbatim}
+!
+! FLAT.PRO:  Read Flat Field Frames from tape and add together
+!            into a single flat field.  Assumes that flats
+!            come from the tape in adjacent files.  The summed
+!            flat is made in BUFFER 1 and BUFFER 2 is used as
+!            working space.  Baseline correction is applied to
+!            all flats.
+!
+ASK 'Tape Unit Number ? : ' TAPE
+ASK 'Enter file number of first FLAT ? : ' FLAT1
+ASK 'Enter file number of last FLAT  ? : ' FLAT2
+RT 1 $FLAT1 UNIT=TAPE NOMEAN
+BL 1
+DO TN=FLAT1+1,FLAT2
+      RT 2 $TN UNIT=TAPE NOMEAN
+      BL 2
+      ADD 1 2
+END_DO
+DISPOSE 2
+MN 1
+PRINTF 'Summed Flat is in BUFFER 1'
+END
+\end{verbatim}
+
+%------------------------------------------------------
+
+\section{Draw a Scale Bar on an Image}
+
+If you want to draw a scale bar on an image to indicate angular scale, this
+procedure could come in handy.  It is the procedure used in the
+chapter on ``dirty tricks''.
+
+\begin{verbatim}
+!
+!   BAR.PRO:  Draws a scale bar of length NCOLS on an image
+!
+ASK 'IMAGE NUMBER ? : ' IM
+ASK 'PUT BAR IN WHAT IMAGE ROW ? : ' ROW
+ASK 'STARTING COLUMN ? : ' ZSTART
+ASK 'LENGTH ? : ' NCOLS
+ASK 'INTENSITY VALUE ? : ' VALUE
+SET ZEND=ZSTART+NCOLS
+DO Z=ZSTART,ZEND
+      VAL=SETVAL[IM,ROW,Z,VALUE]
+END_DO
+VAL=SETVAL[IM,ROW-1,ZSTART,VALUE]
+VAL=SETVAL[IM,ROW+1,ZSTART,VALUE]
+VAL=SETVAL[IM,ROW-1,ZEND,VALUE]
+VAL=SETVAL[IM,ROW+1,ZEND,VALUE]
+END
+\end{verbatim}
+
+%------------------------------------------------------
+
+\section{Cross Correlate 2 Images}
+
+This is a procedure to cross correlate two images and find the shift between
+them.  It is a procedure version of the cross correlation technique for image
+registration discussed in Chapter 4.  Among other things, it demonstrates
+the use of formatting statements in the \comm{PRINTF} command to make
+spiffy looking output.
+
+As an exercise, re-write the procedure to replace all of the \comm{ASK}
+commands with a single \comm{PARAMETER} command so that you could invoke CROSS
+with the command:
+\begin{command}
+      \item CALL CROSS 1 2 3 2 5
+\end{command}
+which will cross correlate the image in Buffer 1 against the template image in
+Buffer 2, use Buffer 3 as a temporary work space, use a cross-correlation
+radius of 2 pixels, and limit the computation to the contents of \comm{BOX} 5.
+
+\begin{verbatim}
+!
+!  CROSS:  Cross Correlate 2 images and find relative shift
+!
+ASK ' BUFFER WITH THE IMAGE TO SHIFT ? : ' IMAGE
+ASK ' BUFFER WITH THE TEMPLATE IMAGE ? : ' TEMP
+ASK ' BUFFER TO USE AS WORKING SPACE ? : ' WORK
+ASK ' RADIUS FOR CROSS CORRELATION (TYP=2) ? : ' WIDTH
+ASK ' BOX TO USE ? : ' DABOX
+CROSS $WORK $TEMP $IMAGE RAD=WIDTH BOX=DABOX
+SURFACE $WORK LOAD
+SET DENOM=4*COEFFC2*COEFFR2-COEFFRC*COEFFRC
+SET DELR=MIDR+(COEFFC*COEFFRC-2*COEFFR*COEFFC2)/DENOM
+SET DELC=MIDC+(COEFFR*COEFFRC-2*COEFFC*COEFFR2)/DENOM
+PRINTF 'Relative Shift:'
+PRINTF '   DELTA ROWS : %F12.6' DELR
+PRINTF '   DELTA COLS : %F12.6' DELC
+END
+\end{verbatim}
+
+%------------------------------------------------------
+
+\section{Another Interpolation Procedure}
+
+Another bad region fixer-upper, and a good example of a simple use of
+\comm{IF/END\_IF} statements for flow control in a procedure. It also shows
+that you don't have to use upper case all of the time to write your
+procedures.  In this case, the \comm{IF/END\_IF} statement is being used as an
+error trap.
+
+\begin{verbatim}
+printf 'Interpolation routine \N'
+ask 'Enter ROW number    => ' rown
+ask 'Enter lower COLUMN  => ' lcoln
+ask 'Enter upper COLUMN  => ' ucoln
+if ucoln>lcoln
+  numcol=ucoln-lcoln+1
+  box 10 nr=1 sr=rown sc=lcoln nc=numcol
+  interp 4 row box=10
+  printf 'Fixed row %i3 - column %i3 to %i3' rown lcoln ucoln
+end_if
+end
+\end{verbatim}
+
+%------------------------------------------------------
+
+\section{Automatic Tape Archiving}
+
+This little procedure is a good example of how to get down and dirty with two
+very powerful VISTA utilities:  String Substitution and reading data from
+external ASCII files to provide command input.  What this procedure does is
+read a pre-prepared listing of image files stored on disk, reads them into
+VISTA in order, and writes them onto tape.  A way of making an ``archive'' of
+files stored temporarily on disk.  This was originally written to make a tape
+archive of all of the data from a reduction session covering an entire night
+of observing.  It is very handy for making archives of a hundred spectra
+cluttering up the scratch disk.
+
+\begin{verbatim}
+!
+!  ARCHIVE.PRO:  Tape Archive Procedure.  This procedure
+!                archives images onto magnetic tape in
+!                FITS format.
+!
+PRINTF '       *** CCD Disk-to-TAPE File Archiving ***'
+PRINTF '\N'
+PRINTF 'Before continuing, be doubly sure that the files to be '
+PRINTF 'written are correctly named and in the proper order in'
+PRINTF 'the LISTing file.'
+PRINTF 'Under VMS, this file can be created by typing:'
+PRINTF '      $DIRECTORY/NOHEAD/NOTRAIL/OUT=fname.typ *.CCD;*'
+PRINTF 'Finally, make sure the tape is loaded and mounted.'
+STRING DIRECT  '?Enter the directory name containing the images ? '
+STRING NAME    '?Enter the listing filename.typ ? '
+STRING FILE    '%A30%A30' {DIRECT} {NAME}
+ASK             'Enter the tape drive unit number ? ' TAPE
+!
+SETDIR IMAGE DIR={DIRECT}
+SETDIR SPECTRA DIR={DIRECT}
+OPEN LIST {FILE}                ! Open LISTing file.
+STAT NSPEC=COUNT[LIST]          ! Count # of images in file.
+DO I=1,NSPEC
+      STRING DISKIM {LIST}      ! Get disk image name from file.
+      RD 1 {DISKIM}             ! Read image from disk.
+      WT 1 BITPIX=-32 UNIT=TAPE ! Write to TAPE w/full precision.
+      PRINTF '\N'
+      PRINTF 'Wrote file %A30 successfully' {DISKIM}
+END_DO
+DISPOSE 1
+END
+\end{verbatim}
+
+%------------------------------------------------------
+
+\section{Automated Wavelength Calibration Procedure}
+
+This is a very complicated (admittedly overkill) procedure that is used quite
+often at Lick for automatic Wavelength calibration of spectra with lots of
+interaction with the user.  One of the many things it does is interrupt
+procedure flow to allow the user to issue VISTA commands free of the procedure
+(for example, to load a flat-field frame if forgotten).  It also makes heavy
+use of string substitution, and makes use of the output re-direction facility
+to write a log of the calibration session into an external text file.  Dick
+Shaw and Rick Pogge are responsible for this little nasty.
+
+To explain a peculiarity: in general, spectral images taken at Lick on the
+1-meter and 3-meter Cassegrain spectrographs come out with the dispersion
+(wavelength) running along columns, while VISTA (and most humans) like to see
+dispersion running from left to right, or along rows as viewed on the TV
+screen.  Thus, this procedure will first \comm{ROTATE} the raw spectral images
+of the comparison lines before flat-field correction.
+
+\begin{verbatim}
+!
+!  COMPAR.PRO:  Wavelength calibration routine.
+!
+!      Determines the polynomial wavelength scale from the
+!      comparison lamps & linearizes the lamp spectrum.
+!
+PRINTF ' \N'
+PRINTF 'Welcome to the WAVELENGTH CALIBRATION routine.'
+PRINTF ' \N'
+PRINTF 'Is a FLAT-FIELD (and MEAN) loaded into buffer 1?'
+PRINTF 'Type "C" if so; otherwise set things up, then type "C".'
+PAUSE
+ASK 'Grating Number = > ' GRAT
+ASK 'Tape Unit Number => ' TAPE
+ASK 'How many lamp exposures will there be [<=8] => ' NLAMP
+ASK 'Order of polynomial for fit:  => ' PORD
+ASK 'Approximate Central Row of Spectrum => ' SPCEN
+RS=SPCEN-10
+RE=SPCEN+10
+DO SNO=2,NLAMP+1
+      SAVE=SNO+10
+      ASK 'Image file number on TAPE ? => ' TN
+      RT $SAVE $TN UNIT=TAPE NOMEAN
+      BL $SAVE
+      ROTATE $SAVE LEFT
+      DIV $SAVE 1 FLAT
+      MASH $SNO $SAVE SP=(RS,RE)
+      DISPOSE $SAVE
+END_DO
+PLOT 2 MIN=0
+PRINTF ' \N \N WAVELENGTH IDENTIFICATION from appropriate files... '
+!
+! Print list of available line ID lists.
+!
+$DIR [VISTA.BASE.LAMDIR]*.WAV
+!
+!  Call line ID routine with interactive line
+!  selection & extra displayed info.
+!
+LINEID 2 INT TTY
+PRINTF 'If you have blown the wavelength ID ... start again.'
+PRINTF 'If things are O.K. type "C" to continue.'
+PAUSE
+IF NLAMP>1
+DO SNO=3,NLAMP+1        ! ID lines from other lamps if needed.
+      PLOT $SNO MIN=0
+      $DIR [VISTA.BASE.LAMDIR]*.WAV
+      LINEID $SNO INT TTY ADD
+END_DO
+END_IF
+CLEAR
+WSCALE 2 ORD=PORD TTY INT     ! derive polynomial scale.
+IF NLAMP>1
+      DO SNO=3,NLAMP+1        ! copy scale to other lamps.
+            COPW $SNO 2
+      END_DO
+END_IF
+PLOT 2 MIN=0
+PRINTF 'Choose plot parameters from first calibration lamp...'
+ASK 'Starting wavelength for plot (and polynomial) => ' SWV
+ASK 'Ending   wavelength for plot                  => ' EWV
+ASK 'Final Linear Dispersion for Spectra           => ' FD
+CLEAR
+!
+! Write Reduction log info.
+!
+STRING OUT1 'COMPAR_G%I1' GRAT
+STRING OUT2 '.LIS'
+STRING OUTFILE '%A9%A4' {OUT1} {OUT2}
+PRINTF '     ***   WAVELENGTH CALIBRATION   ***' >{OUTFILE}
+PRINTF '_________________________________________' >>{OUTFILE}
+PRINTF 'Using VISTA Version 3.0' >>{OUTFILE}
+PRINTF 'Grating %I2 -- Dispersion %F5.2 A/px' GRAT FD >>{OUTFILE}
+PRINTF 'Wavelength scale calibrated from:' >>{OUTFILE}
+PRINTF '       %F6.1 to %F6.1 \N' SWV EWV >>{OUTFILE}
+PRINTF 'Lamp spectra mash'd over rows %I3 to %I3 ' RS RE >>{OUTFILE}
+PRINTF '*****************************************' >>{OUTFILE}
+PRINTF ' \N' >>{OUTFILE}
+PRINT LINEID >>{OUTFILE}
+PRINTF '*****************************************' >>{OUTFILE}
+PRINTF 'Fitting summary:' >>{OUTFILE}
+PRINTF ' \N' >>{OUTFILE}
+WSCALE 2 ORD=PORD >>{OUTFILE}
+PRINTF '*****************************************' >>{OUTFILE}
+PRINTF ' \N' >>{OUTFILE}
+!
+PRINTF 'Lamp(s) used for Calibration :' >>{OUTFILE}
+PRINTF ' \N'
+PRINTF 'Write each lamp twice: polynomial and aligned'
+COPY 10 2
+DO SNO=2,NLAMP+1
+      PRINTF 'Rename Spectrum if desired'
+      CH $SNO                             ! Rename image.
+      BUF $SNO FITS=OBJECT
+      PRINTF 'Polynomial first: '
+      WD $SNO FULL                        ! Polynomial
+      BUF $SNO FITS=OBJECT >>{OUTFILE}
+      PRINTF '\N Linear next:'
+      ALIGN $SNO DSP=FD W=(SWV,1) LGI
+      PLOT $SNO XS=SWV XE=EWV MIN=0 HARD INFO GRID
+      WD $SNO FULL                        ! Aligned
+      DISPOSE $SNO
+END_DO
+PRINTF 'Output is in file:  %A13' {OUTFILE}
+COPY 2 10
+PRINTF 'Valid calibrated lamp is loaded in buffer 2'
+END
+\end{verbatim}
+
+%------------------------------------------------------------------
+
+%\end{document}
+%\end

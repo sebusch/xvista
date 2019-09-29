@@ -1,0 +1,54 @@
+
+<H1><A NAME="SECTION0012230000000000000000">
+BL: Correct an Image for Baseline Subtraction Noise</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml358#
+<A NAME="5142"><tex2html_anchor_invisible_mark></A>
+<A NAME="5143"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command5144#
+<BR>
+
+<P>
+<#5166#><B>NOTE: This is an old Lick Observatory data-taking system command
+that is no longer valid (unless you have to reduce data taken before
+1990).  It is <#5155#><I>not</I><#5155#> the same as overscan subtraction.</B><#5166#>
+
+<P>
+BL removes the noise introduced through the digital baseline-restoration
+procedure used by the data collection program.  The last column of the CCD,
+called the 'baseline column' is not illuminated during an exposure.  Each
+pixel in this column determines the zero-level for the corresponding row in
+the rest of the chip, which is subtracted from each pixel in that row as
+the image is read off the chip into the data-taking system.  NOTE THAT THIS
+IS THE PROCEDURE IMPLEMENTED AT LICK OBSERVATORY, BUT NOT MOST OTHER
+PLACES!  Lick subtracts a row by row baseline value before storing the
+image at the telescope. If this is not done at your site, you should not
+use the BL command!  Write a procedure to do the appropriate bias and/or
+baseline subtraction using the information supplied by your data taking
+system.
+
+<P>
+The baseline measurement is rather noisy, so when the zero-levels are
+subtracted, significant variations in level from one row to another are
+introduced.  The BL program corrects for this by fitting a straight line by
+least-squares to the values in the baseline column. The original baseline
+measurements are then added back into the image data and the mean baseline
+values evaluated from the linear least-squares fit are subtracted.  The
+best fit baseline is stored in the baseline column, unless the keyword KEEP
+is specified, in which case the original baseline is left in the baseline
+column.
+
+<P>
+The baseline column can sometimes exhibit several jumps in level along its
+length.  BL detects these jumps, fitting a series of linear functions to
+the baseline column between these jumps.  To detect the jumps, thus fitting
+the entire column with more than one linear function, use the JUMP keyword.
+
+<P>
+The BL procedure should be applied to every raw image before analysis or
+processing.
+<tex2html_endfile>#./chap12.tex#
+<tex2html_file>#./chap13.tex#

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>SHIFT: Shift an Image</TITLE>
+<META NAME="description" CONTENT="SHIFT: Shift an Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001260000000000000000">
+SHIFT: Shift an Image</A>
+</H1>
+
+<!-- linkto shift.html -->
+<A NAME="4691"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+SHIFT will translate the coordinate system of the 'source' image by 
+the amount specified in pixels.  
+
+<P>
+The simplest use of SHIFT is to specify the amount of translation along
+each axis using the DR and/or DC keywords.  The routine first rounds the
+desired shift to the nearest pixel, and adjusts the variables specifying
+the image's origin. The routine then uses a flux conserving Lagrangian
+interpolation scheme (unless SINC or BILINEAR is specified in which case
+the sinc or bilinear interpolation option is activated) to move the image
+the remaining fraction of a pixel in the specified row and column
+directions.
+
+<P>
+The NORM keyword is used to conserve counts in the shifted image when sinc-
+interpolation is used.  BEWARE! This may not operate they way you think (or
+want)!  If there is substantial noise in your data it will be trying to
+normalize the noise and will hence be multiplying by a rather arbitrary
+constant.
+
+<P>
+The RMODEL= (or CMODEL=) keyword specifies a spectrum buffer which is used
+as a model for the row (or column) shift as a function of column (or row)
+number.  This allows more flexible shifts to be performed, and allows, for
+instance, the rectification of cross-dispersed spectral data.  Note that if
+you use SPECTROID or FINDPEAK to build the shift model, you must multiply
+the output of these routines by -1 in order to straighten it.  The complete
+interpolation is done, and the starting row and column of the image are not
+changed, when models are used.  Also, the MEAN keyword will force the mean
+shift to be zero, so that you don't risk shifting your data completely off
+of the image.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+<B>Warning:</B> SHIFT can be used to shift an image so that its starting row
+or column is negative.  On some older routines this might lead to errors or
+crashes. After shifting an image, you may want to IMMEDIATELY window the
+image or reset the coordinates (see WINDOW and FIXHEAD, respectively), so
+that the starting row and column are greater than or equal to zero!
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

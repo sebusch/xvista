@@ -1,0 +1,200 @@
+.TH Mongo 1L 10/5/88
+.UC 4
+.SH NAME
+Lick Mongo \- interactive graphics package
+.SH SYNOPSIS
+Lick Mongo
+.SH DESCRIPTION
+.LP
+.I Lick Mongo
+is an interactive graphics program designed especially for scientific
+and astronomical plotting needs.  It is designed to allow users to
+produce high-quality graphics with a minimum of effort.
+To accomplish this,
+.I Lick Mongo
+has a large vocabulary of commands, but requires only a few for simple
+plotting tasks.  Typing "mongo" will put you in command interpreter
+mode, indicated by the * prompt.
+.SH DATA FORMAT
+Input to
+.I Lick Mongo
+is in the form of an ascii data file consisting of columns of numbers.
+The program uses a Fortran list-directed read operation to get the
+data from this file.  The format requirements are:
+.TP
+(1)
+There should be a numeric (non-alphabetic) entry in each column in
+each row (blanks are unacceptable, use some dummy value like -999.99)
+.TP
+(2)
+Data items may be real or integer.
+.TP
+(3)
+Data items in a row (line) are separated by white space.
+.PP
+Any column may be assigned to the `X' values, and any other to be
+the `Y' values.  These coordinates may be used to make points, a
+continuous curve, or a histogram.  The program can also be directed
+to read only a specified range of rows (for example, to avoid reading
+a header line).
+.PP
+Once the data is put in this format, the user may manipulate it by
+instructing the program to plot a column of numbers against any other,
+with free choice as to axis limits, linear or logarithmic scales,
+completely user-defined choice of axis labels, plotting labels, title,
+etc., all accomplished interactively by issuing commands from the
+keyboard.
+.I Lick Mongo
+has an interactive spline fitting facility, a simple
+interactive cursor mode (terminal applications only), a facility for
+plotting 2-D vector fields (from suitably-prepared input files), and
+has a limited facility for plotting image data (2-D data arrays) as
+either contour maps or hidden-line 3-D plots.
+.SH COMMANDS
+.I Lick Mongo
+commands are summarized in a separate document,
+.I The Lick Mongo Interactive Command Summary.
+This information is also available online from within
+.I Lick Mongo
+using the
+.B HELP
+command.   A reference manual,
+.I Lick Mongo 1988,
+describes all commands in detail.
+.PP
+Commands may be read from a file as well as entered by hand
+interactively, and the contents of the command buffer may be written
+to a file.  Often the best way to make a complicated plot is to make
+test plots interactively, write the command buffer to a file, exit
+.I Lick Mongo,
+edit the command file, making appropriate changes, then re-enter
+.I Lick Mongo
+and read in the edited file.
+.PP
+Once developed, command scripts (called "macros") may be stored, then
+later recalled and executed by the
+.I Lick Mongo
+command interpreter to reproduce any plot.
+.PP
+Valid interactive
+.I Lick Mongo
+commands may be entered as any unambiguous abbreviation and are case
+insensitive; the program will flag ambiguous abbreviations entered by
+the user.  For example:
+.PP
+.ti+5n
+.B PLAYBACK,
+.B PLAY,
+and
+.B PLA
+are all valid equivalents
+.sp 1
+.ti+5n
+.B PL
+is ambiguous with
+.B PLAYBACK,
+.B PL3BOX,
+and
+.B PLT3D.
+.PP
+.SH OUTPUT DEVICES
+.I Lick Mongo
+supports a wide variety of graphics terminals and can also produce
+publication-quality hardcopy output; devices locally available are
+summarized here:
+.PP
+.B TERMINALS:
+.TP
+DEI Retrographics 640 VT100:
+use "TERM 1".  These are VT100 terminals with the DEI
+Retrographics board.
+.TP
+X11 Server:
+use "TERM 11".
+.TP
+Sun Workstation, ISI Workstation, MicroVAX/VMS Workstation:
+use "TERM 7".
+.TP
+Visual 603:
+use "TERM 8", but beware: the Visual 603s are really text OR graphics
+terminals, not text AND graphics.
+.TP
+xterm Tektronix emulation:
+use "TERM 10" if you must, but "TERM 11" is much better if the machine
+running
+.I Lick Mongo
+has Xlib support.
+.TP
+GraphOn 140:
+use "TERM 14", and toggle between the text and graphics screens with the
+Shifted View/Status key (top left of keyboard, 2nd from left).
+.TP
+GraphOn 225, 235, 240, 250:
+use "TERM 13", and toggle between the text and graphics screens with the
+Status/Window key (top left of keyboard, 4th from left).
+.PP
+A complete listing of supported terminals may be obtained in
+the Lick Mongo interactive mode by typing the "HELP TERM" command.
+.PP
+.B HARDCOPY:
+.TP
+Apple LaserWriter:
+Use "PSLAND" or "PSPORT" for either Landscape (X-axis along the long side of
+page) or Portrait (Y-axis along long side) plots.  Issuing "HARD" when
+finished will send the PostScript file to the LaserWriter.
+Type "HELP PS" in the
+.I Lick Mongo
+interactive mode for details.
+.TP
+Imagen laserprinter: (only on VMS systems)
+Use "IMPRINT" or "IMLONG" for either Landscape (X-axis along the long side of
+page) or Portrait (Y-axis along long side) plots.  Issuing "HARD" when
+finished will send the file to the Imagen.
+.TP
+Printronix lineprinter: (only on VMS systems)
+Use "PRSWAPXY" for either Landscape (X-axis along the long side of
+page) plots.  Issuing "HARD" when
+finished will send the file to the Printronix.
+.TP
+Versatec V80 printer: (only on VMS systems)
+Use "VERSATEC" or "VTLONG" for either Landscape (X-axis along the long side of
+page) or Portrait (Y-axis along long side) plots.  Issuing "HARD" when
+finished will send the file to the Versatec.
+.SH FONTS
+.I Lick Mongo
+has two basic sets of Hershey fonts available to users.  The
+default font set is a san-serif font which has excellent definition
+especially on higher resolution screens.  The second is a roman
+typefont that is the "traditional"
+.I Lick Mongo
+font, and which some find more aesthetically pleasing.  To select the
+alternative font, set the environment variable FONTNEW:
+.PP
+.ti+15n
+setenv FONTNEW /mongodir/fonts.bin
+.PP
+Custom font tables may be generated; contact the
+.I Lick Mongo
+custodian.
+.PP
+Consult the
+.I Lick Mongo
+manual for details on accessing PostScript fonts on the Apple LaserWriter.
+.SH FORTRAN SUBROUTINE LIBRARIES
+All
+.I Lick Mongo
+subroutines (from primitives to high-level routines) may be called by FORTRAN
+77 and C programs.  See the reference manual for details.
+.SH SEE ALSO
+.I The Lick Mongo Interactive Command Summary
+.br
+.I Lick Mongo 1988, An Interactive Graphics Program
+(the reference manual)
+.SH COPYRIGHT
+This software is copyrighted.  See the COPYRIGHT file for details.
+.SH AUTHORS
+Original by John Tonry.   Completely rewritten at Lick
+Observatory by Steve Allen, Richard Stover, Phil Pinto,
+De Clarke, and Rick Pogge.
+
+

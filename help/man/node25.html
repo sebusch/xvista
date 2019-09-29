@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>SET: Define a VISTA Variable and Assign it a Value</TITLE>
+<META NAME="description" CONTENT="SET: Define a VISTA Variable and Assign it a Value">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00320000000000000000">
+SET: Define a VISTA Variable and Assign it a Value</A>
+</H1>
+
+<!-- linkto set.html -->
+
+<P>
+<A NAME="827"></A>
+<BR>
+
+<BR>
+
+<P>
+SET defines VISTA variables in terms of numerical constants, other
+variables, or the result of arithmetic operations between other
+variables. The name of a VISTA variable is any alphanumeric string.  The
+value of the variable is a floating point number. VISTA supports an
+internal variable table which holds variables defined by you or as the
+output of a program.  These variables can be used to pass the results of
+arithmetic calculations to keywords, to control the flow of a procedure in
+IF tests or DO loops, or to store convenient numbers in symbolic form.
+
+<P>
+Each SET command can handle up to 15 definitions.  Each definition must
+include an '=' sign with the name of the new variable to its left, and a
+defining expression to its right.  The expression on the right may be any
+proper VISTA arithmetic expression (see the section MATH for rules on
+expressions).
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+NOTE: All operations are done in double precision floating point.  There
+must be no spaces between the beginning of 'var_name' and the end of
+'value'.
+
+<P>
+<B>IMPORTANT!</B>
+
+<P>
+The command SET may be left off when defining variables.  This saves lots
+of time.  Just use an arithmetic expression defining a variable.  Examples:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

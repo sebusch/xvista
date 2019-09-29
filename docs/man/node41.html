@@ -1,0 +1,42 @@
+
+<H1><A NAME="SECTION00490000000000000000">
+CALL: Call a Procedure as a Subroutine</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml118#
+
+<P>
+<A NAME="1296"><tex2html_anchor_invisible_mark></A>
+<A NAME="1297"><tex2html_anchor_invisible_mark></A>
+<A NAME="1298"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1299#
+<BR>
+
+<P>
+CALL tells VISTA to save the contents of its current procedure buffer, read
+in the desired procedure file, and begin execution at its first line.  The
+CALL command can be executed directly in the immediate input mode, or be
+used inside procedures to call other procedures.  In both cases, at the
+completion of the called procedure, VISTA will return properly to either
+the input mode or calling procedure.  VISTA will support up to 10 levels or
+subroutine calls.  If an error occurs while a called procedure is
+executing, VISTA will unwind and display the complete subroutine stack.
+
+<P>
+A procedure is allowed a maximum length of 2500 lines, and each line is
+allowed a maximum length of 80 characters.  If your procedures or lines
+exceed this maximum, they will be truncated.
+
+<P>
+Parameters can optionally be passed to the procedure.  These can be numeric
+or string parameters.  The parameters are evaluated by the procedure using
+the PARAMETER command.
+
+<P>
+Examples:  Assume the default procedure directory is /vista/procedure
+and the default extension is .pro.
+<BR>
+<tex2html_image_mark>#example1307#
+<BR>
+
+<P>

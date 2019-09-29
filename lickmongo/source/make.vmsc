@@ -1,0 +1,55 @@
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!      This VMS DCL procedure is Copyright (c) 1987 Steven L. Allen
+$!      The file COPYRIGHT must accompany this file.  See it for details.
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!
+#include "Config.h"
+$!      This is the Lick Mongo makefile for VAX/VMS
+$!      It compiles and links all of Lick Mongo
+$!
+$                               ! see that MONGODIR is defined
+$ if f$trnlnm("mongodir") .nes. "" then goto doit
+$       write sys$output "MONGODIR must be defined before making."
+$       exit
+$ doit:
+$ mgosrc = f$parse("mongodir:",,,"DIRECTORY")-"]"+".SOURCE]"
+$ assign 'mgosrc mongosrc
+$ set def mongosrc:
+$                               ! do the device code
+$ set verify
+$ set def [.devices]
+$ @compile
+$ @mongosrc:library
+$ set def mongosrc:
+$                               ! do the interact code
+$ set verify
+$ set def [.interact]
+$ @compile
+$ @mongosrc:library
+$ set def mongosrc:
+$                               ! do the plotsub code
+$ set verify
+$ set def [.plotsub]
+$ @compile
+$ @mongosrc:library
+$ set def mongosrc:
+$                               ! do the sysdep code
+$ set verify
+$ set def [.sysvms]
+$ @compile
+$ @mongosrc:library
+$ set def mongosrc:
+$                               ! optionally do the raster code
+$ if f$mode() .nes. "INTERACTIVE" then goto NOHARDCOP
+$ inquire/nop yorn "Do you want to recompile the hardcopy code?  "
+$ if yorn .nes. "y" .and. yorn .nes. "Y" then goto NOHARDCOP
+$ set verify
+$ set def [.raster]
+$ @compile
+$ set def mongosrc:
+$
+$ NOHARDCOP:
+$                               ! link everything
+$ set verify
+$ @link
+$ exit

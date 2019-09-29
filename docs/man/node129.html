@@ -1,0 +1,50 @@
+
+<H1><A NAME="SECTION001290000000000000000">
+SMOOTH: Smooth an Image or Spectrum</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml342#
+<A NAME="4774"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command4775#
+<BR>
+
+<P>
+SMOOTH will smooth or convolve the 'source' object with a 2D or 1D Gaussian
+or boxcar.  This is useful for reducing noise, enhancing low surface
+brightness features, or as the first step for looking for sharp features in
+an image (by subtracting the smoothed image from the original).  Specify the
+full-width-half-maximum (FWHM) of the Gaussian (boxcar) in pixels with the
+FW keyword. If desired, you can specify differing widths in the column or
+row directions with the FWC or FWR keywords.  To smooth the image in the
+column direction only, (each image row is convolved along its extent
+separately) just specify the width with the FWC keyword.  To smooth in the
+row direction only, (down the columns) just specify the FWR keyword. For
+Gaussian, the kernel will extend to WID*FWHM, where WID=3 by default,
+although this can be overridden with the WID= keyword.
+
+<P>
+To convolve with a box, use the 'BOXCAR' word. Better yet, use the
+'RUNMEAN' word, which gives identical results much faster for odd-sized
+windows, but slightly different results for even-sized smoothing windows.
+BOXCAR may be removed in future versions, to be supplanted by RUNMEAN.
+
+<P>
+The convolutions are done in the image domain and may be slow for large
+widths of the filter.  Edges are handled properly.  At this time, the
+FWHMs of the filters are limited to 33 pixel for the Gaussian and 99
+pixels for the boxcar.
+
+<P>
+<#4790#>Examples:<#4790#>
+<BR>
+<tex2html_image_mark>#example4791#
+<BR>
+
+<P>
+Since 1-D spectra are treated the same as 2-D images with only one row, use
+the FWC= keyword when smoothing spectra.  Remember that the width of the
+smoothing kernel (Gaussian or Boxcar) is in units of PIXELS not Angstroms.
+
+<P>

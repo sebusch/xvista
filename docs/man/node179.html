@@ -1,0 +1,215 @@
+
+<H1><A NAME="SECTION001530000000000000000">
+ANNULUS: Compute a Radial Profile by Azimuthal Averaging</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml432#
+<A NAME="6777"><tex2html_anchor_invisible_mark></A>
+<A NAME="6778"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6779#
+<BR>
+
+<P>
+Other relevant VISTA commands to be used prior to running ANNULUS:
+<BR>
+<tex2html_image_mark>#hanging6801#
+<BR>
+
+<P>
+ANNULUS computes the azimuthally-averaged radial surface-brightness profile
+of a 2-D image, storing the profile as a spectrum (1-D image).  The value
+at each radius is defined as the azimuthal average of the pixel values
+along a suitably defined annulus (ring) of that radius centered on the
+object.  High accuracy Sinc interpolation or faster Bilinear interpolation
+may be used.
+
+<P>
+By default, the annuli are concentric circles, but it is possible to define
+elliptical annuli to be used as the averaging paths by specifying the major
+axis position angle and inclination angle of the ellipses with keywords.
+
+<P>
+The centers of the annuli are computed before using ANNULUS by running the
+AXES command, although this step may be bypassed using a keyword.
+
+<P>
+It is also possible to forego creating a radial profile, and simply use
+ANNULUS to compute the average along a single annulus of a given radius.
+
+<P>
+Unlike the PROFILE command, which computes the surface brightness profile
+of an object by fitting ellipses to the image isophotes, ANNULUS takes
+averages along pre-defined annuli without regard to the actual isophotes of
+the image.  ANNULUS is more applicable than PROFILE to those cases where
+strong non-axisymmetric structure in the object makes fitting ellipses
+impractical.  For example, ANNULUS might be used to compute the average
+radial surface brightness profile of a Spiral Galaxy, in which the
+isophotes, especially in the spiral arms, are manifestly not ellipses.
+
+<P>
+In cases where isophotes may be defined with PROFILE, reflecting structural
+properties like isophotal rotation or variable eccentricity, the results of
+a PROFILE calculation may be used as averaging paths in annulus via an
+optional keyword.  This is a fairly advanced application of ANNULUS.
+
+<P>
+ANNULUS produces the radial profile of a 2-D image in the ;SPMquot;source;SPMquot;
+buffer and stores it as a 1-D image (spectrum) in the ;SPMquot;dest;SPMquot; buffer.
+
+<P>
+The following is a detailed description of each of the keywords:
+
+<P>
+<#6806#>N=n<#6806#>:<BR>
+This is the number of concentric annuli to be used.  In general, n ;SPMgt; 1.  If
+you wish to find the average along only one annulus, then use the ;SPMquot;RAD=;SPMquot;
+keyword.
+
+<P>
+<#6807#>STEP=dr<#6807#>:<BR>
+This is the spacing between successive annuli.  The first point of the
+profile is always the image center (defined either by AXES or by using the
+;SPMquot;CEN=;SPMquot; keyword).  By default a STEP of 1 pixel is used.  In general, STEP
+has units of pixels, but if the ;SPMquot;SCALE=;SPMquot; keyword is used, then STEP will
+have units of length as defined by the images scale (usually arcseconds).
+
+<P>
+<#6808#>PA=pa<#6808#>:<BR>
+This is the Position Angle of the major axis of elliptical annuli in
+degrees.  PA is measured from the top of the image counter-clockwise, so
+that an ellipse with PA=0.0 will have its long axis oriented along an image
+column, while PA=90.0 will have its long axis oriented along an image
+row. PA=45.0 is oriented diagonally from the upper left to lower right as
+seen on the TV display.
+
+<P>
+<#6809#>INC=i<#6809#>:<BR>
+This is the ellipse Inclination Angle in degrees.  It is defined such that:
+<PRE><tex2html_verbatim_mark>verbatim433#</PRE>
+INC must always be LESS THAN 90 degrees.  It is related to the ellipse
+eccentricity (e) by: e=sin(i)
+
+<P>
+<#6812#>CEN=r0,c0<#6812#>:<BR>
+By default, ANNULUS expects that you've run the AXES command on the image
+to find the appropriate object centroid (called AXR and AXC by the AXES
+command).  You may have ANNULUS ignore the results of the most recent AXES
+command by using the ;SPMquot;CEN=;SPMquot; keyword to specify the center of each of the
+annuli. R0 is the row number of the center, and C0 is the column number. R0
+and C0 may be real numbers (e.g., R0=35.4 is allowed).
+
+<P>
+<#6813#>SCALE=s<#6813#>:<BR>
+This defines the linear scale of the image.  Typically the scale is in
+units of arcseconds/pixel, but any relevant units are OK. The program
+printout assumes arcseconds/pixel, but it is only cosmetic.  If the SCALE
+and STEP options are used, then the STEP value has the units of SCALE. For
+example:<PRE><tex2html_verbatim_mark>verbatim434#</PRE>
+where the units of SCALE are arcsec/pixel implies an annular spacing of 1
+arcsecond (or 1.85 pixels).
+
+<P>
+<#6816#>FAST<#6816#>:<BR>
+For annular radii smaller than 15 pixels, ANNULUS will use a slow, high
+accuracy 2-D Sinc interpolation algorithm to find the intensity at a given
+point along the annulus.  Beyond 15 pixels, a somewhat faster Sinc
+interpolation scheme is used.  However, using the FAST keyword tells
+ANNULUS to use a much faster, but somewhat lower accuracy 2-D bilinear
+interpolation scheme beyond 15 pixels radius.  The time savings is quite
+noticeable.
+
+<P>
+<#6817#>RAD=r<#6817#>:<BR>
+This option allows you to use ANNULUS to find the azimuthal average along a
+single, given annulus with radius ;SPMquot;r;SPMquot; (and PA and INC as appropriate),
+without creating an entire profile.  When using the ;SPMquot;RAD=;SPMquot; keyword, the
+;SPMquot;N=;SPMquot;, ;SPMquot;STEP=;SPMquot; are ignored.  RAD has units of Pixels, unless the ;SPMquot;SCALE=;SPMquot;
+keyword is used, at which point it has  units of ;SPMquot;SCALE;SPMquot;. 
+
+<P>
+<#6818#>The ;SPMquot;PROF;SPMquot; keyword:<#6818#>:<BR>
+Elliptical annuli used by ANNULUS all share the same center, position
+angle, and inclination (eccentricity).  It is possible, using the PROF
+keyword, to use a set of annuli in which the position angle, eccentricity,
+and even the centers, may vary as a function of radius.  This may be done
+by first using the PROFILE command to fit ellipses to the isophotes of an
+image, and then using ANNULUS with the PROF keyword to use the ellipse
+parameters contained in the PROFILE common block in VISTA to define the
+averaging paths.  The PROFILE common block may also be loaded using the GET
+command (see GET and SAVE) before running ANNULUS, which suggests all sorts
+of possibilities.
+
+<P>
+<#6819#>Other details:<#6819#>
+
+<P>
+Output may be redirected to the printer or external files using the ';SPMgt;'
+option in VISTA.
+
+<P>
+For future reference, the FITS header of the spectrum containing the radial
+profile generate by ANNULUS contains a number of HISTORY cards recording
+the relevant annular parameters (PA, INC, STEP, CEN, etc).  These may be
+reviewed by using the ;SPMquot;BUF FULL FITS;SPMquot; command, or by using ;SPMquot;HEDIT;SPMquot;.  The
+FITS ;SPMquot;STATUS;SPMquot; card is changed to read ;SPMquot;Azimuthal Average;SPMquot;, and the ;SPMquot;CTYPE1;SPMquot;
+card reads either Pixels or Arcseconds, depending on whether or not the
+;SPMquot;SCALE=;SPMquot; option has been used.
+
+<P>
+<#6820#>Examples:<#6820#>
+<BR>
+<tex2html_image_mark>#example6821#
+<BR>
+
+<P>
+An example of a procedure using the PROF keyword:
+<PRE><tex2html_verbatim_mark>verbatim435#</PRE>
+In this case, PROFILE is run to fit 30 elliptical isophotes to the image in
+buffer 1 whose centroid is found in BOX=2 using the AXES command. The
+azimuthally averaged radial surface brightness profile is then stored in
+buffer 10 (PROFILE also azimuthally averages along the best fit
+isophotes). The best fit elliptical isophotes from image 1 are then used to
+compute the radial surface brightness profile of the object in image 2
+using ANNULUS, and that profile is stored in buffer 12.
+
+<P>
+<#6829#>A Note about selecting values of the ;SPMquot;PA=;SPMquot; and ;SPMquot;INC=;SPMquot; keywords:<#6829#>
+
+<P>
+A circular disk inclined to the line-of-sight of an observer appears in
+projection as an ellipse with its major axis rotated by some amount from
+vertical.  It is the usual convention in astronomy that position angles on
+the sky are measured from North towards the East, with the usual
+orientation being North Up, and East to the Left.
+
+<P>
+The ANNULUS command defines the position angle in a similar fashion.  The
+position angle for the ;SPMquot;PA=;SPMquot; keyword is the angle between the major axis of
+the projected ellipse and a vertical line passing through the center of the
+ellipse (i.e., along the direction of a single image column).  The angle is
+measured from the top of the image towards the left in a counterclockwise
+sense.  If the image is oriented so that North is Up, East is to the Left,
+then the position angle for ANNULUS is the same as the conventional
+position angle.
+
+<P>
+The angle of inclination, i, is defined as the angle between the
+line-of-sight from the observer to the center of the disk, and a line
+perpendicular to the plane of the disk.  For a face-on disk, the
+inclination is 0 degrees, and for a perfectly edge-on disk, the inclination
+is 90 degrees.
+
+<P>
+This angle is related to the more easily measured axial ratio of the
+ellipse.  If ;SPMquot;a;SPMquot; is the length of the major axis of the ellipse, and ;SPMquot;b;SPMquot; is
+the length of the minor axis, then the inclination ;SPMquot;i;SPMquot; is given by
+<PRE><tex2html_verbatim_mark>verbatim436#</PRE>
+It may also be related to the eccentricity of the ellipse, ;SPMquot;e;SPMquot;, such that
+<PRE><tex2html_verbatim_mark>verbatim437#</PRE>
+NOTE: For ANNULUS, i must always be LESS than 90 degrees.  For cases where
+i = 90 degrees, use the VISTA command CUT instead.
+
+<P>
+See Also: PROFILE, SECTOR, SAVE/GET, CUT
+
+<P>

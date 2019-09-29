@@ -1,0 +1,32 @@
+
+<H1><A NAME="SECTION00510000000000000000">
+PAUSE: Pause Procedure Execution</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml130#
+
+<P>
+<A NAME="1495"><tex2html_anchor_invisible_mark></A>
+<A NAME="1496"><tex2html_anchor_invisible_mark></A>
+<A NAME="1497"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1498#
+<BR>
+
+<P>
+When the PAUSE command is encountered in a procedure, VISTA prints the
+prompt 'PAUSE ' followed by the rest of the (optional) prompt which appears
+on the command line.  The execution of the procedure is then stopped.
+While paused, you can enter any commands in the normal immediate mode of
+execution.  To resume the procedure where it paused type the command
+CONTINUE.  You do not need to type a command to permanently halt the
+procedure.  If you give the command GO any previous pause state will be
+canceled, and VISTA will start the program from the beginning.
+
+<P>
+WARNING: ALWAYS place a PAUSE instruction on its own line in a procedure.
+A procedure which looks like
+<PRE><tex2html_verbatim_mark>verbatim131#</PRE>
+will pause properly, but CONTINUE will start the procedure with 
+command 4, not command 3.
+
+<P>

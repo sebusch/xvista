@@ -1,0 +1,29 @@
+define star
+expand 5
+ptype &1 2
+dot
+end
+
+define decastar
+relocate &1 &2
+star 10
+end
+
+data example.dat
+xcolumn 1
+ycolumn 2
+window 1 2 1
+limits 0 6.4 +1.3 -1.3
+box
+connect
+pcolumn 5
+expand 2
+points
+expand 1
+window 1 2 2
+limits
+box
+histogram
+limits 0 1 0 1
+decastar .3 .5
+decastar .7 .5

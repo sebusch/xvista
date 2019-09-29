@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>GET/SAVE: Get/Save a VISTA Data File</TITLE>
+<META NAME="description" CONTENT="GET/SAVE: Get/Save a VISTA Data File">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00720000000000000000"></A>
+<A NAME="2216"></A>
+<A NAME="2217"></A>
+<BR>
+GET/SAVE: Get/Save a VISTA Data File
+</H1>
+
+<!-- linkto get.html -->
+<!-- linkto save.html -->
+<BR>
+
+<BR>
+
+<P>
+The SAVE and GET commands are used for writing out results produced by
+other VISTA routines to disk for future use by VISTA or other programs, and
+getting them back again.  Various VISTA commands will generate reduced data
+which you may want to save for later analysis.  To SAVE or GET results from
+a specific program, specify that program's keyword and a file name.  If no
+file name is given, VISTA will ask you for one.  More than one keyword can
+be specified at a time.  By default, all files are kept in the data
+directory (specified by the V_DATADIR environment variable) with the file
+extensions given below.  These can be overridden if desired.  To examine
+the current results that VISTA is storing, use the PRINT command.
+
+<P>
+At this time VISTA provides for the storage of the following data types:
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+Note that for DAOPHOT files (COO= or DAO=), you can set the LOWBAD and/or
+HIGHBAD data values using the LOW= and HIGH= keywords.
+
+<P>
+The various formats for the different types of data files are described in
+more detail in the commands which make use of them.
+
+<P>
+Examples:  Assume the data directory is vista/data
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,44 @@
+
+<H1><A NAME="SECTION0015200000000000000000">
+OPREP: Open a Batch Surface Photometry Preparation File</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml454#
+<BR>
+<tex2html_image_mark>#command7083#
+<BR>
+
+<P>
+OPREP opens a ;SPMquot;batch photometry preparation file;SPMquot; used for batch-type
+surface photometry reductions.  The files contain the following information
+(one record per image):
+
+<UL>
+<LI><#7093#>SKY value<#7093#>
+</LI>
+<LI><#7094#>RMAX variable (max. radius for photometry)<#7094#>
+</LI>
+<LI><#7095#>estimated HWHM for the PSF<#7095#>
+</LI>
+<LI><#7096#>contents of the AXES block<#7096#>
+</LI>
+<LI><#7097#>image header.<#7097#>
+</LI>
+</UL>
+
+<P>
+This information is written by WPREP command, and read by RPREP.  This
+routine initialized the PREPCON common block, which records the status of
+the prep-file (whether open to read or write).  The filename is supplied as
+a keyword.  Default directory is V_DATADIR, with the default extension
+``.pre''.  If no name is given on the command line, the default name
+PREPFILE is used.  If there is a prep-file already open, this routine closes
+it and opens a new one.
+
+<P>
+NOTE: You must compute the image parameters above ahead of time, either
+outside of VISTA or using the AXES command without the CORR option.
+
+<P>
+See Also:  CLPREP, WPREP, RPREP
+
+<P>

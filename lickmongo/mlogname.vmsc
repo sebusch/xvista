@@ -1,0 +1,35 @@
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!      This VMS DCL procedure is Copyrighted software.
+$!      The file COPYRIGHT must accompany this file.  See it for details.
+$!      ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+$!
+$!              The System Logical Name Table entry MONGO_SCRATCH
+$!              should always point to useable scratch
+$  if f$trnlnm("mongoscr") .eqs. "" then -
+$  assign       MONGO_SCRATCH:                  mongoscr
+$  if f$trnlnm("mongodir") .eqs. "" then -
+$  assign       sys$sysdevice:[MONGO.LICK]      mongodir
+$!              Only these first two logicals are system dependent, so
+$!              it isn't really necessary to check the translation first
+$!              before assigning the rest of the logical names.
+$ assign        mongodir:fonts.bin              fontnew
+$ assign        mongodir:help.dat               helpfile
+$ assign        mongodir:cmdfile.dat            cmdfile
+!       if using laser pen = 2, use below, default for Lick VAX
+$ assign        mongodir:cmdimag.dat            cmdimag
+!       if using laser pen = 1, comment out above and replace with line below
+$!assign        mongodir:cmdimag1.dat           cmdimag
+$ assign        mongodir:cmdprxf.dat            cmdprxf
+$ assign        sys$command                     for005
+$ assign        sys$output                      for037
+$  this_term = f$trnlnm("tt")
+$  if f$extract(0,2,this_term) .eqs. "WT" then goto workstation
+$  assign       tt:                             termname
+$  goto end
+$  workstation:
+$  assign       tka0:                           termname
+$  if f$trnlnm("tka") .nes. "" then deass tka
+$  if f$trnlnm("tek") .eqs. "" then open/share=write tek tka:
+$! ass tka2: tka
+$  end:
+$  exit

@@ -1,0 +1,575 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>man</TITLE>
+<META NAME="description" CONTENT="man">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"></A>
+
+<UL>
+<LI><A NAME="tex2html13"
+  HREF="node1.html">Introduction</A>
+<UL>
+<LI><A NAME="tex2html14"
+  HREF="node2.html">The VISTA Program</A>
+<LI><A NAME="tex2html15"
+  HREF="node3.html">A Brief History of VISTA</A>
+<LI><A NAME="tex2html16"
+  HREF="node4.html">VISTA Basics</A>
+<LI><A NAME="tex2html17"
+  HREF="node5.html">VISTA Command Syntax</A>
+<LI><A NAME="tex2html18"
+  HREF="node6.html">VISTA and Disk Files</A>
+<LI><A NAME="tex2html19"
+  HREF="node7.html">Running VISTA</A>
+<LI><A NAME="tex2html20"
+  HREF="node8.html">HELP: The VISTA Online Help Facility</A>
+<LI><A NAME="tex2html21"
+  HREF="node9.html">Useful Commands for the Beginner</A>
+<LI><A NAME="tex2html22"
+  HREF="node10.html">QUIT: Stopping VISTA</A>
+<LI><A NAME="tex2html23"
+  HREF="node11.html">VISTA News</A>
+<LI><A NAME="tex2html24"
+  HREF="node12.html">TERM: Specify or Change the Graphics Terminal Type</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html25"
+  HREF="node13.html">Advanced VISTA Command Syntax</A>
+<UL>
+<LI><A NAME="tex2html26"
+  HREF="node14.html">Abbreviating VISTA Commands</A>
+<LI><A NAME="tex2html27"
+  HREF="node15.html">Output Redirection</A>
+<LI><A NAME="tex2html28"
+  HREF="node16.html">HISTORY: Recall the Last Several Commands </A>
+<LI><A NAME="tex2html29"
+  HREF="node17.html">%: Repeating/Editing a Previous Command</A>
+<LI><A NAME="tex2html30"
+  HREF="node18.html">Extending Commands Past One Line</A>
+<LI><A NAME="tex2html31"
+  HREF="node19.html">ALIAS/UNALIAS: Define/Delete Command Aliases</A>
+<LI><A NAME="tex2html32"
+  HREF="node20.html">EDIT: Editing the Last Command</A>
+<LI><A NAME="tex2html33"
+  HREF="node21.html">SETDIR: Set the VISTA Default Directories and File Extensions</A>
+<LI><A NAME="tex2html34"
+  HREF="node22.html">CD: Change the Current Working Directory</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html35"
+  HREF="node23.html">Variables, Arithmetic Expressions, &amp; Strings</A>
+<UL>
+<LI><A NAME="tex2html36"
+  HREF="node24.html">Arithmetic Expressions in VISTA</A>
+<LI><A NAME="tex2html37"
+  HREF="node25.html">SET: Define a VISTA Variable and Assign it a Value</A>
+<LI><A NAME="tex2html38"
+  HREF="node26.html">TYPE: Evaluate/Print Arithmetic Expressions</A>
+<LI><A NAME="tex2html39"
+  HREF="node27.html">ASK: Prompt for Numerical Input at the Keyboard</A>
+<LI><A NAME="tex2html40"
+  HREF="node28.html">Using Variables to Specify Buffer Numbers</A>
+<LI><A NAME="tex2html41"
+  HREF="node29.html">PRINTF: Formatted Display of Strings and Arithmetic Expressions</A>
+<LI><A NAME="tex2html42"
+  HREF="node30.html">STRING: Defining VISTA String Variables</A>
+<LI><A NAME="tex2html43"
+  HREF="node31.html">Substituting String Variables into the Command Line</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html44"
+  HREF="node32.html">VISTA Command Procedure Scripts</A>
+<UL>
+<LI><A NAME="tex2html45"
+  HREF="node33.html">Introduction to Command Procedure Scripts</A>
+<LI><A NAME="tex2html46"
+  HREF="node34.html">PEDIT: Edit the Procedure Buffer</A>
+<LI><A NAME="tex2html47"
+  HREF="node35.html">STOP: Stop Procedure Execution</A>
+<LI><A NAME="tex2html48"
+  HREF="node36.html">END: End Procedure Execution</A>
+<LI><A NAME="tex2html49"
+  HREF="node37.html">SHOW: Show the Current Procedure Buffer</A>
+<LI><A NAME="tex2html50"
+  HREF="node38.html">WP: Write a Procedure to Disk</A>
+<LI><A NAME="tex2html51"
+  HREF="node39.html">RP: Read a Procedure from Disk</A>
+<LI><A NAME="tex2html52"
+  HREF="node40.html">GO: Start Procedure Execution</A>
+<LI><A NAME="tex2html53"
+  HREF="node41.html">CALL: Call a Procedure as a Subroutine</A>
+<LI><A NAME="tex2html54"
+  HREF="node42.html">RETURN: Return from a Procedure Subroutine</A>
+<LI><A NAME="tex2html55"
+  HREF="node43.html">PARAMETER: Pass Arguments to a Procedure</A>
+<LI><A NAME="tex2html56"
+  HREF="node44.html">VERIFY: Verify (Trace) Procedure Execution</A>
+<LI><A NAME="tex2html57"
+  HREF="node45.html">DEF: Define a Procedure</A>
+<LI><A NAME="tex2html58"
+  HREF="node46.html">SAME: End Procedure Insertion and Keep Trailing Lines</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html59"
+  HREF="node47.html">Flow Control in Procedures</A>
+<UL>
+<LI><A NAME="tex2html60"
+  HREF="node48.html">PAUSE: Pause Procedure Execution</A>
+<LI><A NAME="tex2html61"
+  HREF="node49.html">CONTINUE: Resume a Paused Procedure</A>
+<LI><A NAME="tex2html62"
+  HREF="node50.html">GOTO: Jump to a Specified Place in a Procedure</A>
+<LI><A NAME="tex2html63"
+  HREF="node51.html">DO/END_DO: Using Do-Loops in Procedures</A>
+<LI><A NAME="tex2html64"
+  HREF="node52.html">IF, ELSE_IF, ELSE, END_IF: Conditional (IF) Flow Control</A>
+<LI><A NAME="tex2html65"
+  HREF="node53.html">ERROR: Execute On Error</A>
+<LI><A NAME="tex2html66"
+  HREF="node54.html">EOF: Execute On End-Of-File (EOF)</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html67"
+  HREF="node55.html">Input and Output of Images and Spectra</A>
+<UL>
+<LI><A NAME="tex2html68"
+  HREF="node56.html">RD: Read an Image from a Disk File</A>
+<LI><A NAME="tex2html69"
+  HREF="node57.html">WD: Write an Image to a Disk File</A>
+<LI><A NAME="tex2html70"
+  HREF="node58.html">SETDIR: Set the VISTA Default Directories and File Extensions</A>
+<LI><A NAME="tex2html71"
+  HREF="node59.html">CD: Change the Current Working Directory</A>
+<LI><A NAME="tex2html72"
+  HREF="node60.html">COPY: Copy an Image between Buffers</A>
+<LI><A NAME="tex2html73"
+  HREF="node61.html">BUFFERS: List the Contents of the Image Buffers</A>
+<LI><A NAME="tex2html74"
+  HREF="node62.html">DISPOSE: Clear (Delete) an Image Buffer</A>
+<LI><A NAME="tex2html75"
+  HREF="node63.html">CREATE: Create a Blank Image</A>
+<LI><A NAME="tex2html76"
+  HREF="node64.html">CHANGE: Change the Object Name of an Image</A>
+<LI><A NAME="tex2html77"
+  HREF="node65.html">FITS: Insert/Edit a FITS Header Card</A>
+<LI><A NAME="tex2html78"
+  HREF="node66.html">UNFIT: Delete a FITS Header Card</A>
+<LI><A NAME="tex2html79"
+  HREF="node67.html">HEDIT: Edit FITS Headers</A>
+<LI><A NAME="tex2html80"
+  HREF="node68.html">FIXHEAD: Fix FITS Headers</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html81"
+  HREF="node69.html">Getting, Saving, and Printing Non-Image VISTA Data</A>
+<UL>
+<LI><A NAME="tex2html82"
+  HREF="node70.html">Non-Image Data Files used by VISTA</A>
+<LI><A NAME="tex2html83"
+  HREF="node71.html">GET/SAVE: Get/Save a VISTA Data File</A>
+<LI><A NAME="tex2html84"
+  HREF="node72.html">PRINT: Print Data Files, Spectra, or Image Subsections</A>
+<LI><A NAME="tex2html85"
+  HREF="node73.html">OPEN: Open an ASCII Text File</A>
+<LI><A NAME="tex2html86"
+  HREF="node74.html">CLOSE: Close an Open ASCII Text File</A>
+<LI><A NAME="tex2html87"
+  HREF="node75.html">READ: Read the Next Line of an ASCII Text File</A>
+<LI><A NAME="tex2html88"
+  HREF="node76.html">SKIP: Mark Selected Lines to Skip in a File</A>
+<LI><A NAME="tex2html89"
+  HREF="node77.html">REWIND: Rewind an Open File to the First Line</A>
+<LI><A NAME="tex2html90"
+  HREF="node78.html">STAT: Compute Statistics of Data in a File</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html91"
+  HREF="node79.html">Image Display, Plotting, and Interaction</A>
+<UL>
+<LI><A NAME="tex2html92"
+  HREF="node80.html">Introduction to the X11 Image Display</A>
+<LI><A NAME="tex2html93"
+  HREF="node81.html">TV: Display an Image</A>
+<LI><A NAME="tex2html94"
+  HREF="node82.html">ITV: Interact with the Image on the TV</A>
+<LI><A NAME="tex2html95"
+  HREF="node83.html">COLOR: Load a Color Map into the Image Display</A>
+<LI><A NAME="tex2html96"
+  HREF="node84.html">TVBOX: Draw a Box on the Image Display</A>
+<LI><A NAME="tex2html97"
+  HREF="node85.html">TVPLOT: Draw Text and Graphics on the Image Display</A>
+<LI><A NAME="tex2html98"
+  HREF="node86.html">IMPOST: Make a PostScript Hardcopy of an Image</A>
+<LI><A NAME="tex2html99"
+  HREF="node87.html">PLOT: Plot a Row or Column of an Image or Spectrum</A>
+<LI><A NAME="tex2html100"
+  HREF="node88.html">RPLOT: Radial Intensity Plot of an Object in an Image</A>
+<LI><A NAME="tex2html101"
+  HREF="node89.html">TVRPLOT: Radial Intensity Plot of an Object on the Image Display</A>
+<LI><A NAME="tex2html102"
+  HREF="node90.html">CONTOUR: Make Contour Maps Images</A>
+<LI><A NAME="tex2html103"
+  HREF="node91.html">OVERLAY: Draw contours over a Greyscale Image (PostScript)</A>
+<LI><A NAME="tex2html104"
+  HREF="node92.html">HISTOGRAM: Display a Histogram of Image Pixel Values</A>
+<LI><A NAME="tex2html105"
+  HREF="node93.html">PLOT3D: Make a 3-D Perspective (mesh) Plot</A>
+<LI><A NAME="tex2html106"
+  HREF="node94.html">CLEAR: Clear the Terminal or Image Display</A>
+<LI><A NAME="tex2html107"
+  HREF="node95.html">TEXT: Embed Permanent Text on an Image</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html108"
+  HREF="node96.html">Marking Image Subsections or Pixels</A>
+<UL>
+<LI><A NAME="tex2html109"
+  HREF="node97.html">Selecting Image Subsections for Computation</A>
+<LI><A NAME="tex2html110"
+  HREF="node98.html">BOX: Define a Box or Image Subsection</A>
+<LI><A NAME="tex2html111"
+  HREF="node99.html">MASK/UNMASK: Ignore (Mask) Specified Pixels</A>
+<LI><A NAME="tex2html112"
+  HREF="node100.html">MASKTOIM: Create an Image Showing Masked Pixels</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html113"
+  HREF="node101.html">Image Arithmetic</A>
+<UL>
+<LI><A NAME="tex2html114"
+  HREF="node102.html">Introduction to Image Arithmetic</A>
+<LI><A NAME="tex2html115"
+  HREF="node103.html">ADD, SUBTRACT, MULTIPLY, and DIVIDE</A>
+<LI><A NAME="tex2html116"
+  HREF="node104.html">SQRT: Square Root of an Image</A>
+<LI><A NAME="tex2html117"
+  HREF="node105.html">LOG: Base-10 Logarithm of an Image</A>
+<LI><A NAME="tex2html118"
+  HREF="node106.html">LN: Natural Logarithm of an Image</A>
+<LI><A NAME="tex2html119"
+  HREF="node107.html">EXP: Exponentiate an Image</A>
+<LI><A NAME="tex2html120"
+  HREF="node108.html">TAN: Tangent of an Image</A>
+<LI><A NAME="tex2html121"
+  HREF="node109.html">ARCTAN: Arctangent of an Image</A>
+<LI><A NAME="tex2html122"
+  HREF="node110.html">COS: Cosine of an Image</A>
+<LI><A NAME="tex2html123"
+  HREF="node111.html">SIN: Sine of an Image</A>
+<LI><A NAME="tex2html124"
+  HREF="node112.html">NINT: Nearest Integer of an Image</A>
+<LI><A NAME="tex2html125"
+  HREF="node113.html">ONEOVER: Invert an Image</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html126"
+  HREF="node114.html">Basic Image Analysis</A>
+<UL>
+<LI><A NAME="tex2html127"
+  HREF="node115.html">MN: Compute the Mean of the Pixel Values</A>
+<LI><A NAME="tex2html128"
+  HREF="node116.html">SKY: Compute the Modal Sky/Background Level in an Image</A>
+<LI><A NAME="tex2html129"
+  HREF="node117.html">ABX: Analyze Pixel Statistics in an Image</A>
+<LI><A NAME="tex2html130"
+  HREF="node118.html">HISTOGRAM: Display a Histogram of Image Pixel Values</A>
+<LI><A NAME="tex2html131"
+  HREF="node119.html">AXES: Compute the Centroid of an Object in an Image</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html132"
+  HREF="node120.html">Basic Image Processing</A>
+<UL>
+<LI><A NAME="tex2html133"
+  HREF="node121.html">MERGE: Merge Overlapping Images or Spectra</A>
+<LI><A NAME="tex2html134"
+  HREF="node122.html">WINDOW: Window (Crop) an Image to a Smaller Size</A>
+<LI><A NAME="tex2html135"
+  HREF="node123.html">ROTATE: Rotate an Image</A>
+<LI><A NAME="tex2html136"
+  HREF="node124.html">FLIP: Change the Orientation of an Image</A>
+<LI><A NAME="tex2html137"
+  HREF="node125.html">BIN: Compress (bin) an Image or Spectrum</A>
+<LI><A NAME="tex2html138"
+  HREF="node126.html">SHIFT: Shift an Image</A>
+<LI><A NAME="tex2html139"
+  HREF="node127.html">CLIP: Replace Pixels Outside an Intensity Range</A>
+<LI><A NAME="tex2html140"
+  HREF="node128.html">COLFIX: Fix Deferred Charge Columns in a CCD Image</A>
+<LI><A NAME="tex2html141"
+  HREF="node129.html">SMOOTH: Smooth an Image or Spectrum</A>
+<LI><A NAME="tex2html142"
+  HREF="node130.html">ZAP: Non-Interactive Image Median Filter</A>
+<LI><A NAME="tex2html143"
+  HREF="node131.html">TVZAP: Interactively Remove Pixels by Median Filtering</A>
+<LI><A NAME="tex2html144"
+  HREF="node132.html">MEDIAN: Compute Median of Several Images</A>
+<LI><A NAME="tex2html145"
+  HREF="node133.html">BIGMEDIAN: Compute Median of a Large Number of FITS Images</A>
+<LI><A NAME="tex2html146"
+  HREF="node134.html">PICCRS: Optimally Combine Frames with Outlier Rejection</A>
+<LI><A NAME="tex2html147"
+  HREF="node135.html">SURFACE: Fit a Plane or Second-Order Surface to an Image</A>
+<LI><A NAME="tex2html148"
+  HREF="node136.html">SPLINE: Replace Image or Spectrum by a Cubic Spline Fit</A>
+<LI><A NAME="tex2html149"
+  HREF="node137.html">CROSS: Cross-Correlate Images or Spectra</A>
+<LI><A NAME="tex2html150"
+  HREF="node138.html">INTERP: Interpolate Across Rows, Columns, or Masked Pixels</A>
+<LI><A NAME="tex2html151"
+  HREF="node139.html">REGISTAR: Register Images Using Field Star Positions</A>
+<LI><A NAME="tex2html152"
+  HREF="node140.html">DSSCOORD: Compute RA and Dec for Digitized Sky Survey Images</A>
+<LI><A NAME="tex2html153"
+  HREF="node141.html">ATODSIM/ATODFIX: Simulate/Fix WF/PC1 A/D Conversion Errors</A>
+<LI><A NAME="tex2html154"
+  HREF="node142.html">LINCOMB: Fit a Linear Combination of Images to an Image</A>
+<LI><A NAME="tex2html155"
+  HREF="node143.html">BL: Correct an Image for Baseline Subtraction Noise</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html156"
+  HREF="node144.html">Fourier Transforms and Complex Arithmetic</A>
+<UL>
+<LI><A NAME="tex2html157"
+  HREF="node145.html">FFT: Compute a Forward Fast-Fourier Transform</A>
+<LI><A NAME="tex2html158"
+  HREF="node146.html">IFFT: Compute an Inverse FFT</A>
+<LI><A NAME="tex2html159"
+  HREF="node147.html">POWERS: Generate a Power Spectrum (Periodogram Estimate)</A>
+<LI><A NAME="tex2html160"
+  HREF="node148.html">CABS: Absolute Value of a Complex Image</A>
+<LI><A NAME="tex2html161"
+  HREF="node149.html">Complex Image Arithmetic and Operators</A>
+<LI><A NAME="tex2html162"
+  HREF="node150.html">CMUL/CDIV: Complex Image Multiplication</A>
+<LI><A NAME="tex2html163"
+  HREF="node151.html">CMPLX/IMAG/REAL/CONJ: Complex Image Operators</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html164"
+  HREF="node152.html">Spectroscopy</A>
+<UL>
+<LI><A NAME="tex2html165"
+  HREF="node153.html">Introduction to Spectroscopy</A>
+<LI><A NAME="tex2html166"
+  HREF="node154.html">MASH: Extract a Spectrum by Summing (mashing) Rows or Columns</A>
+<LI><A NAME="tex2html167"
+  HREF="node155.html">SPECTROID: Map the Location of a Spectrum on an Image</A>
+<LI><A NAME="tex2html168"
+  HREF="node156.html">EXTRACT: Optimal Spectrum Extraction (Horne's Method)</A>
+<LI><A NAME="tex2html169"
+  HREF="node157.html">LINEID: Identify Lines in a Wavelength-Calibration Spectrum</A>
+<LI><A NAME="tex2html170"
+  HREF="node158.html">WSCALE: Compute Wavelength Scale from Indentified Lines</A>
+<LI><A NAME="tex2html171"
+  HREF="node159.html">COPW: Copy a Wavelength Scale onto a Spectrum</A>
+<LI><A NAME="tex2html172"
+  HREF="node160.html">ALIGN: Linearize or Transform a Wavelength-Calibrated Spectrum</A>
+<LI><A NAME="tex2html173"
+  HREF="node161.html">SKYLINE: Re-Calibrate Wavelengths Using Night-Sky Lines</A>
+<LI><A NAME="tex2html174"
+  HREF="node162.html">EXTINCT: Correct a Spectrum for Atmospheric Extinction</A>
+<LI><A NAME="tex2html175"
+  HREF="node163.html">SETUP: Set the Longitude and Latitude for VISTA</A>
+<LI><A NAME="tex2html176"
+  HREF="node164.html">FLUXSTAR: Compute Flux Curves from a Standard-Star Spectrum</A>
+<LI><A NAME="tex2html177"
+  HREF="node165.html">FLUX: Flux Calibrate a Spectrum</A>
+<LI><A NAME="tex2html178"
+  HREF="node166.html">POLY: Fit a Polynomial to a Spectrum</A>
+<LI><A NAME="tex2html179"
+  HREF="node167.html">STRETCH: Stretch a Spectrum into a 2-D Image</A>
+<LI><A NAME="tex2html180"
+  HREF="node168.html">ISPLINE: Interactively Fit a Spline to a Spectrum</A>
+<LI><A NAME="tex2html181"
+  HREF="node169.html">ROWFIT: Fit Each Row of an Image with a Function</A>
+<LI><A NAME="tex2html182"
+  HREF="node170.html">FINDSHIFT: Compute Relative Shifts Between Two Spectra</A>
+<LI><A NAME="tex2html183"
+  HREF="node171.html">FINDPEAK: Find the Location of a Spectrum along Rows or
+         Columns</A>
+<LI><A NAME="tex2html184"
+  HREF="node172.html">SPINDEX: Measure Equivalent Widths at each Row of an Image</A>
+<LI><A NAME="tex2html185"
+  HREF="node173.html">FQUO: Fit a Broadening Function to a Fourier Quotient Spectrum</A>
+<LI><A NAME="tex2html186"
+  HREF="node174.html">EWAVE: Wavelength Calibrate an Echelle Image</A>
+<LI><A NAME="tex2html187"
+  HREF="node175.html">EXTSPEC: Copy an Order of an Echelle Image to a Spectrum</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html188"
+  HREF="node176.html">Surface Photometry</A>
+<UL>
+<LI><A NAME="tex2html189"
+  HREF="node177.html">CUT: Extract a Brightness Profile Cut along any Position Angle</A>
+<LI><A NAME="tex2html190"
+  HREF="node178.html">PROFILE: Compute Surface Brightness Profile by Elliptical
+         Isophote Fitting</A>
+<LI><A NAME="tex2html191"
+  HREF="node179.html">ANNULUS: Compute a Radial Profile by Azimuthal Averaging</A>
+<LI><A NAME="tex2html192"
+  HREF="node180.html">RECON: Reconstruct an Image from a Surface Photometry Profile</A>
+<LI><A NAME="tex2html193"
+  HREF="node181.html">APER: Aperture Photometry of an Extended Object</A>
+<LI><A NAME="tex2html194"
+  HREF="node182.html">ROUND: Deproject Spirals or Elliptical Images</A>
+<LI><A NAME="tex2html195"
+  HREF="node183.html">POLAR: Regrid an Image into Polar Coordinates</A>
+<LI><A NAME="tex2html196"
+  HREF="node184.html">EGAL: Reconstruct a Galaxy from its PROFILE</A>
+<LI><A NAME="tex2html197"
+  HREF="node185.html">SNUC: Surface Photometry of Multiple-Galaxy Systems</A>
+<LI><A NAME="tex2html198"
+  HREF="node186.html">RENUC: Reconstruct Galaxies from Multiple-Galaxy Photometry</A>
+<LI><A NAME="tex2html199"
+  HREF="node187.html">SECTOR: Surface Photometry of Star Clusters or Complex Objects</A>
+<LI><A NAME="tex2html200"
+  HREF="node188.html">AEDIT: Edit Values in Selected Image Regions</A>
+<LI><A NAME="tex2html201"
+  HREF="node189.html">CLPROF: Clear the Contents of the PROFILE Buffer</A>
+<LI><A NAME="tex2html202"
+  HREF="node190.html">CPROF: Correct the Results of a PROFILE Calculation</A>
+<LI><A NAME="tex2html203"
+  HREF="node191.html">EMAG: Aperture Photometry with Elliptical Apertures</A>
+<LI><A NAME="tex2html204"
+  HREF="node192.html">EMARK: Interactively Specify Ellipse Parameters for 
+        Photometry with EMAG</A>
+<LI><A NAME="tex2html205"
+  HREF="node193.html">RMARK: Interactively Set Maximum Radius for EMAG</A>
+<LI><A NAME="tex2html206"
+  HREF="node194.html">ELLMAG: Compute Elliptical Magnitudes for PROFILE Ellipses</A>
+<LI><A NAME="tex2html207"
+  HREF="node195.html">TVPROF: Display PROFILE Results on the Image Display</A>
+<LI><A NAME="tex2html208"
+  HREF="node196.html">OPREP: Open a Batch Surface Photometry Preparation File</A>
+<LI><A NAME="tex2html209"
+  HREF="node197.html">CLPREP: Close a Batch Surface Photometry Preparation File</A>
+<LI><A NAME="tex2html210"
+  HREF="node198.html">RPREP: Read a Record from a Batch Surface Photometry Prep-File</A>
+<LI><A NAME="tex2html211"
+  HREF="node199.html">WPREP: Write a Record into a Batch Surface Photometry Prep-File</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html212"
+  HREF="node200.html">Stellar Photometry</A>
+<UL>
+<LI><A NAME="tex2html213"
+  HREF="node201.html">DAOPHOT: A Stellar Photometry Package</A>
+<LI><A NAME="tex2html214"
+  HREF="node202.html">OPTIONS: Daophot OPTIONS Command</A>
+<LI><A NAME="tex2html215"
+  HREF="node203.html">FIND: DAOPHOT FIND Command</A>
+<LI><A NAME="tex2html216"
+  HREF="node204.html">PHOTOM: DAOPHOT APERTURE PHOTOMETRY Command</A>
+<LI><A NAME="tex2html217"
+  HREF="node205.html">GROUP: DAOPHOT GROUP Command</A>
+<LI><A NAME="tex2html218"
+  HREF="node206.html">PSF: DAOPHOT PSF Command</A>
+<LI><A NAME="tex2html219"
+  HREF="node207.html">PEAK: DAOPHOT PEAK Command</A>
+<LI><A NAME="tex2html220"
+  HREF="node208.html">NSTAR: DAOPHOT NSTAR Command</A>
+<LI><A NAME="tex2html221"
+  HREF="node209.html">SUBSTAR: DAOPHOT SUBSTAR Command</A>
+<LI><A NAME="tex2html222"
+  HREF="node210.html">MONITOR/NOMONITOR: DAOPHOT MONITORING COMMANDS</A>
+<LI><A NAME="tex2html223"
+  HREF="node211.html">SORT: Sort Two DAOPHOT Files</A>
+<LI><A NAME="tex2html224"
+  HREF="node212.html">OFFSET: Offset Positions in a DAOPHOT File</A>
+<LI><A NAME="tex2html225"
+  HREF="node213.html">SELECT: DAOPHOT SELECT Command</A>
+<LI><A NAME="tex2html226"
+  HREF="node214.html">APPEND: DAOPHOT APPEND Command</A>
+<LI><A NAME="tex2html227"
+  HREF="node215.html">DAOSKY: DAOPHOT SKY Command</A>
+<LI><A NAME="tex2html228"
+  HREF="node216.html">DUMP: DAOPHOT DUMP Command</A>
+<LI><A NAME="tex2html229"
+  HREF="node217.html">AUTOMARK: Locate Stars Automatically in an Image</A>
+<LI><A NAME="tex2html230"
+  HREF="node218.html">MARKSTAR: Locate Stars Interactively in an Image</A>
+<LI><A NAME="tex2html231"
+  HREF="node219.html">APERSTAR: Measure Brightnesses by Circular Aperture Photometry</A>
+<LI><A NAME="tex2html232"
+  HREF="node220.html">COORDS: Compute Celestial Coordinates for Stars</A>
+<LI><A NAME="tex2html233"
+  HREF="node221.html">MODPHOT: Modify Entries in a VISTA Photometry File</A>
+<LI><A NAME="tex2html234"
+  HREF="node222.html">SHORTAP: Convert DAOPHOT Aperture Photometry Files to NSTAR Files</A>
+<LI><A NAME="tex2html235"
+  HREF="node223.html">COMBINE: Combine Photometry Files using Magnitudes and/or 
+        Distances</A>
+<LI><A NAME="tex2html236"
+  HREF="node224.html">MAGAVER: Compute Weighted Means of Photometry from COMBINE</A>
+<LI><A NAME="tex2html237"
+  HREF="node225.html">REGISTER: Compute a Linear Plate Solution Between Several Images</A>
+<LI><A NAME="tex2html238"
+  HREF="node226.html">FITSTAR: Calculate Extinction and Transformation Coefficients</A>
+<LI><A NAME="tex2html239"
+  HREF="node227.html">CORRECT: Correct Photometry for Extinction and/or Transformations</A>
+<LI><A NAME="tex2html240"
+  HREF="node228.html">DAOFILES: Define Names of DAOPHOT Files for DAOPHOT Commands</A>
+<LI><A NAME="tex2html241"
+  HREF="node229.html">AUTOCEN: Find the Center of an Extended Object</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html242"
+  HREF="node230.html">Image Simulation</A>
+<UL>
+<LI><A NAME="tex2html243"
+  HREF="node231.html">PHOTONS: Add Artificial Stars and/or Noise to an Image</A>
+<LI><A NAME="tex2html244"
+  HREF="node232.html">TEMPLATE: Generate an Image from a User-Supplied Profile</A>
+<LI><A NAME="tex2html245"
+  HREF="node233.html">DEVAUC: Generate an Image with a DeVaucouleurs Profile</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html246"
+  HREF="node234.html">Miscellaneous Commands</A>
+<UL>
+<LI><A NAME="tex2html247"
+  HREF="node235.html">$: Execute a Shell Command from VISTA</A>
+<LI><A NAME="tex2html248"
+  HREF="node236.html">TIME: Time a Command</A>
+<LI><A NAME="tex2html249"
+  HREF="node237.html">CLOCK: Turn on the Internal Clock for Timing Multiple Commands</A>
+<LI><A NAME="tex2html250"
+  HREF="node238.html">BELL: Turn the Prompt Bell ON/OFF or Ring the Bell </A>
+</UL>
+<BR>
+<LI><A NAME="tex2html251"
+  HREF="node239.html">Index</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

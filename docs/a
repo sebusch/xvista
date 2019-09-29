@@ -1,0 +1,4 @@
+#!/bin/csh
+foreach file ($*)
+  sed 's/{hanging}/{itemize}/' $file | sed 's/{example}/{itemize}/' | sed 's/{command}/{itemize}/' > tmp/$file
+end

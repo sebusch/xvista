@@ -1,0 +1,32 @@
+
+<H1><A NAME="SECTION0015170000000000000000">
+RMARK: Interactively Set Maximum Radius for EMAG</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml451#
+<BR>
+<tex2html_image_mark>#command7067#
+<BR>
+
+<P>
+RMARK enables the user to interactively set the maximum radius for the
+photometry routine EMAG. The image on which photometry is to be performed
+must be displayed, and an AXES computation must have been previously
+performed, in order for RMARK to work.
+
+<P>
+RMARK will prompt the user to move the cursor to a point at the distance
+from the object center to which the photometry is to be performed. The user
+then strikes the key ;SPMquot;P;SPMquot;. A cross will be displayed at this point and the
+user will be given the option of choosing another position. Once the user
+is satisfied with the position chosen, RMARK will compute the distance of
+this point from the object center. This distance is then loaded into the
+VISTA variable RMAX.
+
+<P>
+When RMAX is given as a command line keyword in EMAG, the value of this
+variable is retrieved and the photometry proceeds out to this radius.
+
+<P>
+See Also: EMARK, EMAG
+
+<P>

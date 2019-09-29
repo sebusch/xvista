@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>MERGE: Merge Overlapping Images or Spectra</TITLE>
+<META NAME="description" CONTENT="MERGE: Merge Overlapping Images or Spectra">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001210000000000000000">
+MERGE: Merge Overlapping Images or Spectra</A>
+</H1>
+
+<!-- linkto merge.html -->
+<A NAME="4592"></A>
+<A NAME="4593"></A>
+<BR>
+
+<BR>
+
+<P>
+MERGE will merge between 2 and 20 images or spectra into one image or
+spectrum, with the pixels in the overlapping regions being replaced with
+the average.  Merging is done in relative coordinate space (or "world"
+coordinates). The FITS cards CDELT1 and CDELT2 are checked to make sure that
+all of the images are on the same scale/pixel (to within +/- 0.01 pixels
+across the range of an image).  If this condition is met the images are
+then checked to make sure that the starting coordinates are an integral
+number of pixels away from each other (again to within 0.01 pixels).  If
+the NOMATCH keyword is used then this last check is not performed and any
+given pixel is added to the closest adjacent pixel in the "master" image.
+(This uses the NINT function in FORTRAN, and allows the user to avoid
+unnecessary interpolations in some cases.)
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

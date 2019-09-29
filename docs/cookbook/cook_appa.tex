@@ -1,0 +1,1273 @@
+%
+%  VISTA Cookbook;  VISTA Command Summary (Appendix A)
+%
+%  Began:  1988 July 10
+%
+%  Last Revision:  1988 August 9
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:com
+%
+
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+%\def \hitkey#1 {$\langle${\tt #1}$\rangle$\/}
+%
+%\begin{document}
+%
+%\appendix
+
+\chapter{VISTA Command Summary}
+
+The following is a summary of standard VISTA commands, intended to be used as
+a quick reference guide.  Commands are listed by function.  Detailed
+descriptions of each of the commands may be found in the VISTA Help Manual, or
+by typing \verb+HELP <command name>+.
+
+%---------------------------------------
+
+\section{Stopping VISTA}
+
+The end a VISTA session, type:
+\begin{verbatim}
+      QUIT
+\end{verbatim}
+
+%---------------------------------------
+
+\section{VISTA Command Syntax}
+
+The basic command syntax for all VISTA commands is as follows:
+\begin{verbatim}
+     COMMAND imbuf req#1 req#2 ... [opt#1] [opt#2] ...
+\end{verbatim}
+Where:
+\begin{description}
+      \item[{\tt COMMAND}] is the command name.  You do not need to type
+            the full name.  Commands may be abbreviated to the shortest
+            unambiguous form.
+      \item[{\tt imbuf}]   is the image buffer the command is to operate
+            on.  It is an integer.  In some cases, more than one image may
+            be required.
+      \item[{\tt req\#n}] are the required keywords.  These may NOT be
+            abbreviated.
+      \item[{\tt [opt\#n]}] are the optional keywords.  These may NOT
+            be abbreviated either.
+\end{description}
+
+\noindent \underbar{Command Keywords}:
+
+The keyword syntax used throughout is:
+\begin{verbatim}
+      uservalue1 KEY1 KEY2=uservalue2 KEY3=user3,user4
+\end{verbatim}
+Capitalized words are command keywords.  Lowercase words are numerical or
+string values that the user must supply.
+
+\noindent \underbar{Extended Commands}:
+
+Commands can be extended to more than one line by ending the line with the
+``\verb+|+'' character (the ``pipe'' character, not a lowercase l), hitting
+\hitkey{RETURN}\ and entering the rest of the command on the next line.
+Commands are limited to 256 characters in length.
+
+\noindent \underbar{Multiple Commands}:
+
+Multiple commands can be chained together on a command line separated commands
+by semicolons (\comm{;}).
+
+\noindent \underbar{Command History}:
+
+The command history is a list of the last 20 VISTA commands.  It allows you to
+see what you have typed in, and with the command recall facility (\comm{\%}
+command below), you can recall any command listed by \comm{HISTORY}.
+
+\begin{verbatim}
+      HISTORY [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Repeating and/or Modifying Previous Commands}:
+\begin{verbatim}
+   %            repeat last command
+   % newkey     repeat last command with new keyword "newkey"
+   %xyz         repeat last command beginning with pattern "xyz"
+   %xyz newkey  as above, but add new keyword "newkey"
+\end{verbatim}
+
+\noindent \underbar{Editing Previous Commands}:
+\begin{verbatim}
+      EDIT
+\end{verbatim}
+
+\noindent \underbar{Defined a Command Synonym (Alias)}:
+\begin{verbatim}
+      ALIAS [synonym] ['command'] [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Remove a Command Synonym}:
+\begin{verbatim}
+      UNALIAS synonym
+\end{verbatim}
+
+\noindent \underbar{On-Line Command Help Facilities}:
+\begin{verbatim}
+       HELP [subjects] [ALL] [output redirection]
+   or
+       ? command
+\end{verbatim}
+
+\noindent \underbar{Appropriate Command Search}:
+\begin{verbatim}
+      APROPOS topic_1 topic_2 ...
+\end{verbatim}
+\begin{quote}
+      \comm{APROPOS} suggests possible VISTA \comm{HELP} topics based
+      on a keyword search.   The topics are the principle sections of
+      the help manual.  Similar to the Unix \comm{apropos} command.
+\end{quote}
+
+%-------------------
+
+\section{VISTA User-Defined Variables}
+
+\subsection{Defining VISTA variables}
+
+\underbar{Definition of a VISTA variable}:
+\begin{verbatim}
+      SET variable_name=value
+   or
+      variable_name=value
+\end{verbatim}
+
+\noindent Note that there can be NO SPACES separating the \comm{=} from either
+the variable name or the value.  Variable names in VISTA are insensitive to
+case, so \comm{IGGY} is the same as \comm{iggy} is the same as \comm{IgGy},
+and so forth.  Variable names may contain both characters and numbers.
+
+\subsection{Arithmetic Operations among VISTA Variables}
+
+The following table lists the arithmetic operations supported by VISTA.
+
+\begin{center}
+   \begin{tabular}{|c|l|ccc|} \hline
+      Symbol&\multicolumn{1}{|c|}{Function}&
+      \multicolumn{3}{c|}{Examples}\\ \hline
+      {\tt +}&addition&{\tt B+C}&&{\tt 2.0+5}\\ \hline
+      {\tt -}&subtraction&{\tt X-Y}&&{\tt 123-54}\\ \hline
+      {\tt *}&multiplication&{\tt X1*X2}&&{\tt 56.4*60.0}\\ \hline
+      {\tt /}&division&{\tt A/B}&&{\tt 125/0.54}\\ \hline
+      {\tt -}&negative sign&{\tt -X}&&{\tt -12.3}\\ \hline
+      {\verb+^+}&exponentiation&{\verb+A^0.5+}&&{\verb+12^2+}\\ \hline
+      {\tt =}&equate&{\tt A=B}&&{\tt A=B=3.5}\\ \hline
+   \end{tabular}
+\end{center}
+
+\noindent Note that there must be no spaces between the operator and the
+operands.  For example:
+\begin{verbatim}
+      X=A+B-C        is valid
+  but
+      X = A + B - C    is not
+\end{verbatim}
+
+Expressions are evaluated in the same order as they are in Fortran. You may
+change the order of evaluation using parentheses "()".  For example:
+\begin{verbatim}
+      X=(B+0.53)*10^(45.6/(A+5))
+\end{verbatim}
+
+\noindent Arithmetic expressions among VISTA functions may be of arbitrary
+complexity.  The only requirements are that all variables appearing on the
+right hand side of equations be previously defined and that parentheses be
+balanced. NOTE:\ SPACES MAY NOT APPEAR ANYWHERE WITHIN AN ARITHMETIC
+EXPRESSION.
+
+\subsection{VISTA Functions}
+
+VISTA supports the following functions.  Arguments of functions may be numbers
+or previously defined VISTA variables (as appropriate).  Functions can appear
+as arguments of other functions, and can contain expressions of arbitrary
+complexity. Spaces are not allowed anywhere within a function.
+
+\noindent \underbar{Arithmetic Functions}:
+\begin{verbatim}
+   INT[E]          nearest integer to the expression E
+   ABS[E]          absolute value of E
+   MOD[E,I]        E modulo I (remainder of E/I)
+   IFIX[E]         integer part of E (truncation)
+   MAX[E,F]        the larger of E or F
+   MIN[E,F]        the smaller of E of F
+   LOG10[E]        Log base 10 of E
+   LOGE[E]         Log base e ("natural log") of E
+   EXP[E]          e raised to the power E
+                     (Use ^ for all other exponentiations)
+   SQRT[E]         square root of absolute value of E
+   RAN[A,B]        returns a random number between A and B
+\end{verbatim}
+
+\noindent \underbar{Trigonometric Functions}:
+\begin{verbatim}
+   SIN[E]         sine of E (E in radians)
+   SIND[E]        sine of E (E in degrees)
+   COS[E]         cosine of E (E in radians)
+   COSD[E]        cosine of E (E in degrees)
+   ARCTAN[E]      arctan of E, returns radians
+   ARCTAND[E]     arctan of E, returns degrees
+\end{verbatim}
+
+\noindent \underbar{Functions to Extract Image FITS Header Information}:
+\begin{verbatim}
+   NR[B]       number of rows of the image in buffer B.
+   NC[B]       number of columns of ...
+   SR[B]       starting row of ...
+   SC[B]       starting column of ...
+   EXPOS[B]    exposure time of ...
+   RA[B]       right ascension in seconds of time of ...
+   DEC[B]      declination in seconds of arc of ...
+   ZENITH[B]   zenith distance in radians of ...
+   UT[B]       UT time of start of exposure in hours of ...
+\end{verbatim}
+
+\noindent \underbar{Advanced Image Pixel Functions}
+\begin{verbatim}
+   GETVAL[I,R,C]   returns the value of the pixel at
+                   row R and column C in image I.
+   SETVAL[I,R,C,V] returns the value of the pixel at
+                   row R and column C in image I, then
+                   sets the value of that pixel to be
+                   equal to V.
+   WL[I,P]         returns wavelength of pixel P in image
+                   I (a wavelength calibrated spectrum).
+   PIX[I,W]        returns the pixel number corresponding
+                   to the wavelength W in image I.
+\end{verbatim}
+
+\subsection{Variable Related Commands}
+
+\underbar{Define a Variable or Set of Variables}:
+\begin{verbatim}
+   SET var1=value1 [var2=value2] ... [var15=value15]
+\end{verbatim}
+Note that you may omit \comm{SET} if desired.
+
+\noindent \underbar{Evaluate an Expression and Print the Result}:
+\begin{verbatim}
+   TYPE expression1 [expression2] ... [expression15]
+\end{verbatim}
+
+\subsection{String Variables}
+
+\underbar{To Define String Variables}:
+\begin{verbatim}
+   STRING name ['format string'] [expressions]
+   STRING name '?query'
+\end{verbatim}
+
+\noindent \underbar{Print List of All User-Defined Strings}:
+\begin{verbatim}
+   PRINT STRINGS [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Substituting String Variables into a Command Line}:
+\begin{verbatim}
+   COMMAND {STRING} [rest of command]
+\end{verbatim}
+
+%-------------------
+
+\section{Tape and Disk Input/Output}
+
+\subsection{FITS Tape Input/Output}
+
+\underbar{Mounting and Dismounting Tapes}:
+\begin{verbatim}
+   MOUNT [UNIT=n] [BPI=m]
+
+   DISMOUNT [UNIT=n]
+\end{verbatim}
+
+\noindent \underbar{Listing of Tape Contents}:
+\begin{verbatim}
+   TDIR [comment] [UNIT=n] [BRIEF] [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Reading and Writing Images}:
+\begin{verbatim}
+   RT imbuf tape_number [UNIT=n] [NOMEAN]
+
+   WT imbuf [PDP8] [ZERO=z SCALE=s] [NOAUTO] [UNIT=n]
+            [BITPIX=m]
+\end{verbatim}
+
+\noindent \underbar{Initialize or Edit a VISTA FITS Tape}:
+\begin{verbatim}
+   INT [firstimage#] [UNIT=n]
+\end{verbatim}
+
+\subsection{VISTA Disk Format Image Input/Output}
+
+\underbar{List the Default Disk Directories}:
+\begin{verbatim}
+   PRINT DIRECTORIES
+\end{verbatim}
+
+\noindent{Change the Default Directory Assignment}:
+\begin{verbatim}
+   SETDIR IM [DIR=directory_name] [EXT=extension]
+ and
+   SETDIR SP [DIR=directory_name] [EXT=extension]
+\end{verbatim}
+\comm{IM} is for images, \comm{SP} is for spectra.
+
+\noindent \underbar{Read an Image from Disk}:
+\begin{verbatim}
+   RD imbuf filename [SPEC]
+\end{verbatim}
+
+\noindent \underbar{Write an Image to Disk}:
+\begin{verbatim}
+   WD imbuf filename [SPEC] [FULL] [ZERO=z SCALE=s]
+\end{verbatim}
+
+\noindent \underbar{Write a Spectrum into an ASCII Text File on Disk}:
+\begin{verbatim}
+   PRINT spbuf SPEC >filename
+\end{verbatim}
+
+%-------------------
+
+\section{VISTA Buffers}
+
+\underbar{Listing of VISTA Buffers}:
+\begin{verbatim}
+   BUFFERS [bufs] [FULL] [FITS[=param]] [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Copying Images among VISTA Buffers}:
+\begin{verbatim}
+   COPY imbuf source [BOX=b]
+\end{verbatim}
+NOTE:  The syntax of \comm{COPY} is:
+\begin{verbatim}
+   COPY <TO this buffer>  <FROM this buffer>
+\end{verbatim}
+
+\noindent \underbar{Deleting a VISTA Buffer}:
+\begin{verbatim}
+   DISPOSE [buf] [buf2] [buf3] [...] [ALL]
+\end{verbatim}
+
+\noindent \underbar{Create a Blank Image}:
+\begin{verbatim}
+   CREATE imbuf [BOX=b] [SR=sr] [SC=sc] [NR=nr] [NC=nc]
+                [CONST=c]
+\end{verbatim}
+
+\noindent \underbar{Changing Name of an Image in a VISTA Buffer}:
+\begin{verbatim}
+   CHANGE buf 'new_name'
+\end{verbatim}
+
+\noindent \underbar{Change or Remove Individual FITS Header Cards}:
+\begin{verbatim}
+   FITS buf [FLOAT=name] float_value
+ or
+   FITS buf [INT=name] integer_value
+ or
+   FITS buf [CHAR=name] 'character string'
+ or
+   FITS buf [REMOVE=name]
+\end{verbatim}
+
+\noindent \underbar{Edit a FITS Header}:
+\begin{verbatim}
+   HEDIT buf
+\end{verbatim}
+You will have the FITS header placed in the default screen editor appropriate
+to your installation.
+
+%-------------------
+
+\section{Display of Images and Spectra}
+
+\subsection{Image Display and Interaction}
+
+\underbar{Display an Image on a Color Monitor}:
+\begin{verbatim}
+   TV imbuf [span] [zero] [L=span] [Z=zero] [BOX=b] [BW]
+            [CF=colormap] [NOLABEL] [LEFT] [RIGHT]
+            [NOERASE] [CLIP]
+\end{verbatim}
+
+\noindent \underbar{Load or Define a Color Map}:
+\begin{verbatim}
+   COLOR [CF=filename] [BW] [INV]
+\end{verbatim}
+
+\noindent \underbar{Put an up Interactive Cursor on an Image Display}:
+\begin{verbatim}
+   ITV
+\end{verbatim}
+The operation of \comm{ITV} depends on your installation of VISTA.
+
+\noindent \underbar{Overlay a \comm{BOX} on a Displayed Image}:
+\begin{verbatim}
+   TVBOX [BOX=b] [SIZE=s PIX=r,c]
+\end{verbatim}
+
+\subsection{Image Hardcopy}
+
+\underbar{Grayscale Hardcopy on a Versatec}:
+\begin{verbatim}
+   VTEC imbuf [span] [zero] [L=span] [Z=zero] [BOX=b]
+              [OLD] [INV] [CLIP]
+\end{verbatim}
+
+\noindent \underbar{Gray Halftone Hardcopy on a PostScript Device}:
+\begin{verbatim}
+   POSTIM imbuf [L=span] [Z=zero] [BOX=b] [CLIP] [INV]
+                [TITLE] [PORT]
+\end{verbatim}
+
+\subsection{Line Graphics and Spectrum Plotting}
+
+\underbar{Plot an Image Row, Column or a Spectrum}:
+\begin{verbatim}
+   PLOT imbuf [R=n] [C=n] [CS=c1,c2] [RS=r1,r2] [MIN=f]
+              [MAX=f] [XS=f] [XE=f] [LOG] [SEMILOG] [GRID]
+              [INFO] [HARD] [OLD] [SWAPXY] [PIXEL] [NOERASE]
+              [NOPRINT] [HIST] [USER] [NOLABEL] [INT]
+\end{verbatim}
+Keywords (\comm{[R=n]} thru \comm{[RS=r1,r2]}) are omitted if \comm{imbuf}
+contains a spectrum.
+
+\noindent \underbar{Plot an Image Contour Map}:
+\begin{verbatim}
+   CONTOUR imbuf [BOX=b] [LEVELS=(L1,L2,...)] [LOW=l]
+                 [RATIO=r] [DIFF=d] [FID=l] [SCALE=s] [USER]
+                 [TITLE] [DASH] [TR=(X0,X1,X2,Y0,Y1,Y2)]
+                 [EXACT] [HARD] [NOERASE] [NOPRINT] [FULL]
+                 [NOLABEL]
+\end{verbatim}
+
+\noindent \underbar{Specify or Change the Default Graphics Devices}:
+\begin{verbatim}
+   TERM  (none)  [TERMINAL=vterm]  [HARDCOPY=vhard]
+\end{verbatim}
+
+%-------------------
+
+\section{Marking Image Segments and Pixels}
+
+\subsection{VISTA Image {\tt BOX}es}
+
+\underbar{Define a \comm{BOX} or Image Subsection}:
+\begin{verbatim}
+   BOX box_num [NC=n] [NR=n] [CR=n] [CC=n] [SR=n] [SC=n]
+\end{verbatim}
+
+\noindent \underbar{Print a List of Current Boxes}:
+\begin{verbatim}
+   PRINT BOX
+\end{verbatim}
+
+\noindent \underbar{Overlay a \comm{BOX} on a Displayed Image}:
+\begin{verbatim}
+   TVBOX [BOX=b] [SIZE=s PIX=r,c]
+\end{verbatim}
+
+\subsection{Image Masks}
+
+\underbar{Mask Image Regions}:
+\begin{verbatim}
+   MASK  [R=r1,r2] [C=c1,c2] [BOX=b] [PIX=r,c]
+\end{verbatim}
+
+\noindent \underbar{Un-Mask Image Regions}:
+\begin{verbatim}
+   UNMASK  [R=r1,r2] [C=c1,c2] [BOX=b] [PIX=r,c]
+\end{verbatim}
+
+\noindent \underbar{Create an Image to Display Current Image Mask}:
+\begin{verbatim}
+   MASKTOIM imbuf [BOX=b] [SR=sr] [SC=sc] [NR=nr] [NC=nc]
+\end{verbatim}
+
+\noindent \underbar{Store the Current Image Mask on Disk}:
+\begin{verbatim}
+   SAVE MASK=filename
+\end{verbatim}
+
+\noindent \underbar{Retrieve an Old Image Mask from Disk}:
+\begin{verbatim}
+   GET MASK=filename
+\end{verbatim}
+
+\noindent NOTE:  Masks may also be created using the \comm{CLIP} command
+(see below).
+
+%-------------------
+
+\section{Image and Spectrum Arithmetic}
+
+\subsection{Basic Arithmetic}
+
+The basic image arithmetic commands are:
+\begin{verbatim}
+   ADD      image#1 [image#2] [CONST=c] [BOX=B] [DR=dr] [DC=dc]
+   SUBTRACT image#1 [image#2] [CONST=c] [BOX=B] [DR=dr] [DC=dc]
+   MULTIPLY image#1 [image#2] [CONST=c] [BOX=B] [DR=dr] [DC=dc]
+   DIVIDE   image#1 [image#2] [CONST=c] [BOX=B] [DR=dr] [DC=dc]
+                    [FLAT]
+\end{verbatim}
+
+\noindent The basic two-image operations are:
+\begin{verbatim}
+   ADD image#1 image#2   implies   image#1 = image#1 + image#2
+   SUB image#1 image#2   implies   image#1 = image#1 - image#2
+   MUL image#1 image#2   implies   image#1 = (image#1)(image#2)
+   DIV image#1 image#2   implies   image#1 = (image#1)/(image#2)
+\end{verbatim}
+
+\noindent The basic one-image operations are:
+\begin{verbatim}
+   ADD image CONST=c      implies   image = image + c
+   SUB image CONST=c      implies   image = image - c
+   MUL image CONST=c      implies   image = c(image)
+   DIV image CONST=c      implies   image = (image)/c
+\end{verbatim}
+
+\subsection{Advanced Image Arithmetic}
+
+\begin{center}
+   \begin{tabular}{lcl}
+      Square Root of an Image:&&\verb+SQRT imbuf [SGN] [SIGN]+\\
+      Log (Base 10) of an Image:&&\verb+LOG imbuf+\\
+      Exponentiate ($e^x$) an Image:&&\verb+EXP imbuf+\\
+      Tangent of an Image (degrees):&&\verb+TAN imbuf+\\
+      ArcTan of an Image (returns degrees):&&\verb+ARCTAN imbuf [0to180]+\\
+   \end{tabular}
+\end{center}
+
+%-------------------
+
+\section{Image Statistics}
+
+\underbar{Mean of the Pixel Values}:
+\begin{verbatim}
+   MN imbuf [NOBL] [BOX=b] [NOZERO] [MASK] [PIX=p] [SILENT]
+               [W=w1,w2]
+\end{verbatim}
+
+\noindent \underbar{Full Image Pixel Statistics}:
+\begin{verbatim}
+   ABX imbuf box1 [box2] ... [ALL] [W=w1,w2] [SILENT]
+         [MASK] [TOTAL=var] [MEAN=var] [HIGH=var] [LOW=var]
+         [HIGH_ROW=var] [HIGH_COL=var] [LOW_ROW=var]
+         [LOW_COL=var] [SIGMA=var] [output redirection]
+\end{verbatim}
+
+\noindent Either a list of box numbers or the keyword \comm{ALL} must be
+given, otherwise \comm{ABX} will simply terminate without producing output.
+
+\noindent \underbar{Compute ``Sky'' Level of an Image}:
+\begin{verbatim}
+   SKY imbuf [BOX=b] [SILENT] [CORNERS] [MAX=c]
+\end{verbatim}
+\comm{SKY} returns the Mode of the pixel intensity distribution.
+
+\noindent \underbar{Plot a Histogram of Image Pixel Intensities}:
+\begin{verbatim}
+   HISTOGRAM imbuf [BOX=b] [NOLOG] [BIN=bin] [XMIN=xmin]
+                   [XMAX=xmax] [YMIN=ymin] [YMAX=ymax] [HARD]
+\end{verbatim}
+
+%-------------------
+
+\section{Image Processing}
+
+\subsection{Image Size, Orientation, and Position}
+
+\underbar{Window an Image to a Smaller Size}:
+\begin{verbatim}
+   WINDOW imbuf BOX=b
+\end{verbatim}
+
+\noindent \underbar{Merge Images or Spectra}:
+\begin{verbatim}
+   MERGE im1 im2 im3 im4 ... [NOMATCH]
+\end{verbatim}
+
+\noindent \underbar{Compress an Image or Spectrum}:
+\begin{verbatim}
+   BIN imbuf [BIN=b] [BINR=br] [BINC=bc] [SR=sr] [SC=sc] [NORM]
+\end{verbatim}
+
+\noindent \underbar{Rotate an Image}:
+\begin{verbatim}
+   ROTATE imbuf [LEFT] [RIGHT] [UD] [PA=degrees] [BOX=b]
+\end{verbatim}
+
+\noindent \underbar{Reverse the Order of Rows or Columns of an Image}:
+\begin{verbatim}
+   FLIP imbuf [ROWS] [COLS]
+\end{verbatim}
+
+\noindent \underbar{Shift an Image}:
+\begin{verbatim}
+   SHIFT imbuf [DC=f] [DR=f] [SINC] [NORM] [RMODEL=i] [CMODEL=i]
+               [MEAN]
+\end{verbatim}
+
+\subsection{Changing Image Pixel Values}
+
+\underbar{Correct an Image for Baseline Subtraction Noise}:
+\begin{verbatim}
+   BL imbuf [JUMP]
+\end{verbatim}
+
+\noindent \underbar{Changing Individual Pixel Values}:
+\begin{verbatim}
+   SET X=SETVAL[imbuf,row,col,newvalue]
+\end{verbatim}
+
+\noindent \underbar{Replace Pixels Outside a Given Intensity Range}:
+\begin{verbatim}
+   CLIP imbuf [MAX=f] [MIN=f] [VMAX=f] [VMIN=f] [BOX=b]
+              [MASK] [MASKONLY]
+\end{verbatim}
+
+\noindent \underbar{Gaussian or Boxcar Smooth an Image or Spectrum}:
+\begin{verbatim}
+   SMOOTH imbuf [FW=f] [FWC=f] [FWR=f] [BOXCAR]
+\end{verbatim}
+
+\noindent \underbar{Image Median Filter and Pixel Zapper}:
+\begin{verbatim}
+   ZAP imbuf [SIG=f] [SIZE=s] [SIZE=r,c] [BOX=b] [TTY]
+\end{verbatim}
+
+\noindent \underbar{Interactive Pixel Zapper}:
+\begin{verbatim}
+   TVZAP [SIG=f] [SEARCH=s] [TTY]
+\end{verbatim}
+
+\noindent \underbar{Compute Median of Several Images}:
+\begin{verbatim}
+   MEDIAN imbuf im1 im2 im3 [im4 im5 ...] TTY
+\end{verbatim}
+
+\noindent \underbar{Fit a Surface to an Image}:
+\begin{verbatim}
+   SURFACE imbuf [BOX=b] [PLANE] [SUB] [LOAD] [DIV] [MASK]
+           [NOZERO] [PIX=N] [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Replace an Image by a Spline (Non-Interactive)}:
+\begin{verbatim}
+   SPLINE imbuf [R=r1,r2,...] [C=c1,c2...] [W=w1,w2,...]
+                [AVG=a] [SUB] [DIV]
+\end{verbatim}
+
+\noindent \underbar{Cross-Correlate two Images or Spectra}:
+\begin{verbatim}
+   CROSS imbuf image#1 image#2 [BOX=b] [RAD=r] [RADR=r] [RADC=c]
+\end{verbatim}
+
+\noindent \underbar{Interpolate across rows, columns, or masked pixels}:
+\begin{verbatim}
+   INTERP imbuf [BOX=b1,b2,...] [COL] [ROW] [ORD=n] [AVE=a]
+                [MASK]
+\end{verbatim}
+
+%-------------------
+
+\section{Spectroscopic Reduction Routines}
+
+Throughout this section, the keyword \comm{spbuf} will be used to refer to a
+VISTA buffer which contains (or will contain) a spectrum, and the keyword
+\comm{imbuf} will be used to refer to a VISTA buffer which contains (or will
+contain) a 2-D image.
+
+\subsection{Spectrum Extraction from 2--D Images}
+
+\underbar{Simple Spectrum Extraction}:
+\begin{verbatim}
+   MASH spbuf imbuf SP=i1,i2 [BK=b1,b2] [COL] [COL=c1,c2]
+                    [ROW=r1,r2] [SKY=s] [NORM] [REFLAT] [SUB]
+                    [MASK]
+\end{verbatim}
+The basic syntax of \comm{MASH} is:
+\begin{verbatim}
+   MASH <into this spectrum> <from this 2-D image>
+\end{verbatim}
+
+\noindent \underbar{Optimal Weighting Scheme Extraction}:
+\begin{verbatim}
+   EXTRACT spbuf imbuf SP=s1,s2 BK=b1,b2 BK=b3,b4 [SKY=s]
+                [VAR=v] [SUB] [SORDER=sord] [PORDER=pord]
+                [RONOISE=r] [EPERDN=eperdn]
+\end{verbatim}
+
+\noindent \underbar{Extraction Using a Spectrum Centroid Map}:
+\begin{verbatim}
+   SPECTROID spbuf imbuf [SP=s1,s2] [BK=b1,b2] [SPW=ds] [BKW=db]
+                [MODEL=m] [DLOC=d] [LOC=r] [NOSHIFT] [FIT=p1,p2]
+                [TRACE] [SELF] [LOAD] [NOMASH] [TAGALONG] [TAG]
+                [MOMENTS]
+\end{verbatim}
+
+\subsection{Wavelength Calibration}
+
+\underbar{Identify Lines in a Wavelength Calibration Spectrum}:
+\begin{verbatim}
+   LINEID spbuf [FILE=lineid_file] [ADD] [TTY] [INT]
+                [CEN=wavec] [DISP=disp] [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Compute Wavelength Calibration from \comm{LINEID} Output}:
+\begin{verbatim}
+   WSCALE spbuf [ORD=n] [TTY] [INT] [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Copy a Wavelength Scale between Spectra}:
+\begin{verbatim}
+   COPW spbuf source [source2]
+\end{verbatim}
+
+\noindent \underbar{Put a Spectrum on a New Wavelength Scale}:
+\begin{verbatim}
+   ALIGN spbuf DSP=disp W=(lam,pix) [LOG] [LGI] [MS=n] [FLIP]
+               [V=f] [Z=z] [DP=dp] [SILENT] [RED=z] [DERED=z]
+\end{verbatim}
+
+\noindent \underbar{Correct Wavelength Scale using Night Sky Lines}:
+\begin{verbatim}
+   SKYLINE sp1 [sp2] [sp3] [sp4] ... [sp15] [INT]
+\end{verbatim}
+
+\subsection{Flux Calibration}
+
+\underbar{Compute a Flux Curve using Standard Star Spectra}:
+\begin{verbatim}
+   FLUXSTAR spbuf [fluxfile] [AVE] [POLY=n] [WT=w] [SYSA] [SYSC]
+\end{verbatim}
+
+\noindent \underbar{Flux Calibrate a Spectrum}:
+\begin{verbatim}
+   FLUX spbuf
+\end{verbatim}
+
+\noindent \underbar{Correct for Atmospheric Extinction}:
+\begin{verbatim}
+   EXTINCT spbuf [CTIO]
+\end{verbatim}
+
+\subsection{Spectrum Fitting and Stretching}
+
+\underbar{Fit a Polynomial to a Spectrum}:
+\begin{verbatim}
+   POLY spbuf ORD=n [SUB] [DIV] [LOAD]
+\end{verbatim}
+
+\noindent \underbar{Fit a Spline to a Spectrum}:
+\begin{verbatim}
+Non-Interactive:
+   SPLINE spbuf [R=r1,r2,...] [C=c1,c2...] [W=w1,w2,...]
+                [AVG=a] [SUB] [DIV]
+
+Interactive:
+   ISPLINE spbuf [XY] [AVG=a] [SUB] [DIV] [HIST]
+\end{verbatim}
+
+\noindent \underbar{Stretch a Spectrum into a 2-D Image}:
+\begin{verbatim}
+   STRETCH imbuf spbuf [VERT] [HORIZ] [SIZE=s] [START=st]
+\end{verbatim}
+
+\subsection{Echelle Reduction Routines}
+
+\underbar{Wavelength Calibrate an Echelle Image}:
+\begin{verbatim}
+   EWAVE imbuf [XOFF=x0] [PORD=nw] [MORD=nm] [REJ=rej]
+               [TTY] [TRACE]
+\end{verbatim}
+
+\noindent \underbar{Copy an Order of an Echelle Image into a Spectrum}:
+\begin{verbatim}
+   EXTSPEC spbuf imbuf ORD=nord
+\end{verbatim}
+
+%-------------------
+
+\section{Stellar Photometry Routines}
+
+\subsection{Locate Stars on an Image}
+
+\underbar{Locate Stars Interactively}:
+\begin{verbatim}
+   MARKSTAR [NEW] [RADIUS=r] [NOBOX] [STAR=s1,s2,...] [AUTO]
+            [DR=dr] [DC=dc] [RSHIFT=rs] [CSHIFT=cs]
+\end{verbatim}
+
+\noindent \underbar{Locate Stars Automatically}:
+\begin{verbatim}
+   AUTOMARK imbuf [RADIUS=rad] [RANGE=low,high] [REJECT=rej]
+                  [BOX=b] [NEW]
+\end{verbatim}
+
+\noindent \underbar{Compute RA and DEC for Stars}:
+\begin{verbatim}
+   COORDS [output redirection]
+\end{verbatim}
+
+\subsection{Measure Stellar Brightnesses}
+
+\underbar{Measure Brightnesses by Aperture Photometry}:
+\begin{verbatim}
+   APERSTAR imbuf STAR=rs SKY=r1,r2 [SKY=NONE]
+                  [GAIN=g] [RONOISE=r]
+\end{verbatim}
+
+\noindent \underbar{Generate a Point Spread Function Image}:
+\begin{verbatim}
+   PSF psfbuf [SIZE=n] [SKY=n] [AVERAGE] [RADIUS=r] [BI]
+\end{verbatim}
+
+\noindent \underbar{Measure Brightnesses using PSF Fitting}:
+\begin{verbatim}
+ Interactive:
+
+   FITSTAR psfbuf [FILE] [FLAT] [PLANE] [INTER] [LOCAL] [NOSUB]
+                  [RADIUS=r] [SEGMENT]
+
+ Batch:
+
+   BFITSTAR imbuf psfbuf [FILE] [FLAT] [PLANE] [INTER] [LOCAL]
+                         [NOSUB] [RADIUS=r] [SEGMENT]
+\end{verbatim}
+
+\subsection{Photometry Files}
+
+\underbar{Print Current Photometry File}:
+\begin{verbatim}
+   PRINT PHOT [BRIEF] [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Modify the Entries in the Current Photometry File}:
+\begin{verbatim}
+   MODPHOT
+\end{verbatim}
+
+\noindent \underbar{Store the Current Photometry File on Disk}:
+\begin{verbatim}
+   SAVE PHOT=filename
+\end{verbatim}
+
+\noindent \underbar{Retrieve an Old Photometry File from Disk}:
+\begin{verbatim}
+   GET PHOT=filename
+\end{verbatim}
+
+%-------------------
+
+\section{Extended Object and Surface Photometry Routines}
+
+\underbar{Compute Centroid of an Extended Object}
+\begin{verbatim}
+   AXES imbuf [BOX=b] [SKY=s] [W=w1,w2] [output redirection]
+\end{verbatim}
+
+\subsection{Aperture Photometry}
+
+\underbar{Aperture Photometry of an Extended Object}:
+\begin{verbatim}
+   APER imbuf [RAD=r1,r2,...,r10] [MAG=M1,M2,...MN] [C=r,c]
+              [STEP=size,n] [SCALE=s] [OLD] [INT] [REF]
+              [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Print Current Aperture Photometry File}:
+\begin{verbatim}
+   PRINT APER [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Store the Current Aperture Photometry File on Disk}:
+\begin{verbatim}
+   SAVE APER=filename
+\end{verbatim}
+
+\noindent \underbar{Retrieve an Old Aperture Photometry File from Disk}:
+\begin{verbatim}
+   GET APER=filename
+\end{verbatim}
+
+\subsection{Surface Photometry by Elliptical Contour Fitting}
+
+\underbar{Surface Brightness Profile by Contour Fitting}:
+\begin{verbatim}
+   PROFILE spbuf imbuf [N=n] [ITER=n1,n2] [SCALE=s] [CENTER]
+                       [PA=f] [INT] [FOUR]
+\end{verbatim}
+
+\noindent \underbar{Print Current Surface Photometry File}:
+\begin{verbatim}
+   PRINT PROFILE [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Store the Current Surface Photometry File on Disk}:
+\begin{verbatim}
+   SAVE PROFILE=filename
+\end{verbatim}
+
+\noindent \underbar{Retrieve an Old Surface Photometry File from Disk}:
+\begin{verbatim}
+   GET PROFILE=filename
+\end{verbatim}
+
+\subsection{Radial Brightness Profile Routines}
+
+\underbar{Compute Radial Profile Along a Single Position Angle}:
+\begin{verbatim}
+   PRAD spbuf imbuf [PA=n] [CEN=n1,n2] [BOTH]
+\end{verbatim}
+
+\noindent \underbar{Compute Radial Profile by Azimuthal Averaging}:
+\begin{verbatim}
+   ANNULUS spbuf imbuf N=n [STEP=dr] [PA=pa] [INC=i] [CEN=r0,c0]
+                           [SCALE=s] [FAST] [RAD=r] [PROF]
+\end{verbatim}
+
+\subsection{Model 2-D Brightness Profile Generation}
+
+\underbar{Reconstruct a Model Profile from a \comm{SURFACE} Fit}:
+\begin{verbatim}
+   RECON imbuf [CR=r0] [CC=c0]
+\end{verbatim}
+
+\noindent \underbar{Model Image from User's Radial Brightness Profile}:
+\begin{verbatim}
+   TEMPLATE  imbuf spbuf [PA=n] [PAM=n] [E=n] [FIT=n1,n2] [SUB]
+                         [GAUSS] [EXP] [HUB] [DEV]
+\end{verbatim}
+
+%-------------------
+
+\section{VISTA Command Procedures}
+
+Note that ANY valid VISTA command (or its unambiguous abbreviation) may be
+used in a procedure.
+
+\subsection{Defining Procedures}
+
+\underbar{Edit the Procedure Buffer}:
+\begin{verbatim}
+   PEDIT
+\end{verbatim}
+
+\noindent \underbar{Define a Procedure}:
+\begin{verbatim}
+   DEF [line_number]
+\end{verbatim}
+
+\noindent \underbar{Stop a Procedure Cold}:
+\begin{verbatim}
+   STOP ['A message']
+\end{verbatim}
+
+\noindent \underbar{End a Procedure}:
+\begin{verbatim}
+   END
+\end{verbatim}
+
+\noindent \underbar{Insert Lines into the Procedure Buffer}:
+\begin{verbatim}
+   IDEF [line_number]
+\end{verbatim}
+
+\noindent \underbar{End an \comm{IDEF} and Keep Trailing Lines}:
+\begin{verbatim}
+   SAME
+\end{verbatim}
+
+\noindent \underbar{Remove Lines from the Procedure Buffer}:
+\begin{verbatim}
+   RDEF [line_number] [LINES=l1,l2]
+\end{verbatim}
+
+\noindent \underbar{Print Contents of the Procedure Buffer}:
+\begin{verbatim}
+   SHOW [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Write the Procedure Buffer to Disk}:
+\begin{verbatim}
+   WP filename
+\end{verbatim}
+
+\noindent \underbar{Read an Old Procedure from Disk}:
+\begin{verbatim}
+   RP filename
+\end{verbatim}
+
+\subsection{Executing VISTA Procedures}
+
+\underbar{Start Procedure Execution}:
+\begin{verbatim}
+   GO [parameter1] [parameter2] ...
+\end{verbatim}
+
+\noindent \underbar{Call In and Start a Procedure as a Subroutine}:
+\begin{verbatim}
+   CALL procedure_filename [parameter1] [parameter2] ...
+\end{verbatim}
+
+\noindent \underbar{Return from a {\tt CALL}ed Procedure}:
+\begin{verbatim}
+   RETURN
+\end{verbatim}
+
+\noindent \underbar{Evaluate Parameters Passed to a Procedure}:
+\begin{verbatim}
+   PARAMETER [var1] [var2] [STRING=string1] ...
+\end{verbatim}
+
+\noindent \underbar{Trace Execution of a Procedure}:
+\begin{verbatim}
+   VERIFY Y   -or-   VERIFY N
+\end{verbatim}
+
+\noindent \underbar{Comment Lines in a Procedure}:
+\begin{verbatim}
+   ! followed by any text, nothing following a ! is executed
+\end{verbatim}
+
+\subsection{Variable Input/Output in Procedures}
+
+\underbar{Formatted Output}
+\begin{verbatim}
+   PRINTF 'Format string' [expressions] [output redirection]
+\end{verbatim}
+
+\noindent \underbar{Prompted Input}:
+\begin{verbatim}
+   ASK  ['An optional prompt in quotes']  var_name
+\end{verbatim}
+
+\subsection{Simple Flow Control in Procedures}
+
+\underbar{Pause a Procedure}:
+\begin{verbatim}
+   PAUSE 'pause message'
+\end{verbatim}
+
+\noindent \underbar{Resume a {\tt PAUSE}'d Procedure}:
+\begin{verbatim}
+   CONTINUE   -or-   C
+\end{verbatim}
+
+\noindent \underbar{Jump to a Labelled Line in a Procedure}:
+\begin{verbatim}
+   GOTO label_name
+\end{verbatim}
+
+\noindent \underbar{Label a Line as a \comm{GOTO} Jumping Point}:
+\begin{verbatim}
+   label_name:
+\end{verbatim}
+
+\noindent \underbar{DO Loops}:
+\begin{verbatim}
+   DO var=from,to,[step]
+         <execute these procedure lines>
+   END_DO
+\end{verbatim}
+
+\noindent NOTE:  No spaces are allowed in the argument list of the DO loop.
+
+\noindent \underbar{Execute on Error}:
+\begin{verbatim}
+   ERROR  VISTA_command
+\end{verbatim}
+
+\noindent \underbar{Execute on End-of-File}:
+\begin{verbatim}
+   EOF  VISTA_command
+\end{verbatim}
+
+\subsection{Logical `IF' Control Statements}
+
+VISTA supports a set of logical operations among VISTA variables to allow
+logical comparison (TRUE/FALSE) between two arithmetic expressions.  The
+following table lists the supported logical operations:
+
+\begin{center}
+   \begin{tabular}{|c|l|ccc|} \hline
+      Symbol&\multicolumn{1}{|c|}{Function}&
+      \multicolumn{3}{c|}{Examples}\\ \hline
+      \verb+>+&greater than&\verb+A>B+&&\verb+A>2.5+\\ \hline
+      \verb+<+&less than&\verb+A<B+&&\verb+A<100+\\ \hline
+      \verb+==+&equal to&\verb+A==B+&&\verb+A==10+\\ \hline
+      \verb+~=+&not equal to&\verb+A~=B+&&\verb+A~=10+\\ \hline
+      \verb+<=+&less than or =&\verb+A<=B+&&\verb+A<=5+\\ \hline
+      \verb+>=+&greater than or =&\verb+A>=B+&&\verb+A>=3+\\ \hline
+   \end{tabular}
+\end{center}
+
+\noindent NOTE: as with arithmetic expressions, no spaces must appear anywhere
+in a logical expression.
+
+A set of simple \comm{IF} block structures are illustrated below.  In what
+follows, the syntax \verb+< >+ is used to denote complicated expressions which
+have no general form.  For example, ``\verb+<condition>+'' denotes a logical
+expression to be tested.  For example, \verb+<condition>+ might be replaced by
+expressions like:
+\begin{verbatim}
+   A==B
+   X~=0
+   A*(12.0)>=(B-EXPOS)/4.0
+\end{verbatim}
+and so forth.  The angle braces (\verb+< >+) are being used to isolate the
+conditional statement for easy reading.  They are NEVER typed.
+
+\noindent \underbar{Simple \comm{IF} Block}:
+\begin{verbatim}
+   IF <condition>
+         Execute these lines if <condition> is true.
+   END_IF
+\end{verbatim}
+
+\noindent \underbar{Simple Two-Level \comm{IF} Block}:
+\begin{verbatim}
+   IF <condition>
+         Execute these lines if <condition> is true.
+   ELSE
+         Execute these lines if <condition> is false.
+   END_IF
+\end{verbatim}
+
+
+\noindent \underbar{Multi-Level \comm{IF} Block}:
+\begin{verbatim}
+   IF <condition 1>
+         lines to be executed if <condition 1> is true.
+   ELSE_IF <condition 2>
+         lines to be executed when <condition 1> is
+         false and <condition 2> is true.
+     .
+     .
+   ELSE_IF <condition N>
+         lines to be executed when all conditions
+         are false except <condition N>.
+   ELSE
+         lines to be executed if and only if
+         all other conditions are false.
+   END_IF
+\end{verbatim}
+
+%-------------------
+
+\section{External ASCII Data Files}
+
+\subsection{Opening and Closing Text Files}
+
+Up to 5 ASCII text file may be opened at one time.  VISTA uses user-supplied
+``logical names'' to distinguish between them.
+
+\noindent \underbar{Opening an ASCII Text File}:
+\begin{verbatim}
+   OPEN logical_name file_name
+\end{verbatim}
+
+\noindent \underbar{Closing an {\tt OPEN}ed ASCII Text File}:
+\begin{verbatim}
+   CLOSE logical_name
+\end{verbatim}
+
+\subsection{External File Operations}
+
+\underbar{Read the next line of an ASCII Text File}:
+\begin{verbatim}
+   READ logical_name
+\end{verbatim}
+
+\noindent \underbar{Data Syntax for Lines \comm{READ} from a File}:
+
+Each column of an ASCII text file is read into a VISTA variable
+named:
+\begin{verbatim}
+   @LOGNAME.n
+\end{verbatim}
+Where: \comm{LOGNAME} is the user-assigned logical name (see \comm{OPEN})
+and \comm{n} is the column number.
+
+\noindent \underbar{Skip Selected Lines in an ASCII Text File}:
+\begin{verbatim}
+   SKIP logical_name line [line1,line2]
+\end{verbatim}
+
+\noindent \underbar{Reset File to \comm{READ} from First Line}:
+\begin{verbatim}
+   REWIND logical_name
+\end{verbatim}
+
+\noindent \underbar{Get File ``Statistics'' }:
+\begin{verbatim}
+   STAT variable=MAX[arithmetic expression]
+ or
+   STAT variable=MIN[arithmetic expression]
+ or
+   STAT variable=FIRST[arithmetic expression]
+ or
+   STAT variable=LAST[arithmetic expression]
+ or
+   STAT variable=COUNT[logical_name]
+\end{verbatim}
+where ``{\tt arithmetic expression}'' is any valid VISTA arithmetic expression
+which must include one (or more) of the ``{\tt @LOGNAME.n}'' variables.
+
+%-------------------
+
+\section{Miscellaneous Commands}
+
+\underbar{Clear the Terminal Screen}:
+\begin{verbatim}
+   CLEAR [TEXT]
+\end{verbatim}
+
+\noindent \underbar{Read the VISTA Welcome Message and Old News}:
+\begin{verbatim}
+   NEWS
+\end{verbatim}
+
+\noindent \underbar{Clock the Execution Time of a Command}:
+\begin{verbatim}
+   TIME VISTA_command
+\end{verbatim}
+
+\noindent \underbar{Turn Prompt Bell On/Off or Ring the Bell}:
+\begin{verbatim}
+   BELL Y   -or-   BELL N   -or-   BELL R
+\end{verbatim}
+
+\noindent \underbar{Execute an Operating System Command from VISTA}:
+\begin{verbatim}
+   $ Any Valid Operating System Command
+\end{verbatim}
+
+\noindent \underbar{Temporarily Return to Operating System Level}:
+\begin{verbatim}
+   $   with no arguments
+\end{verbatim}
+To return to VISTA type \comm{LOGOUT}.
+
+%\end{document}
+%\end

@@ -1,0 +1,97 @@
+VLINE -16 -9 0 12 16    Vertical font metric information for
+MS  32  <sp>            English Gothic (EG) and Simplex Script Font
+MS  33  !       EG A    [Hershey Gothic English]
+MS  34  "       EG B
+MS  35  #       EG C
+MS  36  $       EG D
+MS  37  %       EG E
+MS  38  &       EG F
+MS  39  '       EG G
+MS  40  (       EG H
+MS  41  )       EG I
+MS  42  *       EG J
+MS  43  +       EG K
+MS  44  ,       EG L
+MS  45  -       EG M
+MS  46  .       EG N
+MS  47  /       EG O
+MS  48  0       EG P
+MS  49  1       EG Q
+MS  50  2       EG R
+MS  51  3       EG S
+MS  52  4       EG T
+MS  53  5       EG U
+MS  54  6       EG V
+MS  55  7       EG W
+MS  56  8       EG X
+MS  57  9       EG Y
+MS  58  :       EG Z
+MS  59  ;       backward hyphen [NOT in Hershey]
+MS  60  <       <no such character>
+MS  61  =       <no such character>
+MS  62  >       <no such character>
+MS  63  ?       <no such character>
+MS  64  @       <no such character>
+MS  65  A       [Hershey Complex Script]
+MS  66  B
+MS  67  C
+MS  68  D
+MS  69  E
+MS  70  F
+MS  71  G
+MS  72  H
+MS  73  I
+MS  74  J
+MS  75  K
+MS  76  L
+MS  77  M
+MS  78  N
+MS  79  O
+MS  80  P
+MS  81  Q
+MS  82  R
+MS  83  S
+MS  84  T
+MS  85  U
+MS  86  V
+MS  87  W
+MS  88  X
+MS  89  Y
+MS  90  Z
+MS  91  [       <no such character>
+MS  92  \
+MS  93  ]       <no such character>
+MS  94  ^       <no such character>
+MS  95  _       <no such character>
+MS  96  `       <no such character>
+MS  97  a       [Hershey Simplex Script]
+MS  98  b
+MS  99  c
+MS 100  d
+MS 101  e
+MS 102  f
+MS 103  g
+MS 104  h
+MS 105  i
+MS 106  j
+MS 107  k
+MS 108  l
+MS 109  m
+MS 110  n
+MS 111  o
+MS 112  p
+MS 113  q
+MS 114  r
+MS 115  s
+MS 116  t
+MS 117  u
+MS 118  v
+MS 119  w
+MS 120  x
+MS 121  y
+MS 122  z
+MS 123  {       <no such character>
+MS 124  |       <no such character>
+MS 125  }       <no such character>
+MS 126  ~       <no such character>
+MS 127  <del>   <---NOT ACCESSIBLE FROM MONGO

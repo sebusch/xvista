@@ -1,0 +1,187 @@
+
+<H1><A NAME="SECTION0014160000000000000000">
+ISPLINE: Interactively Fit a Spline to a Spectrum</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml407#
+<A NAME="6035"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6036#
+<BR> 
+
+<P>
+ISPLINE will plot the spectrum in the ;SPMquot;source;SPMquot; buffer and allow the user to
+fit a cubic spline to it based on knot points selected interactively with a
+cursor.  The user is then shown the spline fit and allowed to interactively
+add or delete knot points to improve the fit.  This routine does not work
+with 2-D images.  With no keywords, the spectrum will be REPLACED by the
+spline fit.
+
+<P>
+ISPLINE will first plot the spectrum in the ;SPMquot;source;SPMquot; buffer on the screen.
+By default, the spectrum is plotted as a line.  It is possible to have the
+spectrum plotted as data bins (a so-called ;SPMquot;histogram plot;SPMquot;) by using the
+optional HIST keyword.
+
+<P>
+You will then be allowed to adjust the Y-axis limits with the cursor if the
+default scaling is not to your liking. To select the new Y-axis limits,
+place the cursor at the appropriate Y position with the arrow keys (no need
+to move the cursor in the X direction) and hit any key to mark the
+location.  Upper and lower Y-axis limits may be marked in any order.
+
+<P>
+In all steps involving the interactive crosshair cursor, no distinction is
+made between upper and lower case letters, and there is no need to press
+the RETURN key.  The (X,Y) position of the cursor is controlled by the four
+arrow keys above the keyboard.
+
+<P>
+ISPLINE will fit a cubic spline through a set of up to 60 (X,Y) ;SPMquot;knot;SPMquot;
+points selected interactively by the user.  There are three ways in which
+knot points may selected with the cursor:
+
+ 
+<OL>
+<LI><#6051#>DEFAULT (no keywords) : The knot points are taken to be the nearest
+       pixel to the X-axis position of the cursor (no need to position the
+       crosshair in the Y direction).<#6051#>
+
+<P>
+</LI>
+<LI><#6052#>;SPMquot;AVG=n;SPMquot; Keyword : The knot points will be the average over a region
+       ;SPMquot;n;SPMquot; pixels wide around the X-axis position of the cursor (no need to
+       position the crosshair in the Y direction).  The default is the same
+       as ;SPMquot;AVG=1;SPMquot;.<#6052#>
+
+<P>
+</LI>
+<LI><#6053#>;SPMquot;XY;SPMquot; Keyword : The knot point will be the absolute (X,Y) position
+       of the crosshair.<#6053#>
+</LI>
+</OL>
+In all cases at least 2 knot points are required.
+
+<P>
+<#6055#>DEFAULT or ;SPMquot;AVG=n;SPMquot; keyword option:<#6055#>
+
+<P>
+To select a knot point, position the cursor at the desired X-axis location
+(no need to position in Y) with the arrow keys and hit the space bar or any
+key (except 'D' or 'X').  The knot point will be marked with a plus (+) on
+the spectrum.
+
+<P>
+You may delete the last knot point by hitting the ;SPMquot;D;SPMquot; key (for ;SPMquot;Delete;SPMquot;).
+All of the previous knot points may be deleted in reverse order of their
+selection by hitting ;SPMquot;D;SPMquot; repeatedly.  A deleted point is erased from the
+plot.
+
+<P>
+When you have finished entering knot points, hitting ;SPMquot;X;SPMquot; (for ;SPMquot;Exit;SPMquot;) will
+fit the spline. The routine will automatically end knot point selection
+when 60 points have been chosen.  Knot points do not need to be entered in
+strictly ascending order of X.
+
+<P>
+<#6056#>;SPMquot;XY;SPMquot; keyword option:<#6056#>
+
+<P>
+To select a knot point, move the crosshair to the desired (X,Y) position
+with the arrow keys and hit the ;SPMquot;A;SPMquot; key (for ;SPMquot;Add;SPMquot;).  The knot point will
+be marked with a plus (+) on the spectrum.
+
+<P>
+To remove a knot point, place the crosshair over that point and hit the ;SPMquot;D;SPMquot;
+key (for ;SPMquot;Delete;SPMquot;).  The offending knot point will be erased from the plot.
+Knot points may be deleted in any order.
+
+<P>
+When you have finished entering knot points, hitting ;SPMquot;X;SPMquot; (for ;SPMquot;Exit;SPMquot;) will
+fit the spline. The routine will automatically end knot point selection
+when 60 points have been chosen.  Knot points do not need to be entered in
+strictly ascending order of X.
+
+<P>
+The spline fit through the selected knot points will be plotted over the
+spectrum.  At this point, you will be given the option of adding or
+deleting knot points if you are not happy with the fit.
+
+<P>
+To add a knot point, place the crosshair at the (X,Y) position where you
+want it to go and hit the ;SPMquot;A;SPMquot; key (for ;SPMquot;Add;SPMquot;).  A plus (+) will mark this
+new knot point.  Note that no averaging will be done despite the use of the
+;SPMquot;AVG=n;SPMquot; keyword.
+
+<P>
+To delete a knot point, place the crosshair over it and press the ;SPMquot;D;SPMquot; key
+(for ;SPMquot;Delete;SPMquot;).  The offending point will erased from the plot.
+
+<P>
+When you are finished editing, hit the ;SPMquot;X;SPMquot; key (for ;SPMquot;Exit;SPMquot;). If you add
+enough points so that there are a total of 60 knot points selected
+(previous - deleted + added), the routine will automatically end editing.
+
+<P>
+The spline is then re-fit, and plotted as before.  You may edit as many
+times as is needed to achieve the desired fit.
+
+<P>
+If two or more knot points are coincident in X-axis position, the routine
+will flag the offending points by circling them on the screen and ask you
+to use the cursor to remove at least one of them.  To do this, position the
+cursor over the offending points and hit the 'D' key to delete one of
+them. Hitting 'X' will signal the program that you have finished removing
+all of the offending points.  If more coincident points are detected by the
+routine, this step will be repeated until all such points are removed.
+
+<P>
+When a satisfactory spline fit has been achieved, there are 3 possible
+final results:
+
+ 
+<OL>
+<LI><#6058#>DEFAULT (no keywords) : The spectrum in the ;SPMquot;source;SPMquot; buffer will be
+       REPLACED by the spline fit, destroying the original spectrum.<#6058#>
+
+<P>
+</LI>
+<LI><#6059#>;SPMquot;SUB;SPMquot; keyword : The spline fit will be SUBTRACTED from the spectrum
+       in the ;SPMquot;source;SPMquot; buffer, destroying the original spectrum.<#6059#>
+
+<P>
+</LI>
+<LI><#6060#>;SPMquot;DIV;SPMquot; keyword : The spectrum in the ;SPMquot;source;SPMquot; buffer will be DIVIDED
+       by the spline fit, destroying the original spectrum.<#6060#>
+</LI>
+</OL>
+In all cases, the original spectrum in the source buffer is wiped out.
+
+<P>
+<#6062#>Examples:<#6062#>
+<BR>
+<tex2html_image_mark>#example6063#
+<BR> 
+
+<P>
+<#6071#>NOTE:<#6071#>
+
+<P>
+To completely exit the program with no action taken on the spectrum, type a
+CTRL-Z in response to any Y/N prompt.  This will return you to the VISTA
+command level.
+
+<P>
+<#6267#><B>WARNING:</B><#6267#>
+
+<P>
+Hitting keys (especially RETURN) while the cursor is in motion may
+occasionally have a pathological effect on the interactive cursor routines.
+
+<P>
+Also, avoid hitting control keys in cursor mode.
+
+<P>
+Only enter commands to mark or delete points, or exit the marking routines
+when the cursor is not moving.
+
+<P>

@@ -1,0 +1,8 @@
+data example.dat
+xcolumn 1
+ycolumn 2
+limits
+box
+connect
+xlabel Time (sec)
+ylabel Position (cm)

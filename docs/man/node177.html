@@ -1,0 +1,38 @@
+
+<H1><A NAME="SECTION001510000000000000000">
+CUT: Extract a Brightness Profile Cut along any Position Angle</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml430#
+
+<P>
+<A NAME="6716"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6717#
+<BR>
+
+<P>
+CUT will extract the surface-brightness profile of an object along an
+arbitrary position angle.  The center of the object can be loaded with the
+AXES command or by the C keyword.  A cut can also be offset from any center
+using the OFF keyword, as might be done to take a series of cuts at
+different locations along the major axis of a galaxy.  The position angle
+is defined from the top of the image.  Adding 180 to any PA will generate a
+cut running in the opposite direction.  This can be used to compare or add
+profiles reflected about the center of a galaxy, for example.  The default
+width is one pixel, and the height or length extends to the image borders.
+Both parameters are rounded to the nearest whole pixel. The PLOT keyword
+shows the bounds of the cut on the image display.
+
+<P>
+The cut is loaded into the 'dest' image buffer, and can be treated,
+analyzed, processed, saved, etc., as an image with a row dimension of one.
+The central column of the cut is always set to occur at column 0.  Sinc
+interpolation is used to generated cuts of width 1; bilinear interpolation
+is used otherwise.  Pixels are always summed across the width of the cut.
+Divide the resulting cut vector by the width in pixels (WIDTH= keyword) to
+normalize it after the fact.
+
+<P>
+See Also: AXES, TEMPLATE
+
+<P>

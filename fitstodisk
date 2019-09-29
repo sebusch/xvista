@@ -1,0 +1,71 @@
+#! /bin/csh
+# Shell script to read selected files from of a FITS tape onto the disk.
+# presumably to work with VISTA. Takes 3 arguments, a root file name,
+# plus a starting and ending file number.  The environment variable
+# TAPE should be set to be the name of the device off of which you
+# are reading FITS files.
+set block=28800
+if ($#argv == 0) then
+    setenv TAPNAM dd
+    set i1=0
+    set i2=10000
+else if ($#argv == 1) then
+    setenv TAPNAM $1
+    set i1=0
+    set i2=10000
+else if ($#argv == 2) then
+    setenv TAPNAM $1
+    set i1=$2
+    set i2=$2
+else if ($#argv == 3) then
+    setenv TAPNAM $1
+    set i1=$2
+    set i2=$3
+else if ($#argv == 4) then
+    setenv TAPNAM $1
+    set i1=$2
+    set i2=$3
+    set block=$4
+else
+    echo "Usage:  $0 [tapename] [file1] [tofile2] [blocksize]"
+    exit 1
+endif
+if ( ! $?TAPE ) then
+  echo 'The environment variable TAPE was not set, now is /dev/nst0'
+  setenv TAPE /dev/nst0
+endif
+echo "The name of each file will begin with $TAPNAM"
+unalias rm
+# cd /public/scratch/jesus
+echo 'Rewinding to BOT'
+mt rewind
+if ( $i1 > 0 ) then
+  echo "Positioning to read file # $i1" 
+  mt fsf $i1
+endif
+@ i = $i1 - 1
+set keepgoing = 1
+while ( $keepgoing )
+  @ i = $i + 1
+  echo "Reading file # $i"
+  if ($i < 10) then
+    dd if=$TAPE ibs=$block of=${TAPNAM}00$i.fits >& /tmp/\#ascript.$$
+  else if ($i < 100) then
+    dd if=$TAPE ibs=$block of=${TAPNAM}0$i.fits >& /tmp/\#ascript.$$
+  else 
+    dd if=$TAPE ibs=$block of=${TAPNAM}$i.fits >& /tmp/\#ascript.$$
+  endif
+  fgrep '0+0 records in' /tmp/\#ascript.$$
+  set keepgoing = $status
+  rm /tmp/\#ascript.$$
+  if ( $i >= $i2 ) then
+    set keepgoing = 0
+  endif
+end
+# Remove the last file, which if its an empty one.
+if ( $i < $i2 ) then
+  unalias rm
+  rm -f $TAPNAM.$i
+endif
+echo 'Rewinding tape to beginning'
+mt rewind &

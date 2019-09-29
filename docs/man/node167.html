@@ -1,0 +1,37 @@
+
+<H1><A NAME="SECTION0014150000000000000000">
+STRETCH: Stretch a Spectrum into a 2-D Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml406#
+<A NAME="6014"><tex2html_anchor_invisible_mark></A>
+<A NAME="6015"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6016#
+<BR>
+
+<P>
+The spectrum `source' will be stretched to form the image `dest.'  If the
+VERT keyword is given the spectrum will be stretched vertically (i.e. the
+image `dest' will be constant down each column).  If the HORIZ keyword is
+specified the spectrum will be stretched horizontally (constant across each
+row).  The default (if neither keyword is given) is a vertical stretch.
+
+<P>
+The length of the stretch may be specified with the SIZE= keyword.  For
+example if the VERT keyword has been specified then the SIZE= keyword will
+specify the number of columns in the resulting image.  Note that the image
+will always have one dimension equal to the number of points in the
+`source' spectrum.  If a size is not specified the program will try to use
+the size of any image already in the specified `dest' buffer.  If this is
+not possible (i.e. if the appropriate dimension of the image currently in
+the `dest' buffer is not equal to the length of the `source' spectrum) the
+program will prompt for a size.  The START= keyword specifies the start
+column or row of the image.
+
+<P>
+<#6029#>Examples:<#6029#>
+<BR>
+<tex2html_image_mark>#example6030#
+<BR>
+
+<P>

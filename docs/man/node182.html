@@ -1,0 +1,28 @@
+
+<H1><A NAME="SECTION001560000000000000000">
+ROUND: Deproject Spirals or Elliptical Images</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml440#
+<A NAME="6883"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command6884#
+<BR>
+
+<P>
+ROUND will deproject an image by assuming that the true shape of the object
+is a circle projected into an ellipse of a given position angle,
+ellipticity (1-b/a) and center.  Creates a new image in the `dest' buffer
+from the original image in the `source' buffer.
+
+<P>
+The SINC keyword instructs ROUND to use high-accuracy sinc interpolation
+instead of the default bilinear interpolation algorithm.  
+
+<P>
+The NORM keyword is used to renormalize the pixel intensities (surface
+brightness/pixel) in the transformed image.
+
+<P>
+See Also: POLAR
+
+<P>

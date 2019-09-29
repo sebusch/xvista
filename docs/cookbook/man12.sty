@@ -1,0 +1,220 @@
+% LICK TECHNICAL MANUAL DOCUMENT STYLE 
+%    for LaTeX version 2.09
+% Prepared by R. Pogge, Lick Observatory
+%
+% Written: 1988 June 6
+%
+% Last Modification: 1988 June 6
+%
+%         * * * * * * * * * * * * * * * * * * * * * * * * * * *
+%
+
+\normallineskip 1pt
+\def\baselinestretch{1}
+
+\def\singlespace{
+\lineskip                .15ex
+\baselineskip            3.0ex
+\lineskiplimit             0ex}
+
+\def\oneonehalfspace{
+\lineskip                .15ex
+\baselineskip            4.0ex
+\lineskiplimit             0ex}
+
+\def\doublespace{
+\lineskip                .25ex
+\baselineskip            5.0ex
+\lineskiplimit             0ex}
+
+\def\@normalsize{\@setsize\normalsize{4.0ex}\xiipt\@xiipt   
+\abovedisplayskip 3.8ex plus .57ex minus 1.7ex
+\belowdisplayskip 3.8ex plus .57ex minus 1.7ex
+\abovedisplayshortskip 0ex plus .68ex
+\belowdisplayshortskip 1.6ex plus .68ex minus .91ex}
+
+\def\small{\@setsize\small{3.0ex}\xipt\@xipt		   
+\abovedisplayskip 3.8ex plus .57ex minus 1.7ex             
+\belowdisplayskip 3.8ex plus .57ex minus 1.7ex             
+\abovedisplayshortskip 0ex plus .68ex
+\belowdisplayshortskip 1.6ex plus .68ex minus .91ex
+\def\@listi{\parsep 4.5pt plus 2pt minus 1pt
+            \itemsep \parsep
+            \topsep 9pt plus 3pt minus 5pt}}
+
+\def\footnotesize{\@setsize\footnotesize{3.0ex}\xpt\@xpt   
+\abovedisplayskip 10pt plus2pt minus5pt
+\belowdisplayskip \abovedisplayskip
+\abovedisplayshortskip  \z@ plus3pt
+\belowdisplayshortskip  6pt plus3pt minus3pt
+\def\@listi{\topsep 6pt plus 2pt minus 2pt\parsep 3pt plus 2pt minus 1pt
+\itemsep \parsep}}
+
+\def\scriptsize{\@setsize\scriptsize{4.0ex}\viiipt\@viiipt}	
+\def\tiny{\@setsize\tiny{4.0ex}\vipt\@vipt}			
+\def\large{\@setsize\large{4.0ex}\xivpt\@xivpt}			
+\def\Large{\@setsize\Large{4.0ex}\xviipt\@xviipt}		
+\def\LARGE{\@setsize\LARGE{4.0ex}\xxpt\@xxpt}			
+\def\huge{\@setsize\huge{4.0ex}\xxvpt\@xxvpt}			
+\let\Huge=\huge
+
+\normalsize  
+
+\oddsidemargin 36.14pt
+\evensidemargin 0.0pt
+
+\topmargin 3.85pt        
+\headheight 12pt         
+\headsep 38pt            
+
+\footheight 12pt         
+\footskip 30pt           
+
+\textheight 614.30pt   
+
+\textwidth 430.0pt     
+
+\footnotesep 8.4pt    
+
+\skip\footins 10.8pt plus 4pt minus 2pt  
+
+\floatsep 14pt plus 2pt minus 4pt        
+
+\textfloatsep 20pt plus 2pt minus 4pt    
+
+\intextsep 14pt plus 4pt minus 4pt       
+
+\@maxsep 20pt                            
+
+\@fptop 0pt plus 1fil    
+
+\@fpsep 10pt plus 2fil   
+
+\@fpbot 0pt plus 1fil    
+
+\singlespace
+
+\parskip 1.0ex plus .50ex minus .25ex  
+\parindent 1.5em                   
+
+\topsep 10pt plus 4pt minus 6pt    
+
+\partopsep 3pt plus 2pt minus 2pt  
+
+\itemsep 5pt plus 2.5pt minus 1pt  
+
+\@lowpenalty   51      
+\@medpenalty  151      
+\@highpenalty 301      
+
+\@beginparpenalty -\@lowpenalty    
+\@endparpenalty   -\@lowpenalty    
+\@itempenalty     -\@lowpenalty    
+
+\def\@makechapterhead#1{             
+  \vspace*{50pt}                     
+  { \parindent 0pt \raggedright
+    \ifnum \c@secnumdepth >\m@ne     
+      \Huge\rm \@chapapp{} \thechapter 
+      \par
+      \vskip 20pt \fi                  
+    \Huge \rm                        
+    #1\par
+    \nobreak                         
+    \vskip 40pt                      
+  } }
+
+\def\@makeschapterhead#1{             
+  \vspace*{50pt}                     
+  { \parindent 0pt \raggedright
+    \Huge \rm                        
+    #1\par
+    \nobreak                         
+    \vskip 40pt                      
+  } }
+
+\def\chapter{\cleardoublepage      
+   \thispagestyle{plain}           
+   \global\@topnum\z@              
+   \@afterindentfalse            
+   \secdef\@chapter\@schapter}   
+
+\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+        \refstepcounter{chapter}
+        \typeout{\@chapapp\space\thechapter.}
+        \addcontentsline{toc}{chapter}{\protect
+        \numberline{\thechapter}#1}\else
+      \addcontentsline{toc}{chapter}{#1}\fi
+   \chaptermark{#1}
+   \addtocontents{lof}{\protect\addvspace{10pt}} 
+   \addtocontents{lot}{\protect\addvspace{10pt}} 
+   \@makechapterhead{#2}
+   \@afterheading                  	   
+   }					   
+
+\def\@schapter#1{
+    \@makeschapterhead{#1}
+    \@afterheading}
+
+\def\section{\@startsection {section}{1}{\z@}{-0.5in}{0.2in}{\large\rm}}
+
+\def\subsection{\@startsection{subsection}{2}{\z@}{-3.25ex plus -1ex minus
+   -.2ex}{1.5ex plus .2ex}{\large\rm}}
+
+\def\subsubsection{\@startsection{subsubsection}{3}{\z@}{-0.2in}{4.0ex}
+    {\normalsize\rm}}
+
+\def\paragraph{\@startsection
+    {paragraph}{4}{\z@}{3.25ex plus 1ex minus 0.2ex}{-1em}{\normalsize\rm}}
+
+\def\subparagraph{\@startsection
+     {subparagraph}{4}{\parindent}{3.25ex plus 1ex minus
+     .2ex}{-1em}{\normalsize\rm}}
+
+\def\chaptermark#1{}
+
+\setcounter{secnumdepth}{2}
+
+\def\appendix{\par
+  \setcounter{chapter}{0}
+  \setcounter{section}{0}
+  \def\@chapapp{Appendix}
+  \def\thechapter{\Alph{chapter}}}
+
+\leftmargini 2.5em
+\leftmarginii 2.2em     
+\leftmarginiii 1.87em   
+\leftmarginiv 1.7em     
+\leftmarginv 1em
+\leftmarginvi 1em
+
+\leftmargin\leftmargini
+\labelwidth\leftmargini\advance\labelwidth-\labelsep
+\labelsep .5em
+
+%\parsep 5pt plus 2.5pt minus 1pt
+\parsep 3pt 
+\itemsep -1pt
+
+\def\@listi{\leftmargin\leftmargini}
+
+\def\@listii{\leftmargin\leftmarginii
+   \labelwidth\leftmarginii\advance\labelwidth-\labelsep
+   \topsep 5pt plus 2.5pt minus 1pt
+   \parsep 2.5pt plus 1pt minus 1pt
+   \itemsep \parsep }
+
+\def\@listiii{\leftmargin\leftmarginiii
+    \labelwidth\leftmarginiii\advance\labelwidth-\labelsep
+    \topsep 2.5pt plus 1pt minus 1pt
+    \parsep \z@ \partopsep 1pt plus 0pt minus 1pt
+    \itemsep \topsep}
+
+\def\@listiv{\leftmargin\leftmarginiv
+     \labelwidth\leftmarginiv\advance\labelwidth-\labelsep}
+
+\def\@listv{\leftmargin\leftmarginv
+     \labelwidth\leftmarginv\advance\labelwidth-\labelsep}
+
+\def\@listvi{\leftmargin\leftmarginvi
+     \labelwidth\leftmarginvi\advance\labelwidth-\labelsep}

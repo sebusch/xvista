@@ -1,0 +1,5 @@
+NUMFONT 4     There are 4 fonts defined by this fontmap file
+include 'simroman.fmp'
+include 'crtscrpt.fmp'
+include 'comroman.fmp'
+include 'mgotonry.fmp'

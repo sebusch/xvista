@@ -1,0 +1,135 @@
+
+<H1><A NAME="SECTION0016180000000000000000">
+MARKSTAR: Locate Stars Interactively in an Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml485#
+<A NAME="7645"><tex2html_anchor_invisible_mark></A>
+<A NAME="7646"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command7647#
+<BR>
+
+<P>
+MARKSTAR creates a 'photometry file', which is a record of the positions,
+coordinates, and magnitudes of stars on an image.  (See HELP PHOTOMETRY for
+a complete list of entries in the photometry file).  Typing 'NEW' starts a
+new list.  If you don't type 'NEW', any stars you mark will be appended to
+the current list (if there is one); in this case the program will show the
+positions on the TV of the stars that have already been marked -- after
+this marking the program will be ready for you to enter new stars.  Thus
+MARKSTAR with no options will show the positions of the stars in the
+current photometry file.
+
+<P>
+There are two ways to operate this program.  The first mode lets you
+interactively mark the positions of the stars.  The only keywords you need
+in this mode are NEW and RADIUS=.
+
+<OL>
+<LI><#7688#>Load an image into the display with the TV command.<#7688#>
+</LI>
+<LI><#7689#>Type MARKSTAR or MARKSTAR NEW (with a RADIUS specifier).<#7689#>
+</LI>
+<LI><#7690#>Move the cursor near a star.<#7690#>
+</LI>
+<LI><#7691#>Hit 'C' or 'J' to mark the star.
+    The 'J' key defines the star's position to be exactly
+    the location of the cursor.  The 'C' computes
+    an exact position by finding the centroid of the
+    stellar image.  You will probably use the 'C' key
+    most of the time.  The 'J' key can be used in very
+    crowded fields.  <#7691#>
+</LI>
+<LI><#7692#>Repeat steps 3 and 4 until all the desired stars are found.
+    At any time you may type 'H' to get a list
+    of the commands for this program.<#7692#>
+</LI>
+<LI><#7693#>Hit 'E' when you are finished.<#7693#>
+</LI>
+</OL>
+
+<P>
+In interactive mode, the key # will display the number in the photometry
+list of the star nearest the current location of the cursor, and print the
+row and column location of that star.  This, combined with the STAR=
+keyword (below) allows you to go back and forth between a list of star
+positions and a TV image.
+
+<P>
+The second mode is to have the program mark all the stars that are on an
+already-present photometry file.  This saves you time when you have several
+exposures of the same field (say in several colors).  The syntax for the
+second mode is MARKSTAR AUTO with the other options.  The program takes
+each position on the current photometry photometry file, then looks at the
+current TV image for a star.  If the star is found, the information is
+stored on a new photometry list, REPLACING the old list.  (Save the old one
+first!) If the stars on the new image are not exactly in the same positions
+as on the old image, use DR and DC to specify the change that must be
+applied to the old coordinates to match the new ones.  When the program is
+finished marking the stars in this automatic mode, it switches to the
+interactive mode, allowing you to mark more stars.  NOBOX prevents display
+of the newly-marked stars. For images that are not just shifted, but also
+rotated, you can specify the angle and center of rotation with the ANGLE,
+AR=, and AC= keywords.
+
+<P>
+Use RSHIFT and CSHIFT to reject stars for which the AUTO marking gives a
+new position far from the old one.  As MARKSTAR AUTO runs, it prints on the
+screen the difference in position of stars on the new frame compared to the
+EXPECTED positions on that frame.  This output may be redirected.
+
+<P>
+Do not confuse MARKSTAR AUTO with AUTOMARK.  AUTOMARK automatically finds
+stars on a frame by locating peaks.  MARKSTAR AUTO finds stars on a frame
+by referring to a photometry file.
+
+<P>
+The RADIUS specifier gives the size of the region used in computing the
+centroid of the star.  It should be something like the FWHM of the star in
+pixels.
+
+<P>
+The STAR= word is used to identify individual stars in a photometry file.
+It draws a box around the stars whose numbers are given as arguments to
+STAR=, then exits the program.  The word STAR= can appear more than once on
+the command line.
+
+<P>
+<#7695#>Examples: <#7695#>
+<BR>
+<tex2html_image_mark>#example7696#
+<BR>
+
+<P>
+You can print the contents of a photometry file with the PRINT command.
+Type 'PRINT PHOT' to see the results on your terminal; type 'PRINT PHOT
+HARD' to send them to the lineprinter.
+
+<P>
+It is best to create a new photometry file for each image you reduce.  That
+way there is a one-to-one match between images and files.  You do not have
+to include all the stars in a frame in a photometry file, if you do not so
+desire, but you are asking for trouble if you have information from several
+frames in the same file.
+
+<P>
+The variables R and C are loaded with the position of the last star marked.
+
+<P>
+MARKSTAR AUTO is most useful to mark a series of images that are very
+similar -- say exposures of the same duration and in the same color.
+Images of different duration, or images in different colors will reach to
+different magnitudes.  In this case AUTOMARK applied to each frame may be
+the best.
+
+<P>
+To find the coordinate offset between different frames, use MARKSTAR on one
+frame to locate a few bright, uncrowded stars.  Then use MARKSTAR AUTO on
+the second frame.  The program will print the difference in location
+between the star on the second frame and that on the first, then print the
+average row and column shift.  These differences are in the sense: 
+<PRE><tex2html_verbatim_mark>verbatim486#</PRE>
+So the shift would be applied to the first image to bring them into
+alignment.
+
+<P>

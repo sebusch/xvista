@@ -1,0 +1,68 @@
+
+<H1><A NAME="SECTION00760000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2316"><tex2html_anchor_invisible_mark></A><BR>
+READ: Read the Next Line of an ASCII Text File
+</H1>
+<tex2html_verbatim_mark>rawhtml244#
+<BR>
+<tex2html_image_mark>#command2317#
+<BR>
+
+<P>
+READ will read the next line of the named opened file (the argument of READ
+is the logical name of a file previously opened with OPEN).  This line then
+becomes the 'current' line for the file and all subsequent references to
+the file in arithmetic expressions use the current line.  Each READ causes
+a new line to be read in the order in which they appear in the file.
+However, it is possible to skip specified lines in the file using the SKIP
+command. The following example shows how to use the OPEN, and READ commands
+in conjunction with arithmetic expressions.
+
+<P>
+Suppose you have a file called photometry.dat containing the following four
+lines of data:
+<PRE><tex2html_verbatim_mark>verbatim245#</PRE>
+We could compute B-V using the following simple procedure.
+<PRE><tex2html_verbatim_mark>verbatim246#</PRE>
+The first line opens the file and gives it the name PHOT.  Since the first
+line of the file does not contain numeric data and is just a header for the
+columns of data, we use the SKIP command to label line 1 as a line to be
+skipped.  We then begin to read the real data. The first time line 4 is
+executed it reads line 1 of the file.  It finds that we have marked line 1
+as a line to skip so it then reads the next line.
+
+<P>
+Line 5 then makes two references to the file.  The construction @PHOT.1 is
+interpreted in the following way: In the 'current' line of PHOT (the one we
+just got with the READ), extract the first word of the line and convert it
+into a numeric value.  And, of course, @PHOT.2 refers to the second word on
+the current line.  The 'word' indicator can be either a constant as shown
+or it can be a variable. So if B=1 and V=2 we could have said @PHOT.B and
+@PHOT.V.  Expressions are not allowed: @PHOT.(B+1) is illegal and @PHOT.B+1
+means ;SPMquot;add 1 to the value of @PHOT.B;SPMquot;.
+
+<P>
+<A NAME="2326"><tex2html_anchor_invisible_mark></A>
+<A NAME="2327"><tex2html_anchor_invisible_mark></A>
+
+<P>
+Implicit READing: String substitutions, using the <#2328#>string_name<#2328#>
+construction, can also substitute lines from an opened file.  To do so use
+the form <#2329#>logical_name<#2329#>, which does an implied READ of the named file and
+substitutes the entire line from the file into the command line.  You can
+also substitute particular words using the form
+<#2330#>logical_name.word_indicator<#2330#> where the word indicator is an expression
+giving the word number.  These substitutions always do a new implicit READ
+for each substitution.  The following example shows how to use these
+implied READ string substitutions.
+
+<P>
+In this procedure, the user is asked to give a filename.  The file contains
+a list of disk file names for images which are to be processed in some
+standard way.  The processed image is written out with the same name.
+There is one disk file name per line.
+
+<P>
+<PRE><tex2html_verbatim_mark>verbatim247#</PRE>
+
+<P>

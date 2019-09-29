@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>TV: Display an Image</TITLE>
+<META NAME="description" CONTENT="TV: Display an Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00820000000000000000"></A>
+<A NAME="2577"></A>
+<A NAME="2578"></A>
+<A NAME="2579"></A>
+<A NAME="2580"></A>
+<BR>
+TV: Display an Image
+</H1>
+
+<!-- linkto tv.html -->
+<BR>
+
+<BR>
+
+<P>
+For more general TV help, type HELP X11.
+
+<P>
+TV displays the image in 'buf' on the X11 image display.  Only those pixels
+with data numbers between Z and Z+L are displayed.  Data values greater
+than the maximum are all shown as one color, although the interactive
+cursor will still be able to display the data associated with the "clipped"
+pixels.
+
+<P>
+If no intensity scaling is given on the command line, TV will assume Z=0
+and L=3 times the image mean intensity.  If the mean has not been
+calculated, TV will do a quick calculation using every 9th pixel.  A peak
+intensity of 4x the mean is a reasonable values to use for many
+astronomical images with a large dynamic range.  It is not so good,
+however, for viewing flat fields, skies, or dark images that have a narrow
+range of data values.  In the latter case, you should specify the display
+levels explicitly on the command line.
+
+<P>
+BOX=n tells TV to only display that part of the image within box 'n'
+(see BOX command).
+
+<P>
+OLD tells TV to use the same display limits as the previous image.
+
+<P>
+CF=filename loads the color map ("look-up table") used to translate
+pixel values into colors.  'BW' loads a black and white color map.  Once
+the map is loaded, it remains in effect until changed by either the
+COLOR or subsequent TV commands.
+
+<P>
+The basic set of color maps is:
+<BR>
+
+<BR>
+More are available, see the COLOR command for specifics.
+
+<P>
+The NCOLOR= keyword can be used to limit the number of colors displayed in
+X windows.  By default, 256 colors are displayed.  A limited color map is
+useful when VISTA is being run at the same time as other color-hungry
+applications (e.g., SAOimage, or web browsers like Netscape).  If VISTA
+asks for too many colors, the X server can refuse to open the image
+display.  An alternative is to shut down the unneeded applications when
+running VISTA.
+
+<P>
+The TV display uses a 4-place "ring buffer" to hold the 4 most recently
+displayed images in memory.  You can page through these images using the
+ and <IMG
+ WIDTH="14" HEIGHT="24" ALIGN="MIDDLE" BORDER="0"
+ SRC="img154.png"
+ ALT="$-$"> keys when the mouse is on the TV display window.  Blinking may
+be accomplished by displaying two images sequentially, and then using the
+<IMG
+ WIDTH="14" HEIGHT="19" ALIGN="MIDDLE" BORDER="0"
+ SRC="img155.png"
+ ALT="$+/-$"> keys to blink between them.
+
+<P>
+If the blink buffers are getting filled with a confusing mix of images, the
+CLEAR IMAGES command may be used to clean them out (except for the
+currently displayed image) and allow you to start over again.
+
+<P>
+The default image coordinates are as follows:
+<PRE> 
+  (SC,SR)
+        +-------------+
+        |             |
+     |  |             |
+     |  |             |
+     R  |             |
+     |  |             |
+     V  |             |
+        |             |
+        +-------------+
+            ---C--&gt;   (EC,ER)
+</PRE>
+
+<P>
+The origin is at the upper left-hand corner, with columns increasing to the
+left and rows increasing from top to bottom.  This is the "natural" order
+in which to directly map images from memory onto the display, and allows us
+to display images as fast as possible without remapping.
+
+<P>
+The FLIP keyword is provided to invert the rows axis so as to increase
+vertically from bottom to top, i.e., in ``Cartesian'' coordinate order.
+This will give you an orientation that is more ``natural'' from the user's
+point of view, but which incurs some performance penalty.
+
+<P>
+The properties of the display (size, whether or not to auto-dezoom, etc.)
+can be customized using X resources variables set in the user's .Xdefaults
+file.  See HELP X11 for an overview.
+
+<P>
+Whenever an image is in the display, a set of basic cursor keys are
+available to provide simple interactive capabilities.  See HELP X11 for
+details.
+
+<P>
+Examples:
+
+<OL>
+<LI>
+<BR>
+<IMG
+ WIDTH="34" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
+ SRC="img156.png"
+ ALT="\begin{example}
+\item[{MN 1\hfill}]{}
+\item[{TV 1 CF=RAIN\hfill}]{loads image 1 into the display, setting the
+span to be 4 times the image mean.}
+\end{example}">
+<BR>
+</LI>
+<LI>
+<BR>
+<IMG
+ WIDTH="14" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img157.png"
+ ALT="\begin{example}
+\item[{TV 3 100. 30.0\hfill}]{loads image 3 into the display, setting the
+span to be 100 and the zero to be 30.}
+\end{example}">
+<BR>
+</LI>
+<LI>
+<BR>
+
+<BR>
+</LI>
+<LI>
+<BR>
+
+<BR>
+</LI>
+</OL>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

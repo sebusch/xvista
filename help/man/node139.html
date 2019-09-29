@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>REGISTAR: Register Images Using Field Star Positions</TITLE>
+<META NAME="description" CONTENT="REGISTAR: Register Images Using Field Star Positions">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0012190000000000000000">
+REGISTAR: Register Images Using Field Star Positions</A>
+</H1>
+
+<!-- linkto registar.html -->
+<A NAME="5068"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+REGISTAR will register (spatially align in 2-D) an image with respect to a
+common reference image by determining the mean row and column shifts
+between stars common to the target and reference images.  The positions of
+the reference stars must be pre-selected using the MARKSTAR command.
+REGISTAR is designed to allow simple interactive and batch-mode alignment
+of images.  For example, if you are going to "stack" a number of images of
+an object together into a single cumulative image, REGISTAR may be used to
+correct the images for small frame-to-frame shifts (usually due to guiding
+errors) before adding them together.  Other common uses are alignment of
+image pairs used for "on-band/off-band" emission-line imaging or
+photometric color maps, and aligning elements of an image mosaic before
+merging them into a single large image with the MERGE command.
+
+<P>
+Before using REGISTAR, it is necessary to use the MARKSTAR command to
+create a "reference list" containing the positions of stars to be used as
+the common reference frame for the image registration.  To do this, one
+first chooses a single image from the set to act as the "reference image"
+and then uses MARKSTAR to mark all stars found in common between the frames
+to be registered.  The best strategy is to select stars which are neither
+too faint, too bright (especially not saturated stars), or too crowded to
+give a good centroid.  The list of reference star positions determined with
+the MARKSTAR command (also known in VISTA parlance as a "photometry file")
+is stored in an internal COMMON block.  This reference list will be used by
+all subsequent calls to the REGISTAR command.  However, if MARKSTAR is run
+again, or if another photometry file is loaded using the GET command, the
+reference list will be lost, and REGISTAR may produce spurious results.
+
+<P>
+Once the reference list has been created with the MARKSTAR program, it may
+be stored on disk using the "SAVE PHOT=xxx" command, and later loaded into
+COMMON using the "GET PHOT=xxx" command.  This allows the user to
+pre-select stars interactively, then run REGISTAR on a large number of
+images in batch mode by reading in a prepared reference star list, or to
+repeat the registration procedure on other images sharing the same
+reference stars without having to repeat the selection process with
+MARKSTAR.  The user may also use the VISTA utilities for editing or
+updating a photometry file to change a predefined reference star list, and
+then repeat the registration procedure.  REGISTAR will not work without a
+photometry file loaded, either by MARKSTAR or GET.
+
+<P>
+Image registration in previous versions of VISTA was accomplished using a
+combination of the interactive MARKSTAR command and the SHIFT command.
+However, this had the distinct disadvantage of precluding batch
+registration, and also made the procedure more cumbersome as MARKSTAR
+resets the coordinates of the stars in the photometry file each time it is
+run, causing the "fiducial" to change.  In addition, the user had to
+determine the sign of the relative offset, and feed it by hand to the SHIFT
+command.  With REGISTAR, the reference star list is fixed, and the shift is
+applied automatically.
+
+<P>
+The positions of the individual reference stars are found by multiple
+centroiding.  Once the relative offset in rows and columns between the
+target image and the reference frame has been determined, the target image
+is then shifted and re-binned, using either 4th-order Lagrangian
+interpolation (default), or a somewhat slower but arguably more precise
+SINC interpolation scheme.  SINC interpolation should only be used on
+images which are well-sampled (or even oversampled), as it has a tendency
+to produce undesirable "ringing" artifacts in the presence of rapid changes
+in pixel-to-pixel intensity.  SINC interpolation should never be used with
+under-sampled star images.
+
+<P>
+REGISTAR searches in the neighborhood of the reference star positions for
+those stars on the target image.  The maximum distance that REGISTAR will
+search in rows and columns is +/-3 pixels.  The search limits may be
+changed using the RSHIFT= and CSHIFT= keywords.  Setting the search size
+too large poses the danger of REGISTAR getting lost and grabbing the wrong
+stars, hot pixels, or cosmic ray events.  (It is a good idea to "clean"
+images of cosmic rays and hot pixels before attempting a registration; see
+ZAP and TVZAP for details).  Setting RSHIFT or CSHIFT too small runs the
+risk of missing the stars if the relative shift puts them outside the
+search box.
+
+<P>
+If it is already known that the target image is shifted relative to the
+reference image by a large amount (e.g., you know that the target is
+shifted by at least 5 pixels in rows and -10 pixels in columns), this may
+be specified using the DR= and DC= keywords.  DR and DC need only be given
+to the nearest pixel or two.  Without a suitable offset, REGISTAR could get
+lost and either give up or give a spurious answer.
+
+<P>
+When 5 or more reference stars are used, REGISTAR iterates to calculate the
+best mean shift between images by rejecting stars which give discrepant
+shifts.  The default rejection threshold is 4-sigma from the mean shift,
+but this may be changed using the "REJECT=" keyword.  Too small of a
+rejection threshold could eliminate valid stars, and too large could accept
+spurious centroids.  Once the mean shift calculation has converged,
+REGISTAR will print the shifts for each of the stars on the image, and the
+mean shift with an uncertainty (sigma).
+
+<P>
+REGISTAR provides for interactive control of the shift calculation via the
+"INT" keyword.  This is especially useful in cases where the image quality
+or depth of the target image is not comparable to that of the reference
+image.  The "INT" keyword stops after each iteration and provides an
+opportunity for the user to change the weights of the stars used.  REGISTAR
+uses a normalized weighting scheme.  A weight of 0.0 (zero) is used to
+reject a star.  Similarly, a weight of 1.0 accepts a star.  With INT, the
+user determines when the registration solution has converged.  After
+accepting a shift, the image is then shifted to the common reference frame.
+
+<P>
+After using REGISTAR, the target image should line up with the reference
+image to within the accuracy allowed by the image quality.  Most often this
+is limited by the frame-to-frame repeatability of the stellar PSF.
+
+<P>
+REGISTAR includes a record keeping option available via the LOG keyword.
+This is useful for identifying problems after a long batch registration run
+of many images.  In addition, it has also proven useful as providing data
+to help track autoguider performance on a sequence of images.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+NOTE: At this time, a maximum of 100 stars are allowed to be used To change
+this, the parameter MAXSTAR must be changed in the REGISTAR and GETMEAN
+subroutines, both of which live in the same source code file.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

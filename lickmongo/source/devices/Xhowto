@@ -1,0 +1,102 @@
+Article 6846 of comp.windows.x:
+Path: saturn!agate!ucbvax!bloom-beacon!SUN.COM!dshr
+From: dshr@SUN.COM (David Rosenthal)
+Newsgroups: comp.windows.x
+Subject: Re: Memory utilisation in X11 systems
+Message-ID: <8901080111.AA20481@devnull.sun.com>
+Date: 7 Jan 89 21:20:46 GMT
+Sender: daemon@bloom-beacon.MIT.EDU
+Organization: The Internet
+Lines: 89
+
+Just to make it quite clear - setting backing store on a window
+is a HINT to the server,  it does not absolve the client from
+the responsibility of responding appropriately to Expose events.
+
+There is no sensible way to write an X client without dealing with
+Expose events:
+
+-	There is no way to tell when to start drawing in your
+	window(s) without waiting for an Expose event.  Stupid X
+	client #1 is the one who says "I created a window,  mapped
+	it and drew in it but nothing was visible".
+
+-	Even if you set the backing-store hint to "Always",  the
+	server may lazy-evaluate the hint and not actually devote
+	the memory until you map the window the first time.  So
+	even with backing-store Always you can't create the window
+	and paint in it without waiting for an Expose event.
+
+-	The server may stop maintaining backing store for a window
+	at any time,  and start generating Expose events on it.
+
+The bottom line is - if you think having the server pay attention to
+the backing-store hint on any of your windows is essential to the
+functioning or performance of your client,  re-think the way you're
+writing the client.  Never depend on anyone taking the hint.
+
+If you really mean that you want to be sure that you only draw the
+image once,  what you want to do is:
+
+-	Create a Pixmap the size you want the image to be.
+
+-	If you did not actually get a Pixmap (remember,  the
+	error is asynchronous, and you will need to install a
+	custom error handler to avoid the default Xlib bail-out.
+	See Section 8.12 of the Xlib manual):
+
+	-	Check the error code.  If it is an Alloc:
+
+		-	Explain to the user that the server is out of
+			resources and ask that other clients be
+			terminated to free up resources.
+			
+		-	Wait for confirmation that this has been done,
+			and try again.
+
+	-	If it isn't an Alloc,  you wrote a bug.
+
+-	Draw the image into the Pixmap.
+
+-	Create a top-level Window that you are going to use to
+	display all or part of the image in.  Set up a mapping
+	between the Pixmap coordinates and the Window coordinates,
+	that can be adjusted to scroll the Window around over the
+	Pixamp (remember,  you may not get the size of top-level
+	Window you ask for).  Select for Expose and ConfigureNotify
+	on the Window.  (Really,  this should be a Widget with
+	appropriate scrollbars to control the mapping).
+
+-	When you get an Expose,  use CopyArea to copy the appropriate
+	part of the Pixmap to the Window.
+
+-	When you get a ConfigureNotify,  change the coordinate mapping
+	to correspond to the new window size.
+
+Note that even this isn't entirely free of resource exhaustion problems.
+But at least it anticipates the thing that is likely to fail (creating
+a large Pixmap) and does something sensible - instead of just failing
+with an Xlib error.
+
+Of course,  this doesn't guarantee success.  The server may never be
+able to create the Pixmap you want even with no other clients active.
+
+X does not guarantee portability,  and this is only one of the ways
+in which the guarantee is not made.  Sorry,  but we never promised you
+a rose garden.  X makes portability much more likely,  but there are
+no guarantees.  Even PostScript,  which makes much stronger efforts
+than X to attain portability,  does not guarantee it - see Appendix B
+of the PostScript Red Book.
+
+Another area in which X does not guarantee portability (Visuals)
+is the subject of the paper Dave Lemke & I will be giving at Usenix.
+There is a good paper waiting to be written on techniques for writing
+BadAlloc-proof X clients (I don't want to write this one,  so I don't
+mind telling you about it).  There are equally good papers waiting to
+be written on how to deal with other areas in which X doesn't guarantee
+portability (I do want to write some of these,  so I won't tell you
+what they are just yet).
+
+	David.
+
+

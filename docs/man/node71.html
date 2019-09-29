@@ -1,0 +1,46 @@
+
+<H1><A NAME="SECTION00720000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="2209"><tex2html_anchor_invisible_mark></A>
+<A NAME="2210"><tex2html_anchor_invisible_mark></A><BR>
+GET/SAVE: Get/Save a VISTA Data File
+</H1>
+<tex2html_verbatim_mark>rawhtml239#
+<BR>
+<tex2html_image_mark>#command2211#
+<BR>
+
+<P>
+The SAVE and GET commands are used for writing out results produced by
+other VISTA routines to disk for future use by VISTA or other programs, and
+getting them back again.  Various VISTA commands will generate reduced data
+which you may want to save for later analysis.  To SAVE or GET results from
+a specific program, specify that program's keyword and a file name.  If no
+file name is given, VISTA will ask you for one.  More than one keyword can
+be specified at a time.  By default, all files are kept in the data
+directory (specified by the V_DATADIR environment variable) with the file
+extensions given below.  These can be overridden if desired.  To examine
+the current results that VISTA is storing, use the PRINT command.
+
+<P>
+At this time VISTA provides for the storage of the following data types:
+
+<P>
+<BR>
+<tex2html_image_mark>#command2220#
+<BR>
+
+<P>
+Note that for DAOPHOT files (COO= or DAO=), you can set the LOWBAD and/or
+HIGHBAD data values using the LOW= and HIGH= keywords.
+
+<P>
+The various formats for the different types of data files are described in
+more detail in the commands which make use of them.
+
+<P>
+Examples:  Assume the data directory is vista/data
+<BR>
+<tex2html_image_mark>#example2229#
+<BR>
+
+<P>

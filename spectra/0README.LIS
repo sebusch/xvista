@@ -1,0 +1,48 @@
+          Figaro Oke and HST Spectrophotometric Flux Standards
+          ====================================================
+
+
+This directory contains spectrophotometric flux standards for use with
+the Figaro package.  Two sets of standards are provided:
+
+
+File            Description
+
+oke.tar.Z       Standard stars observed by Oke.
+hst.tar.Z       HST standard stars.
+
+
+The files are compressed tar archives.  Remember to use ftp in binary
+mode when retrieving them.  Once you have retrieved copies of the
+files they can be decompressed using Unix command uncompress, for example:
+
+  uncompress oke.tar.Z
+
+Then extract the individual files from the tar archive:
+
+  tar xvf oke.tar
+
+Each set of standards includes a 0README.LIS file giving further details.
+
+The files are intended for used with the Figaro package.  Figaro is
+documented in SUN/86.  To view a hypertext version of this document on a
+Starlink system type:
+
+  showme sun86
+
+or
+
+  findme figaro
+
+Further information about Figaro is available via the World Wide Web
+at the following URL:
+
+  http://www.starlink.rl.ac.uk/figaro/
+
+If you encounter any problems using the standards then please send an
+e-mail message to username:
+
+  figaro@star.rl.ac.uk
+
+Clive Davenhall,
+2/8/02.

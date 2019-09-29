@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>POLY: Fit a Polynomial to a Spectrum</TITLE>
+<META NAME="description" CONTENT="POLY: Fit a Polynomial to a Spectrum">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0014140000000000000000">
+POLY: Fit a Polynomial to a Spectrum</A>
+</H1>
+
+<!-- linkto poly.html -->
+<A NAME="5996"></A>
+<BR>
+<IMG
+ WIDTH="9" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img308.png"
+ ALT="\begin{command}
+\item[Form:POLY source ORD=n {[SUB]} {[DIV]} {[LOAD]} {[NOZERO]...
+...th value= 0 in the fit}
+\item[SILENT]{suppresses terminal output}
+\end{command}">
+<BR>
+
+<P>
+POLY fits a polynomial to the spectrum in image buffer 'source'.  The order
+of the polynomial is specified by the keyword 'ORD=n', where n=1 is a line,
+n=2 is a quadratic, and so forth.  Here a ``spectrum'' is any 1-D image
+vector (an ``image'' with 1 row and NC columns).
+
+<P>
+As in the SPLINE command the keywords SUB and DIV can be used to tell the
+program to subtract or divide (respectively) the original spectrum by the
+fit.  (Without both of these keywords the spectrum will be replaced by the
+fit.) As in the SURFACE command the keyword LOAD will load VISTA variables
+with the computed polynomial coefficients, so that they are accessible by
+other commands.  The names of the variables loaded are COEFF0, COEFF1, ...,
+COEFFn, where 'n' is again the order of the fit.  The formula using these
+coefficients is
+<PRE>
+   y = COEFF0 + COEFF1 * x + COEFF2 * x * x + ...
+</PRE>
+where y is the intensity and x is the pixel number.
+
+<P>
+Examples:
+<BR>
+<IMG
+ WIDTH="9" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img309.png"
+ ALT="\begin{example}
+\item[POLY 14 ORD=3]{Fits a cubic polynomial to the spectrum in...
+..., DCOEFF1, DCOEFF2,
+and DCOEFF3 with the fit coefficient errors.}
+\end{example}">
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

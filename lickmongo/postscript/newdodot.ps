@@ -1,0 +1,51 @@
+From pogge@bruno.mps.ohio-state.edu Mon Oct  1 17:04:39 1990
+Return-Path: <pogge@bruno.mps.ohio-state.edu>
+Received: from ucscc.UCSC.EDU by helios (4.1/SMI-4.0)
+	id AA27508; Mon, 1 Oct 90 17:04:37 PDT
+Received: from bruno.mps.ohio-state.edu by ucscc.UCSC.EDU (5.64/1.35)
+	id AA11098; Mon, 1 Oct 90 17:04:02 -0700
+Received: by bruno.mps.ohio-state.edu (4.1/1.890418)
+	id AA06772; Mon, 1 Oct 90 20:03:31 EDT
+Date: Mon, 1 Oct 90 20:03:31 EDT
+From: pogge@bruno.mps.ohio-state.edu (R. Pogge)
+Message-Id: <9010020003.AA06772@bruno.mps.ohio-state.edu>
+To: sla@helios.UCSC.EDU
+Subject: Re:  thank you
+Status: RO
+
+OK, here is the prototype.  Only types 0 and 3 are affected, but it is
+easy to see how to do it for more.
+
+/DoDotDict 20 dict def
+/DoDot { DoDotDict begin /expand exch def /ptype exch def /nvert exch def 
+         /rot exch def /ydot exch def /xdot exch def 
+gsave 
+   xdot ydot translate
+   rot rotate /orad 5.0 expand mul def /irad 1.25 expand mul def
+   /dang 360. nvert div def /bang -90. dang 0.5 mul add def
+   /eang 270. dang 0.5 mul sub def /xv orad bang cos mul def
+   /yv orad bang sin mul def 
+newpath xv yv moveto 
+ptype 0 eq ptype 3 eq or {
+   bang dang add dang eang {dup sin exch cos /xv exch orad mul def
+   /yv exch orad mul def xv yv lineto } for closepath
+   ptype 0 eq {gsave 1 setgray fill grestore stroke} if 
+   ptype 3 eq {gsave gsave 0 setgray fill grestore 0.5 setlinewidth 1 setgray 
+   stroke grestore} if } if
+ptype 1 eq { bang dang add dang eang {dup sin exch cos /xv exch orad mul def
+   /yv exch orad mul def 0 0 lineto xv yv moveto } for 0 0 lineto stroke} if
+ptype 2 eq {/hang dang 0.5 mul def bang dang eang 
+   {dup hang add dup sin exch cos
+   /xv exch irad mul def /yv exch irad mul def xv yv lineto
+   dang add dup sin exch cos /xv exch orad mul def /yv exch orad mul def
+   xv yv lineto } for stroke} if 
+grestore end } bind def
+
+--------------
+
+Beware, it bombs for PTYPE 2 3, erasing the line if lweight is default.
+So it goes.
+
+			cheers,
+				rick
+

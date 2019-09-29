@@ -1,0 +1,19 @@
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+C       This Fortran module is Copyrighted software.
+C       The file COPYRIGHT must accompany this file.  See it for details.
+C       ** COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT ****  COPYRIGHT **
+	integer         MAXFONT
+	parameter       (MAXFONT = 6)
+c                       # of characters in a font (no international chars yet)
+	integer         ASCIICHAR
+	parameter       (ASCIICHAR = 128)
+c                       hard-compiled maximum number of character vertices
+	integer         MAXVRTX
+	parameter       (MAXVRTX = 50000)
+c                       End Of a Stroke in a character.  When the x-value of
+c                       a character is EOS, it is time to "lift the pen."
+	integer         EOS
+	parameter       (EOS = 31)
+c                       symbolic names for the vertical font metric information
+	integer         BOT, BAS, HLF, CAP, TOP
+	parameter       (BOT = -2, BAS = -1, HLF = 0, CAP = 1, TOP = 2)

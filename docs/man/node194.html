@@ -1,0 +1,38 @@
+
+<H1><A NAME="SECTION0015180000000000000000">
+ELLMAG: Compute Elliptical Magnitudes for PROFILE Ellipses</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml452#
+<BR>
+<tex2html_image_mark>#command7071#
+<BR>
+
+<P>
+ELLMAG calculates the elliptical magnitude within the elliptical isophote
+fit using the PROFILE command.  It uses the values for the surface
+brightness computed previously by PROFILE.  It recomputes the circular
+totals using CIRCMAG, so that any results appended to the PROFILE results
+with EMAG will have appropriate circular totals all the way out to the
+final radius.
+
+<P>
+This routine differs from EMAG in that the magnitudes within each ellipse
+in the PROFILE common block are computed, correctly taking into account the
+varying position angles and eccentricities.  EMAG, by contrast, computes
+concentric elliptical magnitudes given the parameters for ONE of the
+ellipses in the PROFILE common block.
+
+<P>
+This routine uses the SB results to approximate the elliptical totals
+within increasing semi-major axis radii.  For each increase in radius, the
+routine approximates the additional ellipse area which needs to be taken
+into account for calculating the elliptical totals.  It then multiplies the
+SB value at that radius by this area to get an approximation of the extra
+number of counts to add to the elliptical total.  The routine does take
+into account the possibility of crossing ellipses but, at this time, does
+not yet take into account the possibility of changing position angle.
+
+<P>
+See Also: EMAG, APER, PROFILE
+
+<P>

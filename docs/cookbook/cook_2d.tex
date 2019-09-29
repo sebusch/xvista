@@ -1,0 +1,1131 @@
+%
+%  VISTA Cookbook;  2-D Image Reduction Chapter (5 for now)
+%
+%  Began:  1988 May 31
+%
+%  Last Revision:  1988 August 30
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:im
+%
+
+
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+%
+%\begin{document}
+%\setcounter{chapter}{4}
+
+\chapter{2-D Image Reduction}
+
+The goal of this chapter is to outline the basic procedures for reducing raw
+CCD images.  Image ``reduction'' is distinct from image ``analysis,'' which is
+actual measurement of some property from the images.  Reduction is the set of
+procedures used to take a raw image from the instrument and prepare it for
+analysis.   Throughout this section, it will be assumed that the reader has
+already read over the material in the basic techniques section (Chapter 3),
+particularly regarding flat-fields, dark counts, and baseline restoration. 
+
+We shall begin with basic procedures which should be common (in some for or
+another) to all CCD chips.  From there, secondary reduction procedures are
+described to deal with effects which depend strongly on what instrument has
+been used, and what measurements you ultimately wish to extract from your
+data.  Finally, a set of advanced techniques which range from somewhat tricky
+to real ``black-belt'' level are discussed. 
+
+% -----------------------------------------------
+
+\section{Basic Image Reduction}
+
+A few basic corrections must be applied to all images before further reduction
+can proceed.  In what follows, a ``raw'' image refers to the data values off
+the tape from the mountain data taking system.  The goal of this section is to
+produce a ``reduced'' image, containing (to a first approximation) an image of
+what is in the sky with most of the major instrumental effects removed. 
+
+Some basic reduction procedures are strongly dependent on the equipment used.
+A TI CCD image taken at Lick Observatory will require a few different steps
+than, for example, an RCA CCD image taken at Cerro Tololo. This cookbook will
+describe procedures for reducing CCD images from Lick in particular, although
+most of the techniques, and the VISTA commands required, should in principle
+be common to all CCD data. 
+
+\noindent{To perform a basic image reduction, you need the following pieces:}
+\begin{enumerate}
+      \item {\bf Raw CCD Image}, read into a VISTA buffer from tape or disk 
+            using either \comm{RT}\ or \comm{RD}.  
+      \item A pre-prepared {\bf Dark Frame} with an exposure time the same as 
+            the raw image, read into a second VISTA buffer from tape or disk
+            (see \S2.X).
+      \item An appropriate {\bf Flat-Field Frame}, prepared as described 
+            in \S2.X, and read into a third VISTA buffer, and with its mean 
+            computed and stored.
+\end{enumerate}
+In the following example, we start with:
+\begin{enumerate}
+      \item A raw CCD image, stored on TAPE as image number 10. The tape is
+            on UNIT 0, and has been mounted (\comm{MOUNT UNIT=0}).
+      \item A pre-prepared Dark Frame, stored on DISK with the name: 
+            \comm{dark.ccd}
+      \item A pre-prepared Flat-Field Frame, stored on DISK with the name: 
+            \comm{flat.ccd}
+\end{enumerate}
+
+\noindent{Read the Dark Frame into buffer 2, the Flat-Field Frame into buffer
+3, and compute the mean of the Flat-Field:}
+\begin{command}
+      \item RD 2 dark.ccd 
+      \item RD 3 flat.ccd 
+      \item MN 3 NOBL
+\end{command}
+Buffer 2 now contains the dark frame, and buffer 3 contains the flat-field
+frame, with its mean intensity computed and stored in 
+the VISTA variable \comm{M3}.  The \comm{NOBL}\ keyword in the \comm{MN}\ 
+command tells VISTA to ignore the baseline column when computing the image
+mean.
+
+\noindent{Read the raw image from the tape into buffer 1 and restore the
+digital baseline:} 
+\begin{command}
+      \item RT 1 10 UNIT=0 NOMEAN 
+      \item BL 1
+\end{command}      
+
+\noindent{Remove the dark counts:}
+\begin{command}
+      \item SUB 1 2
+\end{command}
+
+\noindent{Finally, flat-field correct the image:}
+\begin{command}
+      \item DIV 1 3 FLAT
+\end{command}
+The corrected and flattened image is now in buffer 1, and is ready for further
+processing.  It is advisable to store this image in some non-fragile way
+(either on disk, or a working scratch tape) before proceeding. As can be seen,
+once dark and flat-field frames have been prepared for a night (or a run), the
+basic reduction of an entire night's data may proceed almost automatically, as
+little or no image interaction is required at this stage. For a large number
+of images taken through one or two filters, running VISTA as a batch process
+can reduce the tedium tremendously. 
+
+% -----------------------------------------------
+
+\section{Secondary Image Reduction}
+
+After the basic reduction step, there are a number of secondary steps that may
+be required before beginning analysis of the images.  Which of these steps are
+taken depends on the analysis you wish to pursue, and the peculiarities of the
+instrument you are using.  In that sense, these procedures are optional.  The
+procedures in this section are listed in approximate order of complexity.  The
+basic format is to present the simplest way to perform each procedure, then
+adding increasing detail.  These are by no means the {\it only} way to do
+things, but should serve more as a guide for what the commands do, and some of
+the general considerations. 
+
+\subsection{Windowing}
+\label{sec:imwindow}
+Windowing is image reduction in the most literal sense of the word.  It is the
+process of removing from an image only a small subset for further analysis. 
+Often, this is necessary because vignetting or an aperture plate make it so
+that some regions contain no data.  A number of CCD chips have bad regions
+around their periphery which are useless and may even be a nuisance later on.
+In other cases, you may simply wish to break up a large image into small,
+easily digested subsets. 
+
+Windowing in VISTA may be accomplished in one of two ways: either using a
+combination of the \comm{WINDOW}\ and \comm{BOX}\ commands, or the
+\comm{COPY}\ and \comm{BOX}\ commands.  In either method, the \comm{BOX}\
+command is used to define the image sub-region to be isolated using either the
+\comm{WINDOW}\ or \comm{COPY}\ commands.   The difference is that with
+\comm{WINDOW}, the regions outside the specified \comm{BOX}\ are permanently
+lost, while with \comm{COPY}\ the original image may be left untouched, and a
+new image containing the contents of the specified \comm{BOX}\ is created in
+a different buffer. 
+
+For example:  You have an 800$\times$800 TI CCD image in buffer 2, of which you
+wish to use a region 150 columns wide by 250 rows high starting at pixel (R,C)
+= (127,334).  Let's define \comm{BOX 4}\ to surround the region of interest,
+and throw away all of the image regions lying outside of it.  To do this, you
+would type: 
+\begin{command}
+      \item BOX 4 SR=127 SC=334 NR=250 NC=150
+      \item WINDOW 2 BOX=4
+\end{command}
+The former 800$\times$800 image has now been reduced to a 250$\times$150
+(rows$\times$columns) image, and the rest has been removed from memory.  It is
+a very good idea to store the whole image, either in another buffer, or on
+tape or disk, just in case you screw up.  The \comm{WINDOW}\ command is
+PERMANENT!
+
+Suppose instead that you wish to keep the 800$\times$800 image in buffer 2 as
+is, and copy the region of interest (same as before) into a different buffer,
+say buffer 9. This way, you could break off pieces of the larger image for
+individual attention.  Remember that smaller images make for faster processing
+for routines that use the entire image.  To do this, you would type: 
+\begin{command}
+      \item BOX 4 SR=127 SC=334 NR=250 NC=150
+      \item COPY 9 2 BOX=4
+\end{command}
+Now buffer 9 contains a 250$\times$150 image which is the desired subset of the
+larger image, which remains untouched in buffer 2. 
+
+One final remark:\ \comm{COPY 2 2 BOX=4}\ is equivalent to 
+\comm{WINDOW 2 BOX=4}.  If you copy into a buffer a subset of itself (defined
+by \comm{BOX=4}), then you will destroy the current image and replace it by
+the subset.  This is essentially what \comm{WINDOW} is doing. 
+
+% -----------------------------------------------
+
+\subsection{Image Position and Orientation}
+\label{sec:imposorient}
+Often it is desirable to orient the image in a fashion which is logical. For
+example, an image orientation of North--South running vertically with North at
+the top, and East--West running horizontally with East at the left, is the
+conventional orientation of astronomical images. Optics or details of the CCD
+readout often introduce reflections or rotations which may be removed using
+simple commands.  All of these come under the broad heading of commands 
+effecting the image coordinates.
+
+The simplest image coordinate change is to shift (or translate) the image to a
+new origin.  VISTA provides the \comm{SHIFT}\ command for this purpose. 
+\comm{SHIFT}\ works very rapidly for shifts by an integral number of pixels in
+either dimension.  For example, an image in buffer 2 has its origin (upper
+left hand corner) at (R,C)=(345,~23), and you want to translate it so that the
+new origin is (R,C)=(0,~0).  To do this, you would type: 
+\begin{command}
+      \item SHIFT 2 DR=$-$345 DC=$-$23
+\end{command}
+where \comm{DR=}\ is the shift in rows, and \comm{DC=}\ is the shift in
+columns.  You can find out the origin of an image by issuing the
+\comm{BUFFER}\ command (see \S~x.x).  Another way to do the same thing as
+above is to use the internal VISTA variables that contain the image origin,
+thus you could have typed instead: 
+\begin{command}
+      \item SHIFT 2 DR=$-$SR[2] DC=$-$SC[2]
+\end{command}
+The variables \comm{SR[i]}\ and \comm{SC[i]}\ contain the starting row and
+column of image \comm{i}\ respectively.  More complicated applications of
+\comm{SHIFT}\ will be discussed in the Advanced Techniques section below, in
+the context of the problem of image registration. 
+
+The orientation of the image may be changed by either reflection about a given
+axis (the \comm{FLIP}\ command), or rotation about the image center (the
+\comm{ROTATE}\ command).  For example, you have an image in buffer 4 which
+has an orientation which is East--West along the horizontal (columns) axis,
+with West on the left.  To ``flip'' this orientation so it appears with
+East on the left, you would issue the command:
+\begin{command}
+      \item FLIP 4 COLS
+\end{command}
+This has the effect of reflecting (flipping) the image about its central
+column.  There is an analogous keyword, \comm{ROWS}, which will reflect
+the image about the central row.
+
+A more common orientation problem is an image which is turned on one side. For
+example, the TI 500$\times$500 CCD on the 1-meter Nickel Telescope at Mount
+Hamilton in its ``CCD-D'' configuration is mounted such that the images come
+out with an orientation of North--South running horizontally (columns) with
+North to the left, and with East--West running vertically (rows) with West at
+the top.  To get it into the conventional ``North Up, East Left'' orientation,
+you want to turn it clockwise on its side.  Suppose you have such an image in
+buffer 1, then you would put it into the desired orientation by typing the
+command: 
+\begin{command}
+      \item ROTATE 1 RIGHT
+\end{command}
+The \comm{RIGHT}\ keyword tells it to rotate the image clockwise 
+by 90\deg.  Similarly, you may restore the old orientation by issuing the
+command:
+\begin{command}
+      \item ROTATE 1 LEFT
+\end{command}
+which will rotate the image {\it counterclockwise}\ through 90\deg.
+To now turn the image upside down --- a rotation by 180\deg\ about
+the image center, you would issue the command:
+\begin{command}
+      \item ROTATE 1 UD
+\end{command}
+Note that this is {\it not} the same as a \comm{FLIP 1 ROWS}.
+
+For rotations through 90 and 180\deg, \comm{ROTATE}\ works very rapidly (it is
+only swapping array index pointers).  It is possible to rotate through an
+arbitrary angle, but this internally involves an interpolation and re-binning
+of the image and thus may be very time consuming, especially for large images.
+For example, suppose you wish to rotate an image in buffer 3 through an angle
+of 45\deg.  You would type in: 
+\begin{command}
+      \item ROTATE 3 PA=45.
+\end{command}
+and wait\ldots
+
+The sign convention for the \comm{PA=}\ keyword is:\ (+) for counterclockwise,
+($-$) for clockwise.  It follows the usual astronomical convention of position
+angles rotation from North counterclockwise towards East. 
+
+% -----------------------------------------------
+
+\subsection{Cosmic Ray Events}
+\label{sec:imcosrays}
+CCD detectors are not only great detectors of optical photons, but also of any
+ionizing radiation energetic enough to knock electrons out of the silicon as
+it passes through.  Cosmic rays, $\gamma$-rays, and X-rays may all be detected
+by a CCD.  In many cases, these high-energy ``events'' (or ``ion hits'' as
+they are sometimes called) create hundreds or thousands of electrons, making
+the counts in a single pixel jump tremendously.  In thick devices, the
+probability of a passing cosmic ray creating spurious signal is greatly
+enhanced, so long exposures (30 minutes or greater) with thick chips are often
+peppered with bright patches. VISTA offers two ways to remove cosmic ray
+events from an image: \comm{ZAP}\ and \comm{TVZAP}. 
+
+The first option, \comm{ZAP}, is blind.  It passes a square filter of a
+specified width (in rows and columns) over the image.  At each pixel, it
+computes the median image intensity in the specified filter box centered on
+that pixel.  If counts in that pixel deviate from the median by more than a
+specified threshold value (expressed as a multiple of the standard deviation
+of the pixels inside the filter), it is set equal to that median value. Since
+cosmic ray events are usually dramatic deviations from neighboring pixels,
+they can be removed in this way. 
+
+For example, you wish to ZAP an entire image stored in buffer 1, specifying a
+5~$\times$~5 pixel square filter, and a rejection threshold of 3 standard
+deviations.  You would type: 
+\begin{command}
+      \item ZAP 1 SIG=3 SIZE=5,5
+\end{command}
+and wait for the routine to finish.  The larger the image, the longer it
+takes.  At the end, VISTA will printout how many pixels were ``zapped''. 
+\comm{ZAP}\ is particularly convenient for batch processing (provided it
+is safe to use on the data) as it require no interaction.  It is possible to
+monitor the progress of \comm{ZAP}\ by appending the \comm{TTY}\ keyword
+onto the end of the command line.  This will print on the terminal the
+locations of the pixels zapped.  However, for large images, bear in mind
+that this could significantly increase run time.
+
+There is a significant danger of ``zapping'' data away, especially if the
+images are oversampled. An alternative procedure is to {\it interactively}
+remove cosmic ray events from the image using \comm{TVZAP}.  The \comm{TVZAP}\
+command works with the image display cursor.  Like \comm{ZAP}, the user
+specifies the filter size and the rejection level via keywords.  However,
+\comm{TVZAP}\ allows you to change both in mid-stream as required to remove
+the offending pixels. 
+
+For example, to interactively ``zap'' the image above, you would first display
+the image using the \comm{TV}\ command, then type: 
+\begin{command}
+      \item TVZAP SIZE=5,5 SIG=3
+\end{command}
+Place the cursor on the offending pixel, and hit the \comm{Z}\ key. VISTA will
+respond by printing out how many pixels in the present filter were ``zapped.''
+In some installations (\eg\ those for an AED 1024 color display), the
+``zapped'' pixels are updated immediately on the screen, so you can see the
+effects of the ``zap''.  In others, \comm{TVZAP}\ is ``blind'', and it will be
+necessary to re-display the image with \comm{TV}\ to see the results.  An
+alternative is simply to keep hitting the \comm{Z}\ until VISTA responds
+with \comm{0 pixels zapped}.  While not necessarily ``better'' than
+\comm{ZAP}, it is ``safer'' in some cases.   Because it is interactive, it 
+cannot be used for batch processing.
+
+%----------------------------------------------------------
+
+\subsection{Coping with Bad CCD Regions}
+\label{sec:imbadspots}
+Many CCDs have bad image columns which appear as dark streaks of ``missing
+data'', often with one end very bright.  These are columns along which charge
+cannot be transferred because of a so-called ``bulk state trap''.  The bright
+pixel which often caps a bad column is the trap where the charge piles up
+(thus appearing anomalously bright).  Sometimes, many adjacent columns may be
+affected by bulk state traps, so bad columns may be many (4 or more) columns
+wide.  Image data falling across these regions is lost.  In addition, there
+may be regions of reduced or dead sensitivity (either really dead or due to
+foreign matter on the chip surface) that cannot be removed by flat-fielding,
+or ``hot spots'' which are regions of anomalous and/or non-linear dark current
+which the dark frame cannot entirely remove (see above).  Also, on many chips,
+the edges of the chip are usually really bad, and data there useless.
+
+For the most part, bad regions should be left alone so that there will be no
+danger of making an erroneous measurement from those regions of the image. 
+However, there are some things that may be done to avoid possible numerical
+problems, as bad regions can sometimes contain extreme data values which could
+screw up measurements.  The three basic procedures are: masking, clipping, and
+interpolating. 
+
+\noindent{\underbar{Masking}}
+
+A few VISTA commands (\comm{ABX}, \comm{MN}, \comm{INTERP}, \comm{MASH},
+\comm{SURFACE}, and \comm{AUTOMARK}) allow the use of an image ``mask.''  A
+mask is a map of image regions to be ignored by the routines, and which may be
+stored on disk for later use.  There are two ways to generate an image mask. 
+The first is using the \comm{MASK}\ command, and the second is via the
+\comm{CLIP}\ command.  Clip will be discussed separately below.  With
+\comm{MASK}, you can specify entire rows or columns, boxes containing entire
+regions (say a box surrounding a saturated star image), or single pixels to be
+included in the image mask.  For example, to create a mask which flags bad
+columns 40 thru 42, 65, and 365, the contents of \comm{BOX 1}\ which surrounds
+a bad region on the chip, and a bad pixel at (R,C) = (127,359), you would
+issue the following commands: 
+\begin{command}
+      \item MASK C=40,42
+      \item MASK C=65
+      \item MASK C=365
+      \item MASK BOX=1
+      \item MASK PIX=127,359
+\end{command}
+Note that \comm{MASK}\ is {\it cumulative}, that is, each time it is invoked,
+something is added to the current mask.  Thus it is possible to build up a
+complicated mask as required. 
+
+Since VISTA only allows one mask at a time, you can make many different masks
+and store them on disk, to be read in when needed.  For example, to store the
+above mask on disk as the file \comm{mymask.msk}, you would type the command: 
+\begin{command}
+      \item SAVE MASK=mymask
+\end{command}
+Note that by default, the extension \comm{.msk}\ is appended to the file name.
+The default directory and extension may be changed by using the \comm{SETDIR}
+command (see \S~X.X).  This mask may then be
+read back in by typing the command:
+\begin{command}
+      \item GET MASK=mymask
+\end{command}
+When a mask is read in using \comm{GET}, the current mask is lost.
+
+You can remove part (or all) of the current mask using the \comm{UNMASK}\
+command.  For example, with the above mask, you later realize that the cosmic
+ray at pixel (127,359) only appears on one image, so you could just
+\comm{TVZAP}\ it away and ignore it.  To remove this region from the current
+mask, you would type: 
+\begin{command}
+      \item UNMASK PIX=127,359
+\end{command}
+Finally, to completely eliminate the current mask, simply typing
+\comm{UNMASK}\ without any keywords, and the current mask will be erased. 
+
+\noindent{\underbar{Interpolation}}
+
+Interpolation is the process of replacing the data in a bad region (\eg\ the
+``missing'' data in a blocked column) with an estimate of what should be there
+based on interpolation data values in surrounding regions.  This will usually
+produce acceptable results in the case of a bad column crossing a region
+containing sky or a diffuse region, but erroneous results if a star lands on
+the bad column.  Thus, removing bad regions by interpolation is mostly
+cosmetic, but it can be valuable if there is danger of biasing a measurement
+in an image region because of extreme data values in the bad column.  This is
+probably the best way of coping with bad regions for those VISTA routines that
+do not recognize image masks (see above), or for which clipping (see below) is
+inappropriate (or too drastic). 
+
+Most often, interpolation is used to smooth over bad columns.  For example, in
+an image in buffer 3 there is a column 254 is blocked starting at row 127 and
+continuing all the way to the bottom of the image at row 799.  By using the
+two ``good'' columns on either side of column 254, to interpolate this
+bad column away requires 2 steps.  First define a \comm{BOX}\ 
+which contains the bad column, then you issue the \comm{INTERP}\ 
+command.  You would type:
+\begin{command}
+      \item BOX 5 SR=127 SC=254 NC=1 NR=799$-$127+1
+      \item INTERP 3 BOX=5 COL AVE=2
+\end{command}
+The first half defines the \comm{BOX 5}\ to contain the bad column. This box
+is 1 column wide starting on column 254, and also starting on row 127 and
+going to row 799.  Note that for the \comm{NR=}\ we are having VISTA compute
+the number of rows from 127 to 799.  Since this must include row 799, we add 1
+to (799$-$127).  The second half uses the \comm{INTERP}\ command to tell VISTA
+to interpolate across the region of the image in buffer 3 contained in
+\comm{BOX=5}\ such that for each row inside \comm{BOX=5}, use the data in two
+pixels either side (\comm{AVE=2}) of the box. 
+
+If there are many bad regions on a given image (many CCD chips are usually
+chock full of bad columns and such), you can use an image mask (see above) to
+interpolate across many regions at once.  For example:  you've got data from
+Fernwood Observatory's MGA~\#2 CCD chip which has 127 bad columns. Previously,
+you've made a mask of these bad columns, which is stored on disk in the file
+\comm{mga2badcol.msk}.  To use this mask to interpolate across all the bad
+columns in the image in buffer 1 using 3 pixels either side of the offending
+columns you would type: 
+\begin{command}
+      \item GET MASK=mga2badcol
+      \item INTERP 1 COL AVE=3 MASK      
+\end{command}
+And all of the bad columns will be interpolated out.
+
+\noindent{\underbar{Clipping}}
+
+Masking is asking some VISTA commands to simply ignore regions.  Interpolation
+is smoothing them over by using surrounding data.  Clipping is major surgery.
+Clipping is the process of setting all pixel values in a specified region
+equal to a constant value if they are above (or below) some fiducial value.
+For example, if the basic reduction (dark and flat-field correction) causes
+bad regions to have extreme values, it is possible to clip all these pixels to
+some neutral value (say, zero).  This is done in VISTA with the \comm{CLIP}
+command.  Needless to say, clipping is a rather drastic procedure, so it
+should only be done with great care. 
+
+For example, after dark and flat-field correction, there are regions of
+the an image in buffer 3 which contain large negative numbers.  Since negative
+counts are ``unphysical'' for this image, you wish to have VISTA ignore all
+negative pixels.  One way is to set all negative pixels equal to zero.  To do
+this you would type: 
+\begin{command}
+      \item CLIP 3 MIN=0. VMIN=0.
+\end{command}
+This sets all pixels with values less than \comm{MIN=0.}\ to have the value
+\comm{VMIN=0.}.  Some VISTA commands (\eg\ \comm{MN}, and \comm{SURFACE}) have
+keywords that will explicitly ignore pixels with zero value, so this may be
+useful. 
+
+Another way is to put the negative regions into the current mask (see above).
+This would be done by typing: 
+\begin{command}
+      \item CLIP 3 MIN=0. VMIN=0. MASK
+\end{command}
+Thus, all negative pixels are ``clipped'' and set to zero (0.) as above, and
+their positions are loaded into the current mask.  It is possible to make a
+mask using \comm{CLIP}, but not actually change the data values by typing
+instead: 
+\begin{command}
+      \item CLIP 3 MIN=0. VMIN=0. MASKONLY
+\end{command}
+In this case, the negative pixels are left untouched, but their locations are
+loaded into the current image mask. 
+
+\comm{CLIP}\ may also be used to suppress extremely large values.  For example,
+you know that pixels with more than 30,000 counts in the image in buffer 4 are
+due to saturation, so you wish to ignore everything above 30,000.  To set all
+pixels with more than 30,000 counts to a fiducial value of (say) 500., then
+you would type: 
+\begin{command}
+      \item CLIP 4 MAX=30000. VMAX=500.
+\end{command}
+Similarly, these pixels may also be put in the current image mask using the
+\comm{MASK}\ and \comm{MASKONLY}\ keywords as above.  Note that you can clip
+pixels above or below the thresholds set by the \comm{MIN=}\ and \comm{MAX=}\
+keywords simultaneously.  Thus, in the above example, to clip all negative
+pixels to zero (0.) at the same time, you would have typed: 
+\begin{command}
+      \item CLIP 4 MAX=30000. VMAX=500. MIN=0. VMIN=0.
+\end{command}
+which is a more efficient use of computer time as you scan over the image only
+once. 
+
+Clipping an entire image may be dangerous, as you might accidentally punch out
+valid data points.  In addition, if the offending pixels are confined to a
+small region, it is very wasteful of computer time to have \comm{CLIP}\ scan
+over an entire image (for example, if the bad spot is only a 10$\times$10
+pixel region on a 500$\times$500 CCD image, the times savings is roughly 2500,
+although additional execution overhead will not make it quite that fast).  You
+can restrict the limits of the \comm{CLIP}\ to only those pixels within a
+given \comm{BOX}.  For example:  a saturated star image centered on pixel
+(250,303) of an image in buffer 2 blows away a region roughly 15 pixels
+across.  You want to clip out all pixels in this region greater than 20,000
+counts and set them to zero (0.).  You first create a box isolating the
+offending star (call it \comm{BOX 1}) and then clip the contents of the box.
+To do this type: 
+\begin{command}
+      \item BOX 1 CR=250 CC=303 NR=15 NC=15
+      \item CLIP 2 BOX=1 MAX=20000. VMAX=0.
+\end{command}
+When the image in buffer 2 is redisplayed, the central pixels of the saturated
+star image should have all zeros in it.  The combination of \comm{CLIP}\ and
+\comm{BOX}\ for handling bad regions of an image is rather powerful and finds
+a fair amount of use in most image processing applications. 
+
+% -----------------------------------------------
+
+\subsection{Sky Subtraction}
+\label{sec:imskysub}
+In some sense, the subject of sky subtraction belongs under the heading of
+``image analysis'' rather than ``image reduction'', as it is often a crucially
+important step in such problems as stellar photometry (both artificial aperture
+and profile fitting techniques) and surface photometry of extended objects. 
+However, in other applications, it may not be as critical a step.  How you
+handle sky subtraction very much depends on the quality of your images, the
+instrumental peculiarities, and your ultimate analysis goals.  What shall be
+presented here are some of the basic considerations and techniques, and how to
+use VISTA for this end. 
+
+The field of view of most CCD cameras is such that after correction for the
+flat-field, there should be a constant background level due to the brightness
+of the night sky.  Thus, to remove the sky, one simply estimates the sky level
+in some way, then subtracts that value from every pixel in the image. There
+are, however, some complications that arise.  Deviations from constancy are
+due primarily to scattered light in the camera --- particularly if there are
+bright, saturated stars in the field, and optical effects like vignetting in a
+focal reducing camera (due to the field being imaged overfilling the
+collimating lens).  It is also more difficult to estimate the sky level if the
+image is of an extended object (say an emission nebula or galaxy) which fills
+most of the field.  
+
+Another complication is that the sky may not be ``flat'' after all, and so
+simply subtracting a constant background will not produce acceptable results. 
+In these cases, it may be more appropriate to fit a two-dimensional surface
+(either a plane or curved polynomial surface) to the sky and subtract that
+from the image.  These techniques are very involved, and dependent on the type
+of data and the instrument, and so will not be discussed here.  Instead, we
+shall assume that the sky background is well described by a constant value
+everywhere on the CCD.  Even if there are optical problems which cause
+deviation from flatness, let us assume that it is possible to window down the
+image (see \S~\ref{sec:imwindow}\ above) to a region where it is flat. 
+
+In a frame full of stars, or of an extended object that fills a fraction of
+the field, most of the pixels contain sky (or close to sky).  To estimate the
+sky level, there are basically two schools of thought.  One is that the sky
+value should be the most common value in the image, which is defined as the
+{\it mode} of the image intensity distribution.  Another is that the image
+{\it mean} in regions away from the object should be used, although
+occasionally the {\it median} is used by some workers instead of the mean.  
+
+The former is useful if it is difficult to isolate regions which are ``sky''
+and which are ``object(s)'', for example, an image of a star field.  The
+latter is useful only in those cases where ``sky'' and ``object'' may be
+readily isolated, say, an image of a single star.  A representative histogram
+of the distribution of single-pixel intensities in an image is shown in
+Figure~\ref{fig:skyhist}. 
+\begin{figure}[t]
+   \vspace{4.0in} 
+   \caption[Representative Image Intensity Distribution]
+           {\small\rm \label{fig:skyhist}
+            Representative image intensity distribution for a 500$\times$500
+            CCD image of a star field.  The x-axis plots the intensity
+            value in digital counts, and the y-axis plots the number of
+            pixels with that intensity.  The Mode, Median, and Mean of the
+            distribution are labelled with arrows.}
+\end{figure}
+The mode is simply the peak of this distribution (indicated by the arrow). 
+The arithmetic mean and the median are also indicated.  Note that both the
+mean and median are affected by pixels in the high-intensity tail of the
+distribution, thus a large number of stars on the image, or inability to
+isolate ``sky'' and ``object(s)'' will lead to an over-estimate of the sky
+value.  For most applications, deriving a modal sky value is the most
+appropriate estimate of the sky level to use. 
+
+VISTA computes the mode of an image with the \comm{SKY} command.  For example,
+suppose you wish to estimate the modal sky value of an image in buffer 2.  To
+compute the sky level of the entire image, you would type: 
+\begin{command}
+      \item SKY 2
+\end{command}
+The mode and its uncertainty (defined as the full-width at half-maximum of the
+image intensity distribution) will be printed on the terminal, and stored in
+the VISTA variables \comm{SKY}\ and \comm{SKYSIG}\ respectively. These
+variables allow you to conveniently use this data for sky subtraction.  For
+example, typing the commands: 
+\begin{command}
+      \item SKY 2
+      \item SUB 2 CONST=SKY
+\end{command}
+will compute the value of the sky level in the image in buffer 2, then
+subtract that value from the image, leaving the sky-subtracted image in buffer
+2. 
+
+Consider now the case where there is an extended object, say a galaxy, in the
+center of the CCD image, and sky and foreground stars in the periphery. There
+are two ways to estimate the sky level in this image without including the
+regions containing the extended galaxy image.  The first is to simply compute
+the modal sky value by restricting the regions of interest to the four corners
+of the image.  You would do this by typing: 
+\begin{command}
+       \item SKY 2 CORNERS
+\end{command} 
+The \comm{SKY}\ command will then print the coordinates of the four corner
+regions it has used, and the sky value and uncertainty in each.  It will then
+automatically select the {\it smallest} sky value of the four, and put those
+into the variables \comm{SKY}\ and \comm{SKYSIG}.  If you do not wish to
+accept VISTA's estimate of the sky from each corner, you may enter your own
+choice from among the four.  The second way is to choose a region of the
+image that is relatively free of stars and extended image, and define
+your own box in which to do the modal sky calculation.  For example, suppose
+in our image there is a region 55 columns wide by 245 rows high, with the
+upper left hand corner at pixel (R,C)=(76,345) which contains a ``clean''
+piece of sky.  To compute the mode within the region, you would first define
+a box (say \comm{BOX 2}), and type:
+\begin{command}
+      \item BOX 2 SR=76 SC=345 NR=245 NC=55
+      \item SKY 2 BOX=2
+\end{command}
+which would load its estimate of the modal sky level and its uncertainty into
+\comm{SKY}\ and \comm{SKYSIG}.  Note that if you choose a small region, your
+calculation of the mode will become less certain.
+
+Another way of getting a good estimate of the sky is to proceed
+semi-iteratively. This procedure is especially useful in crowded fields with
+many stars or extended objects.  It makes more advanced use of the VISTA
+variables \comm{SKY}\ and \comm{SKYSIG}\ loaded by the \comm{SKY}\ command. In
+outline, assume you have an image in buffer 2:
+\begin{enumerate}
+      \item Choose a region (or regions) which contains mostly sky, and
+            is relatively free of ``objects'' and define a \comm{BOX}\ to
+            outline the region(s).  Call it \comm{BOX 4}.
+      \item Compute the modal sky and its uncertainty within the \comm{BOX},
+            using the command: \comm{SKY 2 BOX=4}.  The values of \comm{SKY}\ 
+            and \comm{SKYSIG}\ are now loaded.
+      \item Define a ``rejection threshold'' to be 3$\sigma$\ above the
+            sky computed modal sky value.  Load this into the VISTA variable
+            \comm{THRESH}\ using the command: \comm{THRESH=3.0*SKYSIG}.
+      \item Recompute the sky level by using the \comm{CLIP=}\ keyword of the
+            \comm{SKY}\ command as follows: \comm{SKY 2 BOX=4 CLIP=THRESH}.  
+            The \comm{CLIP=}\ keyword tells the \comm{SKY}\ command to
+            ignore all pixels greater than \comm{THRESH}.  Note that it
+            {\it does not} actually change any pixel values in the image.
+      \item Improved (?) values of \comm{SKY}\ and \comm{SKYSIG}\ are now
+            available for use.
+\end{enumerate}
+While nice, this little procedure is not foolproof.  You may need to
+experiment a bit to find an appropriate threshold value, and with the effects
+of multiple iterations. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Advanced Techniques}
+
+This section presents examples of more advanced image reduction techniques
+developed over the years for special applications.  
+
+\subsection{Image Compression}
+\label{sec:imcompress}
+It may be desirable, in some applications, to compress an image by enlarging
+the size of the pixels.  For example, a 500$\times$500 CCD image with an
+initial pixel scale of 0\arcsecpoint18/pixel may be compressed into a
+250$\times$250 image with a pixel scale of 0\arcsecpoint36/pixel by adding
+adjacent pixels in both rows and columns.  The process of compression is
+usually referred to as ``binning.''  Usually, this is done to try to improve
+dynamic range, especially in an oversampled image, at a cost of increased 
+readout noise.  VISTA uses the \comm{BIN}\ command for image compression.
+
+Consider the above example of wishing to compress a 500$\times$500 image
+by a factor of 2 in both rows and columns, so as to produce a
+250$\times$250 image.  If this image is in buffer 2, you would issue
+the command:
+\begin{command}
+      \item BIN 2 BIN=2
+\end{command}
+The old image in buffer 2 is destroyed and replaced by the old image
+compressed by a factor of 2 (\comm{BIN=}\ keyword).  Each pixel will contain
+the {\it sum} of the adjacent pixels, and the origin of the compressed image
+will be set to (0,0), regardless of its origin before compression.  Note that
+only {\it integral} compression factors are allowed. 
+
+Instead of the sum, it is possible to compress an image so that each pixel
+contains the {\it mean} of the adjacent pixels.  This is done using the
+\comm{NORM}\ keyword, thus: 
+\begin{command}
+      \item BIN 2 BIN=2 NORM
+\end{command}
+will do the same as above, only now the average instead of the sum is in each
+pixel. 
+
+By default, \comm{BIN}\ will begin compressing an image starting at the image
+origin.  You may specify the pixel on which the compression begins using the
+\comm{SR=}\ and \comm{SC=}\ keywords.  Thus, to compress the example image
+above starting on pixel (1,1) rather than (0,0) you would type: 
+\begin{command}
+      \item BIN 2 BIN=2 SR=1 SC=1
+\end{command}
+Note that all pixels before (SR,SC) are deleted from the image during
+compression, and the compressed image origin will be set to (0,0). 
+
+Finally, it is possible to compress an image in one dimension only, or with a
+different compression factor for each axis.  For example to shorten the number
+of pixels in each image row by a factor of 3, but leave the number of rows the
+same, you would type: 
+\begin{command}
+       \item BIN 2 BINR=2
+\end{command}
+Note that the original 500$\times$500 (rows$\times$columns) image is
+compressed into a 500$\times$166 image (\ie\ each row is now 500/3=166 pixels
+long --- \comm{BIN} rounds to the nearest integer).  Similarly, to shorten
+each {\it column} by a factor of 3, and leave the image with the same number
+of pixels per row, you would have typed:  \comm{BIN 2 BINC=2}, which would
+result in a 166$\times$500 image of 166 rows of 500 pixels each. 
+
+\subsection{Image Smoothing}
+\label{sec:imsmooth}
+Smoothing (or ``Convolving'') is an image enhancement technique whose
+application must be made with circumspection.  It is a process of cutting
+through noise on an image at the expense of instrumental resolution.  It is
+most justified when you want to make large-scale trends visible without the
+accompanying complication of short spatial-scale (\ie\ pixel-to-pixel)
+variations (as Press \etal\ say in {\it Numerical Recipes}: ``to guide the eye
+through a forest of data points all with large error bars'').   For example,
+smoothing an image might make a faint extended feature more ``visible'' by
+smearing out (literally) the large pixel-to-pixel noise variations in the
+image. Applied without care, smoothing can often {\it create} artificial
+features that are not there. 
+
+Smoothing, however, also has definite applications other than purely
+aesthetic.  It is possible, with a carefully chosen smoothing function, to
+degrade the image resolution (\ie\ seeing) of one image to that of another to
+allow a more fair comparison.   Another useful application is for removal of
+large spatial-scale features from an image (\eg\ fixed pattern noise) without
+introducing additional noise (\ie\ small spatial-scale variations) to the
+image. For example, in broad-band filter images made with thinned,
+back-illuminated CCD chips, one often encounters ``fizeau fringes'' due to
+monochromatic light from the night sky that is absent from the flat-fields
+(and variable with sky position), and thus not removed by the flat-fielding
+process.  Using images of ``blank'' regions of the night sky, it is possible
+to create a smooth ``fringe field'' frame to remove (or at least mitigate) the
+effects of fringing.  A smoothed fringe field will retain the fringe pattern
+(a variation over many pixels), and suppress pixel-to-pixel noise. 
+
+VISTA offers three options for image smoothing:  Gaussian Convolution, Boxcar
+Filtering, and Median Filtering.  Both Gaussian and Boxcar smoothing are done
+using the \comm{SMOOTH}\ command.  In this command, the width of the filter in
+pixels is specified (either as a FWHM for the Gaussian, or full width for a
+square, ``boxcar'', filter).  Image convolution is done in the real (image)
+domain, rather than in the fourier domain, and may be quite slow for large
+filters widths.  The \comm{SMOOTH}\ command does two 1-D convolutions, rather
+than a true 2-D convolution, so filters are {\it square} rather than round (or
+elliptical). This is a good first approximation for most applications. 
+
+For example, you wish to artificially degrade the seeing in an image in buffer
+2 by convolving it with a gaussian filter with FWHM of 1.75 pixels.  To do
+this, you would issue the command:
+\begin{command}
+      \item SMOOTH 2 FW=1.75
+\end{command}
+Large images can take long times ($>$5 minutes) to filter completely.  To
+smooth each image row independent of adjacent rows, you would type:
+\begin{command}
+      \item SMOOTH 2 FWC=1.75
+\end{command}
+Note that to smooth each row separately you set the width of the
+filter in {\it columns}, as each row is composed of pixels in
+adjacent columns.  Similarly, to smooth each image column independently, you
+would type:
+\begin{command}
+      \item SMOOTH 2 FWR=1.75
+\end{command}
+To switch from a Gaussian to a Boxcar filter, you would append the
+\comm{BOXCAR} keyword to the above commands, hence, to smooth the image in
+buffer 2 with a boxcar filter 1.75$\times$1.75 pixels square you would type: 
+\begin{command}
+      \item SMOOTH 2 FW=1.75 BOXCAR
+\end{command}
+In all of these cases, the original image is destroyed and replaced with the
+results of the convolution.  Smoothing is irreversible, so care should be
+taken in its application. 
+
+Median filtering is done using the \comm{ZAP}\ command in an extreme fashion.
+To median filter an image, use the \comm{ZAP}\ command with the rejection
+threshold set to 0., thus all pixels are set to the median pixel value within
+the filter.  For example, to median filter an image in buffer 3 with a
+5$\times$5 pixel square median filter, you would type: 
+\begin{command}
+      \item ZAP 3 SIG=0. SIZE=5,5
+\end{command}
+In most cases, the median is close or indistinguishable from the mean in the
+filter, and so boxcar filtering (using the \comm{SMOOTH}\ command) is probably
+more appropriate, and is certainly faster.  However a median filter is less
+sensitive than a boxcar filter in cases where there are hot pixels which
+deviate significantly from the other pixels within the filter. 
+
+\subsection{Editing Image Values}
+\label{sec:imchangepix}
+There is a facility within VISTA for changing image data at the individual
+pixel level.  It is possible to make a given pixel any value desired,
+using the \comm{SETVAL}\ function in VISTA.  For example, to set the pixel at
+(125,435) in the image in buffer 4 to have the value 653.45, you would issue
+the command: 
+\begin{command}
+      \item X=SETVAL[4,125,435,653.45]
+\end{command}
+To provide a ``bail-out'', the VISTA variable \comm{X}\ now contains the value
+of the pixel at (125,435) {\it before} it was changed.  You can read an
+individual pixel non-destructively using the \comm{GETVAL}\ function, thus:
+\begin{command}
+      \item Y=GETVAL[4,35,134]
+\end{command}
+will put the value of pixel (35,134) in the image in buffer 4 into the
+VISTA variable \comm{Y}.
+
+\subsection{Image Registration}
+\label{sec:imregister}
+Image registration is the procedure of aligning features in two (or more)
+images.  It is a two step process.  The first step is to determine the
+coordinates of features (\eg\ star images) common to both images, and the
+second step is to shift one of the images so that they line up.  While at
+first sight fairly simple, it can become a rather involved process.  The
+procedures outlined below have been found to be good general starting points,
+but the quality of the registration depends to some degree on the general
+quality and peculiarities of your images, and what you wish to use
+registration for.  For the purposes of adding two images together, these
+techniques should be more than adequate.  For subtraction or division of
+registered images, you become immediately more sensitive to the accuracy of
+the registration, and greater care needs to be taken before adopting a
+particular procedure. 
+
+There are two basic ways within VISTA to determine the shift between two
+images.  The first, and most simple, is to measure the centroids of star
+images common to both, and determine the mean shift in rows and columns
+between the image centroids.  The most convenient way to do this is with the
+interactive command \comm{MARKSTAR}.  For example, you have two images in
+buffers 1 and 2, with 5 bright (but not saturated) stars in common.  You want
+to shift the image in buffer 2 so it lines up with the image in buffer 1.  To
+do this you would follow this procedure: 
+
+\begin{command}
+      \item TV 2 <span, zero, and color map as desired>
+      \item MARKSTAR NEW RAD=1
+
+            {\it (Mark stars with cursor, typing {\tt C}\ to mark
+            the stars.  When done, type {\tt E}\ on image display device to 
+            exit from the interactive cursor mode).}
+      \item MARKSTAR AUTO
+
+            {\it (This extra step serves to refine the centroids, marking 
+            your old stars automatically by boxing them on the image
+            display.  Simply type {\tt E}\ on image display device 
+            to exit from the interactive cursor mode.)}
+      \item TV 1 <span, zero, and color map as desired>
+      \item MARKSTAR AUTO
+
+            {\it (If the image registration is not too far off, this
+            will mark the stars from the image in buffer 2 automatically.
+            If it has found them satisfactorily, type {\tt E}\ on the
+            image display device to exit the interactive cursor mode.)}
+\end{command}
+The last \comm{MARKSTAR AUTO}\ command will printout the mean incremental shift
+in rows and columns between the images in buffers 1 and 2. Let us suppose that
+the \comm{MARKSTAR AUTO}\ command has returned with \comm{DELR=0.24}\ and
+\comm{DELC=$-$1.25}\ pixels.  You would then issue the command to shift the
+image in buffer 2 into alignment with the image in buffer 1 by typing: 
+\begin{command}
+      \item SHIFT 2 DR=0.24 DC=$-$1.25
+\end{command}
+After a pause, depending on the sizes of the images, the image in buffer 2
+will be shifted so that the five stars should be lined up on both images
+(\ie\ have the same centroid).
+
+If the initial shift between the two images is large, it is best to estimate
+the approximate whole-pixel shift between them using the interactive cursor
+(the \comm{ITV}\ command), and shift the image in buffer 2 by an integral
+pixel amount that will get them close to each other, then refine the
+registration with the procedure outlined above.  Since shifting by an integral
+pixel amount is very fast (it involves no interpolations as in fractional
+pixel shifts), the smaller the difference to start with, the more accurate the
+centroids calculated by the peak-finding algorithms in \comm{MARKSTAR}. 
+
+A second way to estimate the relative shift between two images is to use a
+two-dimensional cross-correlation.  For images which share field stars in
+common, tests have shown that 2-D cross-correlation is no more accurate than
+the centroid technique outlined above.  Cross-correlation is more involved,
+and much less economical of CPU time.  If however, you feel that it might
+be more appropriate (and it might be in some applications), here goes.  
+
+You wish to align the image in buffer 2 so that it lines up with the image in
+buffer 1.  First, use the interactive cursor (\comm{ITV}\ command) to determine
+the rough shift in whole-number pixels between the images.  Using the
+\comm{SHIFT}\ command, bring the image in buffer 2 into rough alignment with
+the image in buffer 1. 
+
+Second, choose a sub-region of the image which contains features in
+common on both images (say a star or group of stars).  Define a
+\comm{BOX}\ to contain this region.  Call it \comm{BOX 2}\ for the
+present example.
+
+Next, determine the sky level within this box in each of images 1 and 2 
+(see \S~\ref{sec:imskysub}\ above), and subtract the sky from each image as
+follows: 
+\begin{command}
+      \item SKY 1 BOX=2
+      \item SUB 1 CONST=SKY
+      \item SKY 2 BOX=2
+      \item SUB 2 CONST=SKY
+\end{command}
+
+Next, cross-correlate buffer 2 against buffer 1, and put the resulting
+cross-correlation function in buffer 3.  Confine the cross-correlation
+to the contents of \comm{BOX 2}\ and a radius of 3 pixels.
+\begin{command}
+      \item CROSS 3 1 2 RAD=3 BOX=2
+\end{command}
+
+Compute the position of the peak of the cross-correlation function in buffer
+3.  The position of the peak in (rows,columns) is the relative shift between
+buffers 1 and 2.  Compute the shift using the \comm{SURFACE}\ command by
+assuming that the cross-correlation function is well described by a parabolic
+surface, and derive the position of the peak of this function (\ie\ the
+point of zero slope).  Once this shift is computed, perform the shift.  To do
+this, you would issue the following commands: 
+\begin{command}
+      \item SURFACE 3 LOAD
+      \item DENOM=4*COEFFC2*COEFFR2$-$COEFFRC*COEFFRC
+      \item DELR=MIDR+(COEFFC*COEEFRC-2*COEEFR*COEEFC)/DENOM
+      \item DELC=MIDC+(COEFFR*COEEFRC-2*COEEFR*COEEFC)/DENOM
+      \item SHIFT 2 DR=DELR DC=DELC 
+\end{command}
+The VISTA variables \comm{COEFFC}, \comm{COEFFR}, \comm{COEFFRC},
+\comm{COEFFR2}, \comm{COEFFC2}, \comm{MIDR}, and \comm{MIDC}\ are the
+coefficients of the 2-D polynomial surface fit loaded by the \comm{SURFACE}\
+command.  See the VISTA Help Manual for details. These are used in the above
+procedure to compute the relative shift, \comm{DELR}\ and \comm{DELC}. 
+
+As noted before, the procedure is fairly involved, and for most applications
+encountered by the author, gives the same result that would be obtained using
+the simple centroid technique described first.  The principle limitation of
+image registration is the degree of matching between the two images, and it is
+fundamentally limited by the degree of sampling.  An undersampled image (taken
+under good seeing or with a large pixel scale) cannot be accurately registered
+to more than a few percent of a pixel to begin with. In addition, seeing
+variations (due to the atmosphere, or, more commonly, guiding errors) can also
+limit the registration accuracy. 
+
+The \comm{SHIFT}\ command offers two interpolation schemes: simple bi-linear
+interpolation and sinc function interpolation.  In the author's experience
+(which is pretty extensive), bi-linear interpolation gives perfectly
+acceptable results for a lower investment of CPU time compared to sinc
+interpolation.  There is no measurable difference between the mean residual
+registration errors noted after using either interpolation scheme for the
+shift in most applications.  This result, however, should be taken with
+caution, and could well depend on the type of image data you have.  Thus, you
+should test both interpolation schemes before proceeding. 
+
+
+\subsection{Image Stacking and Combining}
+\label{sec:imstack}
+Image stacking (sometimes called ``co-adding'') is a technique whereby
+many exposures of a single image are added together to simulate the effects of
+a longer exposure.  This is very useful if you wish to preserve flux
+information from objects in your images that might be saturated on a longer
+exposure.  Stacking serves to increase the effective dynamic range of your
+imaging data at a cost of increased readout noise (how expensive depends on
+how noisy your CCD is; for most CCDs it may be negligible). 
+
+To stack a set of images, the first step is to bring them into alignment (see
+``Image Registration'' above).  Then add them together using the \comm{ADD}\
+command.  Nothing could be simpler.  The reason that this is in the
+``black-belt'' techniques section is that it involves the step of image
+registration.  However, if you have taken great care to keep guiding as steady
+as possible while taking the data (and not changed the filter at all), then
+accurate registration should not be necessary, and image stacking is then
+trivial.  In a sense (modulo an integral factor), you are constructing the
+{\it mean} of the ``stack'' of CCD images. 
+
+Another technique for combining multiple images into a single image is to
+construct the {\it median} of an image stack.  This is useful for rejection of
+cosmic ray and other transient events among the images as computing a median
+effectively rejects values which deviate strongly from the most common value
+of a given individual pixel among the images in the stack. The more images in
+the stack, the more effective constructing the median image will be at
+transient noise rejection.  However, more images also means much more
+computational overhead, so there is a trade-off.  Some observers compute the
+median of a stack of flat-field frames to represent the best flat-field for an
+observing run. 
+
+To construct a median image of a stack of images, you would first read the
+images into VISTA buffers, leaving enough room in virtual memory for the
+median image.  For example, you wish to construct the median of a stack of 6
+images.  Read each of these 6 source images into buffers 1 thru 6, and then
+issue the command: 
+\begin{command}
+      \item MEDIAN 7 1 2 3 4 5 6 TTY
+\end{command}
+The median image will be computed and stored in buffer 7.  The \comm{TTY}\
+keyword is an option which serves to report the progress of the median
+calculation.  You must have {\it at least} 3 images to perform a median
+computation.  In addition, if the images are not in good registration (see
+above), then the derived median image could contain unwanted artifacts (a nice
+way of saying its screwed up). 
+
+Using \comm{MEDIAN}\ as a way of rejecting cosmic rays is especially useful
+for long-exposure images taken with thick CCD chips (like the GEC P-8600 or
+thick RCA and Tektronix CCDs).  However, you must have planned your
+observations around applying this technique in order to have enough images to
+compute a good median. 
+
+\subsection{Image Mosaics}
+\label{sec:immosaic}
+In addition to combining images vertically by stacking them together (see
+above), larger images may be created by laying images next to each other,
+side-by-side, like tiles in a mosaic.  The simplest ``image mosaic'' is made
+by laying together two (or more) images that do not overlap.  This is most
+often done for sets of images taken in different filters so they may be
+displayed together. 
+
+To create a simple mosaic of two images (it may be easily extended to
+more as need be), first create an appropriate ``substrate'' image, then
+add the individual images, properly aligned, to create the mosaic.
+
+For example, consider two images, in buffer 1 and 2, which are both
+223$\times$233 in size.  You wish to combine them so they lie side-by-side,
+with the image in buffer 1 on the left.  In buffer 3, you will create an empty
+image large enough to hold both images side by side with a 1-pixel border
+around and between them.  Then, you will have to shift the individual images
+in buffer 1 and 2 so that they land in the appropriate parts of the mosaic
+image, and then add them to the mosaic. To do this, you would issue the
+following commands (I'm purposely multiplying the steps so you can follow the
+logic): 
+\begin{command}
+      \item CREATE 3 NR=NR[1]+2 NC=2*NC[1]+3
+      \item CH 3 `Two Image Composite'
+      \item SHIFT 1 DR=$-$SR[1] DC=$-$SC[1]
+      \item SHIFT 2 DR=$-$SR[2] DC=$-$SC[2]
+      \item SHIFT 1 DR=1 DC=1
+      \item SHIFT 2 DR=1 DC=NC[2]+2
+      \item ADD 3 1
+      \item ADD 3 2
+\end{command}
+The mosaic is now in buffer 3.
+
+A more difficult procedure is to produce true image mosaics by aligning images
+where their fields overlap to create a larger overall image.  This is done
+where a CCD camera with a small field of view is used to image a larger
+region, and is a common technique with Infrared imaging arrays which, at
+present, are limited in size.  Creating a multi-image mosaic involves
+determining the relative shift between common features on the component images
+(see ``Image Registration'' above), and then merging the components, averaging
+the regions of overlap to attempt to achieve as uniform a background as is
+possible. I will not give a detailed example, but outline the steps and
+relevant command procedures to follow. 
+
+\begin{enumerate}
+      \item Choose one image which is to remain fixed during the mosaicing
+            procedure.  For convenience, let this be the image in buffer 1.
+            We will proceed to build up the mosaic in buffer 1.
+      \item Determine the sky level of the image in buffer 1, and subtract
+            it from the image (see ``Sky Subtraction'', \S~\ref{sec:imskysub})
+      \item Load the next component of the mosaic into buffer 2.  
+      \item Following the ``Centroid Method'' for image registration described
+            above (\S~\ref{sec:imregister}), determine the relative shift 
+            between common objects (\eg\ stars) in the images in bufferS 1 
+            and 2.
+      \item \comm{SHIFT}\ the image in buffer 2 so it is aligned with the
+            image in buffer 1.
+      \item Determine the sky level of the image in buffer 2, and subtract
+            it from the image. 
+      \item Merge the image in buffer 2 with the mosaic (buffer 1) by
+            issuing the command:  \comm{MERGE 1 2}
+      \item Iterate back to Step 3 and continue until the mosaic is
+            complete.
+\end{enumerate}
+
+It should be possible, in this way, to build up an image mosaic consisting of
+a large number of components.  Each piece changes the size of the image in
+buffer 1.  To avoid potential problems with FORTRAN, it is necessary to
+\comm{SHIFT}\ the image in buffer 1 so that its starting row or column is not
+at a negative pixel value.  Some VISTA routines don't mind a negative starting
+pixel value, but others may crash horribly. 
+
+% ----------------------------------------------
+
+\section{Final Remarks}
+
+Despite the tone of the above, it is important to point out that there are no
+hard and fast rules for how to reduce or analyze imaging data with VISTA (or
+any other program for that matter).  Ultimately, you will have to decide what
+information you wish to derive from your images.  How you should go about that
+in detail depends almost entirely upon the context in which you are working.
+It is hoped that the procedures outlined above will give you some idea of how
+to make use of the tools VISTA provides, as well as suggesting other image
+processing possibilities to you. 
+
+%\end{document}
+%\end

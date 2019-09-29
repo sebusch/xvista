@@ -1,0 +1,49 @@
+
+<H1><A NAME="SECTION008160000000000000000"><tex2html_anchor_invisible_mark></A>
+<A NAME="3378"><tex2html_anchor_invisible_mark></A><BR>
+TEXT: Embed Permanent Text on an Image
+</H1>
+<tex2html_verbatim_mark>rawhtml283#
+<BR>
+<tex2html_image_mark>#command3379#
+<BR>
+
+<P>
+TEXT is used to add a permanent annotation text to an image by ``poking''
+pixel values to render the text.
+
+<P>
+The coordinates (X0=, Y0=) give the location in pixels of the upper
+left-hand corner of the text box.  You can compute centering of a string
+using the cell size and the number of characters in the string.  The TEXT=
+keyword is used to give the text string to embed, but if omitted the
+program will prompt for the input string.  The text may include any valid
+ASCII keyboard characters.
+
+<P>
+Text is embedded on the image as a string of 8x11-pixel ASCII characters by
+changing the data values of the pixels to 32766.  The height of an
+uppercase M is 10 pixels height of a lowercase x is 6 pixels.  Each
+character cell has 1 pixel of white space between it and the surrounding
+characters, and one pixel of white space below for descenders (e.g., on y
+and g).  The size of the text may be scaled larger using the SCALE=
+keyword.
+
+<P>
+Data pixels under the characters proper are lost, but data between
+character pixels is untouched.  If FILL=1 is given, however, the inter-text
+pixels are set to 0.0 This provides a way of ``boxing and filling'' the
+text so it does not conflict with background data.
+
+<P>
+The ROT keyword is used to rotate the text, in increments of 90 degrees.
+Since we are using a simple text rendering, odd angles do not work
+satisfactorily.
+
+<P>
+Note that TEXT makes <B>PERMANENT</B> changes to the data values in the
+image being annoted.   To make only temporary labels (drawn on the image
+display's ``vector'' plane, not by changing image pixels proper), see the
+TVPLOT command.
+<tex2html_endfile>#./chap8.tex#
+<tex2html_file>#./chap9.tex#

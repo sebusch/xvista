@@ -1,0 +1,451 @@
+\chapter{Getting, Saving, and Printing Non-Image VISTA Data} 
+
+%
+% checked keywords & function against current sources
+% moved SETDIR and CD to chap6 (needed there before here)
+% re-organized the introductory section
+% rwp/osu 98Aug24
+%
+
+\section{Non-Image Data Files used by VISTA}
+\index{Data!Introduction to non-image data files} 
+\begin{rawhtml}
+<!-- linkto data.html -->
+<!-- linkto files.html -->
+\end{rawhtml}
+
+In addition to images and spectra, VISTA generates a number of auxiliary
+non-image data structures.  Some VISTA commands produce data that are
+stored internally in Fortran COMMON blocks.  These data can be saved into
+disk files using the SAVE command described below and can be read back into
+VISTA at a later time using the GET command.  The PRINT command is used to
+show the contents of these auxiliary data structures.
+
+VISTA can also read numeric and alphanumeric data from ASCII text files.
+The commands for manipulating these files are:
+\begin{example}
+  \item[OPEN]{open an ASCII file}
+  \item[CLOSE]{close an Open ASCII file}
+  \item[READ]{read the next line of an ASCII file}
+  \item[SKIP]{designate lines to skip in a file}
+  \item[REWIND]{rewind an open ASCII file to the first line}
+  \item[STAT]{compute statistics on data in an ASCII file}
+\end{example}
+
+%---------------------------------------------------------------------------
+
+\section{GET/SAVE: Get/Save a VISTA Data File}
+\index{Data!Getting data file}
+\index{Data!Saving data file}
+\begin{rawhtml}
+<!-- linkto get.html -->
+<!-- linkto save.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form: } SAVE data\_keyword=filename {[LOW=lowbad]} 
+       {[HIGH=highbad]}\hfill]{}
+  \item[GET  data\_keyword=filename\hfill]{}
+  \item[data\_keyword]{is a word specifying the type of data
+       being saved or get (APER, MASK, PHOT, COO or DAO, or PROFILE),}
+  \item[filename]{is the name of the file that is holding
+       the data (GET) or will hold the data (SAVE)}
+\end{command}
+
+The SAVE and GET commands are used for writing out results produced by
+other VISTA routines to disk for future use by VISTA or other programs, and
+getting them back again.  Various VISTA commands will generate reduced data
+which you may want to save for later analysis.  To SAVE or GET results from
+a specific program, specify that program's keyword and a file name.  If no
+file name is given, VISTA will ask you for one.  More than one keyword can
+be specified at a time.  By default, all files are kept in the data
+directory (specified by the V\_DATADIR environment variable) with the file
+extensions given below.  These can be overridden if desired.  To examine
+the current results that VISTA is storing, use the PRINT command.
+
+At this time VISTA provides for the storage of the following data types:
+
+\begin{command}
+  \item[Keyword:\hfill]{}
+  \item[APER=name]{Aperture photometry file 'name(.APR)'}
+  \item[MASK=name]{Photometry mask file 'name(.MSK)'}
+  \item[PHOT=name]{Stellar photometry file 'name(.PHO)'}
+  \item[COO= or DAO=]{Reads DAOPHOT style ASCII file (\# x y ) into
+       internal photometry file}
+  \item[PROF=name]{Surface photometry file 'name(.PRF)'}
+  \item[LINEID=name]{Saves the LINEID identifications.}
+\end{command}
+
+Note that for DAOPHOT files (COO= or DAO=), you can set the LOWBAD and/or
+HIGHBAD data values using the LOW= and HIGH= keywords.
+
+The various formats for the different types of data files are described in
+more detail in the commands which make use of them.
+
+Examples:  Assume the data directory is vista/data
+\begin{example}
+  \item[GET PHOT=ORION\hfill]{loads the photometry file
+       vista/data/ORION.PHO to VISTA}
+  \item[SAVE MASK=MASK5\hfill]{writes the VISTA mask file
+       to vista/data/MASK5.MSK}
+\end{example}
+
+
+\section{PRINT: Print Data Files, Spectra, or Image Subsections}
+\index{Data!Printing}
+\index{Photometry!Printing results}
+\index{Image!Print pixel values in}
+\index{Profile!Printing results}
+\index{Aperture photometry!printing results}
+\index{Spectrum!Print values in}
+\index{Spectrum!Print wavelength scale}
+\index{Spectrum!Print line identifications}
+\index{Image!Print headers of disk images}
+\index{Spectrum!Print headers of disk spectra}
+\index{Strings!Print defined strings}
+\index{Files!Print current file directories}
+\begin{rawhtml}
+<!-- linkto print.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form: } PRINT {[data keywords]} {[output redirection]}\hfill]
+  \item[data keywords]{specify which information is printed}
+\end{command}
+
+PRINT will print out a formatted listing of reduced data, spectra or image
+subsections.  The output from PRINT appears on your terminal; to send it to
+a file use the '$>$filename' construct.  PRINT recognizes the following
+keywords:
+
+\begin{example}
+  \item[object {[BOX=n]}\hfill]{ Print out the pixel values of object (in
+       the subsection specified by box 'n').  If the object is a
+       wavelength- calibrated spectrum, the wavelengths will be printed.
+  \begin{hanging}
+    \item{PRINT 1 BOX=2}
+    \item{PRINT \$Q BOX=4 $>$imagesec.dat}
+  \end{hanging}
+}
+
+  \item[BOXES\hfill]{Print out the sizes, centers, and origins of all boxes
+       defined.
+  \begin{hanging}
+    \item{PRINT BOXES}
+  \end{hanging}
+}
+
+  \item[PROF {[MEDIAN]} {[MAG]} {[SPIRAL]}\hfill]{ Print out the surface
+       photometry profile.  If the MEDIAN keyword is specified, the median
+       surface brightnesses, rather than the mean, will be printed. If the
+       MAG keyword is specified, the surface brightnesses and total counts
+       will be output in magnitude units. If the SPIRAL keyword is given
+       (for SPIRAL galaxies), then some extra information, like the disk
+       scale length, disk/tot, etc. will be printed - if these values have
+       been computed using CORRECT.
+  \begin{hanging}
+    \item{PRINT PROFILE}
+    \item{PRINT PROFILE $>$prof.dat}
+  \end{hanging}
+}
+
+  \item[PHOT {[BRIEF]}\hfill]{ Print out the stellar photometry results.
+       BRIEF produces a short listing.
+  \begin{hanging}
+    \item{PRINT PHOT }
+    \item{PRINT PHOT BRIEF}
+    \item{PRINT PHOT $>$photlist.dat}
+  \end{hanging}
+}
+
+  \item[APER\hfill]{ Print out the aperture photometry results.
+  \begin{hanging}
+    \item{PRINT APER}
+    \item{PRINT APER $>>$aperlist.dat}
+  \end{hanging}
+}
+
+  \item[DIRECTORIES\hfill]{Print the default directories.
+  \begin{hanging}
+    \item{PRINT DIRECTORIES}
+    \item{PRINT DIRECTORIES $>$dirs.dat}
+  \end{hanging}
+}
+
+  \item[IMAGES or SPECTRA\hfill]{Print headers for images or spectra in the
+       default directory.  (Use PRINT DIRECTORIES to see which directory
+       this is)
+  \begin{hanging}
+    \item{PRINT IMAGES}
+    \item{PRINT SPECTRA $>$imlist.dat}
+  \end{hanging}
+}
+
+  \item[LINEID\hfill]{Print wavelength v. pixel identifications obtained
+       with the LINEID command.
+  \begin{hanging}
+    \item{PRINT LINEID}
+    \item{PRINT LINEID $>$lines.dat}
+  \end{hanging}
+}
+
+  \item[STRINGS\hfill]{Print all defines strings.  See the command STRING
+       to define strings.
+  \begin{hanging}
+    \item{PRINT STRINGS}
+    \item{PRINT STRINGS $>$string.txt}
+  \end{hanging}
+}
+\end{example}
+
+\section{OPEN: Open an ASCII Text File}
+\index{ASCII files!Opening for reading}
+\begin{rawhtml}
+<!-- linkto open.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form: } OPEN logical\_name file\_name\hfill]{}
+  \item[logical\_name]{Is the name you assign to the file}
+  \item[file\_name]{Is the disk file name.  No default VISTA directories or
+       extensions are applied to the name before it is opened.}
+\end{command}
+
+OPEN attempts to do a Fortran OPEN on the specified file. Such files must
+be normal sequential files as might be generated by the editor or various
+commands.  If the file is successfully opened the logical\_name is then
+assigned to the opened file and all further references to the file are made
+using the logical name. If an OPEN is done using a logical name which is
+already assigned to an opened file, this old file is closed and the new
+file is opened.  When a file is first opened, the first line of the file is
+ready to be read.  A detailed example of how to use OPEN and the logical
+file name is given in the description of the READ command. 
+
+A maximum of up to five (5) files can be OPEN'ed at once.  See CLOSE to
+close a currently open file.
+
+\begin{example}
+  \item[OPEN DATA ./mydatafile.dat\hfill]{ Opens the file for reading
+       and assigns it the logical name DATA.}
+\end{example}
+
+Note that while in Unix all file names are case sensitive, but within
+VISTA the logical names assigned to them are case insensitive, thus:
+\begin{verbatim}
+   OPEN DATA ./myfile.dat
+   OPEN data ./myfile.dat
+\end{verbatim}
+are identical.
+
+\section{CLOSE: Close an Open ASCII Text File}
+\begin{rawhtml}
+<!-- linkto close.html -->
+\end{rawhtml}
+\index{ASCII files!Closing}
+\begin{command}
+  \item[\textbf{Form: }CLOSE logical\_name\hfill]{}
+  \item[logical\_name]{is the name of a file previously
+       opened for reading by the OPEN command.}
+\end{command}
+
+CLOSE allows you to close one of the ASCII text files which you have
+previously opened with the OPEN command.  You may occasionally want to do
+this because there can be only five (5) OPEN'ed files at one time.  
+
+In general it is a good practice to CLOSE all files OPEN'ed by a procedure
+at the end, as files opened by a procedure are not automatically closed
+when the procedure terminates.
+
+\section{READ: Read the Next Line of an ASCII Text File}
+\index{ASCII files!Reading}
+\begin{rawhtml}
+<!-- linkto read.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form: }READ logical\_name\hfill]{}
+  \item[logical\_name]{is the name of a file previously
+       opened for reading by the OPEN command.}
+\end{command}
+
+READ will read the next line of the named opened file (the argument of READ
+is the logical name of a file previously opened with OPEN).  This line then
+becomes the 'current' line for the file and all subsequent references to
+the file in arithmetic expressions use the current line.  Each READ causes
+a new line to be read in the order in which they appear in the file.
+However, it is possible to skip specified lines in the file using the SKIP
+command. The following example shows how to use the OPEN, and READ commands
+in conjunction with arithmetic expressions.
+
+Suppose you have a file called photometry.dat containing the following four
+lines of data:
+\begin{verbatim}
+     B      V
+   100.5  150.3
+   110.4  164.9
+    75.3  113.6
+\end{verbatim}
+We could compute B-V using the following simple procedure.
+\begin{verbatim}
+    OPEN PHOT photometry.dat
+    SKIP PHOT 1
+    DO I=1,3
+       READ PHOT
+       BV=2.5*(LOG10{[@PHOT.1]}-LOG10{[@PHOT.2]})
+       PRINTF '%I2 %F10.3' I BV
+    END_DO
+    END
+\end{verbatim}
+The first line opens the file and gives it the name PHOT.  Since the first
+line of the file does not contain numeric data and is just a header for the
+columns of data, we use the SKIP command to label line 1 as a line to be
+skipped.  We then begin to read the real data. The first time line 4 is
+executed it reads line 1 of the file.  It finds that we have marked line 1
+as a line to skip so it then reads the next line.
+
+Line 5 then makes two references to the file.  The construction @PHOT.1 is
+interpreted in the following way: In the 'current' line of PHOT (the one we
+just got with the READ), extract the first word of the line and convert it
+into a numeric value.  And, of course, @PHOT.2 refers to the second word on
+the current line.  The 'word' indicator can be either a constant as shown
+or it can be a variable. So if B=1 and V=2 we could have said @PHOT.B and
+@PHOT.V.  Expressions are not allowed: @PHOT.(B+1) is illegal and @PHOT.B+1
+means "add 1 to the value of @PHOT.B".
+
+\index{ASCII files!Substituting file line into command line}
+\index{Strings!Substituting data file line into command line}
+
+Implicit READing: String substitutions, using the {string\_name}
+construction, can also substitute lines from an opened file.  To do so use
+the form {logical\_name}, which does an implied READ of the named file and
+substitutes the entire line from the file into the command line.  You can
+also substitute particular words using the form
+{logical\_name.word\_indicator} where the word indicator is an expression
+giving the word number.  These substitutions always do a new implicit READ
+for each substitution.  The following example shows how to use these
+implied READ string substitutions.
+
+In this procedure, the user is asked to give a filename.  The file contains
+a list of disk file names for images which are to be processed in some
+standard way.  The processed image is written out with the same name.
+There is one disk file name per line.
+
+\begin{verbatim}
+    STRING FILE '?Enter image name file. >> ' ! Get image name file
+    OPEN IMAGES {FILE}  ! Open the name file
+    STAT LINES=COUNT{[IMAGES]}  ! Get number of lines in file
+    DO I=1,LINES  ! For each image ...
+       STRING DISKIM {IMAGES}  ! Get image name from file
+       RD 1 {DISKIM}                         ! Read image
+       CALL PROCESS                          ! Process it
+       WD 1 {DISKIM}                         ! Write out
+    END_DO
+    END
+\end{verbatim}
+
+\section{SKIP: Mark Selected Lines to Skip in a File}
+\index{ASCII files!Skipping selected lines}
+\begin{rawhtml}
+<!-- linkto skip.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form: }SKIP logical\_name line line1,line2 ...\hfill]{}
+  \item[logical\_name]{is the name of a file opened with the OPEN command.}
+  \item[line]{is an arithmetic expression specifying one line in the file
+       to skip.}  
+  \item[line1,line2]{are two arithmetic expressions giving a range of lines
+       to skip.}
+\end{command}
+
+SKIP builds a skip table of lines to be skipped inside the named file.  The
+file must have been previously opened using the OPEN command.  Up to 50
+skip points are available in the table for each opened file.  Each
+individual line skipped counts as one specification and each range of lines
+skipped counts as two specifications.  Whenever a file is OPEN'ed, or
+reOPEN'ed, its skip table is cleared.  REWINDing a file (see the REWIND
+command) does not clear the skip table.  If you just type SKIP
+logical\_name without any lines to skip then the table of skipped lines for
+the named file is printed.
+
+Lines which are SKIPped in a file can not be read with the READ command or
+by string substitution and are not used by the STAT command.  In
+particular, note that the number of lines in the file as returned by the
+STAT command is the actual number of lines minus any skipped lines.
+
+\noindent{Examples:}
+\begin{example}
+  \item[SKIP PHOT 1]{Marks line 1 of file PHOT to be skipped.}
+  \item[SKIP PHOT 100,120]{Marks the range of lines from 100 to 120 to 
+       be skipped.}
+  \item[SKIP PHOT 1 100,120]{Does both.}
+  \item[SKIP PHOT]{Prints the skip table for PHOT.}
+\end{example}
+See the example under the READ command for one use of the SKIP command.
+
+\section{REWIND: Rewind an Open File to the First Line}
+\index{ASCII files!Rewinding}
+\begin{rawhtml}
+<!-- linkto rewind.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form: }REWIND logical\_name\hfill]{}
+  \item[logical\_name]{is the name of an OPEN'ed file.}
+\end{command}
+
+The REWIND command repositions the named file back to the beginning of the
+file.  The file must already be opened for reading using the OPEN command.
+Lines in the file which are marked for skipping using the SKIP command will
+continue to be skipped.
+
+\section{STAT: Compute Statistics of Data in a File}
+\index{ASCII files!Statistics and line count}
+\begin{rawhtml}
+<!-- linkto stat.html -->
+\end{rawhtml}
+\begin{command}
+  \item[\textbf{Form: } STAT variable=function{[expression]}\hfill]{}
+  \item[variable]{is a VISTA math variable in which the
+       value of the statistic is stored.}
+  \item[expression]{is an arithmetic expression which involves
+       at least one reference to data in an OPEN'ed ASCII file.}
+  \item[function]{is one of the following:}
+  \item{MAX :Find the maximum value of the expression.}
+  \item{MIN :Find the minimum value of the expression.}
+  \item{FIRST :Finds the first value of the expression.}
+  \item{LAST :Find the last value of the expression.}
+  \item{COUNT :Counts the number of lines in the file.
+        In this case 'expression' is a logical file name.}
+  \item{LOAD   :  Loads the arithmetic expression from each
+       line in the input file into a specified buffer
+       using STAT N=LOAD{[buffer,expression]}}
+\end{command}
+
+The STAT command can be used to determine information about the data values
+in an ASCII file.  For the MAX and MIN functions, the given expression is
+evaluated for each line in the file.  For the FIRST function, the
+expression is evaluated for the first line in the file and for the LAST
+function the expression is evaluated for the last line in the file.  The
+COUNT function merely counts the lines in the file. Remember that SKIP'ed
+lines (see the SKIP command) are never included in the calculations.  These
+STAT functions are not the same as the normal VISTA math functions and can
+not be included in other mathematical expressions.
+
+The LOAD function allows the user to load data from an input ASCII file
+into a VISTA image buffer. Arithmetic operations may be performed on the
+input data before loading into the buffer. Simply specify the desired
+buffer and the arithmetic expression to load. The new buffer will
+automatically be created.
+
+\noindent{Examples:}
+\begin{example}
+  \item[STAT LINES=COUNT{[DATAFILE]}\hfill]{ Set the variable LINES to the
+       number of lines in the file DATAFILE.  DATAFILE must have been
+       opened with the OPEN command.  SKIP'ed lines are not counted.}
+
+  \item[STAT MAXVAL=MAX{[2.5*LOG10{[@PHOT.2]}]}\hfill]{ Evaluates the
+       expression 2.5*LOG10{[@PHOT.2]} for each line in the file PHOT and
+       sets MAXVAL to have the maximum value.  The file PHOT will be left
+       repositioned to the beginning of the file after the STAT command
+       completes.}
+
+  \item[STAT N=LOAD{[1,@PHOT.1*@PHOT.2]}\hfill]{ Loads the product of the
+       values in the first and second columns of the input file PHOT into
+       VISTA buffer number 1.}
+\end{example}
+

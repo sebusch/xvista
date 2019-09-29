@@ -1,0 +1,45 @@
+
+<H1><A NAME="SECTION0016200000000000000000">
+COORDS: Compute Celestial Coordinates for Stars</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml488#
+<A NAME="7735"><tex2html_anchor_invisible_mark></A>
+<A NAME="7736"><tex2html_anchor_invisible_mark></A>
+<A NAME="7737"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command7738#
+<BR>
+
+<P>
+COORDS finds the right ascension and declination for each star in a
+photometry file.  At least three of the stars must have had their R.A. and
+Declination. entered in MARKSTAR or in MODPHOT.  The coordinates for the
+standards must all be at the same epoch. (One day we will have a precession
+program.)
+
+<P>
+COORDS works by solving a least-square relation between the rectangular
+coordinates on the image (i.e., row and column) and the spherical
+coordinates on the sky. The program calculates the coordinates for every
+star in the photometry file based on the standard positions you have
+entered, including the standard stars. The input positions, calculated
+positions, and difference in seconds of time for the standards will be
+displayed on your terminal. The program will then print the positions of
+the standards.
+
+<P>
+The difference between the input and the calculated positions should be
+small and evenly distributed about zero. If not, one or more of your input
+coordinates is possibly wrong.  Use MODPHOT to change that coordinate, and
+try again.  Note that the difference is in seconds of arc for both the
+declination and the right ascension.
+
+<P>
+If you want to save the coordinates computed by the MODPHOT command, you
+must use the 'SAVE PHOT=filename' command.
+
+<P>
+The output of COORDS can be redirected.  See HELP REDIRECT for information
+about the redirection mechanism.
+
+<P>

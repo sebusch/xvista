@@ -1,0 +1,35 @@
+
+<H1><A NAME="SECTION001300000000000000000">
+Fourier Transforms and Complex Arithmetic</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml367#
+
+<P>
+VISTA provides a limited capability for doing Fourier operations on images.
+VISTA internally can have ;SPMquot;Fourier images;SPMquot; which have 2 pixels associated
+with each grid location, one for the real and one for the imaginary
+part. For the VISTA Fourier routines, the data in the spatial domain IS
+ASSUMED TO BE REAL. This assumption allows data in the frequency domain to
+be stored in almost the same size image as the spatial domain data. Because
+the Fourier transform of a real function is hermitian (symmetric real part
+and antisymmetric imaginary part), only the Fourier amplitudes of
+non-negative frequencies are stored to minimize redundancy and space.  The
+Fourier-transformed image has the same size as the input image (except
+padded up to a power of 2), plus 2 extra columns, one each for the real and
+imaginary parts of the Nyquist frequency.
+
+<P>
+The VISTA Fourier Transform and Complex Arithmetic commands are:
+<BR>
+<tex2html_image_mark>#example5510#
+<BR>
+
+<P>
+The command FFT can be used to generate the direct fourier transform of a
+real image, the result is a complex image. IFFT would do the inverse
+fourier transform from a complex image into a real image. Both
+transformations can be perform in one or two dimensions. Command POWERS can
+be used after FFT to generate the periodogram estimation of the power
+spectrum.  
+
+<P>

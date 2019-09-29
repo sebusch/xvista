@@ -1,0 +1,45 @@
+
+<H1><A NAME="SECTION004110000000000000000">
+PARAMETER: Pass Arguments to a Procedure</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml123#
+
+<P>
+<A NAME="1329"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1330#
+<BR>
+PARAMETER evaluate parameters passed to a procedure.  An example will show
+best how PARAMETER works.  Suppose the following command was typed:
+<BR>
+<tex2html_image_mark>#hanging1337#
+<BR>
+The parameter list portion of the command line is saved, i.e.  '2 X
+IMAGEFILE'.  The procedure TEST.PRO is then called.  TEST has in it the
+command
+<BR>
+<tex2html_image_mark>#hanging1340#
+<BR>
+BUFNUM and FACTOR are taken to be variable names and are associated with
+the first two parameters from the parameter list.  In effect it does the
+command SET BUFNUM=2 FACTOR=X.  Note that '2' and 'X' could have been any
+arithmetic expression.
+
+<P>
+The STRING= keyword means that the third parameter is used as a literal
+string and the string variable name FILENAME is given the string value
+IMAGENAME, in effect doing the command:
+<BR>
+<tex2html_image_mark>#hanging1343#
+<BR>
+
+<P>
+If there are fewer parameters in the CALL than required in the PARAMETER
+command, the missing parameters are taken to be 0 or blank, as appropriate.
+
+<P>
+Note that there is only one area in VISTA for saving the list of passed
+parameters, so the PARAMETER command should be executed before calling
+another procedure.
+
+<P>

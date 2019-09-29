@@ -1,0 +1,102 @@
+
+<H1><A NAME="SECTION00550000000000000000">
+IF, ELSE_IF, ELSE, END_IF: Conditional (IF) Flow Control</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml140#
+
+<P>
+<A NAME="1550"><tex2html_anchor_invisible_mark></A>
+
+<P>
+VISTA procedures allow testing of variables and branching based on the
+results of those tests.  This capability greatly expands the usefulness of
+procedures.
+
+<P>
+The simplest use of IF is to mark a section of a procedure that is executed
+only if come condition is true.  It has the form:
+<PRE><tex2html_verbatim_mark>verbatim141#</PRE>
+
+<P>
+You can also have two level branching:
+<PRE><tex2html_verbatim_mark>verbatim142#</PRE>
+
+<P>
+These may be strung together:
+<PRE><tex2html_verbatim_mark>verbatim143#</PRE>
+
+<P>
+The conditions tested by the IF and ELSE_IF statements are really just
+VISTA arithmetic expressions.  An expression is considered to be true if it
+evaluates to be non-zero, and false otherwise.  VISTA arithmetic supports
+various logical operators whose value is either 1 or 0 depending on whether
+the logical test is true or false.  The logical operators are the
+following, where A and B can represent single VISTA variables or algebraic
+expressions.
+<BR>
+<tex2html_image_mark>#example1557#
+<BR>
+
+<P>
+There are two logical conjunctions <tex2html_ampersand_mark> (and) and | (or) which can be used to
+join several of the above tests. Examples of the conjunctions are below:
+<BR>
+<tex2html_image_mark>#example1565#
+<BR>
+
+<P>
+The syntax of the IF statements is designed to look similar to the
+FORTRAN-77 IF block structures.  Each IF block must begin with an IF
+command and end with the END_IF command.  An algebraic statement to be
+tested must follow the IF on the same line.  If the relation is true, then
+the procedure commands following the IF command are executed. If the
+relation is false, VISTA looks for any ELSE_IF tests, any final ELSE
+statement, or jumps to the procedure lines following the END_IF statement.
+
+<P>
+The ELSE_IF command also must have a condition to be tested on the same
+line.  ELSE_IF's are optional, but permit you to test other conditions and
+execute other blocks of the procedure buffer in the event that the initial
+IF or any preceding ELSE_IF's are false.  In this way you can allow VISTA
+to 'trickle down' through several tests looking for one that is true.
+
+<P>
+The ELSE statement is also optional and marks a set of procedure lines for
+VISTA to execute if and only if the initial IF and any following ELSE_IF's
+all test out false. Basically, the IF, any ELSE_IF's, or any ELSE
+statements all mark out various blocks of the procedure to be executed
+under different conditions.  After the execution of any block, VISTA
+transfers control to the procedure lines following the END_IF statement.
+
+<P>
+IF blocks can be nested within other IF blocks up to 15 levels deep.  IF
+blocks can be jumped out of, but not into, by the GOTO command. IF blocks
+must contain or be contained within DO loops completely. Some examples of
+IF blocks are given below:
+
+<P>
+
+<OL>
+<LI>Simple Single Test:
+  <PRE><tex2html_verbatim_mark>verbatim144#</PRE>
+
+<P>
+</LI>
+<LI>IF/ELSE Test:
+  <PRE><tex2html_verbatim_mark>verbatim145#</PRE>
+
+<P>
+</LI>
+<LI>IF/ELSE_IF Test:
+  <PRE><tex2html_verbatim_mark>verbatim146#</PRE>
+
+<P>
+</LI>
+<LI>Test on 1 or 0 for an expression:
+  <PRE><tex2html_verbatim_mark>verbatim147#</PRE>
+
+<P>
+</LI>
+</OL>
+
+<P>

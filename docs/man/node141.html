@@ -1,0 +1,85 @@
+
+<H1><A NAME="SECTION0012210000000000000000">
+ATODSIM/ATODFIX: Simulate/Fix WF/PC1 A/D Conversion Errors</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml356#
+<A NAME="5108"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command5109#
+<BR>
+
+<P>
+These routines is designed to simulate or fix the effects of A/D conversion
+errors in data obtained with the WF/PC1.  The basic algorithm that
+simulates the generation of errors is a direct software duplication of the
+A/D conversion process.  The pixels input are assumed to be analogue
+signals and must have a smooth and continuous distribution of floating
+values.  The A/D converter will translate these values into output integer
+DN by successively comparing the input signal with a decrementing power of 2
+series of voltages.  At any stage, if the input signal is greater than the
+comparison voltage, the appropriate bit is set in the output DN, and the
+reference voltage is subtracted from the signal before the next stage.  The
+WF/PC1 produces 12 bit DN, so the first bit tested will be the 2048 bit.  The
+1024 bit is then tested and so on.
+
+<P>
+The errors in the WF/PC1 digitization process appear to occur during the
+reference voltage comparison, but not during the subsequent subtraction of
+the reference from the signal once the (possibly erroneous) bit has been
+set.  More specifically, the error model assumes that a bit-dependent error
+in the reference voltage occurs during the comparison that will cause
+improper setting of the corresponding bit in the output DN for signals
+within ``error value'' of the reference voltage.  Once the bit decision is
+made, however, the actual voltage subtracted from the signal for subsequent
+bit-tests is free from error (even though the decision to subtract it or
+not may be erroneous).  Errors in the reference voltages appear to be
+constant for a given WF/PC1 CCD at a given electronic bay temperature.
+Errors may be less than one DN, therefore, for proper simulation of the
+WF/PC1 A/D the input pixel MUST NOT BE PRESET TO INTEGER VALUES.  Default
+operation is to simulate A/D conversion errors.  The FIX keyword calls a
+routine that corrects the simulated image data for systematic errors
+introduced by the A/D converter.  This routine generates a lookup table
+that translates the observed DN value into a best estimate ;SPMquot;correct;SPMquot; value.
+The output value will be floating.  The fix-up routine cannot correct for
+the variable-width DN bins produced by the A/D converter, thus histograms
+will still look funny.
+
+<P>
+Both the simulator and fix-up routines require a file containing the
+reference voltage error in each bit.  The file is specified with the
+FILE=filename keyword.  By default, the error files are assumed to be in
+the DATA directory with a .ATD extension.  A given set of errors should be
+constant for a given WF/PC1 CCD at a given bay temperature.  The start and
+end of an example file is given below.
+
+<P>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="CENTER">2048</TD>
+<TD ALIGN="CENTER">4.50</TD>
+</TR>
+<TR><TD ALIGN="CENTER">1024</TD>
+<TD ALIGN="CENTER">4.50</TD>
+</TR>
+<TR><TD ALIGN="CENTER">.</TD>
+<TD ALIGN="CENTER">.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">.</TD>
+<TD ALIGN="CENTER">.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">.</TD>
+<TD ALIGN="CENTER">.</TD>
+</TR>
+<TR><TD ALIGN="CENTER">4</TD>
+<TD ALIGN="CENTER">-0.32</TD>
+</TR>
+<TR><TD ALIGN="CENTER">2</TD>
+<TD ALIGN="CENTER">1.17</TD>
+</TR>
+<TR><TD ALIGN="CENTER">1</TD>
+<TD ALIGN="CENTER">0.00</TD>
+</TR>
+</TABLE>
+
+<P>

@@ -1,0 +1,577 @@
+%
+%  VISTA Cookbook;  Brief VISTA Tutorial (Chapter 2)
+%
+%  Began:  1988 July 3
+%
+%  Last Revision:  1988 August 9
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:tut
+%
+
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+%
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+%
+%\def \comm#1{{\tt #1\/}}
+\def \exfile#1{{\tenit #1\/}}
+%\def \hitkey#1 {$\langle${\tt #1}$\rangle$\/}
+
+%\begin{document}
+%\setcounter{chapter}{1}
+
+\chapter{A Brief VISTA Tutorial}
+
+This chapter presents a brief tutorial of basic VISTA commands for the new
+user.  More experienced users can pass this section over, although it may
+serve as a useful reference to basic procedures when you're so far into it
+that you start to forget the simple stuff.
+
+The first section of the VISTA Help Manual gives the full details of what is
+needed to run VISTA, and some of the basic command syntax.  Rather than
+regurgitating the contents of the help manual in altered form, this tutorial
+is a simple collection of illustrative tasks making use of the most basic
+VISTA commands.  As with all chapters, we will start out simple and progress
+towards more sophisiticated commands.  These are commands which are general to
+any image processing chore.  Before reading this section, read over the first
+part of the VISTA Help Manual.  Make sure you understand all about pixels,
+rows, column, image buffers, image headers and the like.  If this stuff is
+greek to you.  Stop now and read the first part of the manual.
+
+\section{Starting VISTA}
+
+\subsection{Running VISTA}
+
+We will assume that your local VISTA custodian has followed the suggested
+installation and had the system manager define the command word ``xvista'' or
+put in an appropriate link so that this command will
+run VISTA for you, no fuss, no muss.  If your site is different, then you'll
+need to find your VISTA custodian and ask them:
+
+\begin{enumerate}
+      \item Where the local VISTA executable lives?
+      \item What it is called?
+\end{enumerate}
+
+%\noindent
+%On a VMS machine, you would type something like:
+%
+%\begin{verbatim}
+%      $ RUN [VISTA.BASE]VISTA
+%\end{verbatim}
+%
+%%\noindent
+On a Unix machine, you would type something like:
+
+\begin{verbatim}
+      % xvista
+\end{verbatim}
+
+\noindent
+The exact directory syntax may vary from site to site.
+
+VISTA should respond by erasing the screen (depends a little on the type of
+terminal or workstation you are on), and print the welcome message.  After the
+welcome message (informing you that this is indeed VISTA you're running and
+not MONGO or some other damn fool thing), you will be shown, page by page, the
+current VISTA news.  If your custodian is the diligent type, then the news
+will tell you of any changes to VISTA that might affect you, warnings about
+bugs (there are {\it always} bugs), and other bits of useful information. Make
+a habit of reading the news as you begin.  When you're done with a page, hit
+the space bar to see the next page.
+
+\subsection{Terminal Type}
+\label{sec:tutterm}
+
+Know what kind of terminal you are on.  After the news scrolls past, VISTA
+will stop and ask you what kind of graphics terminal you are on.  You should
+be on some kind of graphics terminal or fancy workstation.  If not, stop and
+go find one.  VISTA really doesn't work too well from a line printer.  Also,
+unless you have special drivers or an investment in a good quality terminal
+emulator, VISTA won't really work on a PC.  If you never want to do graphics,
+you're OK, but VISTA {\it is} an {\it image} processing program, somehow not
+looking at your data graphically seems a bit pointless.
+
+VISTA will first tell you what the default devices for your installation are.
+Your VISTA custodian should have set these to the most common device when
+VISTA was installed on your machine.  If you are on one of the default
+devices, simply hit return and VISTA will continue on.
+
+If you are not on the default device, then find out what type of terminal you
+{\it are} on.  If you type \comm{?} in response to the \comm{terminal type}
+prompt, you will be given a menu of the devices that VISTA supports, along
+with a number representing the ``device code.'' If your terminal is not one of
+these, then you may be in trouble.  VISTA uses Lick MONGO, and Lick MONGO only
+supports those terminal types that we have in hand at UCSC.  (It's awful hard
+to support terminals we've never heard of.)  Most (but not all) terminals on
+the market these days look and smell like DEC VT100s with Retrographics
+boards, so you're probably safe if the exact terminal you are on doesn't show
+in the device menu.  Check your owner's manual and proceed with fingers
+crossed.
+
+If you don't know, then to avoid a potentially major VISTA hassle, {\it don't
+guess}.  Find someone who knows.  If you're on a VT100 and you tell VISTA
+you're a Sun 4 WorkStation, VISTA will take your word for it and make you pay
+by crashing horribly into your lap.  Don't laugh, half of the ``VISTA doesn't
+work'' phone calls seem to be people doing just this sort of thing. VISTA is
+pretty good, but it doesn't read minds.  So it goes.
+
+\subsection{Logical Assignments (environment variables)}
+
+Users can customize their VISTA environment by setting  some environment
+variables {\it before} running VISTA. THese can be used to specify
+default directories to use for storage/retrieval of images, etc. There
+is also a very useful environment variable which can be set to refer to
+a VISTA procedure file which will automatically be run every time  you
+start VISTA (and which can include all of your favorite aliases, 
+initializations, etc.
+
+If you are on a Unix machine, let's suppose your account name is \comm{ethel},
+and your top-level directory is \comm{/usr/ethel}.  Then you would make the
+necessary logical assignments by adding the following lines to either your
+\comm{.login} or \comm{.cshrc} file:
+
+\begin{verbatim}
+      # VISTA Directory and File Assignments
+      setenv V_CCDIR=/usr/ethel/images
+      setenv V_SPECDIR=/usr/ethel/spectra
+      setenv V_PRODIR=/usr/ethel/procedure
+      setenv V_DATADIR=/usr/ethel/vdata
+      setenv V_STARTUP=/usr/ethel/procedure/startup.pro
+\end{verbatim}
+
+The first four lines define the four necessary storage directories for Images,
+Spectra, VISTA Command Procedures, and auxilliary data files respectively.
+Remember that Unix is case sensitive, so you must define \comm{V\_CCDIR} and
+not \comm{v\_ccdir}, otherwise VISTA will ignore your definition.  Again,
+these directories must be pre-existing or VISTA will get upset.  To
+create these, you would type in (following the above example):
+
+\begin{verbatim}
+      % mkdir /usr/ethel/images
+      % mkdir /usr/ethel/spectra
+      % mkdir /usr/ethel/procedure
+      % mkdir /usr/ethel/vdata
+\end{verbatim}
+
+(Where, for this document, the \comm{\%} represents the default C-shell
+prompt.  It's what the computer types at you.  On some machines, especially
+those in networks, the prompt may be different.)
+
+The fifth line points to a pre-existing VISTA procedure file that contains
+VISTA commands to be run at startup time.  It is a simple text file (see
+Appendix B for some simple examples of procedure files).  While considered
+discretionary by VISTA, they are generally so useful, that you should get in
+the habit of making one and using it.  A startup file should contain your
+favorite command abbreviations (see Appendix B), special variable assignments,
+or simply just erase the screen for you at the start.  The latter is simple
+enough, define your file \exfile{[FRED.PROCEDURE]STARTUP.PRO} to have just two
+lines:
+
+\begin{verbatim}
+      CLEAR
+      END
+\end{verbatim}
+
+All procedure files must end with the \comm{END} command.  The first character
+of a line starts on the first position.
+
+
+\section{Stopping VISTA}
+
+First learn how to start VISTA.  Second learn how to stop VISTA.  The rest is
+rock-n-roll.  There are two ways to stop VISTA.  One neat and the other sloppy
+but occasionally useful.
+
+\noindent
+To stop VISTA at any time you have the VISTA \comm{GO:} prompt, type the
+command:
+
+\begin{command}
+      \item QUIT
+\end{command}
+
+\noindent
+VISTA will stop cold, dispose of all image buffers and variables, and return
+you to your computer's operating system.  Simple.
+
+If VISTA should hang up (or you're just mad at it and want to kill it in a
+satisfying way), then type a \hitkey{CTRL} \hitkey{\}.  VISTA will terminate
+immediately.  Admittedly drastic and a little sloppy, it is good in a pinch
+when you've sent VISTA into a tight spin and want to bale out.
+
+\section{The VISTA Command Prompt}
+
+After all the preliminaries are done with, VISTA is ready to accept command
+input.  The screen should show the VISTA command prompt:
+
+\begin{verbatim}
+      GO:
+\end{verbatim}
+
+VISTA commands may be typed in either upper or lower case.  VISTA is not case
+sensitive (although in Unix versions, file names are most definitely
+case sensitive).  Each command is terminated by hitting the \hitkey{RETURN}
+key.  Cases where the command is longer than 75 characters is dealt with
+later.  The following subsections cover sets of simple commands.
+
+Some people like to have VISTA ``beep'' at them when it wants command input.
+You can make VISTA do this by typing the command:
+
+\begin{command}
+      \item BELL Y
+\end{command}
+
+\noindent
+It has its uses, especially to let you know when a particularly long
+processing routine has finished.  Mostly it's a matter of taste.
+
+\section{A Simple VISTA Session}
+\label{sec:tutsimple}
+
+This section describes a simple VISTA session in which you will read images
+off of tape and perform simple tasks like displaying the images, writing them
+to disk files, move them around among VISTA buffers, and so forth.  For this
+brief example, we will have the following items in hand:
+
+\begin{enumerate}
+      \item Assume VISTA installed on a UNIX computer (like a MicroVAX).
+      \item VISTA running on a workstation with X11 display
+      \item A bunch of FITS images on disk
+\end{enumerate}
+
+\medskip
+
+\noindent{Task 1: \underbar{What Images are on Tape?}}
+\nobreak
+VISTA reads tapes which have been written in the FITS format (FITS stands for
+Flexible Image Transport System).  FITS is a standard format for storing
+astronomical data, originally developed for radio data but adopted for 2-D
+imaging data.  Presumably it is portable anywhere.  Lick data, and FITS tapes
+written with VISTA have proven to be portable to MIDAS, IRAF, and AIPS at many
+sites, so this shouldn't be a problem.  If your tape is not a FITS format
+tape, then you are out of luck (for example, some Palomar data tapes, Lick IDS
+tapes, etc. are not FITS format).
+
+To read a tape, first load it onto the tape drive and, when properly spooled,
+put the tape drive on-line.  Check with your VISTA custodian for the unit
+numbers that VISTA uses for each of your tape drives (if you have only 1 tape
+drive, it should be named \comm{UNIT=0}, but check anyway).
+
+\noindent
+To mount a tape on the drive named \comm{UNIT=0}, issue the command:
+
+\begin{command}
+      \item MOUNT UNIT=0
+\end{command}
+
+\noindent
+And VISTA will either verify the mount, or come back with an error message
+telling you why it failed.
+
+To find out what images are on a tape, you use the \comm{TDIR} command (for
+Tape DIRectory). \comm{TDIR} has two modes, wordy and terse.  If you want all
+the gory details, then simply type:
+
+\begin{command}
+      \item TDIR UNIT=0
+\end{command}
+
+\noindent
+And the headers of all of the FITS images will be translated and the essential
+details printed onto the screen in a dense format (known as ``full'' format).
+
+We aren't interested in all that, and since we want a printout we can read at
+our leisure, we'll do a brief tape directory and redirect the output to an
+external file which can be printed.  This is done with the following sequence
+of commands:
+
+\begin{command}
+      \item TDIR BRIEF UNIT=0 'MYSTERY TAPE' >TAPE.LIST
+      \item \$~PRINT TAPE.LIST
+\end{command}
+
+The first line is a \comm{BRIEF} tape directory of the FITS tape mounted on
+\comm{UNIT=0}, labels the directory as \comm{'MYSTERY TAPE'} and redirects the
+output to a file called \exfile{TAPE.LIST}.  The \comm{>} is the key used to
+redirect output.  Without the redirection ``arrow,'' the tape directory would
+be printed on the terminal screen. The second line issues a DCL (\comm{\$})
+command to print the file \exfile{TAPE.LIST} on the MicroVAX line-printer.
+Note that everything after the \comm{\$} is not a VISTA command, but a VMS
+operating system command.  The \comm{\$} allows you to issue operating system
+commands without stopping VISTA execution.
+
+\medskip
+
+\noindent{Task 2: \underbar{Read in 2 Images for Inspection}}
+\nobreak
+Now that we have the tape directory in hand (there were 41 images), we want to
+read in images 10 and 11 and look at them.  Since images 10 and 11 are near
+the front of the tape, it is best to rewind the tape using the following
+sequence of commands:
+
+\begin{command}
+      \item DISMOUNT UNIT=0
+      \item MOUNT UNIT=0
+\end{command}
+
+A \comm{DISMOUNT} followed immediately by a \comm{MOUNT} is a sloppy but
+effective rewind.  VISTA knows how to read backwards to an image it has passed
+on a tape, but that can be very slow when it has a long way to go, as in this
+case.
+
+Read Image 10 into VISTA buffer 1, and Image 11 into VISTA buffer 2 by
+typing the commands:
+
+\begin{command}
+      \item RT 10 1 UNIT=0
+      \item RT 11 2 UNIT=0
+\end{command}
+
+The tape will move forward to the image, and read it off tape into the
+requested VISTA buffer.  It translates the image header and prints a verbose
+summary of essential information on the screen.
+
+To get a brief summary of the contents of the VISTA buffers, issue the
+command:
+
+\begin{command}
+      \item BUF
+\end{command}
+
+\noindent
+VISTA will print a the image dimensions (in rows and columns), the origin of
+each image (in rows and columns), the name of the image, and other useful
+information.  A more complete listing of the buffers would be gotten by typing
+the command:
+
+\begin{command}
+      \item BUF FULL
+\end{command}
+
+Note that \comm{BUF} is an abbreviation of the full command name,
+\comm{BUFFER}.  VISTA recognizes unambiguous abbreviations for all commands
+(but {\it NOT} for the keywords making up a command).  If you give it an
+ambiguous abbreviation, it will tell you so.  Try it, type:
+
+\begin{command}
+      \item B
+\end{command}
+
+\noindent
+And VISTA will tell you all of the commands that begin with \comm{B} and ask
+you to be more specific.
+
+\medskip
+
+\noindent{Task 3: \underbar{Display the Images on the Color Display}}
+\nobreak
+Let's have a look at the images.  Image display is done using some kind of
+color display (typically an AED or some fancy color workstation like a Sun
+4/110).  To display the image in buffer 1, issue the command:
+
+\begin{command}
+      \item TV 1
+\end{command}
+
+VISTA will automatically translate the image intensities into colors and
+display the image on the color monitor.  Since we have used no command
+arguments for \comm{TV}, we will get the default ``color'' map (Black and
+White monochrome), and 4 times the image mean intensity (computed
+automatically by the \comm{RT} command) will be used to set the scale of the
+mapping (\ie\ 0 will be full black, and 4 times the mean intensity will be
+full white).
+
+If black and white doesn't do it for you, you can load a color map.  The
+fast an easy way is to use the command:
+
+\begin{command}
+      \item COLOR CF=RAIN
+\end{command}
+
+\noindent Which will load the ``RAINbox'' color map.  (\comm{CF} stands for
+``color file,'' and artifact of Version 1.0). There are other color maps
+available, see the manual.  If you issue \comm{COLOR} without arguments, then
+it will begin asking for data that it wants to construct a custom color map.
+Color maps are arcane, and beyond the scope of this cookbook to go into.
+
+Another way, to avoid typing two commands, is to specify the color map with
+the \comm{TV} command.  Don't ever do this to change the color map of the
+image currently on the display, that would be a horrible waste of CPU time.
+To specify the color map at display time, you would issue the command:
+
+\begin{command}
+      \item TV 1 CF=RAIN
+\end{command}
+
+\medskip
+
+\noindent{Task 4: \underbar{Plot a Row or Column of an Image}}
+\nobreak
+Another way to look at your data is to plot along a given row or column.
+To plot the image intensities along ROW 250 of the image in buffer 2, you
+would issue the command:
+
+\begin{command}
+    \item PLOT 2 R=250
+\end{command}
+
+\noindent
+Default X and Y axis limits will be computed, and the plot will appear on your
+terminal screen.  If instead, you see no plot but a stream of apparent
+gibberish of characters, you haven't specified the right terminal type (see
+\S\ref{sec:tutterm}\ above).
+
+You can change the plotting limits using keywords.  For example, you're only
+interested in the data between Columns 200 and 350 along Row 250.  To restrict
+the plot to this range, you'd type:
+
+\begin{command}
+    \item PLOT 2 R=250 XS=200 XE=350
+\end{command}
+
+Now, you only want to see the intensity values between 0 and 255.3, thus you
+would type:
+
+\begin{command}
+    \item PLOT 2 R=250 XS=200 XE=350 MIN=0. MAX=255.3
+\end{command}
+
+Finally, you'd like a hardcopy to post on your door.  To do this you would add
+an additional keyword, \comm{HARD} as follows:
+
+\begin{command}
+  \item PLOT 2 R=250 XS=200 XE=350 MIN=0. MAX=255.3 HARD
+\end{command}
+
+\noindent No plot will appear on your screen, and the hardcopy will
+(hopefully) appear on the plotting device.  If it does not, then you may have
+to consult with your local VISTA custodian to see if something is not set
+correctly.
+
+\medskip
+
+\noindent{Task 5: \underbar{Save the Images in Disk Files}}
+\nobreak
+Having inspected the images, you want to save them both in Disk files for easy
+access later.  Disk files are good for temporary storage during reduction and
+analysis, but they eat up a large amount of space.  If you are working on an
+account with a fixed disk space quota, that quota may have to be increased if
+you want to store many images temporarily on disk.  As with all shared
+computer resources, you should be frugal.
+
+Let us store the image in buffer 1 in a disk file named \exfile{OLLIE.CCD},
+and the image in buffer 2 as \exfile{STANLEY.CCD}.  To do this, you would
+issue the commands:
+
+\begin{command}
+      \item WD 1 OLLIE
+      \item WD 2 STANLEY
+\end{command}
+
+\noindent The \comm{.CCD} extension is automatically appended to the file
+name, and the files are written into the image directory you specified at
+runtime with the \comm{V\_CCDIR} logical name.  If you wanted to write the
+file somewhere else, you would add the directory information onto the front of
+the file.
+
+To conserve space as much as possible, the image values are converted into
+integers between $-$32767 and +32767, and the scaling coefficients stored in
+the image headers.  When the images are read back in from disk, VISTA will
+translate the image intensities back into their original values.  If you want
+the images to be written in their full REAL*4 precision, you would add the
+\comm{FULL} keyword to the \comm{WD} command.
+
+\medskip
+
+\noindent{Task 7: \underbar{Moving Images around Buffers}}
+\nobreak
+To move the image in buffer 1 to buffer 3, you would type the command:
+
+\begin{command}
+      \item COPY 3 1
+\end{command}
+
+\noindent In VISTA operations between two buffers, the command syntax is
+always of the general form:
+\begin{command}
+      \item OPERATION <to> <from>
+\end{command}
+
+\noindent or equivalently:
+\begin{command}
+      \item OPERATION <destination> <source>
+\end{command}
+
+This resembles so-called Reverse Polish Notation (RPN) popular among owners
+of HP hand calculators.  For the more algebraically minded, another way to
+think about the order of buffers is:
+\begin{command}
+      \item OPERATION <buffer to change> <buffer left unchanged>
+\end{command}
+
+OK, back to the task at hand (moving images around, remember?).  If you
+now issue a \comm{BUF} command, you will have 3 images connected, of
+which the images in buffers 1 and 3 are now identical.  You can
+get rid of the old image in buffer 1 by issuing the command:
+
+\begin{command}
+      \item DISPOSE 1
+\end{command}
+
+This will erase the image from memory, and free that space for another image.
+
+Using \comm{COPY} to copy an image into a different buffer which is already
+occupied will have the effect of deleting the existing image, and replacing it
+with the source image indicated by the \comm{COPY} command.
+
+
+\medskip
+
+\noindent{Task 8: \underbar{Dismount the Tape and Quit VISTA}}
+\nobreak
+The first step in finishing a session is to dismount any tapes.  To do this,
+issue the command:
+
+\begin{command}
+      \item DISMOUNT UNIT=0
+\end{command}
+
+\noindent Which will rewind and dismount it.  You will need to physically take
+the tape off-line and remove the tape from the drive. The second step, while
+not absolutely necessary is illustrative, dispose of the VISTA buffers.  You
+would do this by issuing the command:
+
+\begin{command}
+      \item DISPOSE ALL
+\end{command}
+
+\noindent Finally, stop VISTA by typing the command:
+
+\begin{command}
+      \item QUIT
+\end{command}
+
+\noindent VISTA will terminate, and return you to the operating system
+prompt after a brief pause.
+
+\section{Final Remarks}
+
+VISTA is a system best learned by using.  Typical learning times are a few
+days to many months, depending on the individual, and the degree of
+sophisitication of the image procession task at hand.  Most new users find it
+very useful to ``noodle'' around with VISTA, using a dummy image stored on
+disk, and trying various commands out.  VISTA is surprisingly easy to use, and
+quite flexible once you're accustomed to it.  It is very easy for a first-time
+user to sit down and get an image read in from a raw data tape and displayed
+in color right away.
+
+% ----------------------------------------------
+
+%\end{document}
+%\end

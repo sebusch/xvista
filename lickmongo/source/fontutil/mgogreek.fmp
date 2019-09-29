@@ -1,0 +1,97 @@
+VLINE -16 -9 0 12 16    Vertical font metric information for
+MG  32  <sp>    <backspace>             Complex Greek and Symbol font
+MG  33  !       Filled Triangle Down
+MG  34  "       Filled Triangle Up
+MG  35  #       Filled Square
+MG  36  $       Filled Circle
+MG  37  %       Square
+MG  38  &       Paragraphoh (Section)
+MG  39  '       Dot Product
+MG  40  (       Sun
+MG  41  )       Earth
+MG  42  *       X (times) USED IN SCIENTIFIC NOTIATION! [skinnier than Hershey]
+MG  43  +       Plus or Minus
+MG  44  ,       Variation (Proportional to)
+MG  45  -       Minus or Plus
+MG  46  .       Diamond
+MG  47  /       Quotient (Divided by)
+MG  48  0       ^
+MG  49  1       |
+MG  50  2       |
+MG  51  3       |
+MG  52  4       |       Numerals are Simplex Roman font
+MG  53  5       |
+MG  54  6       |
+MG  55  7       |
+MG  56  8       |
+MG  57  9       v
+MG  58  :       Integral
+MG  59  ;       Circuit Integral
+MG  60  <       Equal or Less
+MG  61  =       Identity
+MG  62  >       Equal or More
+MG  63  ?       Inequality
+MG  64  @       <no such character>
+MG  65  A       At
+MG  66  B       Infinity
+MG  67  C       Cent    [Solidus & Complex Roman c raised 2 units]
+MG  68  D       Delta
+MG  69  E       Element
+MG  70  F       Phi
+MG  71  G       Gamma
+MG  72  H       #       [Complex Roman]
+MG  73  I       Double Bar (small parallel)     [Complex Roman Small]
+MG  74  J       Nabla (Del)
+MG  75  K       Tensor Product  [NOT Hershey, X & Circle]
+MG  76  L       Lambda
+MG  77  M       Up Arrow
+MG  78  N       Down Arrow
+MG  79  O       Circle          [NOT Hershey, used to make Tensor Product]
+MG  80  P       Pi
+MG  81  Q       Theta
+MG  82  R       Percent [Complex Roman]
+MG  83  S       Sigma
+MG  84  T       Perpendicular   [shorter than Hershey]
+MG  85  U       Upsilon
+MG  86  V       Aangstrom       [NOT Hershey]
+MG  87  W       Omega
+MG  88  X       Xi
+MG  89  Y       Psi
+MG  90  Z       h-bar           [NOT Hershey]
+MG  91  [       Dagger
+MG  92  \
+MG  93  ]       Double Dagger   (broken)
+MG  94  ^       <no such character>
+MG  95  _       Right Arrow
+MG  96  `       Radical
+MG  97  a       alpha
+MG  98  b       beta
+MG  99  c       chi
+MG 100  d       delta
+MG 101  e       epsilon         [Hershey variant epsilon]
+MG 102  f       phi
+MG 103  g       gamma
+MG 104  h       eta
+MG 105  i       iota
+MG 106  j       Partial Derivative      [NOT in Hershey?!]
+MG 107  k       kappa
+MG 108  l       lambda
+MG 109  m       mu
+MG 110  n       nu
+MG 111  o       omicron
+MG 112  p       pi
+MG 113  q       theta           [Hershey variant theta]
+MG 114  r       rho
+MG 115  s       sigma
+MG 116  t       tau
+MG 117  u       upsilon
+MG 118  v       script l (ell)  [NOT in Hershey]
+MG 119  w       omega
+MG 120  x       xi
+MG 121  y       upsilon
+MG 122  z       zeta
+MG 123  {       Left Elbow (Bra)
+MG 124  |       Double Bar
+MG 125  }       Right Elbow (Ket)
+MG 126  ~       Left Arrow
+MG 127  <del>   <---NOT ACCESSIBLE FROM MONGO

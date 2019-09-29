@@ -1,0 +1,56 @@
+
+<H1><A NAME="SECTION00540000000000000000">
+DO/END_DO: Using Do-Loops in Procedures</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml136#
+
+<P>
+<A NAME="1525"><tex2html_anchor_invisible_mark></A>
+<A NAME="1526"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1527#
+<BR>
+
+<P>
+The DO/END_DO commands enable you set set up repeatable groups of commands
+within the procedure buffer.  The VISTA DO-LOOP is very similar to the
+Fortran DO-LOOP.
+
+<P>
+The variable 'var' is initially set equal to the starting value N1.  When
+the END_DO statement is encountered the value is changed by an amount
+equal to N3. The value of N3 can be either positive or negative. If N3 is
+positive then the looping terminates when N1 becomes greater than N2. If N3
+is negative then looping terminates when N1 becomes less than N2.  If N3 is
+not specified then it defaults to +1.0 if N2 is greater than N1 or to -1.0
+if N2 is less than N1.
+
+<P>
+N1, N2, and N3 can all be arithmetic expressions as described in the SET
+command.  The value of 'var' can be changed within the loop without
+affecting the do-loop operation.  However, VISTA will reset 'var' to its
+appropriate loop value at the beginning of each loop.
+
+<P>
+The underline is required in END_DO because VISTA requires commands to be
+one word long.  Up to 20 do-loops can be nested.  Do-loops are recognized
+only within procedures. The GOTO command can be used to jump out of a DO
+loop, but VISTA will not permit jumping into one. Further, DO loops must
+contain or be contained completely within any IF blocks.
+
+<P>
+<#1540#>Examples:<#1540#>
+
+<OL>
+<LI><#1606#>
+  <PRE><tex2html_verbatim_mark>verbatim137#</PRE><#1606#>
+</LI>
+<LI><#1607#>
+  <PRE><tex2html_verbatim_mark>verbatim138#</PRE><#1607#>
+</LI>
+<LI><#1608#>
+  <PRE><tex2html_verbatim_mark>verbatim139#</PRE><#1608#>
+</LI>
+</OL>
+
+<P>

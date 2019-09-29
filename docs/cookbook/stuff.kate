@@ -1,0 +1,289 @@
+From:	BKYAST::EBNETER      16-MAY-1988 17:18
+To:	LICK
+Subj:	for Rick Pogge...
+
+SOME NOTES ON FIGARO VS. VISTA
+
+FIGARO is a nice package, but it lacks a few things which VISTA has:
+
+(1)	SURFACE PHOTOMETRY.  The Berkeley version of VISTA, in particular,
+	contains a large number of surface photometry routines:
+	
+  PRAD         Finds a selected position angle surface brightness profile.
+  PROFILE      Find the surface brightness profile of an extended object.
+ *GPROF        Surface brightness profile of an extended object (alternate).
+ *GPHOT        Surface brightness photometry for globular clusters.
+ *RMARK        Mark RMAX radius on the TV (to be used in photometry).
+  TEMPLATE     Generates an image template from a user supplied profile.
+  RECON        Reconstruct an object from a surface photometry profile.
+ *QUACK        Smooth surface brightness, ellipticity and pa profiles.
+ *ELLTOECC     Convert ellipticities to eccentricities.
+ *PACORR       Correct PA to zero at the top (for RECON).
+ *SKYCORR      Correct GPROF results for the sky subtraction.
+ *OPREP        Open a batch-photometry preparatory file.
+ *RPREP        Read a record from a photometry prep-file.
+ *WPREP        Write a record into photometry prep-file.
+  APER         Perform aperture photometry on an extended object.    
+ *AEDIT        Edit values in selected image regions.
+
+	* = Berkeley additions to VISTA.
+
+PROFILE and GPROF are two slightly different implementations (by Tod Lauer and
+George Djorgovski, respectively) of Steve Kent's surface photometry algorithm.
+GPHOT is Djorgovski's routine for surface photometry of globular clusters.
+RECON is Tod Lauer's routine for modelling elliptical galaxies based on their
+surface brightness profiles.  Most of the Berkeley routines are utility routines
+designed to make the photometrist's life easier.
+
+(2)	STRIPER:  Kate Ebneter's (much enhanced) VISTA implementation of 
+Peter Stetson's algorithm for removing bleed trails from CCD images.
+
+(3)	IMAGE SEGMENT ANALYSIS:   VISTA contains a large number of routines
+for setting and analyzing "boxes", i.e., parts of an image, for finding sky
+levels for photometry etc.  There is presumably a way to do this in FIGARO,
+but it isn't obvious (what am I not seeing?).  The relevant VISTA commands
+are
+
+	BOX	Define a box for analysis, possibly interactively
+	SKY	Measure the sky or background level of an image.
+	BSKY	Berkeley algorithm for measuring sky.
+	ABX	Statistics on an image segment or segments.
+	AEDIT	noted above; edit an image segment.
+
+(4)	MISCELLANY:	A few other VISTA routines for which I see no obvious
+FIGARO counterparts:
+
+	BL	Baseline noise correction.  (Lick specific).
+	INTERP	Interpolate across bad rows/columns.
+	ZAPCR	Interactive cosmic ray zapping (median filter) (UCB).
+	FF	Correct flat field for global gradient.
+	CROSS	Cross-correlate two images.
+	MEDIAN	Median of several images.
+	SPLINE	Replace image by best-fitting spline.
+	SURFACE	Fit a plane or second-order surface to an image.
+	BLIN	Bilinear interpolation of an image to a larger size.
+	BIN	Compress an image.
+	WINDOW	Window an image to a smaller size.
+	AXES	Find image center using a mirror-autocorrelation technique.
+
+(5)	2-D SPECTROSCOPY:	FIGARO of course has a full complement of
+routines for doing 2-d spectroscopy.  VISTA's routines, however, also are
+valid and probably slightly different ways of extracting spectra, and should
+be provided to UC users for compatibility reasons if nothing else.
+
+(6)	SUPPORT FOR IVAS AND AED DISPLAYS; MONGO:	FIGARO uses the
+ARGS and Grinnell displays; UC uses AEDs and (at Berkeley) IVASes.  Also,
+most UC astronomy departments use MONGO for plotting rather than FIGARO's
+PGPLOT.  PGPLOT is OK, and is provided with FIGARO, but it doesn't support
+the MicroVAX workstation displays (or my Mac!).  A MONGO-based FIGARO would
+be nice indeed...
+
+It is relatively easy to port VISTA routines to FIGARO because of the fact that
+both programs use dynamic memory allocation.  I have already ported a couple
+of VISTA applications to FIGARO and it is not at all difficult.
+
+From:	BKYAST::EBNETER      16-MAY-1988 17:18
+To:	LICK
+Subj:	for Rick Pogge
+
+
+IMAGE PROCESSING WARS, OR WHICH SOFTWARE IS BEST?
+A highly unscientific survey by Kate Ebneter
+
+IRAF VS. VISTA VS. FIGARO
+=========================
+
+The three main players in the current crop of optical image processing software
+for astronomy are IRAF (and SDAS, the son-of-IRAF), FIGARO, and VISTA.  They
+all have certain advantages and disadvantages.  These notes are a vague attempt
+by a user and computer hacker to determine which is "best".  Note that "best"
+in this context is not well defined.
+
+IRAF
+====
+
+IRAF was written (or, more accurately, is being written) by Doug Tody and a
+cast of thousands at NOAO.  It was primarily invented as a replacement for
+KPNO's IPPS system, a rather awkward menu-driven system.  Some of IPPS's 
+functional units have found their way into IRAF, but most of IRAF is new code.
+IRAF is also the "host" system for STScI's Science Data Analysis System (SDAS).
+
+IRAF's main goal in life originally was to be the ultimate portable data
+processing engine, in the sense that it was designed to be easily ported from
+one operating system to another. It achieves this portability in two ways.
+First, the main IRAF kernel talks to the host operating system solely through a 
+host interface unit which is the only non-portable part of IRAF.  The kernel
+establishes a virtual operating system on top of the host operating system
+which USUALLY allows IRAF to run exactly the same way on all machines.  I say
+usually merely because the underlying operating system does of necessity peer
+through; you can tell the difference between running IRAF on a VMS machine 
+and on a UNIX machine, because you have full access to the host OS at all times
+(or you should).  The second trick that IRAF uses to ensure portability is to
+write all IRAF program code in a pre-processed FORTRAN which more closely
+resembles C.  The IRAF programming language is very similar to RATFOR and other
+"rationalized" FORTRANs, and eliminates the problem of trying to write 
+structured programs in standard FORTRAN 77.  The output of the preprocessor IS
+standard F77 which can be compiled by the host compiler.  This vastly simplifies
+porting the code between different environments.
+
+IRAF was originally written to run under UNIX.  It presently supports only two
+image display devices, the IIS Model 70 (and 75, I think) and the Sun color
+workstation.  There is no interactive cursor for the IIS (!!), and that on the
+Sun is not ideal.  Note, however, that IRAF is still officially in beta test, 
+and steps are being taken to correct these problems.  IRAF was ported to VMS 
+by STScI for SDAS, and has also been ported to a variety of other host systems,
+most notably the Steward Data General computer and (supposedly) the ISI systems
+currently in use at Lick.  It currently supports more graphics devices than
+image displays (10 for VMS, vs. 2 image displays!), which must say something
+about something.
+
+IRAF, in a nutshell, is a thoroughly professional programming environment and
+image analysis environment written by a thoroughly professional group of
+programmers.  It is reasonably fast in timing tests.  It occupies roughly
+90,000 blocks of disk space in its VMS version and will take essentially all
+of the computing resources it can get its hands on.  It is probably best 
+suited to run on microcomputer workstations like the Sun and MicroVAX work-
+stations.  My own feeling is that it will be more useful with a separate
+associated video display unit rather than displaying on the workstation monitor;
+workstation monitors tend to get cluttered very rapidly and generally are not
+as good for image processing displays as a dedicated display like the IIS IVAS
+or the Grinnell.  (IRAF should at least support these two!!)  
+
+IRAF has a couple of disadvantages besides its voracious appetite for computers
+(which it shares with AIPS, I might add).  The first is that the command 
+language (for writing interpreted procedures) is unnecessarily complicated.
+The CL is based on the programming language C, which is one of those ideas that
+sounds good (especially if you are computer hacker who is familiar with C!)
+but is in practice not so great.  (Who wants to declare variables in a command
+procedure?  Raise your hands...I thought so.)  It IS very powerful.  But power
+achieved at the expense of ease of use is not a very good thing in most cases.
+A simpler system should be available.  Second, it is not easy for someone who
+is not an IRAF programmer to extend the system.  There are ways of interfacing
+existing FORTRAN programs with IRAF's I/O facilities, but these simple methods
+don't allow the program to make use of IRAF's other facilities.  The only 
+alternative is to learn the entire IRAF programming environment, not for the
+faint-hearted.  This puts the astronomer back in the hands of the local systems
+programmers, who are probably loath to learn such a complex new environment
+just so they can write programs for astronomers.  This leaves you at the mercy
+of the NOAO people...Finally, IRAF desperately needed an interface watchdog
+to ensure that all the commands used the same parameters to mean the same
+things and to ensure some "user-friendliness" in the command syntax.  It 
+didn't get it, and IRAF falls somewhere between UNIX and AIPS in terms of 
+user-friendliness for the casual or beginning user.  This is very unfortunate,
+especially in light of what is now known about user interface design.
+
+IRAF gets a B+:  Powerful and easily portable, but clumsy in some ways and
+frustratingly incomplete.
+
+
+VISTA
+=====
+
+VISTA was written at Lick Observatory by a large number of different people.
+It is used throughout the UC system, almost exclusively on VAXes running VMS,
+the original environment of the program.  (It is written in VAX FORTRAN, in
+fact.)  It has been ported to UNIX by Tod Lauer at Princeton. (Lauer is one of
+the program's original authors.)  I should note here that I am Berkeley's
+principal VISTA hacker, so I am not entirely without prejudice.  VISTA is used
+on Mount Hamilton on the ISI UNIX systems there (port by Richard Stover) and
+was also available on the LSI-11 systems used there until recently, albeit in
+a much abbreviated form.  It is also used at DAO and at a number of other
+institutions; George Djorgovski (also a VISTA hacker) has even taken it to 
+CalTech!  VISTA's original goal in life was to allow CCD users to reduce their
+data.  Lately it seems that its goal in life is to do so many things that there
+is no longer any room for data when the program is running.
+
+VISTA's biggest advantage is that it is usually quite fast.  It is (or, more
+accurately, can be) small, and, on a machine with lots of memory, one can 
+stuff the entire program and some images in memory and go bashing along quite
+happily.  However, VISTA achieves this by reading its images into internal
+buffers, which count against it in memory allocation on virtual memory systems.
+Since the whole program has to be there as well---VISTA is implemented as one
+large program, not a system of programs---it is very easy to run out of 
+memory when trying to process more than one image.  At Berkeley we have at
+least partially alleviated this problem by breaking the program up into three
+specialized programs:  Baseline VISTA, which just does basic CCD data reduction
+things like flat-fielding, image arithmetic, cosmetic cleaning, cosmic ray
+zapping, etc.; VSPEC, a VISTA clone for doing 2-d to 1-d spectroscopy; and
+VSPHOT, a VISTA clone for doing surface photometry.  (Berkeley has always done 
+1-d spectroscopy stuff with SPECTRE, a program based on the original version of
+VISTA.)  This has worked out fairly well, although VISTA as it stands will 
+never be able to deal with a 2048x2048 Tektronix image, for instance.  
+
+VISTA's other advantage is that it is easy to learn, and uses a fairly consis-
+tent interface.  It has a very simple command procedure language which can be
+used to automate complex image processing, with a fairly shallow learning
+curve.  The program itself is simple enough to learn that any astronomer with
+a bit of computer savvy can figure out how to add features to it.  This can
+be dangerous, of course:  Your custom VISTA routine can at least potentially
+break the whole program!!  At Berkeley we have added many extensions, most
+of them written by astronomers (well, grad students:  Djorgovski, Ebneter,
+Strauss).  And the environment is simple enough that the systems programmers
+will not snarl at you when you ask for help.  (Berkeley VISTA supports the
+IVAS image displays, an addition written by one of our systems programmers,
+Dan Plonsey.)
+
+VISTA gets a B+:  Easy to use, friendly, but with almost overwhelming memory
+management problems that make it difficult to extend without making it too big
+to run.
+
+
+FIGARO
+======
+
+FIGARO was written by Keith Shortridge at CalTech and the AAO.  It is really
+a collection of little programs which use a common interface to data and to 
+the user; it runs from the host system operating system level.  Originally
+written for VMS, it has been (or is being) ported to UNIX (I presume to 
+Berkeley UNIX) where it will run in the C-shell.  Although it currently
+supports only ARGS and Grinnell displays, it is easily modified to support
+other devices, because the code is remarkably well isolated.  
+
+FIGARO's biggest advantage is that it is easily expanded by virtually any
+user, and without impacting on anyone else's use of the program.  This is 
+because FIGARO is really many small programs, never one large one, and the
+user can write a small program of their own to run in the FIGARO environment
+WITHOUT TELLING ANYBODY ELSE ABOUT IT.  This is really nice:  Write your own
+custom data reduction routine at home and bring it to the mountain with you.
+IRAF is also infinitely expandable, but not so easily.  Since it runs at the
+host OS level, you can do anything you want from within it.  (Even delete all
+your data...)  This removes an added layer of complexity that VISTA has.
+
+On the other hand, FIGARO can be...slow.  This is because it uses the disk to
+store all its images (clever, right?).  Hence when you run a FIGARO command,
+the image has to be retrieved from disk.  Disk I/O is sloooowwww.  In VISTA
+you at least have a fighting chance that the image is already in memory.
+(VISTA can "thrash"---page fault wildly---when it's running some things on a
+heavily loaded machine, however...and that's slow, too.)  I'm not 100% clear
+on how IRAF handles memory management, but IRAF is at least decently fast.
+For doing things like flat-fielding where the CPU time involved is normally
+fairly small, the I/O limits FIGARO's speed.  This could be fixed in a number
+of ways, actually; it is probably not a fundamental limitation.  For any 
+operation which requires lots of CPU cycles, FIGARO's I/O is only a fraction
+of the total time and FIGARO is competitive with either of the other systems
+running comparable algorithms.
+
+FIGARO also gets a B+:  It's speed problems need to be fixed because it is 
+very disconcerting to have to wait several seconds to flatten a 500x500 image.
+
+
+So who's best?  It depends on what you want.  VISTA in its current incarnation
+is doomed by the next generation of large-format CCDs and by its inability to
+grow gracefully.  IRAF is very demanding of computer resources, although if
+you need to do it, IRAF can probably do it.  If it can't, though, watch out:
+adding things to IRAF, even writing command procedures for it, is a little
+like getting your teeth pulled.  FIGARO is infinitely extensible, makes good
+use of existing operating system facilities (FIGARO command procedures are
+written as DCL or C-shell procedures), and is easily modified, but it has some
+speed problems.  Still, all in all I like FIGARO as an on-line, quick-look-on-
+the-mountain package, especially since it means I can roll my own routines and
+bring them with me if I so desire.  I think the speed problems can be fixed
+with a little thought.  IRAF is going to be shoved down all of our throats
+anyway, if you want to reduce your ST data (hey, we're thinking of the future
+here!).  It is very powerful.  It likes Sun workstations.  It is not easy to
+learn at 3 o'clock in the morning.  Put it on a Sun on the mountain, but not
+on the data-taking computer.  Better yet, put it on a Sun back home, where its
+extraordinary power can be used in its full glory by wide awake astronomers.
+VISTA, much as I love it, is not going to last much longer unless it is 
+totally restructured.  It would be easier to port what is uniquely VISTA into
+FIGARO, I think.

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>CLPROF: Clear the Contents of the PROFILE Buffer</TITLE>
+<META NAME="description" CONTENT="CLPROF: Clear the Contents of the PROFILE Buffer">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0015130000000000000000">
+CLPROF: Clear the Contents of the PROFILE Buffer</A>
+</H1>
+
+<!-- linkto clprof.html -->
+<BR>
+
+<BR>
+
+<P>
+CLPROF sets all parameters in the PRF common block to zero. CLPROF should
+always be used when the command GET PROF= is used to overwrite the existing
+contents of the profile block with new profile parameters stored in a .pro
+file. If CLPROF is not run, and if the profile being overwritten is larger
+than the new one, the old parameters will remain in the common block for
+radii larger than the maximum radius of the new profile.
+
+<P>
+To retain the existing profile parameters out to a given radius, setting
+them to zero beyond this, the optional keyword RAD=r may be given. All
+profile parameters corresponding to radii greater than or equal to r are
+then set to zero. This is valuable if a PROFILE calculation is seen to have
+gone awry beyond a certain radius.
+
+<P>
+See Also: PROFILE, CPROF
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

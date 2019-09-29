@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>PRINTF: Formatted Display of Strings and Arithmetic Expressions</TITLE>
+<META NAME="description" CONTENT="PRINTF: Formatted Display of Strings and Arithmetic Expressions">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00360000000000000000">
+PRINTF: Formatted Display of Strings and Arithmetic Expressions</A>
+</H1>
+
+<!-- linkto printf.html -->
+
+<P>
+<A NAME="885"></A>
+<BR>
+<IMG
+ WIDTH="22" HEIGHT="10" ALIGN="BOTTOM" BORDER="0"
+ SRC="img58.png"
+ ALT="\begin{command}
+\item[\textbf{Form: } PRINTF 'Format string' {[expressions]} {[redirection]}\hfill]{}
+\end{command}">
+<BR>
+This command displays character strings and variables in specified formats,
+thus producing tables of results.
+
+<P>
+The simplest form of PRINTF is PRINTF 'string'.  This prints the specified
+string.  Examples are:
+<BR>
+
+<BR>
+
+<P>
+You can print the values of expressions by specifying in the character
+string (1) that expression is to be evaluated and its value printed, and
+(2) the format for the printing of the variable.  The character % in the
+string does the job. It tells that an expression is to be evaluated and
+printed where the % appears. The rest of the word following the % is used
+to specify the format of the string.  The format specifiers are the same as
+they are in FORTRAN.  ANY valid FORTRAN specifier appropriate for
+displaying numeric values may be used. You can specify multiple variables
+with the same format specification by putting the number of variables for
+which you wish to use the specifier for before the format specifier.
+
+<P>
+For example, if you want to print a single floating point variable with a
+field width of 9 characters with 3 after the decimal point, use
+%f9.3, and give one argument after the format specifier. If you have
+5 variables which you want all printed in this format, you can use
+either '%f9.3 %f9.3 %f9.3 %f9.3 %f9.3', or '%5f9.3'.
+
+<P>
+For users familiar with C, you can also use the %d specifier for an
+integer (as well as %i); note, however, that the width/precision
+specification comes <I>after</I> the format specifier, not before it (e.g.,
+arguments to be printed with the desired format.
+
+<P>
+Examples:
+
+<P>
+Suppose we have the variables A with value 1.0 and PI with value
+3.14159. Then
+<BR>
+
+<BR>
+Note that spaces between % specifiers are printed. The output of PRINTF
+can be redirected.
+
+<P>
+To force a new line when printing, use the pattern <code>\n</code> in the format
+statement (the newline character).  An example is:
+<BR>
+
+<BR>
+
+<P>
+See the section SUBSTITUTE (type 'HELP SUBSTITUTE' if you are on a
+terminal) for instructions on printing string variables.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

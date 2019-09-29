@@ -1,0 +1,205 @@
+%
+%  VISTA Cookbook;  Introduction (Chapter 1)
+%
+%  Began:  1988 June 7
+%
+%  Last Revision:  1988 August 30
+%
+%  Note:  Throughout this chapter, subsections are all labelled for
+%         cross-referencing.  The base reference key is:
+%
+%                        sec:int
+%
+
+%\documentstyle {manual}
+%\input sys$user:[rick.thesis]thesismacros.pogge
+
+%\newenvironment{command}{\begin{center}
+%\begin{list}{\tt GO:}{\setlength{\rightmargin}%
+%{\leftmargin}}\tt\singlespace }{\end{list}\end{center}}
+
+%\def \comm#1{{\tt #1\/}}
+%\def \hitkey#1 {$\langle${\tt #1}$\rangle$\/}
+
+%\begin{document}
+
+\pagestyle{manual}
+\pagenumbering{arabic}
+\chapter{Introduction}
+
+\section{Overview of VISTA}
+
+VISTA is an interactive image reduction and analysis package developed at Lick
+Observatory.  VISTA development was begun by Richard Stover and Tod Lauer in
+the early 1980's to provide software for the reduction of data obtained with
+the new CCD cameras coming into use at Mount Hamilton.  General agreement among
+the astronomy departments at the other UC campuses led to the adoption of
+VISTA as the standard image processing package, and all campuses (at first)
+installed similar computer hardware on which is was to be run (Digital
+Equipment Corporation VAX/VMS systems AED 512 color image displays).  As a
+result, the VISTA package from the start was tailored to this equipment.  A
+general overview of the architecture of the VISTA package may be found in an
+article by Richard Stover in {\it Instrumentation for Ground-Based Optical
+Astronomy: Present and Future}, the proceedings of the 1988 Summer Workshop
+held in Santa Cruz. 
+
+Since that time, the VISTA package has taken on a life of its own, spreading
+to many parts of the world besides the UC system.  The principal agents of
+this spread have been former graduate students, postdocs, and visitors who
+have taken VISTA with them when they departed. It has been ported to a UNIX
+platform and has been successfully used on Sun workstations (SunOS and
+Solaris), DecStations, and DEC Alpha machines.
+Non-image graphics (\eg\ line drawings, spectra, etc) is done using Lick
+MONGO, a fully portable incarnation of the old Tonry MONGO which has evolved
+at Lick Observatory over the years.  Lick MONGO supports a variety of graphics
+display terminals, as well as the most common hardcopy devices, including
+PostScript laser printers. 
+
+VISTA has no ``philosophy'' {\it per se}.  It is designed to be a small
+package (small, that is, by image processing standards) that lends itself
+readily to user modification.  As such, it is relatively easy for an
+astronomer with a modest command of Fortran to write custom commands to take
+care of special image processing needs.  It is not intended to be all
+encompassing, like the larger MIDAS or IRAF packages. VISTA does have its
+faults, which any long-time user will be glad to tell you all about, and which
+you will discover for yourself in time.  Recall that it was produced by
+graduate students and research astronomers, not professional programmers, so
+it has a nice, homey, slapped together in the garage sort of feel at times (it
+can also be incomprehensible as hell, too.  So it goes). 
+
+The general development of routines for the VISTA package has been driven by
+the needs of individual researchers, principally graduate students working on
+their Ph.D. dissertations (\ie\ driven by that oldest of instincts, self
+preservation).  In addition, it is often these graduate students who are
+called upon for consultations when problems arise, or to assist visiting
+scientists with getting started using the VISTA package to reduce their data.
+Since graduate students are not eternal (at least, we're not {\it supposed} to
+be), it was decided among the present hard core of VISTA gurus to distill our
+experience into a ``VISTA Cookbook'' before we kick off for the boondocks. 
+This cookbook is to serve as a guide to basic image reduction procedures with
+VISTA for new users and visitors.  The idea was for us not to simply vanish to
+a postdoc somewhere and leave the people who have come to depend on us at Lick
+``turning slowly in the wind.'' 
+
+%-------------------------------------------------------------------------------
+
+\section{The Cookbook}
+
+This cookbook is designed as a resource for VISTA users interested in
+accomplishing basic image reduction chores.  It is divided into 8 chapters,
+each of which covers a single topic.  Within each chapter, the discussion
+starts at the most basic level, progressing towards more advanced techniques.
+It is not all encompassing, but that is impossible, as each person's data will
+ultimately require different treatment depending on how it was taken and what
+information they wish to derive from it.  The intent is to provide new users
+with a set of basic VISTA tools which can be used to develop individually
+tailored  image reduction and analysis procedures. 
+
+The format is laid out so as to guide the user as much as possible. Different
+typefonts are used to distinguish the running commentary from input required
+by the computer and the names of external data files.  They are: 
+
+\begin{center}
+  \begin{tabular}{|c|p{4.0in}|}
+      \hline
+      \multicolumn{2}{|c|}{Cookbook Fonts}\\ \hline
+      \multicolumn{1}{|c|}{Font}&\multicolumn{1}{c|}{Use}\\ \hline
+      {\tt EXTSPEC}&Computer command input (either VISTA or 
+operating system)\\ \hline
+      {\tenit HAMPREP.PRO}&Names of external data files\\ \hline
+      \hitkey{RETURN} & Particular keys on a terminal keyboard \\ \hline
+  \end{tabular}
+\end{center}
+
+User input prompts are used throughout the cookbook.  These are meant to
+reproduce, as well as possible, what you should see on the screen, and to
+remind you that the input is either a VISTA command or an operating system
+command (DCL or Unix).  The prompts are: 
+
+\begin{center}
+  \begin{tabular}{|c|p{4.0in}|}
+    \hline
+    \multicolumn{2}{|c|}{Command Prompts}\\ \hline
+    \multicolumn{1}{|c|}{Prompt}&\multicolumn{1}{c|}{Meaning}\\ \hline
+    {\tt GO:}& The default VISTA command prompt.\\ \hline
+    {\tt \$}& The default DCL prompt for the operating system.\\ \hline
+  \end{tabular}
+\end{center}
+
+It is expected that the cookbook will be used in conjunction with the VISTA
+Help Manual.  The help manual is available in the form of a computer printout,
+as well as accessible on-line while running VISTA. 
+
+A brief synopsis of the cookbook is as follows:  We begin with a brief
+tutorial of basic VISTA commands (Chapter 2) to give new users a place to get
+started. With the preliminaries out of the way, we begin our discussion of how
+to use VISTA for a variety of image processing tasks.  Chapter 3 is an
+overview of basic reduction procedures common to most image processing tasks
+(imaging or spectrophotometric data), such as flat fields, dark frames, etc. 
+In Chapter 4 we describe the basic VISTA procedures for 2-D image reduction.
+Basic spectral data reduction techniques are described in Chapter 5.  An
+advanced discussion of reduction techniques for data obtained with the
+Hamilton echelle spectrograph at Mount Hamilton is presented in Chapter 6. 
+Chapter 7 presents a brief tutorial on the use of command procedures in VISTA
+for automating various reduction tasks.  Finally, Chapter 8 is a brief
+collection of ``dirty tricks'' that some folks might find useful. 
+
+Following the chapters are a series of useful appendices. Appendix A is a
+compendium of all of the VISTA commands organized by function.  A set of
+examples of VISTA command procedures, ranging from very simple to rather
+complex, are given in Appendix B. Appendix C presents a brief discussion of
+FITS header cards and how they are used in VISTA. 
+
+VISTA has been ported to both VMS and Unix (ISI) systems, using a variety of
+color image display devices.  Throughout this cookbook, we shall use examples
+that are for the most common installation at the time of writing, namely a
+UNIX computer using an X11 color graphics display.  
+Variations are described in the Help Manuals for the different
+flavors of VISTA. 
+
+\section{Final Remarks}
+
+For the future? It is clear that VISTA has a fairly large cadre of
+loyal users, and so will probably be supported in some state or another for
+the present time.
+
+%-------------------------------------------------------------------------------
+%
+%\section{The Recipe}
+%
+%There are no banana recipes in this cookbook.  In fact, there aren't {\bf any}
+%recipes in this cookbook.  OK, there's {\bf one} recipe in this cookbook.  It
+%couldn't be a cookbook without at {\it least} one, right?
+%
+%\begin{verbatim}
+%
+%    Killer Margaritas.
+%
+%         1 fifth of Tequila (cheap Mexican tequila, the cheaper 
+%                            the better, with the worm still kicking)
+%         Triple Sec  (Grand Marnier would spoil it)
+%         Limes
+%         Party Ice
+%
+%         Coarse Salt
+%         1 qt blender.
+%         Mason Jars
+% 
+%   Remove worm (do this before you start drinking).  Cut the 
+%   worm in half.  Fill the blender 2/3 full of party ice.  
+%   Pour half of the Tequila and as much Triple Sec as you can 
+%   stand into the blender.  
+%   Put one of the worm halves in the blender.  Squeeze a lime
+%   (or two) into the blender.  Don't worry about seeds, they 
+%   add texture.  Turn on the blender.  
+%   Blend until the ice is crushed.  Turn off the blender.  
+%   Pour the Margaritas into Mason Jars rimmed with coarse salt.
+%
+%   Drink the Margaritas (slowly). 
+%
+%   Makes 2 batches.
+%
+%\end{verbatim}
+%
+%\end{document}
+%\end

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>TVPLOT: Draw Text and Graphics on the Image Display</TITLE>
+<META NAME="description" CONTENT="TVPLOT: Draw Text and Graphics on the Image Display">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00860000000000000000"></A>
+<A NAME="2698"></A>
+<BR>
+TVPLOT: Draw Text and Graphics on the Image Display
+</H1>
+
+<!-- linkto tvplot.html -->
+<BR>
+
+<BR>
+
+<P>
+TVPLOT is used to markup, label, annotate, or otherwise deface the image
+display.  It has loads of options and clever use of defaults, so you don't
+have to say everything.  The origin of the plots is from a predefined
+center loaded by the AXES command or is given by the C= keyword.
+
+<P>
+In simple use TVPLOT will draw lines.  Use just L=l, or just P= for the
+default center, or two P=(r,c) endpoints to ignore the default origin.  Use
+SCALE if you mean arcseconds for L and not pixels, PA to rotate, or OFF to
+give an offset in whatever direction the X axis is for any PA
+specification.  TICKS will give nice scale marks on the line.
+
+<P>
+Show the image subsection boxes (see BOX) with BOX=n.  You can also make up
+any boxes just for plotting by giving the BOX keyword.  This tells TVPLOT
+to think about BOX plotting instead of lines.  Use W and H with the default
+center or C= keyword, two P= keywords to give opposite corners, P and C
+together for corners, any of L, W, or H by themselves for square boxes, and
+so on.  Use PA, OFF, SCALE to help out.
+
+<P>
+Other symetrical plots.  Here you have CROSS, CIRC=r, COMPASS=r, all of
+which follow the AXES, C=, or P= centers. Use PA, OFF, SCALE here, too.
+
+<P>
+Now you can make any label you want with the TEXT option - except you can't
+rotate it with PA (sorry - it uses system fonts that I didn't want to muck
+with).  Use P=, or C= to position it - where you give where you want the
+center of the string to be.  Right now VISTA has a little trouble with
+multiword strings enterred directly on the TVPLOT command line, but they
+work fine if you load them first with the STRING command.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+
+<P>
+O.K. so now you want real vector graphics.
+<BR>
+
+<BR>
+Use procedures to make a neat grid at a funny angle.
+<PRE>
+   YDIM=25 
+   XDIM=15 
+   FUNNY=37 
+   STEP=5
+   DO Y=-YDIM,YDIM,STEP
+      TVPLOT P=(-XDIM,Y) P=(XDIM,Y) PA=FUNNY
+   END_DO
+   DO X=-XDIM,XDIM,STEP
+      TVPLOT P=(X,-YDIM) P=(X,YDIM) PA=FUNNY
+   END_DO
+</PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

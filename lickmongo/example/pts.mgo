@@ -1,0 +1,16 @@
+data cietristm.dat
+xcolumn 1
+ycolumn 4
+limits
+box
+xlabel Wavelength [nm]
+ylabel Visual stimulus
+tlabel Distribution of apples, clubs, & spades
+ptype 4 1
+points
+ycolumn 3
+ptype  8 0
+points
+ycolumn 2
+ptype 3 2
+points

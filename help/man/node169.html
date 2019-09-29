@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>ROWFIT: Fit Each Row of an Image with a Function</TITLE>
+<META NAME="description" CONTENT="ROWFIT: Fit Each Row of an Image with a Function">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0014170000000000000000">
+ROWFIT: Fit Each Row of an Image with a Function</A>
+</H1>
+
+<!-- linkto rowfit.html -->
+<BR>
+
+<BR>
+
+<P>
+ROWFIT substitutes, subtracts, or divides, each row by a fit from a menu
+of functions (all linear in the coefficients). By default, the image is
+replaced by the fits, unless the SUB, DIV, or FITONLY keywords are
+specified.  Either a polynomial or a Fourier series can be used for the
+fitting function, with the number of polynomials (or sins and cosines)
+specified by the NCOEF=m keyword. The default is a polynomial of order 0
+(i.e. a constant term).
+
+<P>
+The XBUF=buf keyword allows using any physical quantity (instead of the
+default column number) as independent variable for the fit. In this case
+the pixel values of the spectrum in buffer 'buf' will be use as the values
+of the independent variable at each column. Useful application include the
+fitting and subtraction of continuum or absorption spectra from emission
+line objects, sky-level estimation and sky subtraction in long-slit
+spectroscopy, or the fitting of many highly non-linear functions. The
+WBUF=wbuf keyword allows the user to give individual pixel weights for the
+fit, with the weights for the given pixel given by the value in buffer
+'wbuf'.
+
+<P>
+The parameters of the fit can be saved for inspection or for later use with
+the LOAD=buf keyword. The image loaded into buffer 'buf' will have, for
+each row, the coefficients of the row fit and their estimated error as
+well as the standard deviation from the fit in the following format:
+<PRE>
+  Column  0  holds the standard deviations from the fits,
+  Column  1  holds the first coefficient of the fits (The constant term),
+  Column -1  holds the estimated error on the first coefficient,
+  Column  2  holds the second coefficient of the fits (The linear term),
+  Column -2  holds the estimated error on the second coefficient,
+  Column  3  holds the third coefficient of the fits (The quadratic term),
+  Column -3  holds the estimated error on the third coefficient,
+</PRE>
+and so on until column +/- the m coefficients fixed with the NCOEF=m
+keyword.
+
+<P>
+The LOADed coefficients can be smoothed, averaged with other fits, or
+manipulated in any fashion before used to operate in other images with the
+UNLOAD=buf keyword. In this case ROWFIT evaluates (DOES NOT FIT) the
+function defined by the coefficients in buffer 'buf' and operates
+(substitutes, divides or subtracts the function) on the 'source'
+buffer. These coefficients can also be used to remove distortions from an
+image when used in command ALIGN.
+
+<P>
+Note that when evaluating a function with the UNLOAD= keyword the user has
+to specify the kind of function (FOUR or POLY) and the abscissae buffer
+(XBUF=) when appropriate.
+
+<P>
+Examples
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

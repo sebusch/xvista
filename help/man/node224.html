@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>MAGAVER: Compute Weighted Means of Photometry from COMBINE</TITLE>
+<META NAME="description" CONTENT="MAGAVER: Compute Weighted Means of Photometry from COMBINE">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0016240000000000000000">
+MAGAVER: Compute Weighted Means of Photometry from COMBINE</A>
+</H1>
+
+<!-- linkto magaver.html -->
+<BR>
+
+<BR>
+
+<P>
+MAGAVER takes the output file from COMBINE when run with the CMB=
+option. It will ask the user which columns in this file correspond to which
+colors, and will do a weighted average of multiple observations in each
+color. Currently, only 3 different colors are allowed.  If the PLOT keyword
+is specified, the magnitudes to be averaged will be displayed with a MONGO
+plot for each star. If the TTY keyword is specified, the user will be
+allowed to interactively remove points from each set of observations.
+
+<P>
+This command can also be used on output photometry files to merge them
+together into one file, for later use by FITSTAR.  In this mode, the
+program will prompt for a file name, read the stars in from this file and
+output them to a new file, then ask for a new input file, from which to
+append the results onto the original output file. This can be used, for
+example, to merge all observations of standard stars from multiple frames
+into one file.  The NORM keyword will normalize all the measured magnitudes
+to a standard exposure time, assuming the exposure is stored in the data
+file.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

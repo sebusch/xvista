@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>MEDIAN: Compute Median of Several Images</TITLE>
+<META NAME="description" CONTENT="MEDIAN: Compute Median of Several Images">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0012120000000000000000">
+MEDIAN: Compute Median of Several Images</A>
+</H1>
+
+<!-- linkto median.html -->
+<A NAME="4863"></A>
+<A NAME="4864"></A>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+MEDIAN loads the 'dest' buffer with the median of images im1, im2, im3, ...
+Each pixel in the destination image is the median of the corresponding
+pixels in the input images. Normally, the program scales each image to have
+the same mean before computing the median of the stack. If you wish to do
+the background determination and scaling yourself, you can suppress the
+auto-rescaling by using the NOMEAN keyword.
+
+<P>
+Note that all input images must be in VISTA buffers. This prevents
+computing the median of very large numbers of images because of insufficient memory.  For
+this purpose, try the command BIGMEDIAN, which will median input disk FITS
+files and store the median in a VISTA buffer.
+
+<P>
+At least 3 input images must be given.  None of the images can be in the
+same buffer as the output image.  All the images must have the same size
+and starting pixel.
+
+<P>
+The program is useful for removing cosmic-ray hits from many exposures of
+the same object.  Make sure the location of the objects on the image
+(stars, location of spectrum, etc) are the SAME on ALL images!  Use SHIFT
+or ALIGN to align images before using MEDIAN.
+
+<P>
+Example:
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

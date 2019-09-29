@@ -1,0 +1,163 @@
+!       A nice example page created by Vladimir Surdin
+data surdin.dat
+xcolumn 1
+ycolumn 2
+xlimits 0 .6
+ylimits 0 1
+expand 1
+box
+tlabel MONGO   ptype a b
+pcolumn 3
+expand 2
+points
+relocate .07 .93
+expand 1.3
+label b = 0
+relocate .17 .93
+label b = 1
+relocate .27 .93
+label b = 2
+relocate .37 .93
+label b = 3
+relocate .5  .93
+label a
+relocate .5 .89
+label \gN
+relocate .05 .9
+draw .45 .9
+relocate .49 .9
+draw .52 .9
+relocate .5 .85
+label 0
+relocate .5 .8
+label 1
+relocate .5 .75
+label 2
+relocate .5 .7
+label 3
+relocate .5 .65
+label 4
+relocate .5 .6
+label 5
+relocate .5 .55
+label 6
+relocate .5 .5
+label 7
+relocate .5 .45
+label 14
+relocate .2 .82
+label (expand 2)
+relocate 0 0.4
+draw .6 .4
+relocate .47 .36
+expand 1.2
+label ltype \iN
+expand 1.1
+relocate .54 .33
+label \gN
+relocate .54 .30
+label 0
+relocate .54 .26
+label 1
+relocate .54 .22
+label 2
+relocate .54 .18
+label 3
+relocate .54 .14
+label 4
+relocate .54 .10
+label 5
+relocate .54 .06
+label 6
+relocate .03 .30
+label 0
+relocate .03 .26
+label 1
+relocate .03 .22
+label 2
+relocate .03 .18
+label 3
+relocate .03 .14
+label 4
+relocate .03 .10
+label 5
+relocate .03 .06
+label 6
+expand 1.3
+relocate .22 .37
+label lweight a
+expand 1.1
+relocate .29 .33
+label 1
+relocate .42 .33
+label 2
+relocate .16 .33
+label 0
+relocate .08 .33
+label a \g_
+lweight 1
+ltype 0
+relocate .22 .30
+draw .36 .30
+ltype 1
+relocate .22 .26
+draw .36 .26
+ltype 2
+relocate .22 .22
+draw .36 .22
+ltype 3
+relocate .22 .18
+draw .36 .18
+ltype 4
+relocate .22 .14
+draw .36 .14
+ltype 5
+relocate .22 .10
+draw .36 .10
+ltype 6
+relocate .22 .06
+draw .36 .06
+lweight 2
+ltype 0
+relocate .38 .30
+draw .52 .30
+ltype 1
+relocate .38 .26
+draw .52 .26
+ltype 2
+relocate .38 .22
+draw .52 .22
+ltype 3
+relocate .38 .18
+draw .52 .18
+ltype 4
+relocate .38 .14
+draw .52 .14
+ltype 5
+relocate .38 .1
+draw .52 .1
+ltype 6
+relocate .38 .06
+draw .52 .06
+lweight 0
+ltype 0
+relocate .06 .30
+draw .2 .30
+ltype 1
+relocate .06 .26
+draw .2 .26
+ltype 2
+relocate .06 .22
+draw .2 .22
+ltype 3
+relocate .06 .18
+draw .2 .18
+ltype 4
+relocate .06 .14
+draw .2 .14
+ltype 5
+relocate .06 .10
+draw .2 .10
+ltype 6
+relocate .06 .06
+draw .2 .06

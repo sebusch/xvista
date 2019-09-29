@@ -1,0 +1,36 @@
+
+<H1><A NAME="SECTION001460000000000000000">
+WSCALE: Compute Wavelength Scale from Indentified Lines</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml391#
+<A NAME="5799"><tex2html_anchor_invisible_mark></A>
+<A NAME="5800"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command5801#
+<BR>
+
+<P>
+WSCALE calculates the wavelength calibration polynomial using the
+wavelengths and line centers of the calibration spectrum lines identified
+by the LINEID command.  The resulting calibration is associated with the
+spectrum specified by 'dest'. The line centers determined with the LINEID
+command are fit to a polynomial of order specified by 'ORD=n'. If the
+keyword 'INT' is specified, interactive line weighting can be done. The
+program will ask for all unspecified parameters.
+
+<P>
+The resulting wavelength scale becomes associated with the 'dest'
+spectrum. You can then use the COPW command to associate the wavelength
+scale with any other spectrum you wish.
+
+<P>
+Also, note that it is the REVERSE fit which is actually used by the command
+ALIGN to linearize a spectrum (see below).
+
+<P>
+<#5812#>Examples:<#5812#>
+<BR>
+<tex2html_image_mark>#example5813#
+<BR>
+
+<P>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>AXES: Compute the Centroid of an Object in an Image</TITLE>
+<META NAME="description" CONTENT="AXES: Compute the Centroid of an Object in an Image">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001150000000000000000">
+AXES: Compute the Centroid of an Object in an Image</A>
+</H1>
+
+<!-- linkto axes.html -->
+<A NAME="4466"></A>
+<A NAME="4467"></A>
+<BR>
+
+<BR>
+
+<P>
+This command will find the centroid of an object within the specified box
+in the source image, or in the entire image if no box specifier is
+given. The centroid coordinates are loaded into VISTA variables AXR and
+AXC, and are also held in a common block for use by other routines.  If the
+W= keyword is used, the wavelength of the centroid of the spectrum in the
+given interval is loaded into the variable WAVE.
+
+<P>
+The routine uses the highest pixel value on the box perimeter as a
+threshold value for the centroid, unless the SKY word is given, in which
+case the argument of the SKY word is taken as the threshold.  The threshold
+is subtracted from each pixel in the box during the calculation.
+
+<P>
+The output of AXES can be redirected.
+
+<P>
+Examples:
+<BR>
+
+<BR>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

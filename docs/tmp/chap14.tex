@@ -1,0 +1,1771 @@
+\chapter{Spectroscopy}
+
+%
+% minor reformatting and editing.  Most checked for keyword & function
+% syntax, but it is hard to tell on some of the more arcane spectral
+% stuff that JJGG and BF wrote (and near as I can tell only they ahve
+% really used). 
+% Made sure the index of commands below is current
+% moved SETUP command here from Chap 6, as it is used here by EXTINCT and
+% practically nowhere else (photometry???)
+% echelle stuff is still real dicey...
+% rwp/osu 98Aug6 & 13
+
+\section{Introduction to Spectroscopy}
+\begin{rawhtml}
+<!-- linkto spectroscopy.html -->
+<!-- linkto spectra.html -->
+\end{rawhtml}
+
+The VISTA spectroscopy commands are:
+\begin{itemize}
+  \item[MASH\hfill]{extract a spectrum from an image by summing (mashing)
+       adjacent image rows or columns.}
+  \item[SPECTROID\hfill]{extract a spectrum that curves across an image 
+       (also used to map curved extraction apertures).}
+  \item[EXTRACT\hfill]{optimal extraction of the spectra of faint or
+       moderately faint point-sources (Horne Algorithm).}
+  \item[LINEID\hfill]{identify lines in a wavelength calibration spectrum.}
+  \item[WSCALE\hfill]{compute wavelength calibration solutions from
+       identified lamp lines.}
+  \item[COPW\hfill]{apply (copy) a wavelength scale to a spectrum.}
+  \item[ALIGN\hfill]{re-sample a spectrum onto a linearized wavelength
+       scale (or adjust an existing spectrum).}
+  \item[SKYLINE\hfill]{re-calibrate wavelengths using night sky lines.}
+  \item[EXTINCT\hfill]{correct a spectrum for atmospheric extinction.}
+  \item[SETUP\hfill]{set the Longitude and Latitude for extinction correction}
+  \item[FLUXSTAR\hfill]{compute flux calibration curves from observations 
+       of flux standard stars.}
+  \item[FLUX\hfill]{apply flux calibration to a spectrum.}
+  \item[POLY\hfill]{fit a polynomial to a spectrum.}
+  \item[STRETCH\hfill]{expand (stretch) and spectrum into a 2-D image.}
+  \item[ISPLINE\hfill]{interactively fit a spline to a spectrum.}
+  \item[ROWFIT\hfill]{fit a polynomial to each row of an image.}
+  \item[FINDSHIFT\hfill]{find relative shifts between two spectra.}
+  \item[FINDPEAK\hfill]{find the position of a spectrum along rows or 
+       columns.}
+  \item[SPINDEX\hfill]{measures equivalent widths at each row of an image}
+  \item[FQUO\hfill]{fits a broadening function to Fourier quotient spectra}
+  \item[EXTSPEC\hfill]{extract a given order from a wavelength-calibrated
+       echelle file.}
+  \item[EWAVE\hfill]{identify lines in an arc spectrum obtained with the
+        Hamilton spectrograph and compute wavelength scale from line
+        identifications}
+\end{itemize}
+
+
+\section{MASH: Extract a Spectrum by Summing (mashing) Rows or Columns}
+\begin{rawhtml}
+<!-- linkto mash.html -->
+\end{rawhtml}
+\index{Spectrum!Extract from image}
+\index{Spectrum!Extraction by summation of rows/columns}
+\begin{itemize}
+  \item[Form:MASH dest source SP=i1,i2 {[BK=b1,b2]} {[COLS]} {[COL]} 
+       {[COL=c1,c2]} {[ROW=r1,r2]}\hfill]{}
+  \item{{[SKY=s]} {[NORM]} {[REFLAT]} {[SUB]} {[MASK]}}
+  \item[dest\hfill]{is the buffer which will hold the resulting spectrum.}
+  \item[source\hfill]{is the image from which the spectrum is being made.}
+  \item[COLS or COL\hfill]{says that the spectrum runs down columns.}
+  \item[SP=\hfill]{delimits the rows or columns in the image 
+        'source' which are used to make the spectrum.}
+  \item[BK=\hfill]{delimits rows (columns) used for the background}
+  \item[COL=\hfill]{takes the spectrum from the specified columns.}
+  \item[ROW=\hfill]{takes the spectrum from the specified rows.}
+  \item[SKY=\hfill]{saves the sky rows (from BK= keyword) as a
+        spectrum in buffer s.}
+  \item[NORM\hfill]{averages the added rows.}
+  \item[REFLAT\hfill]{fits each background column (row) with a parabola, 
+        and uses this as the background.  Alters source buffer.}
+  \item[SUB\hfill]{subtracts the average background spectrum from
+        the original image.}
+  \item[MASK\hfill]{uses the image mask defined with the MASK
+       command to ignore bad pixels and/or image}
+       segments.  This works only with REFLAT option.
+\end{itemize}
+
+MASH adds together rows or columns of an image to produce a spectrum. The
+number of the spectrum comes immediately after MASH on the command
+line. The basic syntax of this command is:
+\begin{verbatim}
+     MASH (extract this spectrum) (from this image)
+\end{verbatim}
+SP= selects rows (or columns when COLS is used) that are to be added to
+make the spectrum.  BK selects rows (or columns) which are background.  The
+resulting spectrum is the sum of the spectrum rows (or columns) with the
+background rows (columns) subtracted. You may specify SP and BK more than
+once.
+
+It is assumed that the spectrum is aligned with the columns or rows on the
+image -- that each column (or row) contains light of only one wavelength.
+Use SPECTROID if the slit lies along columns or rows, but the spectrum is
+either curved or projected diagonally across the image (as is the case for
+single-order or multi-order cross-dispersed spectrometers, slit
+spectrographs with either large spectra ranges or observations taken with
+severe atmospheric dispersion, or multi-order echelle spectra).  In the
+future, VISTA will be able to handle spectra for which the dispersion is
+not aligned along a row or column (e.g., a CCD tilted with respect to the
+nominal dispersion axis).
+
+NORM divides the spectrum by the number of rows (or columns) used to
+produce the spectrum.  COL= (or ROW= if COLS is used) selects the columns
+(or rows) used to make the spectrum.
+
+REFLAT selects the background rows (columns) in the image, fitting each
+column (row) of the image with a polynomial.  The image columns (rows) are
+divided by this polynomial to 're-flat' the image.  MASK tells the program
+to ignore masked pixels in the REFLAT procedure.
+
+SKY=n saves the sky spectrum (the normalized sum of the background rows or
+columns) in the designated buffer.
+
+Examples: The examples below assume that the spectrum runs along rows.  If
+it ran along columns, you would add the COLS keyword and substitute ROW=
+for the COL= keyword
+\begin{itemize}
+  \item[MASH 2 1 SP=50,55 BK=20,30 BK=75,80\hfill]{ produces spectrum 2
+       from image 1.  The spectrum is taken from rows 50-55.  The
+       background is rows 20-30 and 75-80.}
+
+  \item[MASH 2 1 SP=50,55 BK=20,30 BK=75,80 COL=100,200\hfill]{ does the
+       same as example 1, but takes the spectrum only from columns 100 to
+       200.}
+
+  \item[MASH 2 1 SP=50,55 BK=20,30 BK=75,80 REFLAT\hfill]{ A polynomial is
+       fit down each column, using the rows selected for the background.
+       Each column in the image is divided by the polynomial which was fit
+       in that column.  The MASH then proceeds as in example 1.}
+\end{itemize}
+
+\section{SPECTROID: Map the Location of a Spectrum on an Image}
+\begin{rawhtml}
+<!-- linkto spectroid.html -->
+\end{rawhtml}
+\index{Spectrum!Map location of}
+\index{Spectrum!Extract curved spectrum}
+\begin{itemize}
+  \item[Form:SPECTROID dest source {[SP=s1,s2]} {[BK=b1,b2]} 
+       {[SPW=ds]}\hfill]{}
+  \item{{[BKW=db]} {[MODEL=m]} {[DLOC=d]} {[LOC=r]} {[NOSHIFT]} {[FIT=p1,p2]}}
+  \item{{[TRACE]} {[SELF]} {[LOAD]} {[NOMASH]} {[TAGALONG]} {[TAG]} 
+       {[MOMENTS]}}
+  \item[dest]{is the buffer which will hold the map (which is a spectrum)}
+  \item[source]{is the image from which the map is being made,}
+  \item[SP=]{delimits the rows in the image 'source' which
+       are used to make the spectrum,}
+  \item[SPW=]{alternatively, specifies the width of a
+       symmetric spectrum window centered on the centroid,}
+  \item[BK=]{delimits rows (or columns) used to determine the background,}
+  \item[BKW=]{alternatively, specifies the width of the
+       symmetric background window,}
+  \item[LOC=]{specifies the starting row (or column) for calculating
+       the centroid}
+  \item[DLOC=]{alternatively, specifies a relative shift in
+       rows (or columns) from the centroid model (see MODEL=),}
+  \item[MODEL=]{specifies a buffer containing a model to
+       use as an approximation to the location of the spectrum.}
+  \item[NOMASH]{inhibits the mashing feature -- the destination
+       buffer will then contain the centroids themselves.}
+  \item[NOSHIFT]{specifies that no shift from the model will be calculated,}
+  \item[FIT=]{specifies the range in pixels over which a
+       median shift between the model and the calculated centroid will 
+       be determined.}
+  \item[TRACE]{allows the tracing of the centroiding procedure
+       for debugging purposes.}
+  \item[SELF]{tells SPECTROID to do the mashing without a model.}
+  \item[LOAD]{loads the VISTA variable SHIFT with the calculated value.}
+  \item[TAGALONG or TAG]{implements the "following" algorithm in which a
+       filtered mean of the last 15 centroids is used as the starting guess
+       for the next centroid.  (A centroid is rejected from the mean if it
+       differs by more than 0.5 pixels from the previous mean.)}
+  \item[MOMENTS]{calculate the first five moments of the spectrum,
+       including both the area and the centroid.}
+\end{itemize}
+
+SPECTROID produces a map of the location of a spectrum on an image.  This
+map is stored as a table of row (or column) numbers in a 1-dimensional
+image (like a spectrum) in one of the image buffers.
+
+In the following description it is assumed that the length of the slit lies
+along a row (i.e., dispersion runs horizontally across the detector as
+viewed in the TV display).
+
+SPECTROID calculates the centroid of the spectrum perpendicular to the
+direction of dispersion, with optional background subtraction.  Normally
+the centroid as a function of column number is then used as the center of a
+spectrum window and the spectrum is created by summing over the relevant
+pixels.  (Note that unlike in MASH, Lagrangian interpolation is used to
+account for fractional pixels in SPECTROID.). Look at command FINDPEAK for
+an alternative way to locate the position of an object along the
+dispersion.
+
+With the NOMASH keyword the mashing feature is skipped, and the centroid as
+a function of column number will then be loaded into the destination
+buffer.  This centroid may be smoothed, filtered, fitted, or manipulated in
+any other manner to produce a MODEL to be used in reducing other spectra.
+It may also find uses for calibrating telescope flexure, checking grism
+alignment, etc. Having found the centroid, SPECTROID can then do a 'MASH'
+using the computed centroids to choose which pixels are summed to form the
+extracted spectrum.
+
+The centroiding procedure must be given a reasonable starting estimate for
+the centroid.  This is done via the LOC= keyword, or if a model is supplied
+the value of the first pixel in the model spectrum will be used.  (If both
+a model and the LOC= keyword are specified the latter will be used.)
+Another option if a model is used is the DLOC= keyword, which will specify
+a relative row offset from the starting value of the model.
+
+With the TAGALONG (or simply 'TAG') keyword the command will use a
+"following" algorithm in which a filtered mean of the last 15 centroids is
+used to guess the next centroid.  This allows the routine to follow almost
+any shape of spectrum with minimal information (just the beginning row).
+However, if there are regions in which the spectrum disappears the routine
+may get lost.
+
+Another necessary piece of information is the window over which the
+centroid will be calculated.  This is given via the SP= or the SPW=
+keywords.  The SPW= keyword specifies a window width which will be
+symmetrically placed around the centroid.  Asymmetric windows may be
+specified via the SP=s1,s2 keyword.  In this case the two values must be
+specified relative to the centroid.  Hence SP=-3,5 will specify a window
+extending three rows above and five rows below the centroid.  Note that
+since the centroid will not in general be an integer the spectrum rows may
+be floating-point numbers as well.  Hence SP=-3.4,4.166158 or SPW=2.3 are
+legal formats.
+
+If you want to specify a background to be subtracted (which will presumably
+be the usual procedure) you can use the BKW= and BK= keywords in the same
+fashion as the SPW= and SP= keywords. Rows common to both spectrum and
+background will be taken as spectrum as in MASH.
+
+The MODEL= keyword may be used to specify a curvature model for the
+spectrum.  The value specified for this keyword is the buffer in which the
+model resides.  The model may be a smoothed version of a previously
+determined centroid, for example. If a model is specified and the NOSHIFT
+keyword is NOT, the command will find the centroid at each column of the
+spectrum using the specified spectrum and background regions.  The median
+shift between newly computed centroids and the model is found and this
+shift is added into the original model.  This revised model is then used to
+do the 'MASH' operation.
+
+The NOSHIFT keyword will skip the original centroiding procedure and use
+the model as it is for the intensity extraction. Note that if the NOSHIFT
+keyword is specified then the MODEL= keyword must be used as well.
+
+The FIT= keyword limits the region over which the median shift between
+model and calculated centroid is computed.  The two parameters passed via
+this keyword are the start- and end-column numbers over which the fit is
+done.
+
+The MOMENTS keyword will load a 5 row image with the first five moments of
+the light distribution with respect to the model. The area (total counts)
+will be in row 0, the centroid in row 1, the variance, skewness, and
+kurtosis in rows 2, 3, and 4 respectively. This keyword proves useful for
+mapping focus changes along a spectrum, etc.
+
+The TRACE keyword will provide some feedback on the centroiding process,
+via strategically placed TYPE statements in the subroutine. The output from
+this takes a while to print out, so use it with restraint.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[SPECTROID 1 2 SPW=10 BKW=20 LOC=250 NOMASH\hfill]{ SPECTROID in its
+       simplest form, which loads the centroid as a function of column
+       number into buffer 1. The spectrum window is ten pixels wide, and
+       the background window twenty. Row 250 was specified as an estimate
+       of the centroid.}
+
+  \item[SPECTROID 1 2 SPW=9.4 BK=-6,9 MODEL=5 TRACE\hfill]{ Since the NOMASH
+       keyword was not specified the result of this command will be the
+       production of a total intensity spectrum.  Note that the spectrum
+       window is not an integral number of pixels wide, and the BK=
+       background has been used to specify an asymmetric (with respect to
+       the centroid) background window.  Also note that the BK= keyword
+       uses relative row numbers, not absolute.  Spectrum buffer 5 will be
+       used as a model for the curvature of the spectrum, and a shift
+       between this model and the calculated centroid will be determined
+       and used.  The TRACE keyword will cause a (possibly lengthy) tracing
+       of the centroiding process to be printed out.}
+
+  \item[SPECTROID 6 2 MODEL=5 SPW=3 BK=-25,-20 BK=20,25 NOMASH\hfill]
+  \item{This command uses model 5 as the starting estimate for the
+       centroid, but recalculates the centroid using the new spectrum and
+       background window specifications.  Again, the NOMASH keyword
+       inhibits the mashing feature.}
+\end{itemize}
+
+\section{EXTRACT: Optimal Spectrum Extraction (Horne's Method)}
+\begin{rawhtml}
+<!-- linkto extract.html -->
+\end{rawhtml}
+\index{Spectrum!Optimal extraction}
+\begin{itemize}
+  \item[Form:EXTRACT spec image SP=s1,s2 BK=b1,b2 BK=b3,b4 {[SKY=s]} 
+       {[VAR=v]} {[SUB]}\hfill]{}
+  \item[{[SORDER=sord]} {[PORDER=pord]}{[RONOISE=r]} 
+        {[EPERDN=eperdn]} \hfill]{}
+  \item[spec\hfill]{is the buffer to contain the resulting spectrum,}
+  \item[image\hfill]{is the image from which the spectrum is created,}
+  \item[SP=s1,s2\hfill]{specifies the range of spectrum rows,}
+  \item[BK=b1,b2\hfill]{specifies the background rows (several background
+       regions may be specified),}
+  \item[SKY=s\hfill]{places the sky spectrum (at the position of the
+       middle of the spectrum) into buffer s,}
+  \item[VAR=v\hfill]{places the estimated variance of the extracted
+       spectrum into buffer v,}
+  \item[SUB\hfill]{subtracts the fitted sky from the original image,}
+  \item[SORDER=sord\hfill]{specifies the order of polynomial to be fit to the
+       sky columns (default=2, parabolic fit),}
+  \item[PORDER=pord\hfill]{specifies the order of polynomial to be fit to the
+       PSF profile (default=2, parabolic),}
+  \item[RONOISE=r\hfill]{changes the value used for the read-out noise of the
+       detector in electrons (default=7),}
+  \item[EPERDN=eperdn\hfill]{changes the inverse gain (in electrons per DN) 
+       used for the detector (default=2.5 electrons/DN).}
+\end{itemize}
+
+EXTRACT is an "optimal extraction" routine for extracting the spectra of
+1-dimensional sources (point-sources) from 2-D spectral images.  It is
+based on the algorithm described by Keith Horne (``An Optimal Extraction
+Algorithm for CCD Spectroscopy'', 1986, PASP, 98, 609).  In brief, each
+pixel in the spectral extraction is weighted according to the fraction of
+the flux which is expected in that pixel assuming a uniform spatial
+profile.  The weighting scheme is optimized to retrieve the maximum
+signal-to-noise without biasing the resulting fluxes. 
+
+EXTRACT operates much like MASH, and should result in better
+signal-to-noise in those cases where the noise in the spectrum is dominated
+by the background (either from the sky or from the detector read-out
+noise).  
+
+WARNING: It is inappropriate to use EXTRACT for moderate or bright objects
+in which the noise is dominated by the Poisson statistics of the object
+itself.  In such cases the extraction routine may discard so many points
+from the spatial profile fits it does that parts of the spectrum can become
+meaningless.  It is also inappropriate to use EXTRACT for objects whose
+spectra are dominated by bright, unresolved emission lines (as EXTRACT
+might reject them as being ``cosmic rays''), and for extended sources.  For
+bright sources, emission-line objects, and extended sources, use MASH or
+SPECTROID as appropriate.
+
+The steps which EXTRACT goes through are as follows:
+\begin{enumerate}
+  \item The detector characteristics are specified.  These are the readout
+     noise in electrons (which can be changed using the keyword RONOISE=
+     from its default value of 7) and the inverse gain in electrons per DN
+     (using EPERDN= to change this from the default of 2.5).  Usually the
+     user will not wish to change these values, as the defaults are
+     appropriate for the T.I. CCDs at Lick.
+
+  \item The background rows are fitted with polynomials of order "pord."
+     (Use the keyword SORDER= to change this from its default value of 2.)
+     The expected uncertainties in this fit are then calculated (using the
+     read-out noise and the gain) and any points more than 4-sigma from the
+     fit are ignored and the fit recalculated.  This fit iteration is
+     performed until no new points are ignored or until 5 iterations have
+     been done.
+
+  \item The object profile is then parameterized and fit with a polynomial
+     of order 2 (unless the PORDER= keyword has been used).  Again, the fit
+     is iterated a maximum of 8 times, using a rejection threshold of
+     4-sigma.
+
+  \item Using the resulting parameterization the weights are calculated for
+     each pixel and the spectrum extracted.  An automatic point rejection
+     is performed at this stage to remove bad pixels on the spectrum rows
+     themselves.  A more conservative 5-sigma rejection level is used and
+     only one point (the one with the largest difference) is removed at
+     each iteration.  A maximum of five iterations is allowed (hence up to
+     five points may be removed at each wavelength).  The resulting
+     spectrum is placed into the specified buffer.
+
+  \item If the SKY= and/or VAR= keywords have been specified then the
+     appropriate buffers are loaded with the requested spectra.  If the SUB
+     keyword has been specified then the fitted background rows are
+     subtracted from the original image.
+\end{enumerate}
+
+Note that the uncertainties at all stages are estimated using the assumed
+detector characteristics.  When the data are of sufficient quality this
+means that the uncertainties in the fits will be so small that the
+inability of the fit parameterizations (both sky and profile) to accurately
+model the data will be detectable.  The program will then start rejecting
+large numbers of points because the model assumed is not quite appropriate.
+In this case the MASH command should be used, as the data are probably of
+such high signal-to-noise that the optimal extraction routine will not gain
+anything over a simple summation.  The interested user is referred to
+Keith's article for more details.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[EXTRACT 10 1 SP=134,138 BK=120,130 BK=142,152\hfill]{ extracts a
+       spectrum from rows 134-138 in image 1 and places the result in
+       buffer 10.  Rows 120-130 and 142-152 are used as the background
+       rows.}
+
+  \item[EXTRACT 14 4 SP=100,104 BK=90,114 SUB SKY=34 VAR=24
+       SORDER=3\hfill]{ extracts a spectrum from rows 100-104 of image 4.
+       Note that in this case the BK= specifications straddle the spectrum
+       rows (this will be handled correctly, as it is in MASH).  The sky is
+       fit with cubic polynomials (SORDER=3) and is the fit is subtracted
+       from the image 4.  The object spectrum is placed into buffer 14, the
+       sky spectrum into 34, and the variance of the object spectrum into
+       buffer 24.}
+\end{itemize}
+
+\section{LINEID: Identify Lines in a Wavelength-Calibration Spectrum}
+\begin{rawhtml}
+<!-- linkto lineid.html -->
+\end{rawhtml}
+\index{Spectrum!Identify lines}
+\index{Wavelength scale!Identify lines for}
+\begin{itemize}
+  \item[Form: LINEID source {[FILE=xxx]} {[ADD]} {[TTY]} {[INT]} {[CEN=]} 
+       {[DISP=]}\hfill]{}
+  \item{{[LAMBDA=wave,pix{[,uncer]}]} {[redirection]}}
+  \item[source]{selects the spectrum used in the calibration,}
+  \item[FILE=]{is a file of line identifications,}
+  \item[ADD]{will add newly identified lines to a list
+       of lines from a previous execution of LINEID,}
+  \item[TTY]{sends more extensive output to the terminal,}
+  \item[INT]{allows interactive selection of lines,}
+  \item[CEN=]{allows the user to guess a central wavelength,}
+  \item[DISP=]{allows the user to guess a dispersion.}
+  \item[LAMBDA=]{allow the user to preset a (lambda,pixel) pair}
+\end{itemize}
+
+LINEID will match emission-lines in a wavelength calibration spectrum with
+tables of known line wavelengths.  The routine looks for peaks and attempts
+to identify them based on an initial estimate of the reciprocal dispersion
+in Angstroms/pixel and a list of line identifications read from a file in
+in the spectrum directory (SEE PRINT DIRECTORIES) with name 'xxx.WAV'.
+Accurate line centers are calculated, and if specified in the data file,
+partial line blends deconvolved. The matched lines are saved into a common
+block in VISTA.  The contents of the common block can be examined using the
+command 'PRINT LINEID'. By default, the previous contents of the common
+block are replaced with the current identifications.  However, if you use
+the 'ADD' keyword the new identifications will be appended to the older
+results. This allows you to combine the identifications from several
+independent wavelength calibration spectra. If the keyword 'INT' is
+specified, interactive line identifications can be made.  Once your line
+list has been created with LINEID you use the WSCALE command to fit a
+polynomial to the wavelengths as a function of pixel number.
+
+Normally the first guess as to the dispersion of the wavelength fit (and
+the second order term in the fit) are given as the first line of the
+wavelength list.  (The central wavelength is then left as a free
+parameter.)  However, the starting dispersion guess may be specified via
+the DISP= keyword (specifying two numbers here allows the second order term
+to be input as well).  Also, using the CEN= keyword allows the user to
+input a starting guess for the central wavelength, a necessary feature in
+high-resolution work where the line lists are prohibitively long.
+
+In instances where you have a small number of lines in your calibration
+spectrum the automatic line identification algorithm may find several
+possible matches between the observed lines and the wavelengths given in
+your line list.  In these instances the LAMBDA= option may help to identify
+the correct match.  You need to know the approximate wavelength of one
+point in your spectrum.  With the LAMBDA= keyword you specify a wavelength,
+a pixel number for that wavelength, and an uncertainty in that pixel
+number.  The line identification algorithm will then reject any set of
+line/wavelength identifications which are inconsistent with the given
+pixel/wavelength pair.  For this option to work you much choose a pixel
+which lies between identified lines in your spectrum; don't use a pixel
+near the ends of your spectrum.
+
+If you only specify the wavelength and pixel number with the LAMBDA= option
+then the pixel uncertainty will default to 1.  You may want to supply a
+larger value though to avoid rejecting all line identifications.
+
+In these examples, assume the default spectrum directory is 
+ccd/spec:
+\begin{itemize}
+  \item[LINEID 4 FILE=NEON\hfill]{Matches lines in spectrum 4 with the
+       wavelengths supplied in ccd/spec/NEON.WAV.  The resulting
+       identifications replace any previously saved identifications in the
+       common block.}
+
+  \item[LINEID 4 FILE=NEON $>$id.txt\hfill]{Does the same as example 1, but
+       this time sending the output to the file id.txt in the current
+       working directory.}
+
+  \item[LINEID 4 INT FILE=NEON ; LINEID 5 TTY FILE=MERCURY ADD\hfill]{The
+       first command does the same as example 1, but allows the user to
+       make additional line identifications after the command has made its
+       best attempt.  The second command works on a separate mercury lamp
+       spectrum in buffer 5.  The identifications are added to those for
+       the neon spectrum.}
+
+  \item[LINEID 10 FILE=THAR CEN=6715.4 DISP=0.134\hfill]{Attempts a
+       wavelength calibration using the line list THAR.WAV and starting
+       guesses for the central wavelength of 6715.4 Angstroms and for the
+       dispersion of 0.134 Angstroms.}
+\end{itemize}
+
+The wavelength file has the following format: The file is formatted, with
+the first line showing the estimated dispersion, followed by any
+second-order term. The format is free, but the second-order term must be
+0.0 if it is to be ignored.  Subsequent lines contain an ordered set of
+line wavelengths in Angstroms.  One spectral line is given per file
+line. The wavelength if followed by a two-letter ID code.  If the code is
+CO, that line is ignored.  The code is followed by the wavelengths of any
+blue-side or red-side satellites which might be blended with the primary
+line.  The wavelengths must be set to 0.0 if there are no lines blended
+with the primary.
+
+Example file:
+\begin{tabular}{cccc}
+  7.86&1.0E-03&&\\
+5881.4900 &NE& 5852.4900 &   0.0\\
+5944.8300 &NE&    0.0    &5975.2800\\
+6030.0000 &NE&    0.0    &   0.0\\
+6096.1600 &NE& 6074.3400 &6143.0600\\
+\end{tabular}
+
+\section{WSCALE: Compute Wavelength Scale from Indentified Lines}
+\begin{rawhtml}
+<!-- linkto wscale.html -->
+\end{rawhtml}
+\index{Spectrum!Wavelength scale}
+\index{Wavelength scale!For spectrum -- producing}
+\begin{itemize}
+  \item[Form: WSCALE dest {[ORD=n]} {[TTY]} {[INT]} {[redirection]}\hfill]{}
+  \item[dest]{selects the spectrum for which the wavelength scale is to apply,}
+  \item[ORD=]{determines the order of the polynomial 
+       expressing the relation between channel number and wavelength,}
+  \item[TTY]{sends more extensive output to the terminal,}
+  \item[INT]{allows interactive selection of lines.  INT implies TTY.}
+\end{itemize}
+
+WSCALE calculates the wavelength calibration polynomial using the
+wavelengths and line centers of the calibration spectrum lines identified
+by the LINEID command.  The resulting calibration is associated with the
+spectrum specified by 'dest'. The line centers determined with the LINEID
+command are fit to a polynomial of order specified by 'ORD=n'. If the
+keyword 'INT' is specified, interactive line weighting can be done. The
+program will ask for all unspecified parameters.
+
+The resulting wavelength scale becomes associated with the 'dest'
+spectrum. You can then use the COPW command to associate the wavelength
+scale with any other spectrum you wish.
+
+Also, note that it is the REVERSE fit which is actually used by the command
+ALIGN to linearize a spectrum (see below).
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[WSCALE 4 ORD=2\hfill]{ Computes the wavelength scale for spectrum
+       4, doing a second-order fit to wavelength versus channel number. The
+       resulting wavelength scale is printed on the terminal.}
+
+  \item[WSCALE 4 ORD=2 $>$fit.txt:\hfill]{ Does the same as example 1, but
+       this time sending the output to the file fit.txt in the
+       current working directory.}
+
+  \item[WSCALE 4 ORD=1 INT\hfill]{ Does a first order fit to wavelength
+       versus channel number for spectrum 4.  The user can interactively
+       give weights to the identified lines being fit (0 weight discards a
+       line).}
+\end{itemize}
+
+\section{COPW: Copy a Wavelength Scale onto a Spectrum}
+\begin{rawhtml}
+<!-- linkto copw.html -->
+\end{rawhtml}
+\index{Spectrum!Wavelength scale -- copying}
+\index{Wavelength scale!For spectrum -- copying}
+\begin{itemize}
+  \item[Form:COPW dest source {[source2]}\hfill]{}
+  \item[dest]{is the destination spectrum to which a wavelength scale is to
+       be copied.}
+  \item[source]{is the source spectrum from which the wavelength scale is
+       to be copied}
+  \item[source2]{is a second source spectrum to be used for wavelength
+       interpolation}
+\end{itemize}
+
+COPW will copy a wavelength calibration from one spectrum to another.  This
+is done to copy the wavelength scale computed with the WSCALE command from
+the comparison spectrum to a program spectrum.  The actual spectral data
+are not changed by this command, only the wavelength calibration parameters
+stored in the image header.  
+
+If a second source spectrum is given then the command assumes that you have
+two comparison spectra which bracket the program spectrum in time, and it
+will use the times of observations of the image headers of the three
+spectra to do a linear interpolation of the wavelength parameters of the
+comparisons to the time of the program spectrum.  This procedure can
+sometimes provide an improved wavelength calibration by correcting for the
+effects of instrumental flexure.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[COPW 3 2\hfill]{transfer the wavelength scale of spectrum 3 to
+       spectrum 2}
+
+  \item[COPW 1 3 11\hfill]{transfer interpolate the wavelength scale
+       between spectra 3 and 11.  Transfer this interpolated scale to
+       spectrum 1.}
+\end{itemize}
+
+\section{ALIGN: Linearize or Transform a Wavelength-Calibrated Spectrum}
+\begin{rawhtml}
+<!-- linkto align.html -->
+\end{rawhtml}
+\index{Image!Shifts and Pixel scale -- transforming and distortions.}
+\index{Spectrum!Wavelength scale -- transforming}
+\index{Wavelength scale!For spectrum -- transforming}
+\begin{itemize}
+  \item[Form: ALIGN source {[DSP=disp]} {[W=l,p]} {[NW=n]} {[LOG]} 
+       {[FLIP]} {[MS=n]}\hfill]{}
+  \item{{[NOFLUX]} {[V=v]} {[Z=z]} {[RED=z]} {[DERED=z]} {[DP=dp]} {[DS=dp]}}
+  \item{{[LCMOD=n]} {[SINC]} {[LGI]} {[SILENT]}}
+  \item[source]{is the image that the program works on.}
+  \item[DSP=disp]{set the dispersion of the new scale (p.e. Angs/pixel),}
+  \item[W=l,p]{sets zero-point of new scale (lambda 'l' at pixel 'p',}
+  \item[NW=n]{makes final scale cover the range of n pixels.}
+  \item[LOG]{transforms to a logarithmic scale (linear otherwise),}
+  \item[FLIP]{reverse the direction of the dispersion,}
+  \item[MS=n]{set the final pixel scale to be that of image 'n',}
+  \item[NOFLUX]{prevent conversion to counts/sec/Angstrom.}
+  \item[V=v]{remove velocity shift of 'v' km/sec,}
+  \item[Z=z, DERED=z]{remove redshift z (i.e. deredshifts the image rows),}
+  \item[RED=z]{redshift the image by z.}
+  \item[DP=dp]{remove a shift of dp pixels from the image,}
+  \item[DS=ds]{remove a stretch of ds relative-units from the image,}
+  \item[LCMOD=n]{remove the polynomial distortion given in buffer 'n',}
+  \item[SILENT]{inhibit printout.}
+\end{itemize}
+
+ALIGN will transform the rows of an image from the original pixel scale to
+either a linear scale or a logarithmic scale. The physical pixel units
+defined on the FITS card CTYPE1 are arbitrary (Wavelength, Time, RA, etc)
+We will refer mostly to wavelengths in angstroms but other units are
+treated analogously. Columns can be aligned after a right angle rotation of
+the image.
+ 
+Spectral pixels are re-binned onto the new wavelength scale using a
+Lagrangian interpolation algorithm.  Lagrangian interpolation conserves
+area (under binned data as opposed to sampled data), runs faster, and
+produces less "ringing" when interpolating undersampled data than
+resampling algorithms (like SINC interpolation).
+ 
+If the pixel-scale is not one of wavelength (or ln{Wavelength}) the scale
+used is the linear scale defined by the FITS cards CRVAL1, CDELT1, and
+CRPIX1, so the original image can be on any of the 3 scales supported by
+VISTA:
+\begin{verbatim}
+   Linear (FITS standard)     :  Lambda = Lambda0 + Dispersion * Pix
+   Logarithmic                :  Ln(Lambda) = Ln(Lambda0) + b * Pix
+   Polynomial (VISTA internal):  Lambda = P(0) + P(1)*Pix + P(2)*Pix**2 + ...
+\end{verbatim} 
+
+To ALIGN 1-D or long-slit (2-D) spectra, first compute a polynomial
+wavelength calibration from an appropriate lamp spectrum using the LINEID
+and WSCALE command.  Then copy the results to the object image using the
+COPW command.  ALIGN can then be used to transform the image onto the
+desired final (linear or logarithmic) wavelength scale. If you want to
+edit the FITS cards directly, note that the REVERSE fit (pixel as a
+function of wavelength) computed by WSCALE is the fit actually used within
+ALIGN.
+ 
+If the image is initially on a VISTA polynomial wavelength scale
+(CTYPE1=LAMBDA\_POLY), the observed intensities are converted to an
+uncalibrated F-Lambda scale (counts/sec/Angstrom), unless the NOFLUX word
+is given. This conversion is done by dividing each pixel by (1) the
+integration time (FITS header EXPOSE or EXPTIME card) and (2) the width of
+each pixel in Angstroms (note that for a polynomial wavelength scale in raw
+spectra, the number of Angstroms spanned by each pixel changes as a
+function of position).  If you are aligning co-added ("stacked") images,
+the integration-time data in the FITS header must be changed to the
+appropriate \textit{total} integration time.
+
+To specify the dispersion and zero-point of the new pixel scale, you may
+supply ALIGN with the desired dispersion and reference pixel using DSP=disp
+keyword to specify the desired new dispersion, and W=l,p where 'l' to give
+the lambda at the reference pixel 'p' in the final aligned image. The
+default of these references are those of the image's first column. If the
+original pixel scale is other than raw-pixels, ALIGN will set the starting
+column of the final image to be pixel 1.
+ 
+The keywords DP=dp, DS=ds, and LCMOD=n can remove the effects of having a
+different scale on the FITS cards and on the image rows due to geometric
+distortions (like flexure shifts, Optical distortions, Line-Curvature,
+etc). A combination of DP=dp and DS=ds will take care of simple cases where
+distortions can be characterized by a single shift plus a linear a stretch
+of the form:
+\begin{verbatim} 
+  PIX(Image) = PIX(Fits)*ds + dp, or PIX(Fits) = (PIX(Image)-dp)/ds.
+\end{verbatim} 
+
+LCMOD=b can remove more general distortions than the linear case allowed by
+keywords DP=dp and DS=ds, since a different polynomial distortion may be
+removed from each row of the image. Buffer b should hold the polynomial
+coefficients (in the format generated by command ROWFIT LOAD=b) giving, for
+each row the distortion relation :
+\begin{verbatim} 
+  PIX(Image) = p0 + p1 * PIX(Fits) + p2 * PIX(Fits)**2 + ...
+\end{verbatim} 
+To remove or to add effects due to redshift, the user may use keywords V=v,
+Z=z, RED=z, and/or DERED=z. V=v, will REMOVE a velocity shift of v km/sec
+(one way to conveniently remove known radial velocities from an image). Z=z
+or DERED=z will REMOVE a redshift of 'z' from the image rows. RED=z will
+redshift the spectrum by 'z'. Note that RED=z is NOT the same as DERED=-z
+or Z=z (since 1-z, used by Z=z and DERED=-z, is not equal to 1/(1+z), used
+by RED=z).
+ 
+Any combination of keywords is allowed to remove or to add distortions,
+shifts or redshifts. Note that DSP=disp and W=l,p refer to the dispersion
+and zero-point of the new final scale (i.e. AFTER removing the net combined
+effect)
+
+Other keywords provide a variety of options as follows:
+\begin{itemize} 
+  \item[LOG\hfill]{Puts the image on a logarithmic wavelength scale such
+       that
+       \begin{verbatim}
+  (lambda) = Ln(Lambda0) + b * pix,
+       \end{verbatim}
+       and the DSP=disp keyword specifies the dispersion at the wavelength
+       specified by the W=l,p keyword.}
+
+  \item[NW=n \hfill]{ALIGN generates an output image covering the
+       wavelength range of the input image. NW=n specifies the number of
+       columns of the output to cover larger (filled with zeros) or shorter
+       wavelength ranges.}
+
+  \item[MS=n\hfill]{Forces the new scale to match that of a previously
+       aligned image in buffer 'n'.}
+
+  \item[FLIP\hfill]{will reverse the order of the dispersion by flipping it
+       about the center of the image.}
+
+  \item[SILENT\hfill]{Prevents printout of the new scale.}
+\end{itemize} 
+
+\noindent{Examples:}
+\begin{itemize} 
+  \item[ALIGN 3 DSP=5.75 W=6000,1\hfill]{re-bins the row of image 3 into a
+       linear wavelength scale with a linear dispersion of 5.75
+       Angstroms/pixel, and with 6000 Angstroms at pixel 1.}
+
+  \item[ALIGN 3 DSP=5.75 W=6000,1 SINC\hfill]{Same as above, but sampling
+       only at the center of each new pixel.}
+
+  \item[ALIGN 3 DSP=5.0 W=6000,5 LOG\hfill]{Transform image 3 to a
+       logarithmic wavelength scale in which the dispersion is 5.0
+       Angstroms/pixel at 6000 Angstroms.  Pixel 5 corresponds to 6000
+       Angstroms.}
+
+  \item[ALIGN 1 DSP=8.0 W=(4300,1) Z=0.0035\hfill]{ Removes a redshift of
+       0.0035 from spectrum 1 and creates a final de-redshifted spectrum
+       which has a dispersion of 8 Angstroms/pixel and begins at 4300
+       Angstroms in pixel 1.}
+\end{itemize}
+ 
+\section{SKYLINE: Re-Calibrate Wavelengths Using Night-Sky Lines}
+\begin{rawhtml}
+<!-- linkto skyline.html -->
+\end{rawhtml}
+\index{Spectrum!Wavelength Re-calibration}
+\index{Flexure!Removing effects of from spectrum}
+\begin{itemize}
+  \item[Form:SKYLINE s1 {[s2]} {[s3]} ... {[s15]} {[INT]}\hfill]{}
+  \item[s1]{is the buffer number of the sky spectrum.}
+  \item[s2 ... s15]{are buffer numbers whose wavelength
+       scales are to be re-calibrated using the night sky spectrum s1.}
+  \item[INT]{requests interactive deletion of lines
+       from the list of identified night sky lines.}
+\end{itemize}
+
+SKYLINE searches the night sky spectrum in buffer 's1' for known night sky
+emission lines.  All spectra must be linear wavelength calibrated. If it
+finds at least two lines in the spectrum it will use them to compute a
+corrected zero-point for the wavelength scale (the dispersion term is not
+changed).  This new zero-point is then applied to all of the other spectra
+supplied on the command line.  All of the spectra should be on the same
+linear wavelength scale (using the ALIGN command) to begin with.
+
+If the keyword INT is used then you will be given the option to delete
+lines from the list of night sky lines found in spectrum 's1'.
+
+\noindent{Example:}
+\begin{itemize}
+  \item[MASH 1 8 SP=30,40 BK=10,20 BK=50,60 SKY=2\hfill]{}
+  \item[COPW 1 20\hfill]{! Copy wavelength parameters}
+  \item[COPW 2 20\hfill]{}
+  \item[ALIGN 1 DSP=7.0\hfill]{! Xform to linear wavelength}
+  \item[ALIGN 2 DSP=7.0\hfill]{}
+  \item[SKYLINE 2 1 INT\hfill]{! Correct zero-point}
+\end{itemize}
+MASH is used to operate on image 8, producing a sky-subtracted program
+spectrum in buffer 1 and the sky spectrum in buffer 2.  Wavelength
+parameters are copied from a previously calibrated comparison spectrum (in
+buffer 20). The two spectra are transformed to a linear wavelength scale
+using ALIGN. Then the zero-point of the wavelength scale is corrected using
+SKYLINE.  This procedure can remove instrumental flexure if your spectra
+contain usable night-sky lines.
+
+\section{EXTINCT: Correct a Spectrum for Atmospheric Extinction}
+\begin{rawhtml}
+<!-- linkto extinct.html -->
+\end{rawhtml}
+\index{Spectrum!Extinction correction}
+\index{Longitude!Entering longitude of observation}
+\index{Latitude!Entering latitude of observation}
+\begin{itemize}
+  \item[Form: EXTINCT source {[CTIO]} {[KPNO]} {[LICK]}\hfill]{}
+\end{itemize}
+
+EXTINCT will correct a wavelength-calibrated spectrum 'source' for
+atmospheric extinction.  The zenith angle is measured from the header
+information, and the air mass calculated with a polynomial in secant(z) to
+account for the finite thickness of the atmosphere.  A set of extinction
+values is calculated at several wavelengths, and a spline drawn through
+them.  The spectrum is multiplied by the spline to correct it for
+extinction.
+
+The extinction correction which is used is the average extinction for Lick
+Observatory.  The keyword CTIO will have EXTINCT use values appropriate for
+Cerro Tololo; KPNO uses the Kitt Peak extinction coefficients.  These are
+very similar. Note that the set of coefficients used is remembered between
+successive calls to EXTINCT; if you specify CTIO on one call to EXTINCT,
+the CTIO coefficients will be used on all successive calls unless the
+keyword LICK or KPNO is explicitly used on the command line.
+
+The longitude and latitude of the observatory at which the data were
+acquired must be defined either before running VISTA by defining the UNIX
+environment variables V\_LONGITUDE and V\_LATITUDE, or by using the VISTA
+SETUP command.  You will need to do this to obtain correct determinations of
+airmass or extinction when reducing CCD images from other observatories.
+The longitude and latitude must be in decimal degrees: For example
+\begin{verbatim}
+  SETENV V_LONGITUDE 121.64554
+  SETENV V_LATITUDE 37.43029
+\end{verbatim}
+Is the longitude and latitude of the Lick Observatory (Mount Hamilton, CA).
+
+If these variables are not defined, defaults set at compile time will be
+used.  You can also redefine the longitude with the SETUP command inside of
+VISTA.
+
+\section{SETUP: Set the Longitude and Latitude for VISTA}
+\begin{rawhtml}
+<!-- linkto setup.html -->
+\end{rawhtml}
+\index{Latitude!Defining the observing site Latitude}
+\index{Longitude!Defining the observing site Longitude}
+\index{Coordinates!Defining the observing site Latitude and Longitude}
+
+\begin{itemize}
+  \item[\textbf{Form: } SETUP {[LONG=longitude]} {[LAT=latitude]}\hfill]{}
+  \item{{[MMT]} {[KPNO]} {[CTIO]} {[LOWELL]} {[APO]} {[LICK]} {[AAT]} {[SSO]}}
+  \item{{[ESO]} {[CFHT]} {[CHECKAIR]} {[COMPUTEAIR]} {[USEAIR]}} 
+\end{itemize}
+
+SETUP is used to view the current default observing site longitude and
+latitude that VISTA is using and to change these values if desired.  The
+Latitude and Longitude of the observing site are used to help compute the
+necessary airmass (atmospheric extinction) corrections used for
+spectroscopy and photometry. This is \textbf{very important}, because
+the default behavior of xvista is to recompute airmasses from the observation
+position and time, rather than use values which may be included in the header 
+by the telescope (see below).
+
+On startup, the VISTA searches for the environment variables V\_LONGITUDE
+and V\_LATITUDE.  If these are found, the values are loaded into the VISTA
+internal variables.  The units for both longitude and latitude are assumed
+to be degrees.
+
+If you issue SETUP with no arguments, the current values will be printed.
+You can enter new values using the LONG= and LAT= keywords, or else you
+will be prompted for them by the program. Coordinates for 9 different
+observatories are preloaded into xvista, and can be selected at the
+prompt or by keywords (MMT, KPNO, CTIO, LOWELL, APO, LICK, AAT (or SS0),
+ESO, CFHT).
+
+The arguments CHECKAIR, COMPUTEAIR, and USEAIR can be used if one wishes
+to consider the value of the AIRMASS card within an image's FITS header.
+If you issue SETUP CHECKAIR, then the programs which compute airmasses will
+check them against the value in the FITS header; if the latter exists, the
+user will be warned if the computed airmass differs from the header airmass
+by more than 0.03 airmasses. If SETUP COMPUTEAIR has been issued (this is
+the default startup configuration), the program will just use the computed
+value regardless (and you'd better have the longitude and latitude right!).
+If SETUP USEAIR has been issued, the program will use the airmass from the
+AIRMASS or AM card in the FITS header if it exists, otherwise it will use
+the computed value. Using any of CHECKAIR, COMPUTEAIR, or USEAIR will change
+the default mode of execution until a subsequent SETUP command is issued or
+until you exit xvista. Upon starting up xvista, the default behavior is
+to use the computed airmass without warning whether it differs from the
+header value. If you wish to change this default behavior, put a command
+in your xvista startup file (we highly recommend using SETUP CHECKAIR, but
+didn't make this the default to maintain compatability with earlier releases).
+
+\section{FLUXSTAR: Compute Flux Curves from a Standard-Star Spectrum}
+\begin{rawhtml}
+<!-- linkto fluxstar.html -->
+\end{rawhtml}
+\index{Spectrum!Defining flux curve}
+\begin{itemize}
+  \item[Form: FLUXSTAR source {[standard]} {[AVE]} {[WT=w]} {[SYSA]} {[SYSC]}
+       {[POLY=n]} {[TTY]}\hfill]{}
+  \item[source]{is the spectrum used to determine the flux curve,}
+  \item[standard]{(character string) is a file 
+       containing the flux calibration for the 'source' spectrum,}
+  \item[AVE]{averages the current spectrum with previous results, and}
+  \item[WT=w]{specifies weighting for the averaging.}
+  \item[SYSA]{produces a "System A" (IDS nomenclature) response curve,}
+  \item[SYSC]{produces a "System C" (Compromise between A and B) response 
+       curve.}
+  \item[POLY=n]{use a nth degree polynomial fit rather than a spline}
+  \item[TTY]{extra screen output}
+\end{itemize}
+
+FLUXSTAR computes a flux calibration curve from a standard star spectrum
+and a file containing the correct flux levels as a function of wavelength.
+The input spectrum must be wavelength calibrated, be corrected for
+atmospheric extinction, and have its intensities on an uncalibrated
+F-lambda scale.  The routine locates the flux points given in the input
+file, and finds the star's average flux over the specified wavelength bin
+of the flux point.  A set of correction points are thus defined, which
+consist of the correct fluxes, reduced to the Hayes-Latham Vega calibration
+(Hayes \& Latham, 1975 ApJ, 197, 593), divided by the observed intensity of
+the standard star.  A spline is drawn through these points and replaces the
+standard star spectrum to give the flux curve. If you wish to use a
+polynomial rather than a spline, use the POLY=n keyword, where n specifies
+the degree of the polynomial to use.
+
+The FLUX command takes the correction points defined above, and uses a
+spline (or polynomial) to define a flux calibration buffer for the input
+spectrum.  The spectrum is then calibrated by multiplication by this
+buffer.  The separate FLUXSTAR and FLUX commands permit the calibration of
+spectra on different wavelength scales than the standard star spectrum.
+
+The standard star's flux measurements are read in from a file, which is
+assumed to be in the spectrum directory (see PRINT DIRECTORIES), with
+extension .FLX unless specified otherwise.  The file is headed by the stars
+apparent V magnitude, and then its magnitude at 5556 A.  Generally these
+are identical, and will only be different if a (grey) change in the Vega
+calibration is made. Each line of the file will contain a flux point
+specified by its wavelength, magnitude per unit frequency, and bin width in
+angstroms.  The points must be in order of increasing wavelength, but there
+is no strict format that must be observed.
+
+Below is an example of a standard star flux file:
+
+\begin{tabular}{lll}
+       11.48&   11.48&\\
+     3200.0 &   13.17 &40.0\\
+     3350.0 &   12.87 &40.0\\
+     3400.0 &   12.64 &40.0\\
+     3862.0 &   12.32 &40.0\\
+     4036.0 &   12.12 &40.0\\
+.... ETC.&&\\
+\end{tabular}
+
+The keywords 'AVE' and 'WT=' allow the averaging with weights of multiple
+flux curves.  The default weighting, used for the first flux curve as well
+as for those using 'AVE', is 1.  Anytime neither keyword is specified a
+fresh flux curve is started (again, with a weight of 1.).  Note that the
+averaging can handle two flux curves which overlap (but do not necessarily
+match perfectly) in wavelength, and can even create a flux curve from two
+curves with completely disjoint wavelength scales, but it cannot insert
+flux points in the midst of an existing flux curve.
+
+The SYSA keyword produces a point-by-point flux curve instead of a smooth,
+spline fitted flux curve.  This is done by removing the known stellar
+absorption lines from the observed standard star spectrum. The atmospheric
+bands, however, are not removed.  The result is that you end up with a flux
+curve which can correct for the atmospheric bands.  A drawback for SYSA is
+that any "anomalous" absorption lines not known to the program will appear
+in the response curve and can lead to extraneous features in the data.
+
+The SYSC keyword produces a compromise response curve with the best
+features of both "system A" and (the default) "system B".  In this option
+the system A curve is smoothly fitted by a spline (at the usual knot
+points) while the B and A atmospheric bands (+/- 65 Angstroms) are
+retained.  The curve is piecewise continuous.  It is free from glitches
+introduced by spurious absorption features in the stellar spectra, retains
+a higher accuracy outside the extreme knot points, and compensates for the
+atmospheric bands in the data.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[FLUX 5 FILE=mydir/L1020\hfill]{takes the spectrum in buffer 5, and
+       computes a flux curve from it, using the calibration contained in
+       the file mydir/L1020.FLX.  The spectrum is replaced by the flux
+       curve.}
+
+  \item[FLUX 6 FILE=mydir/L1040 AVE\hfill]{does the same as the first
+       example with buffer 6, using the file mydir/L1020.FLX.  The spectrum
+       is replaced by the average of the flux curves computed by these two
+       spectra.}
+
+  \item[FLUX 33 SYSC FILE=JUNK\hfill]{begins a new flux curve using
+       spectrum 33.  The file is jUNK.FLX in the default spectrum
+       directory.  System-C fluxes is used.}
+\end{itemize}
+
+\section{FLUX: Flux Calibrate a Spectrum}
+\begin{rawhtml}
+<!-- linkto flux.html -->
+\end{rawhtml}
+\index{Spectrum!Flux calibration}
+\begin{itemize}
+  \item[Form: FLUX source\hfill]{}
+  \item[source]{is the spectrum being fluxed.}
+\end{itemize}
+
+FLUX applies a standard star flux curve to a spectrum, replacing raw
+counts/sec/Angstrom (output from ALIGN) with fluxes in F-Lambda units
+(ergs/sec/cm$^2$/Angstrom).  The flux calibration is taken from a standard
+star flux curve computed using the FLUXSTAR command.  
+
+FLUX will work on spectra that do not have exactly the same wavelength
+scale as the flux curve by fitting a spline to the flux curve, and then
+applies that spline fit to the spectrum.
+
+If your spectrum has exactly the same wavelength scale as the flux curve,
+either because the flux standards were taken with the same spectroscopic
+setup as the star being fluxed, or because the spectra have been made to
+have the same scale with ALIGN, then you may flux calibrate the object
+spectrum simply by multiplying the spectrum by the flux curve with MULTIPLY
+command.
+
+\section{POLY: Fit a Polynomial to a Spectrum}
+\begin{rawhtml}
+<!-- linkto poly.html -->
+\end{rawhtml}
+\index{Spectrum!Fit polynomial to}
+\begin{itemize}
+  \item[Form:POLY source ORD=n {[SUB]} {[DIV]} {[LOAD]} {[NOZERO]} 
+       {[SILENT]}\hfill]{}
+  \item[source]{is the number of the spectrum to fit,}
+  \item[ORD=]{is the order of the polynomial to fit (<7),}
+  \item[SUB]{subtracts the polynomial from the data,}
+  \item[DIV]{divides the polynomial by the data,}
+  \item[LOAD]{loads the VISTA variables COEFF0, COEFF1, ...,
+       COEFFn with the coefficients of the fit, and
+       DCOEFF0, DCOEFF1,..., with their estimated error.}
+  \item[NOZERO]{ignore pixels with value= 0 in the fit}
+  \item[SILENT]{suppresses terminal output}
+\end{itemize}
+
+POLY fits a polynomial to the spectrum in image buffer 'source'.  The order
+of the polynomial is specified by the keyword 'ORD=n', where n=1 is a line,
+n=2 is a quadratic, and so forth.  Here a ``spectrum'' is any 1-D image
+vector (an ``image'' with 1 row and NC columns).
+
+As in the SPLINE command the keywords SUB and DIV can be used to tell the
+program to subtract or divide (respectively) the original spectrum by the
+fit.  (Without both of these keywords the spectrum will be replaced by the
+fit.) As in the SURFACE command the keyword LOAD will load VISTA variables
+with the computed polynomial coefficients, so that they are accessible by
+other commands.  The names of the variables loaded are COEFF0, COEFF1, ...,
+COEFFn, where 'n' is again the order of the fit.  The formula using these
+coefficients is
+\begin{verbatim}
+   y = COEFF0 + COEFF1 * x + COEFF2 * x * x + ...
+\end{verbatim}
+where y is the intensity and x is the pixel number.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[POLY 14 ORD=3]{Fits a cubic polynomial to the spectrum in buffer
+       14.  The spectrum is replaced by the polynomial fit.}
+
+  \item[POLY 3 ORD=2 SUB]{Buffer 3 is fit with a parabola, which is then
+       subtracted from the original data.}
+
+  \item[POLY 5 ORD=3 LOAD]{Buffer 5 is fit with a third-order (cubic)
+       polynomial which then replaces the original data in the buffer.  The
+       four VISTA variables COEFF0, COEFF1, COEFF2, and COEFF3 are loaded
+       with the fit coefficients, and variables DCOEFF0, DCOEFF1, DCOEFF2,
+       and DCOEFF3 with the fit coefficient errors.}
+\end{itemize}
+
+\section{STRETCH: Stretch a Spectrum into a 2-D Image}
+\begin{rawhtml}
+<!-- linkto stretch.html -->
+\end{rawhtml}
+\index{Spectrum!Make an image out of}
+\index{Image!Produce from spectrum}
+\begin{itemize}
+  \item[Form:STRETCH dest source {[VERT]} {[HORIZ]} {[SIZE=]} 
+       {[START=]}\hfill]{}
+  \item[dest]{is the number of the image produced by the operation,}
+  \item[source]{is the number of the spectrum which is being stretched,}
+  \item[VERT]{specifies that the spectrum will be stretched vertically,}
+  \item[HORIZ]{specifies that the spectrum will be stretched horizontally,}
+  \item[SIZE=]{specifies the length of the stretch,}
+  \item[START=]{specifies the start column or row (for HORIZ or
+       VERT respectively) of the output image.}
+\end{itemize}
+
+The spectrum `source' will be stretched to form the image `dest.'  If the
+VERT keyword is given the spectrum will be stretched vertically (i.e. the
+image `dest' will be constant down each column).  If the HORIZ keyword is
+specified the spectrum will be stretched horizontally (constant across each
+row).  The default (if neither keyword is given) is a vertical stretch.
+
+The length of the stretch may be specified with the SIZE= keyword.  For
+example if the VERT keyword has been specified then the SIZE= keyword will
+specify the number of columns in the resulting image.  Note that the image
+will always have one dimension equal to the number of points in the
+`source' spectrum.  If a size is not specified the program will try to use
+the size of any image already in the specified `dest' buffer.  If this is
+not possible (i.e. if the appropriate dimension of the image currently in
+the `dest' buffer is not equal to the length of the `source' spectrum) the
+program will prompt for a size.  The START= keyword specifies the start
+column or row of the image.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[STRETCH 1 3\hfill]{Stretches spectrum 3 vertically into image 1.
+       If image 1 does not exist previous to this command, or if it has a
+       number of columns not equal to the length of spectrum 3, the user
+       will be prompted for the number of rows to stretch into image 1.
+       The vertical stretch will make image 1 constant down each column.}
+
+  \item[STRETCH 2 5 HORIZ SIZE=180\hfill]{Stretches spectrum 5 horizontally
+       into image 2, and makes image 2 with 180 columns.  Image 2 will
+       therefore be constant across each row.}
+\end{itemize}
+
+\section{ISPLINE: Interactively Fit a Spline to a Spectrum}
+\begin{rawhtml}
+<!-- linkto ispline.html -->
+\end{rawhtml}
+\index{Spectrum!Interactive spline fit to}
+\begin{itemize} 
+  \item[Form: ISPLINE source {[XY]} {[AVG=n]} {[SUB]} {[DIV]} {[HIST]}\hfill]{}
+  \item[source]{the SPECTRUM to which a spline is to be fitted.}
+  \item[XY]{Use cursor's absolute (X,Y) position to select
+       knot points for the spline fit.}
+  \item[AVG=n]{Knot point is determined as the average of the
+       `n' nearest pixels to the cursor's X axis location. (default is AVG=1)}
+  \item[SUB]{Subtract the spline fit from the spectrum.}
+  \item[DIV]{Divide the spectrum by the spline fit.}
+  \item[HIST]{Plot the spectrum as bins (histogram).}
+\end{itemize} 
+ 
+ISPLINE will plot the spectrum in the "source" buffer and allow the user to
+fit a cubic spline to it based on knot points selected interactively with a
+cursor.  The user is then shown the spline fit and allowed to interactively
+add or delete knot points to improve the fit.  This routine does not work
+with 2-D images.  With no keywords, the spectrum will be REPLACED by the
+spline fit.
+
+ISPLINE will first plot the spectrum in the "source" buffer on the screen.
+By default, the spectrum is plotted as a line.  It is possible to have the
+spectrum plotted as data bins (a so-called "histogram plot") by using the
+optional HIST keyword.
+ 
+You will then be allowed to adjust the Y-axis limits with the cursor if the
+default scaling is not to your liking. To select the new Y-axis limits,
+place the cursor at the appropriate Y position with the arrow keys (no need
+to move the cursor in the X direction) and hit any key to mark the
+location.  Upper and lower Y-axis limits may be marked in any order.
+ 
+In all steps involving the interactive crosshair cursor, no distinction is
+made between upper and lower case letters, and there is no need to press
+the RETURN key.  The (X,Y) position of the cursor is controlled by the four
+arrow keys above the keyboard.
+
+ISPLINE will fit a cubic spline through a set of up to 60 (X,Y) "knot"
+points selected interactively by the user.  There are three ways in which
+knot points may selected with the cursor:
+\begin{enumerate} 
+  \item{DEFAULT (no keywords) : The knot points are taken to be the nearest
+       pixel to the X-axis position of the cursor (no need to position the
+       crosshair in the Y direction).}
+
+  \item{"AVG=n" Keyword : The knot points will be the average over a region
+       "n" pixels wide around the X-axis position of the cursor (no need to
+       position the crosshair in the Y direction).  The default is the same
+       as "AVG=1".}
+
+  \item{"XY" Keyword : The knot point will be the absolute (X,Y) position
+       of the crosshair.}
+\end{enumerate}
+In all cases at least 2 knot points are required.
+
+\noindent{DEFAULT or "AVG=n" keyword option:}
+ 
+To select a knot point, position the cursor at the desired X-axis location
+(no need to position in Y) with the arrow keys and hit the space bar or any
+key (except 'D' or 'X').  The knot point will be marked with a plus (+) on
+the spectrum.
+ 
+You may delete the last knot point by hitting the "D" key (for "Delete").
+All of the previous knot points may be deleted in reverse order of their
+selection by hitting "D" repeatedly.  A deleted point is erased from the
+plot.
+ 
+When you have finished entering knot points, hitting "X" (for "Exit") will
+fit the spline. The routine will automatically end knot point selection
+when 60 points have been chosen.  Knot points do not need to be entered in
+strictly ascending order of X.
+ 
+\noindent{"XY" keyword option:}
+ 
+To select a knot point, move the crosshair to the desired (X,Y) position
+with the arrow keys and hit the "A" key (for "Add").  The knot point will
+be marked with a plus (+) on the spectrum.
+ 
+To remove a knot point, place the crosshair over that point and hit the "D"
+key (for "Delete").  The offending knot point will be erased from the plot.
+Knot points may be deleted in any order.
+ 
+When you have finished entering knot points, hitting "X" (for "Exit") will
+fit the spline. The routine will automatically end knot point selection
+when 60 points have been chosen.  Knot points do not need to be entered in
+strictly ascending order of X.
+ 
+The spline fit through the selected knot points will be plotted over the
+spectrum.  At this point, you will be given the option of adding or
+deleting knot points if you are not happy with the fit.
+ 
+To add a knot point, place the crosshair at the (X,Y) position where you
+want it to go and hit the "A" key (for "Add").  A plus (+) will mark this
+new knot point.  Note that no averaging will be done despite the use of the
+"AVG=n" keyword.
+ 
+To delete a knot point, place the crosshair over it and press the "D" key
+(for "Delete").  The offending point will erased from the plot.
+ 
+When you are finished editing, hit the "X" key (for "Exit"). If you add
+enough points so that there are a total of 60 knot points selected
+(previous - deleted + added), the routine will automatically end editing.
+
+The spline is then re-fit, and plotted as before.  You may edit as many
+times as is needed to achieve the desired fit.
+
+If two or more knot points are coincident in X-axis position, the routine
+will flag the offending points by circling them on the screen and ask you
+to use the cursor to remove at least one of them.  To do this, position the
+cursor over the offending points and hit the 'D' key to delete one of
+them. Hitting 'X' will signal the program that you have finished removing
+all of the offending points.  If more coincident points are detected by the
+routine, this step will be repeated until all such points are removed.
+ 
+When a satisfactory spline fit has been achieved, there are 3 possible
+final results:
+\begin{enumerate} 
+  \item{DEFAULT (no keywords) : The spectrum in the "source" buffer will be
+       REPLACED by the spline fit, destroying the original spectrum.}
+
+  \item{"SUB" keyword : The spline fit will be SUBTRACTED from the spectrum
+       in the "source" buffer, destroying the original spectrum.}
+
+  \item{"DIV" keyword : The spectrum in the "source" buffer will be DIVIDED
+       by the spline fit, destroying the original spectrum.}
+\end{enumerate}
+In all cases, the original spectrum in the source buffer is wiped out.
+ 
+\noindent{Examples:}
+\begin{itemize} 
+  \item[ISPLINE 1 \hfill]{Fit a spline to the spectrum in buffer 1, using
+       the nearest pixel to the cursor for the knot points, and replacing
+       the spectrum by the spline fit.}
+
+  \item[ISPLINE 1 SUB\hfill]{Same as (1), except that the spline fit is
+       subtracted from the spectrum and the result is stored in buffer 1.}
+
+  \item[ISPLINE 1 DIV \hfill]{Same as (1), except that the spectrum is
+       divided by the the spline fit and the result is stored in buffer 1.}
+
+  \item[ISPLINE 2 SUB HIST\hfill]{Same as (2), except that the spectrum is
+       plotted as a "histogram".}
+
+  \item[ISPLINE 3 XY\hfill]{Fit a spline to the spectrum in buffer 3, using
+       the absolute (X,Y) position of the cursor to select the knot points.
+       The spectrum will be replaced by the spline fit.}
+
+  \item[ISPLINE 4 AVG=5 SUB\hfill]{Fit a spline using the average of 5
+       pixels around the X-axis position of the cursor as the knot points,
+       and replace the contents of buffer 4 by the spectrum minus the
+       spline fit.}
+\end{itemize} 
+
+\noindent{NOTE:}
+
+To completely exit the program with no action taken on the spectrum, type a
+CTRL-Z in response to any Y/N prompt.  This will return you to the VISTA
+command level.
+ 
+\noindent{\textbf{WARNING:}}
+ 
+Hitting keys (especially RETURN) while the cursor is in motion may
+occasionally have a pathological effect on the interactive cursor routines.
+ 
+Also, avoid hitting control keys in cursor mode.
+ 
+Only enter commands to mark or delete points, or exit the marking routines
+when the cursor is not moving.
+
+\section{ROWFIT: Fit Each Row of an Image with a Function}
+\begin{rawhtml}
+<!-- linkto rowfit.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: ROWFIT source {[BOX=b]} {[FIT=cs,ce]} {[NCOEF=m]} {[LOAD=bp]} 
+       {[UNLOAD=bp]}\hfill]{}
+  \item{{[SUB]} {[DIV]} {[POLY]} {[FOUR]} {[CLIP=f]} {[FITONLY]} {[XBUF=buf]}}
+  \item[BOX=b]{Box within which the pixels will be substituted.}
+  \item[FIT=cs,ce]{Column limits of up to 4 fitting regions.}
+  \item[NCOEF=m]{Number of coefficients to fit, default 1.}
+  \item[LOAD=bp]{Loads in buffer bp the coefficients, the errors,
+       and the standard deviation from the fit.}
+  \item[UNLOAD=bp]{Uses the pre-loaded coefficients in buffer bp,  
+       to evaluate the fit and operate on the image.}
+  \item[CLIP=f]{Clips out pixels that deviate more than f sigmas from
+       the fit.}
+  \item[SUB]{Subtract the fit from the image.}
+  \item[DIV]{Divide the image by the fit.}
+  \item[XBUF=buf]{Use as abscissae not the column number but the spectrum  
+       in buffer 'buf'.}
+  \item[WBUF=buf]{Uses the spectrum in buffer 'buf' to weight individual
+   pixels in the fit.}
+  \item[POLY]{Fit polynomial of order NCOEF-1.}
+  \item[FOUR]{Fit a Fourier series up to order (NCOEF-1)/2.}
+  \item[FITONLY]{Does not substitute fit in image. If CLIP is specified,
+       only clipped pixels are replaced.}
+\end{itemize}
+
+ROWFIT substitutes, subtracts, or divides, each row by a fit from a menu
+of functions (all linear in the coefficients). By default, the image is
+replaced by the fits, unless the SUB, DIV, or FITONLY keywords are
+specified.  Either a polynomial or a Fourier series can be used for the
+fitting function, with the number of polynomials (or sins and cosines)
+specified by the NCOEF=m keyword. The default is a polynomial of order 0
+(i.e. a constant term).
+
+The XBUF=buf keyword allows using any physical quantity (instead of the
+default column number) as independent variable for the fit. In this case
+the pixel values of the spectrum in buffer 'buf' will be use as the values
+of the independent variable at each column. Useful application include the
+fitting and subtraction of continuum or absorption spectra from emission
+line objects, sky-level estimation and sky subtraction in long-slit
+spectroscopy, or the fitting of many highly non-linear functions. The
+WBUF=wbuf keyword allows the user to give individual pixel weights for the
+fit, with the weights for the given pixel given by the value in buffer
+'wbuf'.
+
+The parameters of the fit can be saved for inspection or for later use with
+the LOAD=buf keyword. The image loaded into buffer 'buf' will have, for
+each row, the coefficients of the row fit and their estimated error as
+well as the standard deviation from the fit in the following format:
+\begin{verbatim}
+  Column  0  holds the standard deviations from the fits,
+  Column  1  holds the first coefficient of the fits (The constant term),
+  Column -1  holds the estimated error on the first coefficient,
+  Column  2  holds the second coefficient of the fits (The linear term),
+  Column -2  holds the estimated error on the second coefficient,
+  Column  3  holds the third coefficient of the fits (The quadratic term),
+  Column -3  holds the estimated error on the third coefficient,
+\end{verbatim}
+and so on until column +/- the m coefficients fixed with the NCOEF=m
+keyword.
+
+The LOADed coefficients can be smoothed, averaged with other fits, or
+manipulated in any fashion before used to operate in other images with the
+UNLOAD=buf keyword. In this case ROWFIT evaluates (DOES NOT FIT) the
+function defined by the coefficients in buffer 'buf' and operates
+(substitutes, divides or subtracts the function) on the 'source'
+buffer. These coefficients can also be used to remove distortions from an
+image when used in command ALIGN.
+
+Note that when evaluating a function with the UNLOAD= keyword the user has
+to specify the kind of function (FOUR or POLY) and the abscissae buffer
+(XBUF=) when appropriate.
+
+\noindent{Examples}
+\begin{itemize}
+  \item[ROWFIT 1 NCEOF=2 LOAD=3 FIT=100,150 FIT=300,350 SUB \hfill]{ Fits a
+       line to each row of the image on buffer 1 using only columns 100 to
+       150 and 300 to 350, subtracts the fits from the whole image and
+       saves the fit parameters in buffer 3.}
+
+  \item[ROWFIT 5 UNLOAD=3 DIV\hfill]{ Divides buffer 5 by the fit generated
+       in example 1).}
+
+  \item[ROWFIT 10 XBUF=11 NCOEF=2 CLIP=5\hfill]{ Fit buffer 10 with a
+       constant plus a scaled spectrum (buffer 11) but do not take into
+       account pixels that deviate more than 5 sigmas from the fit.}
+
+  \item[ROWFIT 5 BOX=10 CLIP=5 NCOEF=5 FITONLY\hfill]{ Fitting a 4th-order
+       polynomial to each row of buffer 5, substitute by the fit only those
+       pixels that deviate more than 5 sigmas, do so only in the defined by
+       box 10. (a way to identify and CLIP ion hits or bad columns).}
+\end{itemize}
+
+\section{FINDSHIFT: Compute Relative Shifts Between Two Spectra}
+\begin{rawhtml}
+<!-- linkto findshift.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: FINDSHIFT s1 s2 {[RAD=r]} {[SHIFT=s]} {[XS=i]} {[XE=j]} 
+       {[ROW=k]} {[LOAD]} {[SILENT]}\hfill]{}
+  \item[RAD=R]{Search Radius for the Chi-squared minimum.
+               The default is 1/4 of the number of columns.}
+  \item[SHIFT=]{A guess of SHIFT, i.e. the column shift on the
+                second spectrum required to match the template.}
+  \item[XS=I]{First column, on template, of the spectral
+              region for Chi-squared computation.}
+  \item[XE=J]{Last column of the selected region.}
+  \item[ROW=k]{Estimate shift in row k (when images are given).}
+  \item[LOAD]{Loads variables SHIFT, DSHIFT, and SHIFTVAR with
+              the relative shift, an estimation of its error
+              and the unbiased mean variance of the spectra.}
+  \item[SILENT]{Loads variables but does not print results.}
+\end{itemize}
+
+FINDSHIFT computes the relative shift between two spectra.  Given two
+spectra (1 row images), it computes SHIFT, the number pixels that the
+second (shifted) spectrum would have to be shifted to match (in the least
+squared sense) the first (template) spectrum. The user can selected a
+spectral region for the chi-squared computation. The algorithm solves the
+interpolation problem, so the command provides accurate fractional shifts.
+
+Since the algorithm minimizes the difference in counts, results are more
+accurate if the spectra are normalized to have the same number of counts
+within the spectral region of interest. The algorithm looses sense if the
+spectra are very different.
+
+If two images are given (more than one row), a single row will be
+considered for the shift calculation, the template's starting row is the
+default row, but can be changed with the 'ROW=' keyword.
+
+\section{FINDPEAK: Find the Location of a Spectrum along Rows or
+         Columns}
+\begin{rawhtml}
+<!-- linkto findpeak.html -->
+\end{rawhtml}
+\index{Spectrum!Map location of}
+\begin{itemize}
+  \item[Form: FINDPEAK buf {[MODEL=b]} {[LOC=r1,r2]} {[SPW=w]} {[SP=s1,s2]}
+       {[DLOC=dp]} {[INT]} {[COLS]}\hfill]{}
+  \item[MODEL=b]{Specifies a spectrum buffer where a model for the
+       curvature of the spectrum will be found.}
+  \item[LOC=r1,r2]{specifies the approximate row upon which the peak lies.
+       If only one row is specified that row will be used as
+       the model for the peak search. If two rows are specified 
+       a linear model will be used.}
+  \item[SPW=w]{To specify a width for the box within which the peak
+       will be searched. See also SP=.}
+  \item[SP=s1,s2]{specify a window (possibly asymmetric) around the model,
+       to find the peak. Two numbers row numbers must be given,
+       and are assumed to be relative to the model.}
+  \item[DLOC=dp]{specifies a shift of d rows between model and peak}
+  \item[INT]{Find the peak location only within a pixel. Otherwise,
+       the fractional location of the peak will be estimated
+       fitting a parabola around the peak.}
+  \item[MEDIAN]{Finds the median row, rather than the peak, inside
+       the given limits.}
+  \item[AREA=fa]{Rather than the peak or the median, finds the row at 
+       which the cumulative counts reach a fraction fa of the 
+       total (fa=.5 is equivalent to MEDIAN). This keyword is
+       analogous to the one in command ABX.}
+  \item[COLS]{Finds the location of the peak or median at each row
+       rather than at each column}
+\end{itemize}
+
+FINDPEAK maps the vertical (row-axis) location of the peak (maximum) down
+each column of an image, or the horizontal (column-axis) location of the
+peak running down each row using the COLS keyword. The mapping is done and
+stored in a "spectrum" in an analogous fashion to the centroiding part of
+command SPECTROID. The MEDIAN and AREA=fa allows for mapping not of the
+location of the peak, but of the row at which a certain fractional area is
+reached (the median in particular),
+
+\section{SPINDEX: Measure Equivalent Widths at each Row of an Image}
+\begin{rawhtml}
+<!-- linkto spindex.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: SPINDEX dest source FILE=file {[DP=dp]} {[DLAM=dlam]} 
+       {[V=v]}\hfill]{}
+  \item{{[Z=z]} {[ROT=buf]} {[VAR=var]} {[TTY]} {[output-redirection]}}
+  \item[source]{the input image (with a wavelength scale)}
+  \item[dest]{the destination buffer}
+  \item[FILE=file]{ASCII file containing a list of wavelength intervals
+       to be used in the line-strength.}
+  \item[DP=dp]{take into account a shift of dp pixels}
+  \item[DLAM=dl]{take into account a shift of dl angstroms}
+  \item[V=v]{take into account a radial velocity of v km/sec}
+  \item[Z=z]{take into account a redshift of z}
+  \item[ROT=buf]{take into account the rotation profile (km/sec)
+       in buffer 'buf' (for images with more than one row).}
+  \item[VAR=buf]{estimate errors in the spectral indices using the
+       variances image in buffer 'buf' (for images with more
+       than one row)}
+  \item[TTY]{Type results on screen or in output-redirection file.}
+\end{itemize}
+
+SPINDEX measures line-strengths indices in a 1-D or a 2-D (long-slit,
+multi-object) image. The input file must contain a list of the wavelength
+intervals needed to measure each index. 
+
+As an example, here is a file that would measure some of the spectral
+indices used by S.M. Faber (UCO/Lick Observatory) and J.J. Gonzalez (UNAM)
+for elliptical galaxies or spiral bulges (the Lick Spectral Indices):
+\begin{center}
+The Faber \& Gonzalez Lick Spectral Indices
+\begin{tabular}{lllllllll}
+\hline
+I &Index band&   &blue continuum& &red continuum&&Units &Name\\  
+\hline
+  01&4847.875&4876.625&4827.875&4847.875&4876.625&4891.625 &0& H-beta \\
+  02&4903.000&4945.500&4894.500&4907.000&4943.750&4954.500 &0& Fe4930 \\
+  03&4977.750&5054.000&4946.500&4977.750&5054.000&5065.250 &0& Fe5015 \\
+  04&5245.650&5285.650&5233.150&5248.150&5285.650&5318.150 &0& Fe5270 \\
+  05&5312.125&5352.125&5304.625&5315.875&5353.375&5363.375 &0& Fe5335 \\
+  06&5387.500&5415.000&5376.250&5387.500&5415.000&5425.000 &0& Fe5406 \\
+  07&5160.125&5192.625&5142.625&5161.375&5191.375&5206.375 &0& Mgb    \\
+  08&5069.125&5134.125&4895.125&4957.625&5301.125&5366.125 &1& Mg1    \\
+  09&5154.125&5196.625&4895.125&4957.625&5301.125&5366.125 &1& Mg2    \\
+\hline
+     & starts &  ends   &  starts & ends   & starts & ends & 0=Ang& Name \\
+\hline
+\end{tabular}
+\end{center}
+
+Comment lines are ignored when the file is read and can be placed anywhere.
+The relevant information rest in the first 8 columns of each index entry
+and the order has to be in the example. The continuum intervals are used to
+define a linear pseudo-continuum level. The actual measurement is carried
+integrating the intensity-to-continuum ratio over the Index
+wavelength-interval.  If the units flag is set to 0, the Index will be
+measure in angstroms as an equivalent width. If the units flags is not
+zero, the Index will be a measure (in magnitudes) of the
+intensity-to-continuum ratio :
+\begin{verbatim}
+  Index = integral(1-I/C) over the Index Band            (zero units flag)
+
+  Index = -2.5 log (integral(I/C) over the Index Band)   (non-zero units flag)
+\end{verbatim}
+
+All wavelength scales (linear, polynomial or logarithmic wavelength, or
+linear in any other units) are accepted. In case of units other than
+angstroms, the list in the input file has to be scaled accordingly.
+
+Flexure shifts (in pixels and/or angstroms), velocity shifts (in km/sec or
+redshift), and shifts due to rotation or line-curvature (for long-slit or
+multi-object spectroscopy), can be taken into account in placing the
+intervals on the spectrum with keywords DP=, DLAM=, V=, Z=, and/or ROT=.
+
+Some users carry along their reduction an image with an estimation of the
+noise-variance at each pixel. SPINDEX can use this image (VAR=buf keyword)
+to estimate an error for the index. It is important to know that the
+intensity values of the variance buffer are not used as weights for the
+integration of the index, but noise-variances used to estimate the error on
+the index. These are not sigmas, but variances (more like sigma-squared)
+because as must users know, error-propagation in data reduction is simpler
+dealing with variances.
+
+The output buffer will have as many rows as the source image and as many
+columns as the number of indices. So dest(r,c) will be the value of the
+c-th index at row r. In case the error where estimated with the VAR=buf
+keyword, the output image will have twice plus one the number of columns
+(indices), saving indices and errors in the format used by command ROWFIT
+to save fit parameters. In this case dest(r,c) will have the c-th index of
+row r, and dest(r,-c) its error.
+
+The results can be printed with the TTY keyword or using command 'PRINT
+dest', both accept output redirection to an ASCII file.
+
+\section{FQUO: Fit a Broadening Function to a Fourier Quotient Spectrum}
+\begin{rawhtml}
+<!-- linkto fquo.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: FQUO fdata ftemplate {[G=g(,mn,mx)]} {[S=s(,mn,mx)]} 
+       {[V=v(,mn,mx)]}\hfill]{}
+  \item{{[GUESS=g,s,v]} {[GUESS=buf]} {[FIXG]} {[FIXS]} {[FIXV]} {[KS=i]} 
+       {[KE=j]}}
+  \item{{[WBUF=w]} {[ROW=k]} {[MODE=1]} {[LOAD]} {[LOAD=b]} {[INTER]} 
+       {[SILENT]}}
+  \item[fdata]{is the 1-D Fourier transform of the data.}
+  \item[ftemplate]{is the 1-D Fourier transform of the template.}
+  \item[G=g(,mn,mx)]{Guess (and optional limits) for relative line-strength
+       relative to the template (gamma-parameter).}
+  \item[S=s(,mn,mx)]{First guess (limits) for the velocity dispersion (km/s).}
+  \item[V=v(,mn,mx)]{First guess (limits) for the relative-velocity (km/s).}
+  \item[GUESS=g,s,v]{Another way of giving first guess for the parameters.}
+  \item[GUESS=buf]{Use values in buffer 'b' as parameter's first guess.}
+  \item[FIXG]{Fix (do not fit) gamma-parameter at value g.}
+  \item[FIXS]{Fix (do not fit) velocity dispersion at value s km/s.}
+  \item[FIXV]{Fix (do not fit) velocity at the guessed value v km/s.}
+  \item[KS=I]{First wavenumber of the fitting region.}
+  \item[KE=J]{Last wavenumber of the selected region.}
+  \item[WBUF=w]{Use buffer w as weights (not errors) for the fit.}
+  \item[LOAD]{Loads variables G, S, V, DG, DS, DV and DEV with the
+       gamma-parameter, velocity-dispersion, relative velocity,
+       their estimated errors and the unbiased-standard-deviation
+       from the fit. If GUESS=b keyword is used, these values
+       are also loaded in the input buffer b.}
+  \item[LOAD=p]{Loads the fit-parameters in buffer 'p'.
+       format of VISTA commands ROWFIT and SPINDEX.}
+  \item[ROW=r]{Fit only in row r (when A has more than 1 row).}
+  \item[MODE=1]{Fits the Gaussian to the quotient A/B (old way).}
+  \item[MODE=2]{Fits B*Gaussian to A (default and a nicer way).}
+  \item[INTER]{Stops after each iteration for user to inspect results.}
+  \item[SILENT]{To prevent printing results on the screen.}
+\end{itemize}
+
+FQUO fits the broadening Gaussian that when convolved with a template
+minimizes least-squares from a given spectrum. The input buffers must hold
+already the 1-d Fourier transforms of the template and the data spectra
+(use command FFT with the keyword ONEDIM), so the user can do his own
+personal recipe to prepare the data before the FFT (de-trending,
+edge-masking, etc) using other VISTA commands like ROWPOLY. The data buffer
+is replaced by the fit, the Fourier transform of the properly scaled,
+broadened and shifted template.
+
+By default (MODE=2) the least-squares minimization is performed comparing
+directly the data A with the convolution (product in Fourier space) of the
+template B and the broadening Gaussian G. If MODE=1 is used instead, the
+least-squares are minimized comparing the Fourier-quotient A/B with G.
+
+The three parameters to fit are the so called gamma-parameter (G), the
+velocity dispersion (S), and the relative velocity (V) with respect to the
+template. Since this is a non-linear fit, the user must give a first guess
+for these parameters. The amplitude G of the Gaussian estimates a relative
+line-strength, the width S measures a relative broadening, and any relative
+shift shows up in the displacement V of the Gaussian. The template and the
+data should normally be in a logarithmic wavelength scale (command ALIGN
+with keyword log) before they are transformed in Fourier space. In this
+case, the units for the broadening S and the shift V are km/sec. Otherwise
+(data not in equally-spaced velocity bins before FFT), S and V will be
+measured in units that are given by the next combination of the value of
+the fits card CDELT1 and the speed of light: (1.0e-10)*CDELT1/C.
+
+The initial guess can be given in three ways. Keywords G=, S=, V=, and
+GUESS=g,s,v, give the guessed values directly in the command line. Keyword
+GUESS=buf reads these values from buffer 'buf', where buf contains in
+column 1 the guess for gamma, in column 2 the guess for sigma, and in
+column 3 the guess for V. GUESS=buf is particularly useful with multi-row
+spectra (long-slit) or when taking previous results saved with the keyword
+LOAD=buf.
+
+Sometimes one or more of the parameters are known a priori and do not want
+be be fitted. In these cases, the user can FIX a parameter at its input
+value with keywords FIXG, FIXS and/or FIXV.
+
+The user can constrain the fit parameters parameters to be within certain
+limits with keywords G=g,mng,mxg, S=s,mns,mxs, and/or V=v,mnv,mxv. For
+example S=s,mns,mng will be fitting Sigma taking value 's' as first guess
+and keeping the fitted sigma between values 'mns' and 'mxs'. When only two
+values are specified in the keyword, like S=mns,mxs, the fit will be
+performed taking the average value as first guess and still constraining
+the final fit parameter within the limiting values.
+
+Keywords KS=ks and KE=ke, can be used to limit the fit within Fourier
+wave-numbers ks to ke. Keyword WBUF=buf can be used to apply different
+weights to different wave-numbers according to the values in buffer 'buf'.
+
+The data, template and weight images can have a single row (1-d
+spectroscopy) or any combination of one ore more rows (long-slit
+spectroscopy). If the template (weight) is a single row image, it will be
+used to fit all the rows of the data image. Otherwise the template
+(weights) will be the taken from the corresponding row in the data
+buffer. When the template (weights) image does not cover all the data rows,
+the template (weights) will be 'extrapolated' using the first or last row
+of the template (weights) image. Normally all the rows of the data image
+will be fit but the user can limit the fit to a single row with Keyword
+ROW=r (ignored in 1-D spectroscopy).
+
+\section{EWAVE: Wavelength Calibrate an Echelle Image}
+\begin{rawhtml}
+<!-- linkto ewave.html -->
+\end{rawhtml}
+\index{Echelle!Wavelength calibration}
+\index{Wavelength scale!Echelle data}
+\begin{itemize}
+  \item[Form:EWAVE source {[XOFF=x0]} {[PORD=nw]} {[MORD=nm]} {[REJ=rej]} 
+       {[TTY]} {[TRACE]} \hfill]{}
+  \item[source]{is the buffer to be wavelength calibrated.}
+  \item[XOFF=]{x-offset (column offset) from the nominal 
+       pattern center. It is positive when the CCD
+       is to the left of the nominal pattern center.}
+  \item[PORD=]{order of the polynomial to be fit in the x coordinate.}
+  \item[MORD=]{order of the polynomial to be fit in the 1/m
+       (1/order number) coordinate.}
+  \item[REJ=]{hard limit in mA determining the maximum residual
+       allowed between the wavelength of a line and the
+       wavelength determined from the fit.}
+  \item[TTY]{gives a detailed printout of the lines identified and 
+       their residuals.}
+  \item[TRACE]{traces the fit parameters, printing them out after each 
+       iteration.}
+\end{itemize}
+
+EWAVE will first match emission peaks in an extracted echelle arc spectrum
+(where the row number of the Vista image corresponds to the order number of
+the spectrum in that row, and the column number will be the column from the
+original (raw) image).  For each order, the program looks for peaks and
+attempts to identify them based on an initial estimate of the central
+wavelength of that order.  It assumes that none of the lines are blended.
+After the identifications are made a two-D polynomial is fit using a
+non-linear least square method.  The two coordinates of this polynomial are
+the column number and 1/m where m is the order number.  The default orders
+of the polynomial are 2 for the column number and 1 for the 1/m coordinate.
+It is possible at the moment to fit a 3 x 1 polynomial instead of a 2 x 1
+polynomial using PORD=3 but this generally does not improve the accuracy of
+the fit.  The fit parameters are iterated up to five times.
+
+The `XOFF=' keyword is used when the ccd is offset from the nominal pattern
+center (grating rotation = 493830).  It is positive when the ccd is to the
+left of the pattern center.  It is zero by default.  The keyword `REJ=' is
+invoked to allow the routine to converge more rapidly.  A line is rejected
+if the difference between the wavelength of the line and its wavelength
+determined from the polynomial fit is larger than `rej' mA.  It is invoked
+after the second iteration and is 100 mA by default.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[RD 1 THAR.EXT; EWAVE 1; WD 1 THAR.WAV FULL\hfill]{ Wavelength
+       calibrates an echelle image centered on the nominal pattern center
+       using a two-D polynomial of order 2 for the column number and of
+       order 1 for 1/m.  The input image called "THAR.CCD" was read from
+       disk and is written back to disk after calibration.}
+
+  \item[RD 1 THAR\_100.EXT\hfill]{}
+
+  \item[EWAVE 1 XOFF=100 PORD=2 MORD=1 REJ=75 TTY TRACE\hfill]{}
+
+  \item[WD 1 THAR\_100.WAV FULL\hfill]{ Wavelength calibrates an echelle
+       image shifted by 100 pixels to the left from the nominal pattern
+       center using again a two-D polynomial of order 2 for the column
+       number and of order 1 for 1/m.  All the lines having a residual
+       larger than 75 mA will be rejected after the second iteration.  The
+       fit parameters, the lines identified and their residuals will be
+       printed out out after each iteration.}
+\end{itemize}
+
+\section{EXTSPEC: Copy an Order of an Echelle Image to a Spectrum}
+\begin{rawhtml}
+<!-- linkto extspec.html -->
+\end{rawhtml}
+\index{Echelle!Produce spectrum}
+\begin{itemize}
+  \item[Form: EXTSPEC dest source ORD=nord\hfill]{}
+  \item[dest]{is the buffer which will hold the spectrum.}
+  \item[source]{is the buffer containing the extracted
+       echelle wavelength-calibrated image.}
+  \item[ORD=]{is the number of the order to be transferred.}
+\end{itemize}
+
+This command copies a given order from an extracted echelle
+wavelength-calibrated image (where the row number of the Vista image
+corresponds to the order number of the wavelength-calibrated spectrum in
+that row) to a buffer. The order number is selected with the keyword
+`ORD='.
+
+\noindent{Example:}
+\begin{itemize}
+  \item[EXTSPEC 10 1 ORD=87\hfill]{ Copy order 87 from a extracted echelle
+       wavelength-calibrated image into buffer 10.}
+\end{itemize}

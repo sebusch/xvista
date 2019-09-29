@@ -1,0 +1,413 @@
+\begin{theindex}
+
+  \item Annulus
+    \subitem Measuring azimuthal averages , \hyperpage{174}
+  \item Aperture Photometry, \hyperpage{179}
+  \item Aperture photometry, \hyperpage{204}
+    \subitem printing results, \hyperpage{53}
+  \item Arithmetic
+    \subitem Evaluating expressions, \hyperpage{21}
+    \subitem Expressions, \hyperpage{18}
+  \item ASCII files
+    \subitem Closing, \hyperpage{55}
+    \subitem Execute on end of file, \hyperpage{40}
+    \subitem Opening for reading, \hyperpage{54}
+    \subitem Reading, \hyperpage{55}
+    \subitem Rewinding, \hyperpage{57}
+    \subitem Skipping selected lines, \hyperpage{57}
+    \subitem Statistics and line count, \hyperpage{58}
+    \subitem Substituting file line into command line, \hyperpage{56}
+
+  \indexspace
+
+  \item Blink comparison
+    \subitem Loading the images, \hyperpage{62}
+  \item Box
+    \subitem Defining, \hyperpage{99}
+    \subitem Display boundaries on TV, \hyperpage{67}
+    \subitem Statistics of image or spectrum in, \hyperpage{109}
+  \item Brightnesses of stars
+    \subitem Introduction, \hyperpage{192}
+  \item Buffer, \hyperpage{2}
+  \item Buffers
+    \subitem List of images in, \hyperpage{47}
+
+  \indexspace
+
+  \item Centroid
+    \subitem Finding centroid of object in., \hyperpage{112}
+  \item Clear screen, \hyperpage{97}
+  \item Color map
+    \subitem Defined, \hyperpage{59}
+    \subitem Loading, \hyperpage{65}
+    \subitem Make new map, \hyperpage{65}
+  \item Column
+    \subitem Interpolate across columns, \hyperpage{131}
+  \item Column Numbering, \hyperpage{2}
+  \item Command Abbreviation, \hyperpage{11}
+  \item Command,Edit last command, \hyperpage{15}
+  \item Commands
+    \subitem Keywords, \hyperpage{4}
+    \subitem Show list of recent commands, \hyperpage{12}
+    \subitem Syntax, \hyperpage{4}
+    \subitem Types, \hyperpage{4}
+  \item Commands, Useful commands for the beginner, \hyperpage{8}
+  \item Commands,Defining synonyms, \hyperpage{14}
+  \item Commands,Extending a command, \hyperpage{14}
+  \item Commands,Removing synonyms, \hyperpage{14}
+  \item Commands,Repeat previous command, \hyperpage{12}
+  \item Compress
+    \subitem an image, \hyperpage{117}
+  \item Control-C
+    \subitem To halt procedure, \hyperpage{35}
+  \item Coordinates
+    \subitem Defining the observing site Latitude and Longitude, 
+		\hyperpage{155}
+
+  \indexspace
+
+  \item DAOPHOT, \hyperpage{194}
+  \item Data
+    \subitem Getting data file, \hyperpage{52}
+    \subitem Introduction to non-image data files, \hyperpage{52}
+    \subitem Printing, \hyperpage{53}
+    \subitem Saving data file, \hyperpage{52}
+  \item Data Files, \hyperpage{2}
+  \item Data,Printing in file, \hyperpage{11}
+  \item Data,Printing on lineprinter, \hyperpage{11}
+  \item Directories
+    \subitem Set default directories, \hyperpage{16}, \hyperpage{45}
+  \item Directories,Specifying directories for images, etc., 
+		\hyperpage{6}
+  \item Disk
+    \subitem Read image or spectrum from, \hyperpage{42}
+    \subitem Read procedure from, \hyperpage{30}
+    \subitem Write image or spectrum to, \hyperpage{43}
+    \subitem Write procedure to, \hyperpage{30}
+  \item Display
+    \subitem Embed permanent text on an image, \hyperpage{97}
+    \subitem Interactive commands, \hyperpage{59}
+    \subitem Marking image with graphics and text, \hyperpage{67}
+    \subitem Marking pixels, \hyperpage{59}
+    \subitem Overview, \hyperpage{59}
+    \subitem Scroll color map, \hyperpage{59}
+    \subitem X11 Image Display Window, \hyperpage{59}
+    \subitem X11 Resource Variables, \hyperpage{59}
+    \subitem Zooming and panning, \hyperpage{59}
+  \item Display, Specifying graphics terminal type, \hyperpage{9}
+
+  \indexspace
+
+  \item Echelle
+    \subitem Produce spectrum, \hyperpage{170}
+    \subitem Wavelength calibration, \hyperpage{169}
+  \item Extensions
+    \subitem Set default for files, \hyperpage{16}, \hyperpage{45}
+
+  \indexspace
+
+  \item Files
+    \subitem Default directories and extensions, \hyperpage{16}, 
+		\hyperpage{45}
+    \subitem Print current file directories, \hyperpage{53}
+  \item FITS header
+    \subitem Loading cards into strings, \hyperpage{25}
+  \item Flexure
+    \subitem Removing effects of from spectrum, \hyperpage{154}
+  \item Functions
+    \subitem List of arithmetic functions, \hyperpage{18}
+
+  \indexspace
+
+  \item Help, List recent changes to program or other news, 
+		\hyperpage{9}
+
+  \indexspace
+
+  \item Image, \hyperpage{2}
+    \subitem Add image and constant, \hyperpage{103}
+    \subitem Add two images, \hyperpage{103}
+    \subitem Arctangent, \hyperpage{106}
+    \subitem Background level, \hyperpage{108}
+    \subitem Baseline correction, \hyperpage{137}
+    \subitem Centroid of object in, \hyperpage{112}
+    \subitem Change object name, \hyperpage{49}
+    \subitem Column display, \hyperpage{75}
+    \subitem Combination of several images, \hyperpage{125}
+    \subitem Compress, \hyperpage{117}
+    \subitem Copy, \hyperpage{46}
+    \subitem Cropping, \hyperpage{115}
+    \subitem Cross-correlation, \hyperpage{130}
+    \subitem Delete from buffer, \hyperpage{47}
+    \subitem Delete/Remove a FITS header card, \hyperpage{50}
+    \subitem Display in TV, \hyperpage{62}
+    \subitem Divide image by constant, \hyperpage{103}
+    \subitem Divide two images, \hyperpage{103}
+    \subitem Edit a FITS header card, \hyperpage{50}
+    \subitem Edit FITS header, \hyperpage{50}
+    \subitem Exponentiation, \hyperpage{105}
+    \subitem Fit spline to rows or columns, \hyperpage{129}
+    \subitem Fix buggy FITS headers, \hyperpage{51}
+    \subitem Fix FITS header coordinate cards, \hyperpage{51}
+    \subitem Fixing Bad pixels, \hyperpage{119}
+    \subitem Flattening, \hyperpage{137}
+    \subitem Hardcopy display, \hyperpage{69}
+    \subitem Header, \hyperpage{47}
+    \subitem High pixel, \hyperpage{109}
+    \subitem Image Registration, \hyperpage{132}
+    \subitem Insert a FITS header card, \hyperpage{50}
+    \subitem Logarithm, \hyperpage{105}
+    \subitem Low pixel, \hyperpage{109}
+    \subitem Make smaller, \hyperpage{115}
+    \subitem Mean, \hyperpage{107}, \hyperpage{109}
+    \subitem Median filter, \hyperpage{122}
+    \subitem Median of several images, \hyperpage{124}
+    \subitem Merging, \hyperpage{114}
+    \subitem Multiply image by constant, \hyperpage{103}
+    \subitem Multiply two images, \hyperpage{103}
+    \subitem Print headers of disk images, \hyperpage{53}
+    \subitem Print pixel values in, \hyperpage{53}
+    \subitem Produce from spectrum, \hyperpage{159}
+    \subitem Read from disk, \hyperpage{42}
+    \subitem Replace by best surface fit, \hyperpage{127}
+    \subitem Reverse rows or columns, \hyperpage{116}
+    \subitem Rotate, \hyperpage{115}
+    \subitem Row display, \hyperpage{75}
+    \subitem Set default directory, \hyperpage{16}, \hyperpage{45}
+    \subitem Shift, \hyperpage{118}
+    \subitem Shifts and Pixel scale -- transforming and distortions., 
+		\hyperpage{152}
+    \subitem Smoothing, \hyperpage{121}
+    \subitem Square root, \hyperpage{105}
+    \subitem Standard deviation, \hyperpage{109}
+    \subitem Statistics in selected regions, \hyperpage{109}
+    \subitem Subtract constant from image, \hyperpage{103}
+    \subitem Subtract two images, \hyperpage{103}
+    \subitem Surface fit, \hyperpage{127}
+    \subitem Tangent, \hyperpage{106}
+    \subitem Windowing, \hyperpage{115}
+    \subitem Write to disk, \hyperpage{43}
+  \item Image Processing, \hyperpage{2}
+  \item Introduction, Useful commands for the beginner, \hyperpage{8}
+
+  \indexspace
+
+  \item Jump
+    \subitem In procedures, \hyperpage{35}
+
+  \indexspace
+
+  \item Keywords
+    \subitem Defined, \hyperpage{4}
+
+  \indexspace
+
+  \item Latitude
+    \subitem Defining the observing site Latitude, \hyperpage{155}
+    \subitem Entering latitude of observation, \hyperpage{155}
+  \item Longitude
+    \subitem Defining the observing site Longitude, \hyperpage{155}
+    \subitem Entering longitude of observation, \hyperpage{155}
+
+  \indexspace
+
+  \item Mask
+    \subitem Interpolate across masked pixels, \hyperpage{131}
+  \item Median
+    \subitem of several images, \hyperpage{124}
+
+  \indexspace
+
+  \item Name
+    \subitem Change name of object image, \hyperpage{49}
+
+  \indexspace
+
+  \item Output Redirection Mechanism, \hyperpage{11}
+
+  \indexspace
+
+  \item Pausing
+    \subitem During procedure, \hyperpage{35}
+  \item Photometry
+    \subitem Artificial Images, \hyperpage{214}
+    \subitem Artificial Stars , \hyperpage{214}
+    \subitem Coordinates of stars, \hyperpage{205}
+    \subitem DAOPHOT, \hyperpage{194}
+    \subitem Entering data, \hyperpage{206}
+    \subitem Locating stars, \hyperpage{199}, \hyperpage{201}
+    \subitem Modifying files, \hyperpage{206}
+    \subitem Printing results, \hyperpage{53}
+  \item Photometry file
+    \subitem Details, \hyperpage{192}
+  \item Pixel
+    \subitem Changing value, \hyperpage{119}
+    \subitem Eliminating negative, \hyperpage{119}
+    \subitem Examining value, \hyperpage{64}
+    \subitem Ignoring, \hyperpage{100}
+    \subitem Mask, \hyperpage{100}
+    \subitem Removing bad, \hyperpage{122}
+    \subitem Removing bad pixels, \hyperpage{123}
+  \item Plot
+    \subitem contour, \hyperpage{82}
+  \item Procedure
+    \subitem Conditional branching, \hyperpage{37}
+    \subitem Debugging, \hyperpage{33}
+    \subitem Defined, \hyperpage{28}
+    \subitem Defining, \hyperpage{34}
+    \subitem DO loops, \hyperpage{36}
+    \subitem Ending definition, \hyperpage{30}, \hyperpage{34}
+    \subitem Ending execution, \hyperpage{29, 30}
+    \subitem Execute, \hyperpage{31}
+    \subitem Execute on end of file, \hyperpage{40}
+    \subitem Execute on error, \hyperpage{39}
+    \subitem Introduction to, \hyperpage{28}
+    \subitem Jump to specified line, \hyperpage{35}
+    \subitem Jump to subroutine, \hyperpage{31}
+    \subitem Line by line execution, \hyperpage{33}
+    \subitem List, \hyperpage{30}
+    \subitem Parameter Passing, \hyperpage{33}
+    \subitem Pausing during, \hyperpage{35}
+    \subitem Print, \hyperpage{30}
+    \subitem Read from disk, \hyperpage{30}
+    \subitem Repeating segments of, \hyperpage{36}
+    \subitem Return from subroutine, \hyperpage{32}
+    \subitem Run, \hyperpage{31}
+    \subitem Startup procedure, \hyperpage{28}
+    \subitem Subroutine, \hyperpage{31}
+    \subitem Write to Disk, \hyperpage{30}
+  \item Procedure,Startup procedure, \hyperpage{6}
+  \item Procedures
+    \subitem Set default directory, \hyperpage{16}, \hyperpage{45}
+  \item Profile
+    \subitem Measuring profile, \hyperpage{172}
+    \subitem Printing results, \hyperpage{53}
+    \subitem Reconstruct object from surface profile, \hyperpage{178}
+
+  \indexspace
+
+  \item Row
+    \subitem Interpolate across rows, \hyperpage{131}
+  \item Row Numbering, \hyperpage{2}
+
+  \indexspace
+
+  \item Spectra
+    \subitem Set default directory, \hyperpage{16}, \hyperpage{45}
+  \item Spectrum, \hyperpage{2}
+    \subitem Change object name, \hyperpage{49}
+    \subitem Copy, \hyperpage{46}
+    \subitem Defining flux curve, \hyperpage{156}
+    \subitem Delete from buffer, \hyperpage{47}
+    \subitem Delete/Remove a FITS header card, \hyperpage{50}
+    \subitem Edit a FITS header card, \hyperpage{50}
+    \subitem Edit FITS header, \hyperpage{50}
+    \subitem Extinction correction, \hyperpage{155}
+    \subitem Extract curved spectrum, \hyperpage{144}
+    \subitem Extract from image, \hyperpage{143}
+    \subitem Extraction by summation of rows/columns, \hyperpage{143}
+    \subitem Fit polynomial to, \hyperpage{158}
+    \subitem Fit spline to, \hyperpage{129}
+    \subitem Flux calibration, \hyperpage{158}
+    \subitem Header, \hyperpage{47}
+    \subitem Identify lines, \hyperpage{149}
+    \subitem Insert a FITS header card, \hyperpage{50}
+    \subitem Interactive spline fit to, \hyperpage{160}
+    \subitem Make an image out of, \hyperpage{159}
+    \subitem Map location of, \hyperpage{144}, \hyperpage{165}
+    \subitem Merging, \hyperpage{114}
+    \subitem Optimal extraction, \hyperpage{147}
+    \subitem Plot, \hyperpage{75}
+    \subitem Print headers of disk spectra, \hyperpage{53}
+    \subitem Print line identifications, \hyperpage{53}
+    \subitem Print values in, \hyperpage{53}
+    \subitem Print wavelength scale, \hyperpage{53}
+    \subitem Read from disk, \hyperpage{42}
+    \subitem Wavelength Re-calibration, \hyperpage{154}
+    \subitem Wavelength scale, \hyperpage{150}
+    \subitem Wavelength scale -- copying, \hyperpage{151}
+    \subitem Wavelength scale -- transforming, \hyperpage{152}
+    \subitem Write to disk, \hyperpage{43}
+  \item Stars
+    \subitem Aperture photometry, \hyperpage{204}
+    \subitem Coordinates, \hyperpage{205}
+    \subitem Locating on frame, \hyperpage{199}, \hyperpage{201}
+    \subitem Positions, \hyperpage{205}
+  \item Stopping VISTA, \hyperpage{9}
+  \item Strings
+    \subitem Loading strings with FITS header cards.., \hyperpage{25}
+    \subitem Print defined strings, \hyperpage{53}
+    \subitem Printing string variables, \hyperpage{25}
+    \subitem Substituting data file line into command line, 
+		\hyperpage{56}
+    \subitem Substituting string variables into command line, 
+		\hyperpage{25}
+  \item Subroutine
+    \subitem Calling, \hyperpage{31}
+  \item Surface Photometry
+    \subitem Deproject spirals or elliptical images, \hyperpage{180}
+    \subitem Extract a cut along any PA, \hyperpage{171}
+    \subitem Least-squares Profile fitting, \hyperpage{182}
+    \subitem Photometry of Multiple-Galaxy Systems, \hyperpage{182}
+    \subitem Rebuilding Galaxy from SNUC, \hyperpage{183}
+    \subitem Reconstruct galaxy from PROFILE, \hyperpage{181}
+    \subitem Reconstruct Multiple Galaxy Systems, \hyperpage{183}
+    \subitem Star clusters or complex objects, \hyperpage{184}
+  \item Surface Profile
+    \subitem by azimuthal averaging along defined annuli, 
+		\hyperpage{174}
+    \subitem by fitting elliptical contours, \hyperpage{172}
+  \item Synonyms,Defining or deleting synonyms for commands, 
+		\hyperpage{14}
+
+  \indexspace
+
+  \item Television
+    \subitem Display box on, \hyperpage{67}
+    \subitem Interacting with image in, \hyperpage{64}
+    \subitem Load image in, \hyperpage{62}
+    \subitem Loading color map, \hyperpage{62}
+  \item Template
+    \subitem Generating model galaxy image, \hyperpage{216}
+  \item Terminal
+    \subitem Clear screen, \hyperpage{97}
+  \item Terminal, Specifying default graphics terminal type, 
+		\hyperpage{9}
+  \item TV
+    \subitem Loading color map, \hyperpage{65}
+    \subitem Use cursor to select bad pixels, \hyperpage{123}
+
+  \indexspace
+
+  \item Variable
+    \subitem Display value with format, \hyperpage{23}
+    \subitem Displaying value, \hyperpage{21}
+    \subitem Setting value of, \hyperpage{21}
+    \subitem Specify buffer numbers with, \hyperpage{22}
+  \item Variables
+    \subitem Defining string variables, \hyperpage{24}
+  \item variables, \hyperpage{18}
+  \item Virtual memory
+    \subitem Define, \hyperpage{47}
+    \subitem What to do when not enough, \hyperpage{47}
+  \item VISTA,Running VISTA, \hyperpage{7}
+  \item VISTA,Stop, \hyperpage{9}
+
+  \indexspace
+
+  \item Wavelength scale
+    \subitem Echelle data, \hyperpage{169}
+    \subitem For spectrum -- copying, \hyperpage{151}
+    \subitem For spectrum -- producing, \hyperpage{150}
+    \subitem For spectrum -- transforming, \hyperpage{152}
+    \subitem Identify lines for, \hyperpage{149}
+  \item WFPC
+    \subitem Simulate or fix WFPC A-D conversion errors, 
+		\hyperpage{135}
+
+  \indexspace
+
+  \item Zap
+    \subitem Remove bad pixels interactively, \hyperpage{123}
+
+\end{theindex}

@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>PEDIT: Edit the Procedure Buffer</TITLE>
+<META NAME="description" CONTENT="PEDIT: Edit the Procedure Buffer">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00420000000000000000">
+PEDIT: Edit the Procedure Buffer</A>
+</H1>
+
+<!-- linkto pedit.html -->
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+PEDIT loads the procedure buffer into a temporary file in your current
+directory, then runs a process which allows you to edit it with the default
+editor (usually vi).  If you exit the editor and save changes, the modified
+procedure is loaded back into the procedure buffer, but not executed.  If
+quit the editor without saving changes, the procedure buffer is left
+unchanged.
+
+<P>
+On a UNIX system, you can use another editor by defining the environment
+variable VISUAL. For example, to use the vi editor, jus execute the
+following BEFORE running VISTA:
+<PRE>
+   setenv VISUAL vi
+</PRE>
+A maximum number of 2500 lines is allowed in a procedure.  If you leave the
+editor with EXIT and your procedure contains more than 2500 lines, it is
+truncated and the last line is set to 'END'.  Also, each line is allowed a
+maximum length of 80 characters. You can have longer lines by using
+<A NAME="tex2html4"
+  HREF="line continuation">linecontinue.html</A>
+as described
+earlier.
+
+<P>
+You may also define procedures (with a maximum length of 2500 lines) with
+the editor before running VISTA, and read them into the procedure buffer
+with RP or execute them with CALL.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

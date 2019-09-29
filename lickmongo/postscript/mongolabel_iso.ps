@@ -1,0 +1,200 @@
+/MongoNormalFont /Helvetica def                  
+/MongoGreekFont /Symbol def                      
+FontDirectory /ZapfChancery-MediumItalic known
+{/MongoScriptFont /ZapfChancery-MediumItalic def}
+{/MongoScriptFont /Times-Roman def}              
+ifelse
+/MongoTinyFont /Courier def                      
+/MongoItalicFont /Helvetica-Oblique def          
+/MongoOtherFont /ZapfDingbats def                
+%%%%%%%%%%%%%%%%
+/ISOLatin1Encoding where        % does ISOLatin1Encoding Vector exist?
+{pop                            % get the dictionary off the stack
+    MongoNormalFont findfont
+    dup length dict begin
+        { 1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+    /MongoNormalISOFont exch definefont pop
+} if
+%%%%%%%%%%%%%%%%
+/MongoLabelDict 70 dict def
+/MongoLabelStartup {
+MongoLabelDict begin
+/ptsize 0 def /rotcode 0 def /hpos 0 def /vpos 0 def /modechar 92 def 
+/modecount 0 def /mode 0 def /submode 0 def /superlevel 0 def 
+/supershift 0.55 def /superscale 1.67 def /voff 0 def /curpt 1 def 
+/curheight 1 def /fontnum 0 def /literalmode 0 def /cfontnum 0 def 
+/cptsize 0 def /fsize 0 def /xlen 0 def /ylen 0 def /xadj 0 def /yadj 0 def 
+/romanchar (r) 0 get def /greekchar (g) 0 get def /scriptchar (s) 0 get def 
+/tinychar (t) 0 get def /italchar (i) 0 get def /otherchar (o) 0 get def 
+/usuperchar (U) 0 get def /usubchar (D) 0 get def /superchar (u) 0 get def 
+/subchar (d) 0 get def /zerochar (0) 0 get def /sevenchar (7) 0 get def 
+/xjustcode 0 def /yjustcode 0 def 
+/ybot 0 def /ycen 0 def /ycap 0 def /ytop 0 def 
+/charcode 0 def /charval 0 def /debugline 720 def
+/doprint {gsave	hpos vpos translate rotcode rotate xadj xlen add yadj voff 
+add moveto show grestore} def
+/SetXYadj{/yadj yjustcode -2 eq
+{ybot}
+{yjustcode -1 eq
+	{0}
+	{yjustcode 0 eq
+		{ycen}
+		{yjustcode 1 eq
+			{ycap}
+			{ytop}
+		 ifelse}
+	 ifelse}
+ ifelse}
+ifelse neg def /xadj xjustcode 1 add xlen mul -2 div def} def
+/DoFont{/cptsize exch def /cfontnum fontnum def
+	findfont [ cptsize 0 0 cptsize 0 0 ] makefont setfont} def
+/SetupFont{dup fontnum cfontnum eq exch 
+	cptsize eq and {pop pop} {DoFont} ifelse} def
+/SelectFont {
+    ptsize curpt mul
+    fontnum 5 eq
+	{MongoOtherFont exch SetupFont}
+	{fontnum 4 eq
+	    {MongoItalicFont exch SetupFont}
+	    {fontnum 3 eq
+		{MongoTinyFont exch SetupFont}
+		{fontnum 2 eq
+		    {MongoScriptFont exch SetupFont}
+		    {fontnum 1 eq
+			{MongoGreekFont exch SetupFont}
+			{MongoNormalFont exch SetupFont}
+		    ifelse}
+		 ifelse}
+	     ifelse}
+	ifelse}
+    ifelse
+} def
+/dochar {/charcode exch def
+literalmode 0 ne
+	{literalmode 3 eq
+		{/charval 0 def}
+	 if
+	/charval charval 8 mul charcode zerochar sub 7 and add def
+	/literalmode literalmode 1 sub def
+	literalmode 0 eq
+		{/charcode charval def}
+	if
+} if
+literalmode 0 eq
+{
+SelectFont
+/thechar ( ) dup 0 charcode put def
+printit 1 eq {thechar doprint} if
+thechar stringwidth pop xlen add /xlen exch def
+submode 1 eq {-1 SetSuperSub /submode 0 def} if
+submode -1 eq {1 SetSuperSub /submode 0 def} if
+mode 1 eq {/fontnum 0 def /mode 0 def} if
+} if} def
+/GetCurheight{gsave newpath 0 0 moveto ([) true charpath flattenpath pathbbox
+/ycap exch def pop /ybot exch def pop /ytop ptsize ybot add def
+/ycen ycap 2 div def ycap ybot sub grestore} def
+/countmode{modecount 1 gt
+	{modechar dochar
+	/modecount 0 def}
+	{/modecount modecount 1 add def}
+	ifelse
+} def
+/ResetModecount {/mode modecount def /modecount 0 def} def
+/SetSuperSub {
+dup 0 gt
+	{
+	/voff voff supershift curheight curpt mul mul add def
+	superlevel 0 ge
+		{/curpt curpt superscale div def}
+		{/curpt curpt superscale mul def}
+	ifelse
+	}
+	{
+	superlevel 0 gt
+		{/curpt curpt superscale mul def}
+		{/curpt curpt superscale div def}
+	ifelse
+	/voff voff supershift curheight curpt mul mul sub def
+	}
+ifelse
+dup superlevel add /superlevel exch def
+modecount mul /submode exch def
+/modecount 0 def} def
+/setmode {
+c romanchar eq
+    {/fontnum 0 def ResetModecount}
+    {c greekchar eq
+	{/fontnum 1 def ResetModecount}
+	{c scriptchar eq
+	    {/fontnum 2 def ResetModecount}
+	    {c tinychar eq
+		{/fontnum 3 def ResetModecount}
+		{c italchar eq
+		    {/fontnum 4 def ResetModecount}
+		    {c otherchar eq
+			{/fontnum 5 def ResetModecount}
+			{c superchar eq c usuperchar eq or
+			    {1 SetSuperSub}
+			    {c subchar eq c usubchar eq or
+				{-1 SetSuperSub}
+				{c zerochar ge c sevenchar le and
+				    {/literalmode 3 def
+				     c dochar
+				     /modecount 0 def}
+				    {1 1 modecount {modechar dochar} for
+				     c dochar}
+				ifelse}
+			    ifelse}
+			ifelse}
+		    ifelse}
+		ifelse}
+	    ifelse}
+	ifelse}
+    ifelse}
+ifelse} def
+/MongoStringWidth {
+{
+/c exch def
+c modechar eq
+	{countmode}
+	{modecount 0 gt
+		{setmode}
+		{c dochar}
+	ifelse}
+ifelse
+} forall} def
+/InitAll{/xlen 0 def /submode 0 def /superlevel 0 def /mode 0 def
+/modecount 0 def /voff 0 def /curpt 1 def /fontnum 0 def /literalmode 0 def
+MongoNormalFont ptsize DoFont} def
+end
+} def
+/MongoPutlabel{gsave MongoLabelStartup MongoLabelDict begin        
+/textstr exch def /ptsize exch def /rotcode exch def /yjustcode exch def
+/xjustcode exch def /vpos exch def /hpos exch def              
+InitAll                     
+/curheight GetCurheight def /ylen curheight def /printit 0 def              
+textstr MongoStringWidth    
+SetXYadj                    
+InitAll                     
+/printit 1 def              
+textstr MongoStringWidth    
+end                         
+grestore
+} def
+%
+/ISOLatin1Encoding where
+{pop
+/Helvetica findfont
+dup length dict begin
+    {1 index /FID ne {def} {pop pop} ifelse} forall
+    /Encoding ISOLatin1Encoding def
+    currentdict
+end
+/Helvetica-ISOLatin1 exch definefont pop
+/MongoNormalFont    /Helvetica-ISOLatin1 def
+}{
+/MongoNormalFont    /Helvetica def
+} ifelse

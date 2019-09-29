@@ -1,0 +1,38 @@
+
+<H1><A NAME="SECTION00680000000000000000">
+CREATE: Create a Blank Image</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml224#
+
+<P>
+<BR>
+<tex2html_image_mark>#command1901#
+<BR>
+
+<P>
+CREATE creates a new blank image, giving all the pixels in that image some
+constant value (the default is 0.0).  Any image that is in the buffer will
+be destroyed.  Use CONST=c to set the initial values of all of the pixels
+to 'c'.
+
+<P>
+The BOX=b keyword is used to define the image size and location.  This
+makes the new image have the size and location of bux 'b'.  See BOX for
+instructions for defining boxes. You may also give the size and location of
+the new image with the keywords SR, SC, NR, NC, or N.  NR and NC, or N, are
+required.  If SR, SC , CR, and CC are not given, the default origin is
+(0,0).
+
+<P>
+If you wish to have the header cards in the new buffer populated with cards
+from an existing buffer (except for cards having to do with image size,
+origin, etc.), use the HEADBUF=oldbuf keyword to copy cards from buffer
+<I>oldbuf</I>.
+
+<P>
+<#1927#>Examples:<#1927#>
+<BR>
+<tex2html_image_mark>#example1928#
+<BR>
+
+<P>

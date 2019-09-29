@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>FITSTAR: Calculate Extinction and Transformation Coefficients</TITLE>
+<META NAME="description" CONTENT="FITSTAR: Calculate Extinction and Transformation Coefficients">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0016260000000000000000">
+FITSTAR: Calculate Extinction and Transformation Coefficients</A>
+</H1>
+
+<!-- linkto fitstar.html -->
+<BR>
+
+<BR>
+
+<P>
+FITSTAR determines extinction and/or transformation coefficients given
+observations of standard stars along with known standard magnitudes and
+colors for these stars. Currently, up to five terms are available for the
+full transformation equation for each color: 
+
+<P>
+
+<OL>
+<LI>first order extinction
+</LI>
+<LI>second order extinction
+</LI>
+<LI>color transformation
+</LI>
+<LI>time term (by Julian date)
+</LI>
+<LI>constant term
+</LI>
+</OL>
+
+<P>
+FITSTAR will by default perform a fit without a second order term or a time
+term. Residuals will be displayed as a function of airmass, color,
+color*airmass, and Julian date; note that these are residuals after the
+best fit has been subtracted. The user then has the option of deleting
+individual points from the fit, and also of allowing for a second order or
+time term, or locking the value of any of the terms at any desired
+value. This is accomplished generally by allowing the user to lock any of
+the five parameters. Thus, transformations for extinction or color terms
+alone are easily obtainable. After allowing for the addition or deletion of
+new parameters and the possible deletion of bad points, a final plot of the
+residuals of the fit is made as a function of standard magnitude.
+
+<P>
+Two input files are required for FITSTAR. The first is a file of standard
+magnitudes and colors. The format is a header line with the number of
+colors and the color names, followed by a line for each star with the
+appropriate standard magnitudes.  The magnitudes should be followed by an
+exclamation mark (!)  and an optional star ID and star name. If a star ID
+number is given after the !, all observations with this ID number are
+assumed to be observations of this standard star. If no number is given,
+the user will be prompted to enter the data ID number for each standard
+star. IMPORTANT: all standard star numbers should have values less than
+1000. This allows use of the OBSNUM option, in which the observed star
+numbers have ID = 1000*STANDARD ID + OBSNUM, allowing multiple observations
+of the same star to have unique ID numbers. By default, VISTA will
+recognize this convention; if you do not wish to use this convention and
+also want to have star numbers greater than 1000, use the NOOBSNUM
+keyword. The OBSNUM=n keyword allows the user to change the default
+switch-over point from 1000 to another value. The OBSNUM2=n allows a
+similar function, but with a reversed definition: ID = n*OBSNUM + STANDARD
+ID
+
+<P>
+By default, the program will search the VISTA default DATA directory for
+the standards file.  The standards file can be specified on the command
+line with the STN=file keyword.
+
+<P>
+The second file which is required is one which contains the measured 
+instrumental magnitudes, airmasses, etc.
+All observations should be combined into one .mag file, using the MAGAVER
+command, before running FITSTAR. It is assumed that all observations of a
+given star will have the same ID number.  The program first searches the
+VISTA default PHOTOMETRY directory for this data file. The data file can be
+specified on the command line with the DAT=file keyword. Note that the .mag
+file contains airmasses for your observations; to get good solutions, these
+airmasses must be correct! For default xvista behavior, airmasses are
+computed from the coordinates and time of observation, which requires that
+the longitude and latitude be known. See the SETUP command for how to
+modify these and/or check the computed values against precomputed values 
+which may exist in the image headers. Airmasses are loaded for stellar
+photometry files when the MARKSTAR or AUTOMARK command is used.
+
+<P>
+The specific transformation equation(s) that will be determined
+has the form: 
+<PRE>
+   mag(corrected) = mag(raw) + z(1)*(airmass-air0)
+                             + z(2)*(airmass-air0)*(color-col0)
+                             + z(3)*(color-col0)
+                             + z(4)*(hjd-hjd0)
+                             + z(5)
+</PRE>
+where FITSTAR solves for some or all of the Z coefficients. The airmass,
+color, and Julian date offsets can be specified using the AIR=, COL=, and
+HJD= keywords, otherwise they default to 0, except for the HJD parameter
+which defaults to the midpoint of the observations.  It can be useful to
+set these values to values that fall in the mid-range of your observed
+values to prevent fits for one coefficient having undue leverage on the
+fits for the other coefficients. Many people like to refer their airmasses
+to AIR=1.  If you use the Julian date term, you almost certainly want to
+set HJD0 to fall in the middle of your observed Julian dates (note that for
+this routine, Julian date actually means Julian date - 2444000). Generally,
+however, the defaults work just fine.
+
+<P>
+FITSTAR will write an output file with default extension (.trn).  You can
+override this default file name with the OUT=file keyword.  This file will
+contain one header line which labels the columns, then a line for each
+transformation equation that you have determined. Note that each run of
+FITSTAR will add one line to the (.trn) file.  On subsequent runs, if you
+specify the same (.trn) output file, the new transformation equations will
+be appended to the old file.  You can force a new file to be opened by
+using the NEW keyword. Each line in this file will contain 8 numbers and 2
+character strings with the transformation info: z(1) z(2) z(3) z(4) z(5)
+air0 col0 hjd0 magname colname (see the equation above for the description
+of these terms).  This file will be used by the CORRECT command to correct
+stellar magnitudes or PROFILE photometry.
+
+<P>
+Normally, FITSTAR runs in an interactive mode to allow you to delete stars
+and/or lock parameters. It can be run in "batch" mode, however, if you
+specify the BATCH keyword, then all points will automatically be
+accepted. You can lock parameters on the command line using the
+LOCK=n[,val] keyword. If the first argument is greater than 0, then that
+parameter is locked to the valued of the second argument, or to 0 if no
+second argument is given.  If the first argument is negative, then that
+parameter is unlocked.  The standard magnitude and color columns to use can
+be specified on the command line using the SCOL=mag,col1,col2 keyword,
+where the 3 values are the same numbers that would have been entered
+interactively.
+
+<P>
+Hardcopy options are available with the HARD, HARD=, and PS= keywords. With
+the HARD copy, both plots will automatically be sent to the printer after
+you're finished deleting stars and changing parameters. With HARD=n, where
+n=1 or 2, you can just have one of the two plots sent to the printer. IF
+the PS=file option is given, the plots will be written to the specified
+file instead of to the printer; with this option, the first plot will have
+the character 'a' appended to the specified name, and the second will have
+the character 'b' appended.
+
+<P>
+The output plots can be labeled using the TITLE or TITLE= keyword; the
+former will prompt the user for a title string.
+
+<P>
+The NOPLOT option can be used to suppress the making of plots entirely,
+useful e.g. if you're not on a graphics terminal.
+
+<P>
+The RES and RES= keywords can be used to output individual star residuals,
+along with the input data information and the standard magnitude and color
+to an output file.
+
+<P>
+The STNERR=x keyword can be used to assign a single error to be used to for
+all of the STANDARD magnitudes if desired. (The observed errors are taken
+from the input data file). The default for STNERR is to assume standards
+are all very accurate, with STNERR=0.001. This parameter will really only
+affect the determined value of CHI2.
+
+<P>
+Finally, the APCOR=x keyword can be used to apply a single aperture
+correction in magnitudes to apply to all of the input data; the default is
+not to apply an aperture correction. If you use APCOR, the value you use
+will be printed on the summary output page. In addition, solely for output
+purposes, you can specify the aperture used with the AP= keyword; this will
+just be echoed on the output summary page.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

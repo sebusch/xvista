@@ -1,0 +1,253 @@
+\chapter{Image Arithmetic}
+
+\section{Introduction to Image Arithmetic}
+\begin{rawhtml}
+<!-- linkto math.html -->
+\end{rawhtml}
+
+%
+% all entries checked for keywords & function against current sources
+% added missing entries for various functions (e.g., ONEOVER)
+% 
+% rwp/osu 1998 Aug 14
+%
+
+An ``image'' may be either a 2-D image array or a 1-D spectrum vector.  The
+commands for one- or two-image arithmetic are:
+
+\begin{itemize}
+  \item[ADD\hfill]{add two images or an image and a constant.}
+  \item[SUBTRACT\hfill]{subtract two images or subtract a constant and a 
+       image.}
+  \item[MULTIPLY\hfill]{multiply two images or an image and a constant}
+  \item[DIVIDE\hfill]{divide two images or divide an image by a constant.}
+  \item[SQRT\hfill]{square root}
+  \item[LOG\hfill]{base-10 logarithm}
+  \item[LN\hfill]{natural logarithm}
+  \item[EXP\hfill]{exponentiate image (e\^image):  LOG INV does 10\^image}
+  \item[TAN\hfill]{tangent}
+  \item[ARCTAN\hfill]{inverse of TAN}
+  \item[SIN\hfill]{sine}
+  \item[COS\hfill]{cosine}
+  \item[NINT\hfill]{nearest integer}
+  \item[ONEOVER\hfill]{invert (1/x)}
+\end{itemize}
+
+\section{ADD, SUBTRACT, MULTIPLY, and DIVIDE}
+\begin{rawhtml}
+<!-- linkto add.html -->
+<!-- linkto subtract.html -->
+<!-- linkto multiply.html -->
+<!-- linkto divide.html -->
+\end{rawhtml}
+\index{Image!Add two images}
+\index{Image!Add image and constant}
+\index{Image!Subtract two images}
+\index{Image!Subtract constant from image}
+\index{Image!Multiply two images}
+\index{Image!Multiply image by constant}
+\index{Image!Divide two images}
+\index{Image!Divide image by constant}
+\begin{itemize}
+  \item[\textbf{Form:}ADD        dest {[other]} {[CONST=c]} {[BOX=B]} {[DR=dr]} {[DC=dc]}\hfill]{}
+  \item[SUBTRACT   dest {[other]} {[CONST=c]} {[BOX=B]} {[DR=dr]} {[DC=dc]}\hfill]{}
+  \item[MULTIPLY   dest {[other]} {[CONST=c]} {[BOX=B]} {[DR=dr]} {[DC=dc]}\hfill]{}
+  \item[DIVIDE     dest {[other]} {[CONST=c]} {[BOX=B]} {[DR=dr]} {[DC=dc]} {[FLAT]}\hfill]{}
+  \item[dest]{is the buffer where the result will be stored}
+  \item[other]{is the other buffer in the calculation, if any.}
+  \item[CONST=c]{performs arithmetic between a buffer and a constant}
+  \item[BOX=B]{limits the arithmetic to those pixels
+in the source which are in box B}
+  \item[DR=dr]{Gives a row offset between the 'dest' and 'other' buffers.}
+  \item[DC=dc]{Gives a column offset between the 'dest' and 'other' buffers.}
+  \item[FLAT]{rescales the division by the mean of 'other', preserving the 
+mean of the source.}
+\end{itemize}
+These commands perform all arithmetic between images and spectra.  There
+are three ways to use these commands.
+
+\noindent{\textbf{Operations between two images or two spectra:}}
+
+In this form, the command word is followed by the numbers of the buffers
+holding the images.  Examples are
+\begin{itemize}
+  \item[ADD 1 2\hfill]{Add image in buffer 2 to image in buffer 1.}
+  \item[SUBTRACT 3 4\hfill]{Subtract image in buffer 4 from image in buffer 3.}
+\end{itemize}
+Note that the first buffer listed is the one modified by the operation.
+
+The FLAT word is used in the DIVIDE command to re-scale the division by the
+mean of the second image, thus preserving the mean of the first buffer.
+This is typically used when dividing raw images by a flat field.
+\textbf{NOTE:} The mean of the second image must have previously been
+calculated by the MN command!
+
+\noindent{\textbf{Operations between images and constants:}}
+
+In this form, there is only one buffer specification on the command line.
+The word CONST= (or C=) is used to specify the constant to be used.
+\begin{itemize}
+  \item[ADD 2 CONST=9.5\hfill]{Adds 9.5 to every pixel in buffer 2}
+  \item[DIVIDE 3 CONST=10/3.1415\hfill]{  Divides buffer 3 by 10/3.14159}
+\end{itemize}
+
+\noindent{\textbf{Combined image and constant operations:}}
+
+The first two forms of these commands may be combined, thus allowing you to
+simultaneously operate on two images and a constant.
+\begin{itemize}
+  \item[ADD 2 3 CONST=5\hfill]{Adds buffers 3 to 2, then adds 5.0
+       to the result.}
+  \item[MULTIPLY 1 \$J CONST=0.01\hfill]{ Multiplies buffer 1 by buffer J
+       (J a variable), then multiplies the result by 0.01.}
+\end{itemize}
+
+\noindent{\textbf{Remarks:}}
+
+In two-image arithmetic, only those pixels common to the two images are
+changed by the operation.  The size of the destination image is not changed
+by the operation.  The DR= and DC= keywords only apply to two-image
+arithmetic and specify row and column offsets between the two images.  The
+sense of the shift is shown in the following example: dest(C+DC,R+DR) =
+dest(C+DC,R+DR) + other(C,R).
+
+BOX limits the operation to those pixels in the destination image which are
+in the specified box.
+
+\section{SQRT: Square Root of an Image}
+\begin{rawhtml}
+<!-- linkto sqrt.html -->
+\end{rawhtml}
+\index{Image!Square root}
+\begin{itemize}
+  \item[\textbf{Form:}SQRT source {[SGN]} {[SIGN]} {[NOABS]}\hfill]{}
+\end{itemize}
+
+SQRT replaces each pixel in 'source' by the square root of the pixel value.
+If there are negative pixels, the square root of the absolute value is
+taken, unless the NOABS keyword is given, in which case negative pixels are
+set to zero, or unless the words SGN or SIGN are included.  If either if
+these words are included on the command line, the square root of the
+absolute value is computed and given a negative sign (example: -4 turns
+into -2).
+
+\section{LOG: Base-10 Logarithm of an Image}
+\begin{rawhtml}
+<!-- linkto log.html -->
+\end{rawhtml}
+\index{Image!Logarithm}
+\begin{itemize}
+  \item[\textbf{Form:} LOG source {[INV]}\hfill]{}
+\end{itemize}
+
+LOG replaces the pixel values in the image 'source' by their base-10
+logarithm values. Any pixels whose original values were less than or equal
+to 0 are replaced by -30 in the resulting image.  If the INV keyword is
+specified, the inverse log is taken
+
+\noindent{Example:}
+\begin{itemize}
+  \item[LOG 3\hfill]{take the log of each pixel in buffer 3.}
+\end{itemize}
+
+\section{LN: Natural Logarithm of an Image}
+\begin{rawhtml}
+<!-- linkto ln.html -->
+\end{rawhtml}
+\index{Image!Logarithm}
+\begin{itemize}
+  \item[\textbf{Form :} LN source {[INV]}\hfill]{}
+\end{itemize}
+
+LN replaces the pixel values in the image 'source' by their base-e
+logarithm values. Any pixels whose original values were less than or equal
+to 0 are replaced by -30 in the resulting image.  If the INV keyword is
+specified, the inverse log is taken
+
+\noindent{Example:}
+\begin{itemize}
+  \item[LN 3\hfill]{take the natural log of each pixel in buffer 3.}
+\end{itemize}
+
+\section{EXP: Exponentiate an Image}
+\begin{rawhtml}
+<!-- linkto exp.html -->
+\end{rawhtml}
+\index{Image!Exponentiation}
+\begin{itemize}
+  \item[\textbf{Form:}EXP source\hfill]{}
+\end{itemize}
+
+EXP replaces every pixel value n in 'source' by $e^n$.  Values larger than
++30 or smaller than -30 are set to 1.0E+30 or 1.0E-30 respectively.
+
+\section{TAN: Tangent of an Image}
+\begin{rawhtml}
+<!-- linkto tan.html -->
+\end{rawhtml}
+\index{Image!Tangent}
+\begin{itemize}
+  \item[\textbf{Form:}  TAN source\hfill]{}
+\end{itemize}
+
+TAN replaces every pixel n in 'source' by tan(n).  The pixel values are
+assumed to be in degrees.  All pixel values are mapped to the range -90 to
++90 degrees.
+
+\section{ARCTAN: Arctangent of an Image}
+\begin{rawhtml}
+<!-- linkto arctan.html -->
+\end{rawhtml}
+\index{Image!Arctangent}
+\begin{itemize}
+  \item[\textbf{Form:} ARCTAN source {[0TO180]}\hfill]{}
+\end{itemize}
+
+ARCTAN replaces every pixel in source by the arctangent of the original
+value.  The result of ARCTAN is in degrees from -90 to +90 by default.  If
+you wish the arctangent values to lie between 0 and 180 degrees, use the
+keyword 0TO180.
+
+\section{COS: Cosine of an Image}
+\begin{rawhtml}
+<!-- linkto cos.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form:} COS source\hfill]{}
+\end{itemize}
+
+COS replaces every pixel in source by the cosine of the original value. The
+pixel values are assumed to be in degrees.
+
+\section{SIN: Sine of an Image}
+\begin{rawhtml}
+<!-- linkto sin.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form:} SIN source\hfill]{}
+\end{itemize}
+
+SIN replaces every pixel in source by the sine of the original value. The
+pixel values are assumed to be in degrees.
+
+\section{NINT: Nearest Integer of an Image}
+\begin{rawhtml}
+<!-- linkto nint.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form:} NINT source\hfill]{}
+\end{itemize}
+
+NINT replaces every pixel in source with the nearest integer value.
+
+\section{ONEOVER: Invert an Image}
+\begin{rawhtml}
+<!-- linkto oneover.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[\textbf{Form:} ONEOVER source\hfill]{}
+\end{itemize}
+
+ONEOVER replaces every pixel in source by its inverse (1/x).  If the pixel
+value is 0, it sets the value to 0 in the inverse image to flag it.
+

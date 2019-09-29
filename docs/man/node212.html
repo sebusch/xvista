@@ -1,0 +1,20 @@
+
+<H1><A NAME="SECTION0016120000000000000000">
+OFFSET: Offset Positions in a DAOPHOT File</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml478#
+<BR>
+<tex2html_image_mark>#command7569#
+<BR>
+
+<P>
+Shifts positions of all stars in a given file by a specified amount. The
+amount can be specified with the DX= and DY= keywords, or else the program
+will prompt the user for values. In addition, OFFSET has a new VISTA
+function. If a buffer is specified with the OFFSET command, a linear plate
+transformation will be performed from the header cards REF_AX ... in the
+specified header. These cards are automatically loaded into the header
+using the REGISTER command, with the LOAD keyword. See REGISTER for more
+information.  If INV is specified, the inverse transformation is done.
+
+<P>

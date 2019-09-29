@@ -1,0 +1,12 @@
+psfmode 2
+expand .8
+data zip.dat
+xcolumn 1
+ycolumn 2
+limits
+wind 2 2 1
+polygon 10
+box
+wind 2 2 2
+box
+polygon 9

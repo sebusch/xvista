@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>REGISTER: Compute a Linear Plate Solution Between Several Images</TITLE>
+<META NAME="description" CONTENT="REGISTER: Compute a Linear Plate Solution Between Several Images">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION0016250000000000000000">
+REGISTER: Compute a Linear Plate Solution Between Several Images</A>
+</H1>
+
+<!-- linkto register.html -->
+<BR>
+
+<BR>
+
+<P>
+REGISTER solves for the coefficients of a linear plate transformation given
+the positions of at least 3 stars appearing in all the frames
+concerned. The plate transformation is of the form:
+<PRE>
+   X(REF) = X(PLATE) + AX*X(PLATE) + BX*Y(PLATE) + CX
+   Y(REF) = Y(PLATE) + AY*X(PLATE) + BY*Y(PLATE) + CY
+</PRE>
+The reference frame is taken to be the first frames specified, but shifted
+in rows and columns so that the positions of the reference stars average to
+0; if the NOMEAN keyword is used, then the first frame will be the
+reference frame, with no shift at all ( this should be the default, but
+isn't for historical reasons - this may change someday ...)
+
+<P>
+If the HEADER option is specified, the stellar positions are read from the
+image header in cards(RSTARX1,RSTARY1),(RSTARX2,RSTARY2), (RSTARX3,RSTARY3)
+... up to a maximum of 9 stars.  These cards can be placed in the header
+using the MARKSTAR command specifying a buffer number and the keyword
+REF. If the HEADER option is not used, the program will prompt for two
+files containing the stellar positions in each of two frames. In this case,
+only 2 frames can be done at a time.
+
+<P>
+If the LOAD keyword is specified, then the coefficients of the fits are
+loaded into each header in the cards REF_AX, REF_BX, REF_CX, REF_AY,
+REF_BY, and REF_CY.
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

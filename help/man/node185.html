@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>SNUC: Surface Photometry of Multiple-Galaxy Systems</TITLE>
+<META NAME="description" CONTENT="SNUC: Surface Photometry of Multiple-Galaxy Systems">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001590000000000000000">
+SNUC: Surface Photometry of Multiple-Galaxy Systems</A>
+</H1>
+
+<!-- linkto snuc.html -->
+<A NAME="6939"></A>
+<A NAME="6940"></A>
+<BR>
+<IMG
+ WIDTH="6" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img338.png"
+ ALT="\begin{command}
+\item[Form: SNUC buf {[SKY=f]} {[SCALE=f]} {[OLD]} {[NPASS=n]} ...
+...must be
+provided.}
+\item[MASK]{ignores MASKed pixels in the fit}
+\end{command}">
+<BR>
+
+<P>
+SNUC will extract the individual surface photometry profiles of overlapping
+or interacting galaxies comprising a multiple galaxy system.  Each galaxy
+within the system is assumed to have concentric elliptical isophotes with
+otherwise arbitrary brightness, position angle, and ellipticity
+profiles. The isophotes parameters for all galaxies are solved for
+simultaneously by a nonlinear least-squares algorithm that decomposes the
+multiple system under the assumption that its morphology can be modeled as
+the simple superposition of normal elliptical galaxies.
+
+<P>
+The routine models the image displayed on the TV.  The startup procedure
+for the decomposition is to mark the nuclei and extent of the individual
+galaxies with the cursor.  Mark any nucleus with (1) to fit the specified
+galaxy to the image or [BOX=n] border, or (2) to then go on and mark an
+outer limiting isophote with (0).  Mark with (0) once all galaxies have
+been selected to start the decomposition.  At this time, five galaxies is
+the maximum that can be fit.  If desired, of course, this routine will also
+fit single isolated galaxies.
+
+<P>
+The photometry solution is found iteratively.  NPASS iterations are done
+for a given run (default is 3).  Further iterations for a given setup can
+be run with the OLD keyword.  The EX keyword is used with the OLD keyword
+to delete or add more isophotes to the outer extent of any galaxy used in a
+previous run.  Isophotes are spaced geometrically by the ratio 1+DELT
+(default is 1.25).  Isophote spacing is the same for all galaxies.
+Isophote centers are fixed by default and taken to be the nuclear centroid
+for each galaxy.  Improved estimates of the centroids can be made during
+any pass with the RECEN keyword if the default centroiding is found to be
+inaccurate. Isophote centers can be solved for independently using the
+CENTER keyword; however, this option does not work well at the present.
+Since the decomposition solves for the isophotes by a least squares
+procedure, portions of the image contaminated by stars, defects, faint
+galaxies can be excluded from the fit.  Pixels set identically to 0.0 are
+ignored by the algorithm.  One handy use of this feature is to run a
+solution, reconstruct it (see RENUC), subtract it off, and clip any faint
+objects or features uncovered in the process to 0.0.  The routine also
+generates error estimates for the isophote parameters assuming shot noise
+errors in the pixel values.  For accurate error estimates the level of any
+sky level subtracted from the image must be given with the SKY keyword.
+
+<P>
+Photometry results can be saved and recalled with the SAVE and GET
+commands, or printed with the PRINT command, using the MULT option in
+either of these commands.
+<BR>
+<IMG
+ WIDTH="6" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img339.png"
+ ALT="\begin{example}
+\item[SNUC buf SKY=back SCALE=0.334 RECEN=5\hfill]{Setup a
+dec...
+...alaxy.lis\hfill]{Use an
+input file to specify galaxy parameters.}
+\end{example}">
+<BR>
+
+<P>
+See Also: RENUC, PROFILE
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

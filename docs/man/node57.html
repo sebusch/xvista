@@ -1,0 +1,106 @@
+
+<H1><A NAME="SECTION00620000000000000000">
+WD: Write an Image to a Disk File</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml218#
+
+<P>
+<A NAME="1764"><tex2html_anchor_invisible_mark></A>
+<A NAME="1765"><tex2html_anchor_invisible_mark></A>
+<A NAME="1766"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command1767#
+<BR>
+
+<P>
+WD writes the image contained in buffer 'buf' to the specified file.
+Unless you specify otherwise, the image will be written in FITS format to
+the default directory for images with the current default file extension.
+By default, WD writes the images in FITS format using 16-bit signed
+integers (BITPIX=16).  You can alternatively specify 32-bit signed integers
+(BITPIX=32) by using the FITS=32 keyword, or 32-bit floating point values
+(BITPIX=-32) using the FULL keyword.  Because VISTA stores all image data
+internally as 32-bit floating-point arrays, the FULL option is often the
+fastest as it requires no data conversion/scaling computations to convert
+the data arrays into the specified integer formats.  Also note that
+conversion of data to 16-bit integers might incur precision degradation (or
+loss of dynamic range), especially for heavily processed data comprised of
+a combination of many individual images.
+
+<P>
+The optional keywords WFPC, DOM, and SDAS may be used to specify that the
+file is to be written in proprietary formats used by the WF/PC-1 team (in
+DEC byte order). IF WFPC is specified, the names are taken to be
+filename.IMG and filename,HDR; for SDAS, the filenames are filename.HHD and
+filename.HHH; for DOM, the file is specified by a number, W00000n.IMG and
+W00000n.HDR. If any of these extensions are explicitly mentioned in the
+filename, the WFPC switch is automatically turned on.  General users are
+advised to ignore these options and write all data in FITS format, as FITS
+data are generally portable and should be understood by all other data
+analysis programs.
+
+<P>
+The SPEC word tells WD to write to the spectrum directory and to
+append the default file extension for spectra [NB: This is an archaic usage
+that is artifact of an earlier version of VISTA where images and spectra
+were treated as separate entities with separate commands, and is no longer
+required.  You can treat images and spectra identically in the current
+version of VISTA.  See the notes at the end of the RD command for a further
+discussion].
+
+<P>
+The command PRINT DIRECTORIES shows the current directories and
+extensions. If you do not give a filename, the program will ask you for it.
+
+<P>
+FULL is used to write the pixels in 32-bit floating point format.  This
+preserves the full precision of the pixels in the buffers.  Note that the
+WF/PC standard is currently defined to be 16 bit integers, so FULL cannot
+be used with WF/PC files.  If the data are to be written as integers
+(either 16- or 32-bit formats), WD will first compute the maximum and
+minimum pixel values, and then scale the pixels so that the maximum and
+minimum values will be packed into the full allowed data range for that bit
+precision (+/-32767 for 16-bit integers, and +/-2147483647 for 32-bit
+integers).  The scaling parameters are printed on the terminal, and stored
+in the FITS header as the BZERO and BSCALE keywords, which will be used by
+subsequent FITS file readers to de-scale the data according to the formula:
+<BR>
+<tex2html_image_mark>#hanging1785#
+<BR>
+The scaling parameters can be overridden by the
+ZERO=z and SCALE=s keywords, following the formula:
+<BR>
+<tex2html_image_mark>#hanging1788#
+<BR>
+but playing with data scaling is ill-advised unless you are absolutely
+certain of what you are doing.
+
+<P>
+The command RD will use these parameters to restore the pixel values when
+the image is read from the disk.  This is similar to the default option of
+the WT command.
+
+<P>
+NOTE: This scaling convention conforms to FITS standard.  In versions 3
+and earlier of VISTA, a backwards convention was used such that if for
+some reason you encounter old FITS images written with VISTA before about
+1985, you could find data scaling problems.  If you invert the BSCALE 
+variable in the header and make BZERO negative, it should come out OK.
+
+<P>
+In the examples below, assume the default image directory and extension are
+/vista/ccd/ and .fits, and the default spectrum directory and extension are
+/vista/spectra and .fits.
+<BR>
+<tex2html_image_mark>#example1791#
+<BR>
+
+<P>
+In earlier versions of VISTA, the 32-bit per pixel format was the default.
+The FULL keyword is new to version 3.
+
+<P>
+See the notes at the end of the RD command for an explanation of the
+archaic custom of separating images and spectra.
+
+<P>

@@ -1,0 +1,4 @@
+c                               vline comes before pointer to avoid trouble
+	common  /fontinfo/      numfont, nvertex, vline, pointer
+	common  /fontchar/      nstroke, ladj, radj, font
+C------------------------------------------------------------------------------

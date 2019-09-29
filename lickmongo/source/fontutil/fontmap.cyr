@@ -1,0 +1,5 @@
+NUMFONT 4     There are 4 fonts defined by this fontmap file
+include 'comcyril.fmp'
+include 'mgogreek.fmp'
+include 'mgoscrpt.fmp'
+include 'mgotonry.fmp'

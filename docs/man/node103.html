@@ -1,0 +1,73 @@
+
+<H1><A NAME="SECTION001020000000000000000">
+ADD, SUBTRACT, MULTIPLY, and DIVIDE</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml299#
+<A NAME="4098"><tex2html_anchor_invisible_mark></A>
+<A NAME="4099"><tex2html_anchor_invisible_mark></A>
+<A NAME="4100"><tex2html_anchor_invisible_mark></A>
+<A NAME="4101"><tex2html_anchor_invisible_mark></A>
+<A NAME="4102"><tex2html_anchor_invisible_mark></A>
+<A NAME="4103"><tex2html_anchor_invisible_mark></A>
+<A NAME="4104"><tex2html_anchor_invisible_mark></A>
+<A NAME="4105"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command4106#
+<BR>
+These commands perform all arithmetic between images and spectra.  There
+are three ways to use these commands.
+
+<P>
+<#4228#><B>Operations between two images or two spectra:</B><#4228#>
+
+<P>
+In this form, the command word is followed by the numbers of the buffers
+holding the images.  Examples are
+<BR>
+<tex2html_image_mark>#example4142#
+<BR>
+Note that the first buffer listed is the one modified by the operation.
+
+<P>
+The FLAT word is used in the DIVIDE command to re-scale the division by the
+mean of the second image, thus preserving the mean of the first buffer.
+This is typically used when dividing raw images by a flat field.
+<B>NOTE:</B> The mean of the second image must have previously been
+calculated by the MN command!
+
+<P>
+<#4229#><B>Operations between images and constants:</B><#4229#>
+
+<P>
+In this form, there is only one buffer specification on the command line.
+The word CONST= (or C=) is used to specify the constant to be used.
+<BR>
+<tex2html_image_mark>#example4148#
+<BR>
+
+<P>
+<#4230#><B>Combined image and constant operations:</B><#4230#>
+
+<P>
+The first two forms of these commands may be combined, thus allowing you to
+simultaneously operate on two images and a constant.
+<BR>
+<tex2html_image_mark>#example4153#
+<BR>
+
+<P>
+<#4231#><B>Remarks:</B><#4231#>
+
+<P>
+In two-image arithmetic, only those pixels common to the two images are
+changed by the operation.  The size of the destination image is not changed
+by the operation.  The DR= and DC= keywords only apply to two-image
+arithmetic and specify row and column offsets between the two images.  The
+sense of the shift is shown in the following example: dest(C+DC,R+DR) =
+dest(C+DC,R+DR) + other(C,R).
+
+<P>
+BOX limits the operation to those pixels in the destination image which are
+in the specified box.
+
+<P>

@@ -1,0 +1,48 @@
+
+<H1><A NAME="SECTION0012130000000000000000">
+BIGMEDIAN: Compute Median of a Large Number of FITS Images</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml346#
+<A NAME="4874"><tex2html_anchor_invisible_mark></A>
+<A NAME="4875"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command4876#
+<BR>
+
+<P>
+BIGMEDIAN loads the 'dest' buffer with the median of images specified in
+the file given by the LIST=file keyword. The list file must contain the
+names of at least 3 images, in FITS format, with one image name specified
+per line of the input file. Optionally, the name of the file can be
+followed (on the same line) with a normalization constant and a zero point
+to be applied to each pixel in this input FITS file before the median is
+performed. For example, if the list file looks like this:
+<BR>
+<tex2html_image_mark>#hanging4886#
+<BR>
+then the median of those frames will be taken from the raw input FITS
+values.  If the input file looks like this:
+<BR>
+<tex2html_image_mark>#hanging4891#
+<BR>
+then the median will be taken of image001, (image002/20.), and
+(image003-5)/20.  Note that the specified zero point is SUBTRACTED from the
+image before computing the median; this makes it ideal to use for subtracting e.g. an
+overscan value.
+
+<P>
+In addition, you can do a pixel-by-pixel bias subtraction for each frame in
+the input list if you specify a FITS bias frame to subtract with the
+BIAS=file keyword. In this case, the bias frame will be subtracted before
+the median is performed.
+
+<P>
+The normalization of each frame can also be specified if there is a FITS
+card called MEAN in the FITS headers. If this card exists, the value of the
+card will be used to normalize the individual frames. Finally, if the
+NOMEAN keyword is specified, no normalization will be applied, regardless
+of the presence of a MEAN card or a value in the input list file.
+
+<P>

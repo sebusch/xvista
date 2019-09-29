@@ -1,0 +1,57 @@
+
+<H1><A NAME="SECTION0012110000000000000000">
+TVZAP: Interactively Remove Pixels by Median Filtering</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml344#
+<A NAME="4831"><tex2html_anchor_invisible_mark></A>
+<A NAME="4832"><tex2html_anchor_invisible_mark></A>
+<A NAME="4833"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command4834#
+<BR>
+
+<P>
+TVZAP works on the image that is loaded into the television.  It performs
+the ZAP operation (see HELP ZAP) on those pixels selected by the TV cursor.
+
+<P>
+SIG=f and TTY have the same meaning as in ZAP.  SEARCH is used to select
+the size of the region which is median filtered.  The region is a square
+box of size 's', where 's' is the argument to the SEARCH word. 's' has a
+maximum size of 50.  If the word SEARCH is not given, the default is a 5 by
+5 box.  The MASK keyword is the same as for the ZAP command.
+
+<P>
+The SURGICAL keyword means to test only the pixel directly beneath the
+cursor for zapping.  By default TVZAP (like ZAP or LZAP) will test 
+<I>all</I> pixels within the current median window, and replace them
+with the median if they exceed the rejection threshold.
+
+<P>
+After you type TVZAP, the cursor will appear on the screen.  The usual
+cursor keys (see ITV) will then be defined.  Other defined keys are:
+
+<P>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="CENTER">Z</TD>
+<TD ALIGN="CENTER">perform ZAP operation at position of cursor</TD>
+</TR>
+<TR><TD ALIGN="CENTER">E</TD>
+<TD ALIGN="CENTER">exit from TVZAP</TD>
+</TR>
+<TR><TD ALIGN="CENTER">S</TD>
+<TD ALIGN="CENTER">change size of box used in median filtering</TD>
+</TR>
+<TR><TD ALIGN="CENTER">T</TD>
+<TD ALIGN="CENTER">change rejection threshold</TD>
+</TR>
+</TABLE>
+
+<P>
+Move the cursor, in turn, to the regions on the image you want zapped.  Hit
+the Z key each time.  The median filtering process will take place, and the
+program will tell you how many pixels have been zapped.
+
+<P>

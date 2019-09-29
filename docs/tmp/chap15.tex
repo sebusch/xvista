@@ -1,0 +1,1284 @@
+\chapter{Surface Photometry}
+\begin{rawhtml}
+  <!-- linkto surfphot.html -->
+\end{rawhtml}
+
+% 
+% minor editing & reformatting, fixed up some routines a fair amount
+% to make consistent with function in source code.  keyword situation
+% on some commands is not always easy to sort out.  I expect future
+% revisions.
+% Made the index of surface photometry commands square with
+% the contents, and some reordering to put related functions together
+% logically (some where scattered somewhat haphazardly through the file)
+% moved TEMPLATE to chap 17 (Image Simulation) as that function is closer
+% to that than here (it stuck out).
+% rwp/osu 98Jul28
+
+The VISTA commands for surface photometry of extended objects are:
+\begin{itemize}
+  \item[CUT\hfill]{extract a brightness profile cut along any position angle}
+  \item[PROFILE\hfill]{compute surface brightness profile by elliptical
+       isophote fitting}
+  \item[ANNULUS\hfill]{compute a radial profile by azimuthal averaging}
+  \item[RECON\hfill]{reconstruct an image from a surface photometry profile}
+  \item[APER\hfill]{aperture photometry of an extended object}
+  \item[ROUND\hfill]{deproject spirals or elliptical images}
+  \item[POLAR\hfill]{regrid an image into polar coordinates}
+  \item[EGAL\hfill]{reconstruct a galaxy from its profile}
+  \item[SNUC\hfill]{surface photometry of multiple galaxy systems}
+  \item[RENUC\hfill]{reconstruct galaxies from multiple galaxy photometry}
+  \item[SECTOR\hfill]{surface photometry of star clusters or complex
+       objects} 
+  \item[AEDIT\hfill]{edit values in selected image regions}
+  \item[CLPROF\hfill]{clear the contents of the profile common block}
+  \item[CPROF\hfill]{correct the results of a profile calculation}
+  \item[EMAG\hfill]{aperture photometry with elliptical apertures}
+  \item[EMARK\hfill]{interactively specify ellipse parameters for EMAG} 
+  \item[RMARK\hfill]{interactively set maximum radius for EMAG}
+  \item[ELLMAG\hfill]{compute elliptical magnitudes for PROFILE ellipses}
+  \item[TVPROF\hfill]{display PROFILE results on the image display}
+  \item[OPREP\hfill]{open a batch surface photometry preparation file}
+  \item[CLPREP\hfill]{close a batch surface photometry preparation file}
+  \item[RPREP\hfill]{read a record from a photometry prep-file}
+  \item[WPREP\hfill]{write a record into photometry prep-file}
+\end{itemize}
+
+%---------------------------------------------------------------------------
+
+\section{CUT: Extract a Brightness Profile Cut along any Position Angle}
+\begin{rawhtml}
+<!-- linkto cut.html -->
+\end{rawhtml}
+
+\index{Surface Photometry!Extract a cut along any PA}
+\begin{itemize}
+  \item[Form: CUT dest source {[PA=n]} {[C=(r,c)]} {[W=w]} {[NORM]} {[L=h]}
+       {[OFF=f]} {[TV]} {[PROF]} {[DPA=dpa]} \hfill]{}
+  \item[dest]{(integer or \$ construct) is an image which
+       will hold the calculated cut profile,}
+  \item[source]{(integer or \$ construct) is the image (object)
+       from which the cut is to be measured,}
+  \item[PA=n]{sets the position angle of radial slice through the 
+       extended object,}
+  \item[C=(r,c)]{resets the center of the slice from the AXES values,}
+  \item[L=l]{Sets the length of the cut in pixels,}
+  \item[W=w]{Sets the cut width in pixels,}
+  \item[NORM]{Normalizes by the cut width,}
+  \item[OFF=f]{Offsets the cut from the center in the width direction.}
+  \item[TV]{Shows the area of the cut on the TV.}
+  \item[PROF]{Plots using information from PROFILE common block (center, 
+        position angle, sky}
+  \item[DPA=dpa]{Using PROF option, plots at an angle dpa degrees from
+        PROFILE pa}
+\end{itemize}
+ 
+CUT will extract the surface-brightness profile of an object along an
+arbitrary position angle.  The center of the object can be loaded with the
+AXES command or by the C keyword.  A cut can also be offset from any center
+using the OFF keyword, as might be done to take a series of cuts at
+different locations along the major axis of a galaxy.  The position angle
+is defined from the top of the image.  Adding 180 to any PA will generate a
+cut running in the opposite direction.  This can be used to compare or add
+profiles reflected about the center of a galaxy, for example.  The default
+width is one pixel, and the height or length extends to the image borders.
+Both parameters are rounded to the nearest whole pixel. The PLOT keyword
+shows the bounds of the cut on the image display.
+
+The cut is loaded into the 'dest' image buffer, and can be treated,
+analyzed, processed, saved, etc., as an image with a row dimension of one.
+The central column of the cut is always set to occur at column 0.  Sinc
+interpolation is used to generated cuts of width 1; bilinear interpolation
+is used otherwise.  Pixels are always summed across the width of the cut.
+Divide the resulting cut vector by the width in pixels (WIDTH= keyword) to
+normalize it after the fact.
+
+See Also: AXES, TEMPLATE
+
+
+\section{PROFILE: Compute Surface Brightness Profile by Elliptical
+         Isophote Fitting}
+\begin{rawhtml}
+<!-- linkto profile.html -->
+\end{rawhtml}
+\index{Profile!Measuring profile}
+\index{Surface Profile!by fitting elliptical contours}
+\begin{itemize}
+  \item[Form: PROFILE dest source {[N=n]} {[ITER=n1,n2]} {[SCALE=f]} 
+       {[CENTER]} {[PA=f]} \hfill]{}
+  \item{{[INT]} {[FOUR]} {[SKY]} {[PSEUDO]} {[GPROF]} {[TTY]} {[NFINE=]} 
+       {[RMAX]}}
+  \item[dest]{is a spectrum which will hold the calculated profile.}
+  \item[source]{is the image which contains the object which is
+       having its profile measured.}
+  \item[N=n or RMAX]{sets the number of steps in the iteration.}
+  \item[ITER=n1,n2]{sets number of iterations for (n1) fast bilinear
+       interpolation and (n2), slower sinc interpolation.}
+  \item[CENTER]{solves for the contour centers.}
+  \item[PA=f]{position angle for the top of the image.}
+  \item[INT]{interactively iterate contour solution.}
+  \item[FOUR]{include 4-theta terms in solution.}
+  \item[SKY]{does sky subtraction using value in VISTA variable SKY}
+  \item[NFINE=]{sets the number of contours (radial) for high accuracy 
+                          sinc interpolation, defaults to 15}
+  \item[PSEUDO]{uses pseudo median rather than median for derivatives}
+  \item[GPROF]{sets all parameters to recover Berkeley GPROF routine}
+  \item[TTY]{displays output from each iteration }
+\end{itemize}
+
+PROFILE computes the radial surface-brightness profile of an object by
+fitting it with elliptical contours. The center of the object must first be
+calculated with the AXES command.  PROFILE uses this center as the starting
+point for its calculations.  The profile is found by sampling the image
+with a set of circles with radius 1, 2, 3, ... pixels.  The average value
+of the pixels along a circle is the mean surface brightness of that
+contour.  Low order sine and cosine transforms are taken along the contour
+to derive its center, position angle, and ellipticity.  After these are
+found for the entire image in the radius specified, the contours are
+adjusted to more exactly fit the isophotes.  The first iteration usually
+turns the original circles into ellipses with varying position angles and
+eccentricities as a function of major-axis length.
+
+A slightly different version of this command written by G. Djorgovski uses
+a slightly modified interpolation scheme, slightly different median
+filtering method for computing derivatives, and the inclusion of sky
+subtraction in the photometry.  These features may be enabled by using the
+GPROF keyword, or may be selectively enabled by using the SKY and PSEUDO
+keywords.
+
+High-accuracy sinc interpolation is used to find the values of the pixels
+along the inner 15 contours.  This number (15) can be modified with the
+NFINE= keyword. Outside of this, either a lower accuracy (but faster)
+interpolation can be used, or an even faster bilinear interpolation scheme.
+The kind of iteration used is set by the ITER keyword; the first number
+specifies the number of iterations using bilinear interpolation, and the
+second the number of iterations using a lower accuracy sinc interpolation.
+The keywords N=n or RMAX sets the number of contours to be computed, to be
+n with the N=n keyword, or to the value in the variable RMAX (set by
+command RMARK) if the RMAX keyword is specified.
+
+The result of the profile calculation is stored in a common block for later
+use.  Print the contents of this block with PRINT, or save it in a disk file
+with SAVE.  The results are also written into the specified spectrum.  Use
+PLOT to show that spectrum.
+
+The option FOUR turns on calculations of the profile which have the terms
+cos(4*theta) and sin(4*theta), where theta is the position angle in the
+calculation.  Normally these are turned off for speed.
+
+Position angles are calculated assuming that the position angle of the
+'top' of the image (as seen on the TV) is 0.  This can be changed with the
+PA keyword.  Use PA < 0 to indicate that the image has been reversed
+right-left (the 'normal' arrangement for an image is north at top, east at
+left).
+
+The INT keyword allows interactive control of the iterations.  The user may
+change the step size from 1.0 to some fraction, and also solve for contour
+centers before the next iteration. Full output from each iteration can be
+shown on the terminal if the keyword TTY is specified.
+
+The output of this program can be redirected.
+
+\noindent{Example:}
+\begin{itemize}
+  \item[PROFILE 11 1 SCALE=0.267 N=20 ITER=2,4 >PROFILE.OUT\hfill]{Create
+       spectrum in buffer 11 with the radial profile of the object in image
+       1.  The centroid of the object was already calculated with AXES.
+       The profile is computed out to 20 pixels, with a scale of 0.267
+       arcsec/pixel.  Four iterations will be done, the first two with
+       quick bilinear interpolation.  The result is stored in the file
+       PROFILE.OUT.}
+\end{itemize}
+
+See Also: ANNULUS, SECTOR, RECON, EGAL, TVPROF, CLPROF, CPROF, 
+          SAVE, GET, SNUC
+
+
+\section{ANNULUS: Compute a Radial Profile by Azimuthal Averaging}
+\begin{rawhtml}
+<!-- linkto annulus.html -->
+\end{rawhtml}
+\index{Annulus!Measuring azimuthal averages }
+\index{Surface Profile!by azimuthal averaging along defined annuli}
+\begin{itemize}
+  \item[Form: ANNULUS dest source N=n {[STEP=dr]} {[PA=pa]} {[INC=i]} 
+       {[CEN=r0,c0]} {[SCALE=s]} {[FAST]} {[RAD=r]} {[PROF]}\hfill]{}
+  \item[dest]{Buffer to hold the average radial profile (spectrum)}
+  \item[source]{Buffer with the source image.}
+  \item[N=n]{Number of concentric annuli to average over.}
+  \item[STEP=dr]{(optional) Spacing between annuli in either pixels or
+       units of the "SCALE=" keyword.}
+  \item[PA=pa]{(optional) Position Angle in degrees of the Major Axis 
+       of elliptical annuli.}
+  \item[INC=i]{(optional) Inclination Angle in degrees of elliptical 
+       Annuli relative to the line-of-sight.}
+  \item[CEN=r0,c0]{(optional) Center of annuli (in rows,columns on image).}
+  \item[SCALE=s]{(optional) Image scale, typically expressed in units
+       of arcseconds/pixel.}
+  \item[FAST]{(optional) Use faster bi-linear interpolation in outer annuli.}
+  \item[RAD=r]{(optional) Allows the user to compute an average along
+       a single annulus.  No profile is calculated}
+  \item[PROF]{(optional) Computes averages along isophotes defined by
+       the PROFILE command.}
+\end{itemize}
+
+Other relevant VISTA commands to be used prior to running ANNULUS:
+\begin{itemize}
+  \item{AXES: REQUIRED unless the "CEN=" keyword is used.  This provides
+        ANNULUS with the object center for the averaging annuli. }
+
+  \item{PROFILE: Only required if you are using the PROF keyword. (see PROF
+        below).}
+
+  \item{GET: May be used in place of PROFILE before using the PROF keyword
+        to load in a previous PROFILE fit saved in an external file with
+        the SAVE command. }
+\end{itemize}
+ 
+ANNULUS computes the azimuthally-averaged radial surface-brightness profile
+of a 2-D image, storing the profile as a spectrum (1-D image).  The value
+at each radius is defined as the azimuthal average of the pixel values
+along a suitably defined annulus (ring) of that radius centered on the
+object.  High accuracy Sinc interpolation or faster Bilinear interpolation
+may be used.
+
+By default, the annuli are concentric circles, but it is possible to define
+elliptical annuli to be used as the averaging paths by specifying the major
+axis position angle and inclination angle of the ellipses with keywords.
+
+The centers of the annuli are computed before using ANNULUS by running the
+AXES command, although this step may be bypassed using a keyword.
+
+It is also possible to forego creating a radial profile, and simply use
+ANNULUS to compute the average along a single annulus of a given radius.
+
+Unlike the PROFILE command, which computes the surface brightness profile
+of an object by fitting ellipses to the image isophotes, ANNULUS takes
+averages along pre-defined annuli without regard to the actual isophotes of
+the image.  ANNULUS is more applicable than PROFILE to those cases where
+strong non-axisymmetric structure in the object makes fitting ellipses
+impractical.  For example, ANNULUS might be used to compute the average
+radial surface brightness profile of a Spiral Galaxy, in which the
+isophotes, especially in the spiral arms, are manifestly not ellipses.
+
+In cases where isophotes may be defined with PROFILE, reflecting structural
+properties like isophotal rotation or variable eccentricity, the results of
+a PROFILE calculation may be used as averaging paths in annulus via an
+optional keyword.  This is a fairly advanced application of ANNULUS.
+
+ANNULUS produces the radial profile of a 2-D image in the "source"
+buffer and stores it as a 1-D image (spectrum) in the "dest" buffer.
+
+The following is a detailed description of each of the keywords:
+
+\noindent{N=n}:\newline
+This is the number of concentric annuli to be used.  In general, n > 1.  If
+you wish to find the average along only one annulus, then use the "RAD="
+keyword.
+
+\noindent{STEP=dr}:\newline
+This is the spacing between successive annuli.  The first point of the
+profile is always the image center (defined either by AXES or by using the
+"CEN=" keyword).  By default a STEP of 1 pixel is used.  In general, STEP
+has units of pixels, but if the "SCALE=" keyword is used, then STEP will
+have units of length as defined by the images scale (usually arcseconds).
+
+\noindent{PA=pa}:\newline 
+This is the Position Angle of the major axis of elliptical annuli in
+degrees.  PA is measured from the top of the image counter-clockwise, so
+that an ellipse with PA=0.0 will have its long axis oriented along an image
+column, while PA=90.0 will have its long axis oriented along an image
+row. PA=45.0 is oriented diagonally from the upper left to lower right as
+seen on the TV display.
+
+\noindent{INC=i}:\newline
+This is the ellipse Inclination Angle in degrees.  It is defined such that:
+\begin{verbatim}
+  Face-On: i = 0 degrees (circular annuli) 
+  Edge-On: i = 90 degrees
+\end{verbatim}
+INC must always be LESS THAN 90 degrees.  It is related to the ellipse
+eccentricity (e) by: e=sin(i)
+
+\noindent{CEN=r0,c0}:\newline
+By default, ANNULUS expects that you've run the AXES command on the image
+to find the appropriate object centroid (called AXR and AXC by the AXES
+command).  You may have ANNULUS ignore the results of the most recent AXES
+command by using the "CEN=" keyword to specify the center of each of the
+annuli. R0 is the row number of the center, and C0 is the column number. R0
+and C0 may be real numbers (e.g., R0=35.4 is allowed).
+
+\noindent{SCALE=s}:\newline
+This defines the linear scale of the image.  Typically the scale is in
+units of arcseconds/pixel, but any relevant units are OK. The program
+printout assumes arcseconds/pixel, but it is only cosmetic.  If the SCALE
+and STEP options are used, then the STEP value has the units of SCALE. For
+example:\begin{verbatim}
+   ANNULUS ... SCALE=0.54 STEP=1
+\end{verbatim}
+where the units of SCALE are arcsec/pixel implies an annular spacing of 1
+arcsecond (or 1.85 pixels).
+
+\noindent{FAST}:\newline
+For annular radii smaller than 15 pixels, ANNULUS will use a slow, high
+accuracy 2-D Sinc interpolation algorithm to find the intensity at a given
+point along the annulus.  Beyond 15 pixels, a somewhat faster Sinc
+interpolation scheme is used.  However, using the FAST keyword tells
+ANNULUS to use a much faster, but somewhat lower accuracy 2-D bilinear
+interpolation scheme beyond 15 pixels radius.  The time savings is quite
+noticeable.
+
+\noindent{RAD=r}:\newline
+This option allows you to use ANNULUS to find the azimuthal average along a
+single, given annulus with radius "r" (and PA and INC as appropriate),
+without creating an entire profile.  When using the "RAD=" keyword, the
+"N=", "STEP=" are ignored.  RAD has units of Pixels, unless the "SCALE="
+keyword is used, at which point it has  units of "SCALE". 
+
+\noindent{The "PROF" keyword:}:\newline
+Elliptical annuli used by ANNULUS all share the same center, position
+angle, and inclination (eccentricity).  It is possible, using the PROF
+keyword, to use a set of annuli in which the position angle, eccentricity,
+and even the centers, may vary as a function of radius.  This may be done
+by first using the PROFILE command to fit ellipses to the isophotes of an
+image, and then using ANNULUS with the PROF keyword to use the ellipse
+parameters contained in the PROFILE common block in VISTA to define the
+averaging paths.  The PROFILE common block may also be loaded using the GET
+command (see GET and SAVE) before running ANNULUS, which suggests all sorts
+of possibilities.
+
+\noindent{Other details:}
+
+Output may be redirected to the printer or external files using the '>'
+option in VISTA.
+
+For future reference, the FITS header of the spectrum containing the radial
+profile generate by ANNULUS contains a number of HISTORY cards recording
+the relevant annular parameters (PA, INC, STEP, CEN, etc).  These may be
+reviewed by using the "BUF FULL FITS" command, or by using "HEDIT".  The
+FITS "STATUS" card is changed to read "Azimuthal Average", and the "CTYPE1"
+card reads either Pixels or Arcseconds, depending on whether or not the
+"SCALE=" option has been used.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[ANNULUS 15 1 N=50\hfill]{A radial profile of the object in buffer 1
+       is computed as the azimuthal average over 50 circular annuli spaced
+       in radius by 1 pixel and stored in buffer 15.}
+
+  \item[ANNULUS 15 1 N=50 >RADPRF.DAT\hfill]{Same as (1), except that the
+       output is redirected to an external file called "RADPRF.DAT" in the
+       users current directory.}
+
+  \item[ANNULUS 15 1 N=50 PA=17 INC=59 STEP=1 SCALE=0.5\hfill]{Compute a
+       radial profile of the Image in buffer 1 as an average over 50
+       concentric ellipses with PA=17 degrees and Inclined 59 degrees
+       relative to the line-of-sight.  The annular spacing is 1 arcsecond,
+       and the pixel scale is 0.5 "/pixel.  Store the results in buffer
+       15.}
+
+  \item[ANNULUS 15 2 RAD=12 CEN=102.3,237.8\hfill]{Compute the azimuthal
+       average along a single circular annulus centered at Row=102.3,
+       Column=237.8 with a radius of 12 pixels of the image in buffer 2.
+       The 15 is a dummy argument, nothing is stored in buffer 15.}
+\end{itemize}
+
+An example of a procedure using the PROF keyword:
+\begin{verbatim}
+  AXES 1 BOX=2
+  PROFILE 10 1 N=30 ITER=25 SCALE=0.54
+  ANNULUS 12 2 PROF
+\end{verbatim}
+In this case, PROFILE is run to fit 30 elliptical isophotes to the image in
+buffer 1 whose centroid is found in BOX=2 using the AXES command. The
+azimuthally averaged radial surface brightness profile is then stored in
+buffer 10 (PROFILE also azimuthally averages along the best fit
+isophotes). The best fit elliptical isophotes from image 1 are then used to
+compute the radial surface brightness profile of the object in image 2
+using ANNULUS, and that profile is stored in buffer 12.
+
+\noindent{A Note about selecting values of the "PA=" and "INC=" keywords:}
+
+A circular disk inclined to the line-of-sight of an observer appears in
+projection as an ellipse with its major axis rotated by some amount from
+vertical.  It is the usual convention in astronomy that position angles on
+the sky are measured from North towards the East, with the usual
+orientation being North Up, and East to the Left.
+
+The ANNULUS command defines the position angle in a similar fashion.  The
+position angle for the "PA=" keyword is the angle between the major axis of
+the projected ellipse and a vertical line passing through the center of the
+ellipse (i.e., along the direction of a single image column).  The angle is
+measured from the top of the image towards the left in a counterclockwise
+sense.  If the image is oriented so that North is Up, East is to the Left,
+then the position angle for ANNULUS is the same as the conventional
+position angle.
+
+The angle of inclination, i, is defined as the angle between the
+line-of-sight from the observer to the center of the disk, and a line
+perpendicular to the plane of the disk.  For a face-on disk, the
+inclination is 0 degrees, and for a perfectly edge-on disk, the inclination
+is 90 degrees.
+
+This angle is related to the more easily measured axial ratio of the
+ellipse.  If "a" is the length of the major axis of the ellipse, and "b" is
+the length of the minor axis, then the inclination "i" is given by
+\begin{verbatim}
+   cos(i) = b/a
+\end{verbatim}
+It may also be related to the eccentricity of the ellipse, "e", such that
+\begin{verbatim}
+   e = \sin(i).
+\end{verbatim}
+NOTE: For ANNULUS, i must always be LESS than 90 degrees.  For cases where
+i = 90 degrees, use the VISTA command CUT instead.
+
+See Also: PROFILE, SECTOR, SAVE/GET, CUT
+
+
+\section{RECON: Reconstruct an Image from a Surface Photometry Profile}
+\begin{rawhtml}
+<!-- linkto recon.html -->
+\end{rawhtml}
+\index{Profile!Reconstruct object from surface profile}
+\begin{itemize}
+  \item[Form: RECON source {[CR=f]} {[CC=f]}\hfill]{}
+  \item[source]{is the image that will contain the reconstructed object.}
+  \item[CR=f]{is an optional redefinition of the center row.}
+  \item[CC=f]{is an optional redefinition of the center column.}
+\end{itemize}
+
+RECON will reconstruct a smooth idealized image from a surface photometry
+profile of a galaxy, star, or any other centrally condensed object. The
+PROFILE command is used to generate the original profile.  This routine
+uses high resolution interpolation to estimate the intensity of the
+original object at any pixel in the image array.  The reconstructed image
+is faithful to the original brightness, and isophote position angle and
+ellipticity profiles, but has perfectly elliptical isophotes.  In some
+sense then, the reconstructed object looks like the original object, but
+smoothed around a contour.  The reconstructed image can then be compared to
+the original to look for faint and subtle features.
+
+The reconstructed image is centered on the same pixel coordinates as the
+original image. This can be adjusted with the CR and CC keywords. The
+reconstruction extends only as far as the surface photometry profile;
+pixels outside of the photometry area are left untouched.
+
+Note that the reconstructed object is placed in an image that already
+exists.  Use CREATE to make a new image if one does not exist, or make a
+copy of the original image.
+
+The reconstruction is based upon either the most recent surface-brightness
+profile computed using PROFILE, or a previously computed fit saved to disk
+with the SAVE PROF= command, and read back into memory with the GET PROF=
+command.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[RECON 3\hfill]{Reconstruct the surface profile in image 3.}
+
+  \item[RECON 3 CR=100 CC=101\hfill]{Do the same as the above example,
+       but center the new object at row 100 and column 101.}
+\end{itemize}
+
+See Also: PROFILE, SAVE, GET, EGAL
+
+
+\section{APER: Aperture Photometry of an Extended Object}
+\begin{rawhtml}
+<!-- linkto aper.html -->
+\end{rawhtml}
+\index{Aperture Photometry}
+\begin{itemize}
+  \item[Form: APER source {[RAD=r1,r2,...,r10]} {[MAG=M1,M2,...MN]} 
+       {[STEP=size,n]} {[SCALE=f]} {[C=r,c]} {[SCALE=f]}\hfill]{}
+  \item{{[GEO=first,fact]} {[OLD]} {[INT]} {[REF]} {[PLOT]} {[STORE]}}
+  \item[source]{the image being measured}
+  \item[RAD=]{specify radii in pixels (or arcsec)}
+  \item[MAG=]{list observed magnitudes for various radii}
+  \item[STEP=]{automatically set radii with arithmetic sequence}
+  \item[GEO=]{automatically set radii with geometric sequence}
+  \item[C]{center of object is at this position}
+  \item[SCALE=f]{input scale of image (arcsec / pixel)}
+  \item[OLD]{repeat command using old parameters}
+  \item[INT]{interactively set radii}
+  \item[REF]{inter reference number for object.}
+  \item[PLOT]{plots apertures on TV (not all devices)}
+  \item[STORE]{stores output in VISTA variables}
+\end{itemize}
+
+APER will sum the intensities of pixels falling within circular apertures
+centered on an object in the 'source' image.  Using apertures of differing
+radii will enable you to characterize the radial intensity distribution of
+an object.
+
+Up to 10 aperture radii in arc seconds can be specified with the RAD
+keyword. Alternatively, a linearly increasing sequence of apertures can be
+specified with the STEP keyword, where 'incr' is the radius increment in
+arc seconds, and 'n' is the number of apertures.  A geometric sequence of
+apertures can be set up with the GEO= keyword, with the first value being
+the first aperture size and the second the multiplier for subsequent
+apertures; as many apertures as will fit in the image will be used.  The
+pixel scale in arcsec/pixel is specified with the SCALE keyword.  The
+centers of the aperture must be calculated ahead of time with the AXES
+centroiding command, or loaded with the C keyword. Lastly, the OLD keyword
+tells the routine to use any unspecified parameters from the last time.
+
+The routine will produce a list of the apertures, the sum of pixels
+interior to them, the average interior surface brightness, and the same
+quantities for the rings defined by sequential apertures. The summations
+are done to the nearest pixel at the edges of the aperture, that is, no
+fractional pixel interpolation is done at the edges.  For this reason,
+results obtained with very small apertures may be inaccurate.  The results
+are stored in a common block, and can be examined with the PRINT command,
+and stored or retrieved with the GET and SAVE commands. With the PLOT
+keyword, the apertures will be displayed on the image display (for most
+video devices).
+ 
+APER does NOT do sky subtraction.  The background light is included in the
+calculation of the brightnesses.  Use SKY to compute the background of the
+image, and SUBTRACT to remove that background.
+
+Specifying a list with the MAG word will give observed magnitudes in the
+listed apertures. (What does this mean??  good question!  Inspection of
+code seems that MAG= keyword allows user to specify magnitude values which
+just get output right back.)
+
+The STORE keyword saves some results into VISTA variables. The total
+intensity in the first aperture is loaded into variable TOTAL, the area of
+the first aperture will be loaded into APAREA, and the average intensity
+into variable AVERAGE.
+
+To extract aperture photometry in elliptical apertures, see the EMAG
+command.
+
+\noindent{Example:}
+\begin{itemize}
+  \item[SKY 3; SUBTRACT 3 CONST=SKY; APERTURE 3 RAD=1,3,5,7,9,13
+       SCALE=0.267 C=50,35\hfill]{this sequence of commands computes and
+       subtracts the mean background level for image 3.  It lists the total
+       counts in the object centered on row 50, column 35, in apertures of
+       1, 3, 5, 7, 9, and 13 arcsec.  The scale of the image is 0.267
+       arcsec/pixel}
+\end{itemize}
+
+See Also: EMAG, ELLMAG, PROFILE, SKY
+
+
+\section{ROUND: Deproject Spirals or Elliptical Images}
+\begin{rawhtml}
+<!-- linkto round.html -->
+\end{rawhtml}
+\index{Surface Photometry!Deproject spirals or elliptical images}
+\begin{itemize}
+  \item[Form: ROUND dest source {[PA=f]} {[E=e]} {[C=(r,c)]} {[NORM]} 
+       {[SINC]}\hfill]{}
+  \item[dest]{is the destination image buffer. It does not need
+       to exist beforehand.}
+  \item[source]{is the image buffer to transform}
+  \item[PA]{is PA of object's major axis}
+  \item[E]{gives its ellipticity = 1-b/a}
+  \item[C]{gives its row and column center}
+  \item[NORM]{renormalize pixel intensities}
+  \item[SINC]{use high-accuracy sinc interpolation.}
+\end{itemize}
+
+ROUND will deproject an image by assuming that the true shape of the object
+is a circle projected into an ellipse of a given position angle,
+ellipticity (1-b/a) and center.  Creates a new image in the `dest' buffer
+from the original image in the `source' buffer.
+
+The SINC keyword instructs ROUND to use high-accuracy sinc interpolation
+instead of the default bilinear interpolation algorithm.  
+
+The NORM keyword is used to renormalize the pixel intensities (surface
+brightness/pixel) in the transformed image.
+
+See Also: POLAR
+
+
+\section{POLAR: Regrid an Image into Polar Coordinates}
+\begin{rawhtml}
+<!-- linkto polar.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: POLAR dest source {[PA=f]} {[E=e]} {[C=(r,c)]} {[NORM]} 
+       {[SINC]} {[R=(rmin,rmax)]}\hfill]{}
+  \item[dest]{is the destination image buffer. It does not need
+       to exist beforehand.}
+  \item[source]{is the image buffer to transform}
+  \item[PA]{is PA of object's major axis}
+  \item[E]{gives its ellipticity = 1-b/a}
+  \item[C]{gives its row and column center}
+  \item[NORM]{renormalize pixel intensities}
+  \item[SINC]{use high-resolution sinc interpolation.}
+  \item[R]{gives the radial limits of the new grid}
+\end{itemize}
+
+POLAR will transform the image in the `source' buffer from observed
+Cartesian coordinates (x,y) to polar coordinates (r,theta) in the `dest'
+buffer.  The transformation assumes that the object is intrinsically round
+and projected into an ellipse in the sky plane with the given position
+angle, ellipticity (1-b/a) and center.
+
+The SINC keyword instructs ROUND to use high-accuracy sinc interpolation
+instead of the default bilinear interpolation algorithm.  
+
+The NORM keyword is used to renormalize the pixel intensities (surface
+brightness/pixel) in the transformed image.
+
+The R=(rmin,rmax) keyword is used to specify the radial limits of the
+r-axis of the polar deprojection.  By default, if R= is not given the
+r-axis will run from 0 to the maximum semi-major axis of the inscribed
+ellipse.
+
+See Also: ROUND
+
+
+\section{EGAL: Reconstruct a Galaxy from its PROFILE}
+\begin{rawhtml}
+<!-- linkto egal.html -->
+\end{rawhtml}
+\index{Surface Photometry!Reconstruct galaxy from PROFILE}
+\begin{itemize}
+  \item[Form: EGAL source {[CR=f]} {[CC=f]} {[AVANG]} {[NODEV]}\hfill]{}
+  \item[source]{is the image buffer}
+  \item[CR=f]{set the row center to f}
+  \item[CC=f]{set the column center}
+  \item[AVANG]{average isophote PAs together}
+  \item[NODEV]{do not fit r\^1/4 law to outer profile}
+\end{itemize}
+
+EGAL is used to reconstruct a galaxy image from the high-resolution profile
+generated with the PROFILE command.  The reconstructed galaxy will be
+smoothed along isophotes and can be used as an ideal model for comparison
+to the original.  The reconstruction preserves high spatial frequencies in
+the center.  
+
+It is possible to change the center of the reconstructed model galaxy to
+any fractional pixel location with the CR and CC keywords.  
+
+Noise in the outer contours may be suppressed with the AVANG keyword, which
+azimuthally averages isophotes.  
+
+By the default, the outer contours are replaced with an r\^1/4 fit to
+suppress noise.  This feature can be defeated with the NODEV keyword.  This
+command can be called at any time provided a profile has been calculated
+with PROFILE or loaded from a disk file with the GET command.
+
+See Also: RECON, PROFILE
+
+
+\section{SNUC: Surface Photometry of Multiple-Galaxy Systems}
+\begin{rawhtml}
+<!-- linkto snuc.html -->
+\end{rawhtml}
+\index{Surface Photometry!Photometry of Multiple-Galaxy Systems}
+\index{Surface Photometry!Least-squares Profile fitting}
+\begin{itemize} 
+  \item[Form: SNUC buf {[SKY=f]} {[SCALE=f]} {[OLD]} {[NPASS=n]} 
+       {[EX=(n1,n2,...)]}\hfill]{}
+  \item{{[RECEN=n]} {[BOX=n]} {[CENTER=(n1,n2,...)]} {[DELT=f]} 
+       {[LIST=filespec]} {[MASK]}}
+  \item[buf]{Buffer number of image to be processed.}
+  \item[SKY=]{DN value of any sky level subtracted from the image}
+  \item[SCALE=]{Pixel scale (arcsec/pixel)}
+  \item[OLD]{Continue iterating on previous photometry solution}
+  \item[NPASS=]{Perform 'n' iterations to find the photometry parameters}
+  \item[EX=]{With OLD option, recalulate solution excluding last 'n'
+       isophotes from galaxies 1, 2, etc from old solution. If
+       'n' is negative, then extend out 'n' more isophotes.}
+  \item[RECEN=]{Find centroids of galaxies, using box 'n' pixels in radius}
+  \item[BOX=]{Only fit the image within box 'n'}
+  \item[CENTER=]{Allow the isophote centers for galaxies 'n1', 'n2', etc
+       to be free parameters.}
+  \item[DELT=]{Space isophotes geometrically by ratio 1+f}
+  \item[LIST=]{Specify file with galaxy centers, radii, processing flags.
+       (Format: ROW COL RADIUS FLAG). Full file pathname must be
+       provided.}
+  \item[MASK]{ignores MASKed pixels in the fit}
+\end{itemize}
+
+SNUC will extract the individual surface photometry profiles of overlapping
+or interacting galaxies comprising a multiple galaxy system.  Each galaxy
+within the system is assumed to have concentric elliptical isophotes with
+otherwise arbitrary brightness, position angle, and ellipticity
+profiles. The isophotes parameters for all galaxies are solved for
+simultaneously by a nonlinear least-squares algorithm that decomposes the
+multiple system under the assumption that its morphology can be modeled as
+the simple superposition of normal elliptical galaxies.
+ 
+The routine models the image displayed on the TV.  The startup procedure
+for the decomposition is to mark the nuclei and extent of the individual
+galaxies with the cursor.  Mark any nucleus with (1) to fit the specified
+galaxy to the image or {[BOX=n]} border, or (2) to then go on and mark an
+outer limiting isophote with (0).  Mark with (0) once all galaxies have
+been selected to start the decomposition.  At this time, five galaxies is
+the maximum that can be fit.  If desired, of course, this routine will also
+fit single isolated galaxies.
+
+The photometry solution is found iteratively.  NPASS iterations are done
+for a given run (default is 3).  Further iterations for a given setup can
+be run with the OLD keyword.  The EX keyword is used with the OLD keyword
+to delete or add more isophotes to the outer extent of any galaxy used in a
+previous run.  Isophotes are spaced geometrically by the ratio 1+DELT
+(default is 1.25).  Isophote spacing is the same for all galaxies.
+Isophote centers are fixed by default and taken to be the nuclear centroid
+for each galaxy.  Improved estimates of the centroids can be made during
+any pass with the RECEN keyword if the default centroiding is found to be
+inaccurate. Isophote centers can be solved for independently using the
+CENTER keyword; however, this option does not work well at the present.
+Since the decomposition solves for the isophotes by a least squares
+procedure, portions of the image contaminated by stars, defects, faint
+galaxies can be excluded from the fit.  Pixels set identically to 0.0 are
+ignored by the algorithm.  One handy use of this feature is to run a
+solution, reconstruct it (see RENUC), subtract it off, and clip any faint
+objects or features uncovered in the process to 0.0.  The routine also
+generates error estimates for the isophote parameters assuming shot noise
+errors in the pixel values.  For accurate error estimates the level of any
+sky level subtracted from the image must be given with the SKY keyword.
+
+Photometry results can be saved and recalled with the SAVE and GET
+commands, or printed with the PRINT command, using the MULT option in
+either of these commands.
+\begin{itemize}
+  \item[SNUC buf SKY=back SCALE=0.334 RECEN=5\hfill]{Setup a
+       decomposition, do three iterations and stop.}
+
+  \item[SNUC buf SKY=back OLD EX=(-2,0,1) NPASS=6\hfill]{Continue this
+       solution, but extend the primary galaxy by more isophotes and delete
+       the outer isophote of galaxy 3.  Iterate for several passes.}
+
+  \item[SNUC buf SKY=back SCALE=0.334 DELT=0.1\hfill]{Start a solution
+       using a finer isophote spacing.}
+
+  \item[SNUC buf SKY=back DELT=0.1 LIST=/mydir/galaxy.lis\hfill]{Use an
+       input file to specify galaxy parameters.}
+\end{itemize}
+
+See Also: RENUC, PROFILE
+
+
+\section{RENUC: Reconstruct Galaxies from Multiple-Galaxy Photometry}
+\begin{rawhtml}
+<!-- linkto renuc.html -->
+\end{rawhtml}
+\index{Surface Photometry!Reconstruct Multiple Galaxy Systems}
+\index{Surface Photometry!Rebuilding Galaxy from SNUC}
+\begin{itemize} 
+  \item[Form: RENUC source {[BOX=n]} {[EX=(n1,n2,...)]} {[LIM=(n1,n2,...]}
+       {[INC=(n1,n2,...)]} {[CENTER=(n1,n2,...)]}\hfill]{}
+  \item[source]{The image buffer which will hold the reconstruction}
+  \item[BOX=]{Only reconstruct within BOX n.}
+  \item[EX=]{Do not reconstruct galaxies n1, n2, etc.}
+  \item[INC=]{Only reconstruct galaxies n1, n2, etc.}
+  \item[LIM=]{Do not use the last n isophotes from galaxies 1, 2, etc.}
+  \item[CENTER=]{Reconstruct using the individual isophote centers for
+       galaxies n1, n2, etc.}
+\end{itemize} 
+
+RENUC reconstructs a model of a multiple galaxy system or any combination
+of its component galaxies from the multiple galaxy system photometry
+computed by the SNUC command.
+
+The EX keyword is used to select those galaxies NOT to be reconstructed.
+Similarly, the INC keyword can be used to select only those galaxy models
+to be included in the reconstruction.
+
+If the quality of the outer isophote solutions for any galaxy is poor, they
+can be ignored by the reconstruction algorithm with the LIM keyword.
+
+CENTER tells the routine to use any isophote dependent centers for the
+reconstruction that may have been measured with the CENTER option in the
+SNUC command (at this time, this option does not work well).
+
+\begin{itemize}
+  \item[RENUC 1\hfill]{Reconstruct the entire system fitted by SNUC (into
+       image 1).}
+
+  \item[RENUC 1 INC=(1) \hfill]{}
+
+  \item[or RENUC 1 EX=(2,3,4)\hfill]{Only reconstruct galaxy 1 (four
+       galaxies were fitted);}
+
+  \item[RENUC 1 LIM=(0,2)\hfill]{Do not use the last isophote of galaxy 2.}
+\end{itemize} 
+
+See Also: SNUC
+
+
+\section{SECTOR: Surface Photometry of Star Clusters or Complex Objects}
+\begin{rawhtml}
+<!-- linkto sector.html -->
+\end{rawhtml}
+\index{Surface Photometry!Star clusters or complex objects}
+\begin{itemize}
+  \item[Form: SECTOR source {[RAD=(lin,geo)]} {[C=(r,c)]} {[SCALE=f]} 
+       {[PLOT]}\hfill]{}
+  \item[source]{The image buffer}
+  \item[RAD=]{Describe the isophote spacing. Isophotes are initially spaced
+       linearly every `lin' pixels in radius. Isophotes further out are
+       spaced geometrically by `geo' when this step is larger than `lin'.
+       Defaults: lin=2 pixels, geo=0.15 (increase radius by 15\% per
+       step).}
+  \item[C=]{Give the object center.  Default is to use results from
+       the AXES or AUTOCEN commands.}
+  \item[SCALE=]{Give the scale in arcsec/pixel. Default is 0.55.}
+  \item[PLOT]{Plot the isophotes on the TV.}
+\end{itemize}
+
+SECTOR measures the brightness distribution of a star cluster or any other
+extended object by adding up the flux in a set of circular isophotal rings.
+Errors in brightness in any ring are calculated by dividing the ring into
+eight angular sectors and intercomparing the individual sector results.
+The final profile is saved in the MULT block, and can be saved or gotten
+with the MULT keyword in the SAVE or GET commands, printed in the PRINT
+command, or plotted with the PLOT command.  The object can also be
+reconstructed with the RENUC command.
+
+The center should be found first with the AUTOCEN or AXES command.  The C
+keyword can be used to override the default center.  Isophotes increase
+linearly from the center at first, and are spaced by the lin entry with the
+RAD keyword.  When a geometric increment given by the geo entry gives a
+larger spacing, it is used to space the outer isophotes.  The radii used
+are at the radii at which the area of the isophotal rings is evenly
+divided.  Pixels can be excluded from the calculation by setting them to
+zero.
+
+See Also: PROFILE, ANNULUS, AXES
+
+\section{AEDIT: Edit Values in Selected Image Regions}
+\begin{rawhtml}
+<!-- linkto aedit.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: AEDIT source {[BOX=n]} {[INT]} {[SET=x]} {[MASK]} {[OLD]} 
+       {[filename]}\hfill]{}
+  \item[BOX=n]{specifies the BOX to use}
+  \item[INT]{BOX will be specified interactively}
+  \item[SET=x]{specifies the flag value}
+  \item[MASK]{tells AEDIT to create a VISTA logical mask only (pixel values
+       are unchanged)}
+  \item[OLD]{tells AEDIT to edit pixels specified in the file specified on
+       the command line}
+  \item[filename]{tells AEDIT to write out the regions it edits into a
+       formatted file (if INT is specified) or to read in the regions from
+       the file (if OLD is specified)}
+\end{itemize}
+
+AEDIT will set all pixels in given image subregions to a constant value and
+create a VISTA logical MASK of those pixels.  This can be done either
+interactively, through a box number, or through a formatted file containing
+a list of box definitions.  If INT is specified, the user is expected to
+interactively determine on the display a number of regions to be edited.
+INT overrides BOX=n.  
+
+If INT is specified and a file name is given on the command line, AEDIT
+will write a list of the boxes it has edited into the specified file.  The
+form is SR ER SC EC; the files are formatted (ASCII) files.  If OLD is
+specified, AEDIT will read the regions to be edited from the specified
+file.  If no file name is given on the command line, the user will be
+prompted for it.  OLD overrides INT.
+
+SET=x specifies the flag value to which to set the data (default = -7777).
+If the image is not displayed and INT is specified, this routine will
+display it.  The keyword MASK tells the routine to create the logical mask
+only, and not actually change any pixel values.
+
+
+\section{CLPROF: Clear the Contents of the PROFILE Buffer}
+\begin{rawhtml}
+<!-- linkto clprof.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: CLPROF {[RAD=r]}\hfill]{}
+  \item[RAD=r]{Specifies the radius beyond which the prf common
+       block is cleared.}
+\end{itemize}
+
+CLPROF sets all parameters in the PRF common block to zero. CLPROF should
+always be used when the command GET PROF= is used to overwrite the existing
+contents of the profile block with new profile parameters stored in a .pro
+file. If CLPROF is not run, and if the profile being overwritten is larger
+than the new one, the old parameters will remain in the common block for
+radii larger than the maximum radius of the new profile.
+
+To retain the existing profile parameters out to a given radius, setting
+them to zero beyond this, the optional keyword RAD=r may be given. All
+profile parameters corresponding to radii greater than or equal to r are
+then set to zero. This is valuable if a PROFILE calculation is seen to have
+gone awry beyond a certain radius.
+
+See Also: PROFILE, CPROF
+
+
+\section{CPROF: Correct the Results of a PROFILE Calculation}
+\begin{rawhtml}
+<!-- linkto cprof.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: CPROF {[ORDER=n]} {[MEDIAN]} {[SQWEIGHT]}\hfill]{}
+  \item[ORDER=n]{Specifies the order of the polynomial fit. Default is 2.}
+  \item[MEDIAN]{Specifies that median surface brightness, rather
+       than mean, will be used for exponential fit (if performed)}
+  \item[SQWEIGHT]{Specifies that square root weighting, rather than 
+       uniform weighting, is to be used during exponential fit}
+\end{itemize}
+
+CPROF enables the user to inspect the results of a PROFILE calculation in
+graphical form, and to modify them by replacing portions judged to be in
+error by the results of a second order polynomial fit to "good" regions.
+This often is necessary for spiral galaxies for which the outer contours
+can get confused.
+
+The ellipticity, surface brightness, and semi-minor axis values stored in
+the PROFILE common block are first plotted on the display.  Frequently one
+can find regions of spuriously low ellipticity and surface brightness, with
+a corresponding local maximum in the semi-minor axis, known as "excursions";
+these represent areas in which the PROFILE iterations have converged
+poorly. If such a region is identified, the user is asked to specify the
+boundaries of regions on either side of the excursion in which the PROFILE
+results are judged to be acceptable; a polynomial is fit to the
+ellipticities, position angles, and surface brightnesses in the latter
+regions. The results of the fit are then used to recompute ellipticities,
+PA's and SB's in the excursion region. The default is to perform a second
+order fit, but fits of other order can be used by giving the ORDER=n
+keyword.
+
+The process of plotting the profile parameters, identifying glitches, and
+replacing with fits continues until the user specifies that the profile is
+satisfactory. Another option is to fit only the surface brightnesses in a
+region. This is sometimes desirable when the ellipticity undergoes an
+abrupt, genuine increase; the surface brightness is then spuriously
+enhanced.
+
+CPROF is best used when the galaxy image has been displayed, and the
+ellipses overplotted on the image using TVPROF. The success of a CPROF
+calculation is best measured by looking at this display.
+
+See Also: PROFILE, TVPROF, CLPROF
+
+
+\section{EMAG: Aperture Photometry with Elliptical Apertures}
+\begin{rawhtml}
+<!-- linkto emag.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: EMAG source {[CENTER=(row,col)]} {[PA=theta]} {[ELL=eps]} {[N=n]}
+     {[PROF=p]} {[RMAX]} {[ERAD]} {[APPEND]}\hfill]{}
+  \item[source]{is the image EMAG works on}
+  \item[CENTER=(row,col)]{allows the user to determine the center
+       of the object being worked on.}
+  \item[PA=theta]{allows the user to set the position angle of
+       the elliptical apertures (theta in degrees.)}
+  \item[ELL=eps]{allows the user to set the ellipticity of the
+       apertures.}
+  \item[N=n]{user-determined number of elliptical apertures;
+       the outermost aperture has semimajor axis (n-1) pixels.}
+  \item[PROF=p]{tells EMAG to take the ellipse parameters from the p-th
+       aperture in the PRF common block--this works only if PROFILE have
+       been previously run, or if their results have been read in by
+       GPGET.}
+  \item[RMAX]{tells EMAG to learn the maximum semimajor axis radius from
+       the VISTA variable RMAX (this works only if EMARK or RMARK have been
+       previously run.)}
+  \item[ERAD]{tells EMAG to take the ellipse parameters from the PRF common
+       block, at a radius given by the value of the VISTA variable ERAD,
+       set by the routine EMARK.}
+  \item[APPEND]{tells EMAG to compute not only elliptical totals, but also
+       surface brightnesses in elliptical belts, for radii between the
+       previous maximum radius in the PRF common block, and the new
+       max. radius determined by the N=n or RMAX keywords; the fixed values
+       of ellipticity and PA used for the EMAG calculation are also filled
+       in.}
+\end{itemize}
+
+EMAG performs aperture photometry within concentric elliptical apertures of
+increasing semimajor axis radius but fixed ellipticity and position angle.
+The image is assumed not to have been sky subtracted, but the background
+level of the image is assumed to be contained in the VISTA variable
+SKY. Each pixel then gives a contribution (pixel value - SKY).  The
+aperture radii (i.e. semimajor axes) are incremented by one pixel at a
+time. The resulting aperture total intensities are recorded in the PRF
+common block, replacing the values of the "elliptical totals" computed by
+PROFILE.
+
+EMAG attempts to account for the presence of perturbing stars (or any other
+glitches) on the image of the galaxy as follows: AEDIT is first used to
+mark those pixels which are contaminated; these pixels are given the flag
+value -7777. EMAG will not use any pixel with a value less than zero (note
+therefore the importance of not performing sky subtraction!); instead, it
+will look for that pixel's "symmetric partner", i.e. the one reflected
+about the galaxy center. If the partner is not also flagged, it will use
+its intensity level as an approximation for the original, flagged pixel; if
+it is also flagged, however, neither pixel is used by EMAG.
+
+The user can explicitly specify the center, position angle, and ellipticity
+of the apertures, if desired, with the CENTER=(row,col), PA=theta, and
+ELL=eps keywords on the command line. It is more common, however, to use
+EMAG following the use of PROFILE. In this case, the ellipse parameters may
+be determined by accessing the PRF common block. (The ellipse centers,
+however, may also be learned from the AX common block, following use of
+AXES.) The radius at which the ellipse parameters are taken from the PRF
+common block is set either directly, via the PROF=p keyword on the command
+line, or by the ERAD keyword, which then gets the radius from the VISTA
+variable ERAD, which has been set by the interactive routine EMARK.
+
+The number of apertures for which the computation is performed (or,
+equivalently, the maximum radius for photometry), may be set in one of
+several ways. The command line keyword N=n sets it explicitly.
+Alternatively, the keyword RMAX instructs EMAG to obtain the maximum radius
+from the VISTA variable RMAX, which can be set interactively with the
+routines RMARK or EMARK. If neither N=n nor RMAX are given on the command
+line, EMAG will use the existing maximum radius in the PRF common block
+(provided the latter is loaded.)
+
+The command line keyword APPEND instructs EMAG to tack on to the PRF common
+block not only the elliptical totals, but also the PA and ellipticity EMAG
+works with, and surface brightnesses computed along the way. This will only
+work if the radius for photometry determined by the N=n or RMAX keywords is
+greater than the previous radius in the PRF common block.
+
+To compute the magnitudes within elliptical apertures with varying
+ellipticity and position angle as computed by PROFILE, see the ELLMAG
+command.
+
+At present, the results of an EMAG calculation can be viewed by writing the
+contents of the PROFILE common block using PRINT PROF.
+
+\noindent{Examples:}
+\begin{itemize}
+  \item[EMAG 5 CENTER=(243,209) N=81 PA=32.5 ELL=0.71\hfill]{}
+
+  \item[EMAG 5 ERAD RMAX APPEND\hfill]{Gets ellipse parameters from PRF
+       common block at radius ERAD, works out to radius RMAX, and tacks on
+       ellipticities, position angles, and surface brightnesses.}
+\end{itemize}
+
+See Also: EMARK, RMARK, ELLMAG
+
+
+\section{EMARK: Interactively Specify Ellipse Parameters for 
+        Photometry with EMAG}
+\begin{rawhtml}
+<!-- linkto emark.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: EMARK\hfill]{}
+\end{itemize}
+
+EMARK enables the user to mark with the cursor the radius at which the
+ellipse parameters to be used by the routine EMAG are to be taken. The
+image must be displayed, and the PROFILE common block loaded, in order for
+EMARK to work. It is advisable to have displayed the elliptical isophotes
+with TVPROF prior to running EMARK.
+
+EMARK will prompt the user to move the cursor to the position (along the
+major axis) of the ellipse whose shape and orientation is the one desired
+for use in EMAG photometry. The user then strikes the key "P". A cross will
+be displayed at this point, and the user will be given the option of
+choosing another position. Once the user is satisfied with the position
+chosen, EMARK will compute the distance of this point from the ellipse
+center. This distance is then loaded into the VISTA variable ERAD.
+
+When EMAG is run with ERAD as a keyword, values of the PROFILE common block
+near the radius specified by EMARK are averaged in order to obtain the
+position angles, ellipticities, and centers of the elliptical apertures
+used by EMAG.
+
+Following the marking of the radius defining ERAD, EMARK asks the user if
+it is desired to mark the maximum radius for photometry. If so, the user is
+again prompted to move the cursor to this position and strike the key "P";
+again the distance from the center is computed, and loaded into the VISTA
+variable RMAX.
+
+See Also: RMARK, EMAG
+
+
+\section{RMARK: Interactively Set Maximum Radius for EMAG}
+\begin{rawhtml}
+<!-- linkto rmark.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: RMARK\hfill]{}
+\end{itemize}
+
+RMARK enables the user to interactively set the maximum radius for the
+photometry routine EMAG. The image on which photometry is to be performed
+must be displayed, and an AXES computation must have been previously
+performed, in order for RMARK to work.
+ 
+RMARK will prompt the user to move the cursor to a point at the distance
+from the object center to which the photometry is to be performed. The user
+then strikes the key "P". A cross will be displayed at this point and the
+user will be given the option of choosing another position. Once the user
+is satisfied with the position chosen, RMARK will compute the distance of
+this point from the object center. This distance is then loaded into the
+VISTA variable RMAX.
+
+When RMAX is given as a command line keyword in EMAG, the value of this
+variable is retrieved and the photometry proceeds out to this radius.
+
+See Also: EMARK, EMAG
+
+
+\section{ELLMAG: Compute Elliptical Magnitudes for PROFILE Ellipses}
+\begin{rawhtml}
+<!-- linkto ellmag.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: ELLMAG {[MEDIAN]}\hfill]{}
+  \item[MEDIAN]{specifies that median, rather than mean, surface
+       brightnesses are to be used for computing magnitudes}
+\end{itemize}
+
+ELLMAG calculates the elliptical magnitude within the elliptical isophote
+fit using the PROFILE command.  It uses the values for the surface
+brightness computed previously by PROFILE.  It recomputes the circular
+totals using CIRCMAG, so that any results appended to the PROFILE results
+with EMAG will have appropriate circular totals all the way out to the
+final radius.
+
+This routine differs from EMAG in that the magnitudes within each ellipse
+in the PROFILE common block are computed, correctly taking into account the
+varying position angles and eccentricities.  EMAG, by contrast, computes
+concentric elliptical magnitudes given the parameters for ONE of the
+ellipses in the PROFILE common block.
+
+This routine uses the SB results to approximate the elliptical totals
+within increasing semi-major axis radii.  For each increase in radius, the
+routine approximates the additional ellipse area which needs to be taken
+into account for calculating the elliptical totals.  It then multiplies the
+SB value at that radius by this area to get an approximation of the extra
+number of counts to add to the elliptical total.  The routine does take
+into account the possibility of crossing ellipses but, at this time, does
+not yet take into account the possibility of changing position angle.
+
+See Also: EMAG, APER, PROFILE
+
+
+\section{TVPROF: Display PROFILE Results on the Image Display}
+\begin{rawhtml}
+<!-- linkto tvprof.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: TVPROF N1=n1 SPACE=n2\hfill]{}
+  \item[N1=n1]{first ellipse displayed has semimajor axis radius n1.}
+  \item[SPACE=n2]{subsequent ellipse semimajor axis radii are incremented
+       by n2 pixels, continuing out to the last entry in the PRF common
+       block.}
+\end{itemize}
+
+TVPROF will display the ellipses contained in the PRF common block as a
+result of a PROFILE or EMAG calculation. The ellipses are drawn on the TV
+display. There must be an image displayed in order for TVPROF to work. This
+image should be the one for which the model elliptical isophotes were
+computed, although TVPROF has no way of knowing what image is displayed, of
+course. TVPROF is intended for use in conjunction with CPROF, for the
+purpose of inspecting and modifying the results of galaxy surface
+photometry calculations.
+
+See Also:  PROFILE, CPROF, EMAG
+
+
+\section{OPREP: Open a Batch Surface Photometry Preparation File}
+\begin{rawhtml}
+<!-- linkto oprep.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: OPREP {[R]} {[W]} {[filename]}\hfill]{}
+  \item[R]{open to read}
+  \item[W]{open to write}
+  \item[filename]{prep-file name.}
+\end{itemize}
+
+OPREP opens a "batch photometry preparation file" used for batch-type
+surface photometry reductions.  The files contain the following information
+(one record per image):
+\begin{itemize}
+  \item{SKY value}
+  \item{RMAX variable (max. radius for photometry)}
+  \item{estimated HWHM for the PSF}
+  \item{contents of the AXES block}
+  \item{image header.}
+\end{itemize}
+
+This information is written by WPREP command, and read by RPREP.  This
+routine initialized the PREPCON common block, which records the status of
+the prep-file (whether open to read or write).  The filename is supplied as
+a keyword.  Default directory is V\_DATADIR, with the default extension
+``.pre''.  If no name is given on the command line, the default name
+PREPFILE is used.  If there is a prep-file already open, this routine closes
+it and opens a new one.
+
+NOTE: You must compute the image parameters above ahead of time, either
+outside of VISTA or using the AXES command without the CORR option.
+
+See Also:  CLPREP, WPREP, RPREP
+
+
+\section{CLPREP: Close a Batch Surface Photometry Preparation File}
+\begin{rawhtml}
+<!-- linkto clprep.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: CLPREP\hfill]{}
+\end{itemize}
+
+CLPREP closes the ``batch surface photometry preparation file" opened with
+the OPREP command.
+
+See Also:  OPREP, WPREP, RPREP
+
+
+\section{RPREP: Read a Record from a Batch Surface Photometry Prep-File}
+\begin{rawhtml}
+<!-- linkto rprep.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: RPREP\hfill]{}
+\end{itemize}
+
+RPREP reads a record from a batch surface photometry preparation file
+opened using OPREP.  These files contain the following information (one
+record per image):
+\begin{itemize}
+  \item{SKY value (into VISTA variable SKY)}
+  \item{max. radius for photometry (into variable RMAX)}
+  \item{estimated HWHM for the PSF (into variable PSF)}
+  \item{contents of the AXES block (into AXES)}
+  \item{image header (ignored by this routine).}
+\end{itemize}
+
+This information must already have been written into the prep-file using
+the WPREP.  OPREP opens the file, which must have already been opened
+read-only using the `OPREP R' command
+
+See Also:  OPREP, WPREP, CLPREP
+
+
+\section{WPREP: Write a Record into a Batch Surface Photometry Prep-File}
+\begin{rawhtml}
+<!-- linkto wprep.html -->
+\end{rawhtml}
+\begin{itemize}
+  \item[Form: WPREP image\hfill]{}
+\end{itemize}
+
+WPREP writes a record into a batch surface photometry preparation file
+opened using OPREP.  The data written in each record are as follows:
+\begin{itemize}
+  \item{SKY value (from VISTA variable SKY)}
+  \item{max. radius for photometry (from variable RMAX)}
+  \item{estimated HWHM for the PSF (from variable PSF)}
+  \item{contents of the AXES block (from AXES)}
+  \item{image header.}
+\end{itemize}
+
+This information is formatted to be read by RPREP.  The file must have
+already been opened with write-access using the `OPREP W' command.
+
+NOTE: You must compute the image parameters above ahead of time, either
+outside of VISTA or using the AXES command without the CORR option.
+
+See Also:  OPREP, RPREP, CLPREP

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>DO/END_DO: Using Do-Loops in Procedures</TITLE>
+<META NAME="description" CONTENT="DO/END_DO: Using Do-Loops in Procedures">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00540000000000000000">
+DO/END_DO: Using Do-Loops in Procedures</A>
+</H1>
+
+<!-- linkto do.html -->
+
+<P>
+<A NAME="1532"></A>
+<A NAME="1533"></A>
+<BR>
+
+<BR>
+
+<P>
+The DO/END_DO commands enable you set set up repeatable groups of commands
+within the procedure buffer.  The VISTA DO-LOOP is very similar to the
+Fortran DO-LOOP.
+
+<P>
+The variable 'var' is initially set equal to the starting value N1.  When
+the END_DO statement is encountered the value is changed by an amount
+equal to N3. The value of N3 can be either positive or negative. If N3 is
+positive then the looping terminates when N1 becomes greater than N2. If N3
+is negative then looping terminates when N1 becomes less than N2.  If N3 is
+not specified then it defaults to +1.0 if N2 is greater than N1 or to -1.0
+if N2 is less than N1.
+
+<P>
+N1, N2, and N3 can all be arithmetic expressions as described in the SET
+command.  The value of 'var' can be changed within the loop without
+affecting the do-loop operation.  However, VISTA will reset 'var' to its
+appropriate loop value at the beginning of each loop.
+
+<P>
+The underline is required in END_DO because VISTA requires commands to be
+one word long.  Up to 20 do-loops can be nested.  Do-loops are recognized
+only within procedures. The GOTO command can be used to jump out of a DO
+loop, but VISTA will not permit jumping into one. Further, DO loops must
+contain or be contained completely within any IF blocks.
+
+<P>
+Examples:
+
+<OL>
+<LI>
+  <PRE>
+     DO I=1,3
+        Any number of procedure lines.  These lines are executed 3 times.
+     END_DO
+</PRE>
+</LI>
+<LI>
+  <PRE>
+     DO Q=1,N
+        Any number of procedure lines.  These lines are executed N times.
+        Here N is a variable that has had its value set by the SET command.
+     END_DO
+</PRE>
+</LI>
+<LI>
+  <PRE>
+     DO B=D+I,N-J,-1
+        Any number of procedure lines.  The counter
+        decrements from D+I to N-J.
+     END_DO
+</PRE>
+</LI>
+</OL>
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,30 @@
+A possible workaround to run xvista on a (Linux) machine on which
+you wish to use 24-bit color for some applications, from Alan Watson:
+
+*******************************************************************
+
+Here's my best-of-a-bad-situation solution:
+
+(a) Log in on virtual console 1 (Ctrl-Alt-F1) and start a
+24b X server on DISPLAY=:0 using:
+
+    $ startx
+
+(b) Log in on virtual console 2 (Ctrl-Alt-F2) and start an
+8b X server on DISPLAY=:1 using:
+
+    $ startx -- :1 -bpp 8
+
+(c) Switch back and forth between the displays using
+Ctrl-Alt-F7 and Ctrl-Alt-F8 (assuming your displays end up
+in the same place as mine). Use xvista (or ximtool et al.)
+on :1 and everything else on :0.
+
+Switching between screens takes several seconds on my
+hardware, which isn't great but is a lot less painful than
+either logging out and restarting X or running everything in
+8b mode.
+
+If you use xdm or something similar, you may be able to make
+all this happen automatically.
+

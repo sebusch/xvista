@@ -1,0 +1,50 @@
+
+<H1><A NAME="SECTION001110000000000000000">
+TERM: Specify or Change the Graphics Terminal Type</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml58#
+<A NAME="214"><tex2html_anchor_invisible_mark></A>
+<A NAME="215"><tex2html_anchor_invisible_mark></A>
+
+<P>
+<BR>
+<tex2html_image_mark>#command216#
+<BR>
+
+<P>
+The default VISTA graphics device is an X11 window that will be created
+automatically when the first graphics commands are used.  VISTA uses the
+LickMongo package for all vector graphics (line plots, contour maps, etc.)
+and PostScript hardcopy.
+
+<P>
+If you are using VISTA from a terminal that does not support X11 graphics
+(e.g., from an old VT100 terminal or over a modem from a PC running a
+Tektronix emulator), you can change the default terminal type used
+for screen graphics using the TERM command.
+
+<P>
+Issuing TERM without an argument will print a menu and prompt the
+user for the device type.
+
+<P>
+TERM is called by the VISTA program on startup and sets the default
+graphics device for the session.  This may be changed at any time
+during a session with the TERM command, but the default is hardwired
+into the program at compile time, and any changes will be forgotten
+during the next VISTA session unless you put a TERM command with
+the necessary keywords in your startup procedure file.
+
+<P>
+Hardcopy devices must be changed explicitly with the HARDCOPY= keyword.  If
+no command line argument is given, then the user will be allowed to change
+the terminal type only.
+
+<P>
+The default Hardcopy device for VISTA is Adobe PostScript files.  All PS
+output from VISTA conforms to the PostScript standard and will produce
+output on any PostScript device.  Encapsulated PS output is produced by
+some commands (usually via an EPS keyword), and conforms to the Adobe EPS
+Level 2.0 structuring conventions.
+<tex2html_endfile>#./chap1.tex#
+<tex2html_file>#./chap2.tex#

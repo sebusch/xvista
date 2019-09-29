@@ -1,0 +1,73 @@
+OVERVIEW
+
+xvista installation is performed by a master configure script and Makefile. 
+The configure script automatically detects your machine type and sets various 
+appropriate variables. It then autmoatically generates a set of Makefiles
+and also a master include file which is used by the individual source files.
+
+HOW TO COMPILE XVISTA
+
+The use of the configure script and the compilation are automatically performed
+by the distributed master Makefile. To compile the program, all you should
+need to do is go to the top level distribution directory (xvista/) and type:
+
+      make
+
+This will automatically run the configure script, and then automatically
+execute the Makefiles. Note that this deviates from previous versions in
+that the make is executed from the top level directory, not xvista/source.
+
+EXECUTABLE NAME AND XVISTA ON MULTIPLE PLATFORMS
+
+xvista is designed so that one distribution tree can include executables
+for multiple platforms without requiring multiple copies of the source code.
+As a result, the machine type is incorporated into the executable file name.
+The executables are kept in the xvista/bin directory, and will have names
+
+     program.machinetype
+
+At this time, three different machine types are supported:
+
+       linux      :  linux systems, so far only RedHat distribution
+       solaris    :  Sun's Solaris operating system
+       osf1axp    :  for DEC Alpha processors running either OSF1AXP or 
+                     DIGITAL UNIX
+
+When the compilation is completed, the xvista/bin directory should have the
+files:
+
+      xvista.machinetype
+      dosystem.machinetype
+      lynx.machinetype
+
+The lynx executable will be a link to your system's lynx executable if it
+was found, or a freshly compiled executable if not.
+
+Once compilation is completed, you could run the make on a different platform
+from the SAME (xvista/) directory and get executables for other platforms in 
+the xvista/bin directory. This works because EVERY time make is invoked, the
+configure script is rerun and Makefiles generated. It is possible to avoid
+running the configuration script for a remake ON THE SAME MACHINE TYPE by
+recompiling using the command, make xvista, in the xvista/source directory. 
+
+LINKING TO THE EXECUTABLE
+
+After compilation, you can (and probably should) make a link to the
+xvista.machinetype executable from a normally searched executable directory,
+e.g.,
+
+    ln /wherever/xvista/bin/xvista.machinetype  /usr/local/bin/xvista
+
+You do NOT need to provide links for the dosystem and lynx executables; the
+program will know how to find them in the xvista/bin directory with the
+appropriate machinetype extension.
+
+LICKMONGO EXECUTABLE
+
+It is also possible to create a standalone LickMongo executable from the
+distribution, since all of the relevant source code is included. To do
+so, cd to the directory xvista/lickmongo/source, and issue a make
+command (after you have compiled xvista). This will create an executable
+    xvista/bin/lmongo.machinetype
+
+

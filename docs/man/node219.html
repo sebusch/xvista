@@ -1,0 +1,61 @@
+
+<H1><A NAME="SECTION0016190000000000000000">
+APERSTAR: Measure Brightnesses by Circular Aperture Photometry</A>
+</H1>
+<tex2html_verbatim_mark>rawhtml487#
+<A NAME="7713"><tex2html_anchor_invisible_mark></A>
+<A NAME="7714"><tex2html_anchor_invisible_mark></A>
+<BR>
+<tex2html_image_mark>#command7715#
+<BR>
+
+<P>
+APERSTAR estimates the brightness of each star on a photometry file using
+aperture photometry.  The brightness is the sum of the counts within a
+specified radius around each star, with the sky estimated by the mean level
+of counts in an annulus around the stars. APERSTAR performs the same task
+as the DAOPHOT 
+<A NAME="tex2html8"
+  HREF="photom.html">PHOTOMETRY</A>
+routine, 
+but the latter probably does a better
+job and is recommended for most occasions.
+
+<P>
+There are three steps to measuring stellar brightnesses using
+APERSTAR. First locate the stars you want to be measured using AUTOMARK or
+MARKSTAR.  Then measure the brightness using APERSTAR.  Finally, save the
+results to disk using SAVE PHOT or print then using the command PRINT PHOT.
+
+<P>
+You MUST specify the radius of a stellar aperture, and the radii of an
+annulus used to estimate the sky.  The inner radius of the sky annulus must
+be larger than the radius of the star aperture. The sky radii must differ
+by at least 2.  Exception: if you give the word SKY=NONE, the sky value is
+assumed to be 0.0.  This allows you to determine the sky value globally for
+the image (using the SKY program), then having all stars measured with the
+same sky level. If SKY=NONE is not given, the sky level is estimated for
+each star.
+
+<P>
+The algorithm for determining the sky level works like this: The MEAN and
+standard deviation of the intensities is measured in a first pass. Those
+pixels which differ from the mean by four times the standard deviation are
+then excluded from the list, and the mean level computed again.  This mean
+is taken as the sky brightness.  The brightness of the star is then the sum
+of (pixel - sky) for all pixels in the star's aperture.  The rejection
+level can be changed from 4-sigma to a user specified value using
+REJECT=sig, which gives the number of sigma objects to reject.
+
+<P>
+A similar program is APER, which measures the brightness of an single
+object using a series of apertures.  Also see PROFILE or PRAD, which
+measure the radial profile of objects on a frame.
+
+<P>
+<#7730#>Examples: <#7730#>
+<BR>
+<tex2html_image_mark>#example7731#
+<BR>
+
+<P>

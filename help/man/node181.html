@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>APER: Aperture Photometry of an Extended Object</TITLE>
+<META NAME="description" CONTENT="APER: Aperture Photometry of an Extended Object">
+<META NAME="keywords" CONTENT="man">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="man.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION001550000000000000000">
+APER: Aperture Photometry of an Extended Object</A>
+</H1>
+
+<!-- linkto aper.html -->
+<A NAME="6857"></A>
+<BR>
+
+<BR>
+
+<P>
+APER will sum the intensities of pixels falling within circular apertures
+centered on an object in the 'source' image.  Using apertures of differing
+radii will enable you to characterize the radial intensity distribution of
+an object.
+
+<P>
+Up to 10 aperture radii in arc seconds can be specified with the RAD
+keyword. Alternatively, a linearly increasing sequence of apertures can be
+specified with the STEP keyword, where 'incr' is the radius increment in
+arc seconds, and 'n' is the number of apertures.  A geometric sequence of
+apertures can be set up with the GEO= keyword, with the first value being
+the first aperture size and the second the multiplier for subsequent
+apertures; as many apertures as will fit in the image will be used.  The
+pixel scale in arcsec/pixel is specified with the SCALE keyword.  The
+centers of the aperture must be calculated ahead of time with the AXES
+centroiding command, or loaded with the C keyword. Lastly, the OLD keyword
+tells the routine to use any unspecified parameters from the last time.
+
+<P>
+The routine will produce a list of the apertures, the sum of pixels
+interior to them, the average interior surface brightness, and the same
+quantities for the rings defined by sequential apertures. The summations
+are done to the nearest pixel at the edges of the aperture, that is, no
+fractional pixel interpolation is done at the edges.  For this reason,
+results obtained with very small apertures may be inaccurate.  The results
+are stored in a common block, and can be examined with the PRINT command,
+and stored or retrieved with the GET and SAVE commands. With the PLOT
+keyword, the apertures will be displayed on the image display (for most
+video devices).
+
+<P>
+APER does NOT do sky subtraction.  The background light is included in the
+calculation of the brightnesses.  Use SKY to compute the background of the
+image, and SUBTRACT to remove that background.
+
+<P>
+Specifying a list with the MAG word will give observed magnitudes in the
+listed apertures. (What does this mean??  good question!  Inspection of
+code seems that MAG= keyword allows user to specify magnitude values which
+just get output right back.)
+
+<P>
+The STORE keyword saves some results into VISTA variables. The total
+intensity in the first aperture is loaded into variable TOTAL, the area of
+the first aperture will be loaded into APAREA, and the average intensity
+into variable AVERAGE.
+
+<P>
+To extract aperture photometry in elliptical apertures, see the EMAG
+command.
+
+<P>
+Example:
+<BR>
+
+<BR>
+
+<P>
+See Also: EMAG, ELLMAG, PROFILE, SKY
+
+<P>
+<BR><HR>
+<ADDRESS>
+ 
+</ADDRESS>
+</BODY>
+</HTML>

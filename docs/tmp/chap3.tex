@@ -1,0 +1,595 @@
+\chapter{Variables, Arithmetic Expressions, \& Strings}
+\begin{rawhtml}
+<!-- linkto variables.html -->
+\end{rawhtml}
+
+%
+% minor editing and reformatting
+% used verbatim for script examples
+% checked keyword syntax & function against current sources
+% rwp/osu 98Jul26
+%
+
+\index{variables}
+
+Variables are character names to which are associated values. 
+You get access to the value by using the name.  The following commands
+are used in VISTA to manipulate variables: 
+
+\begin{itemize}
+  \item[SET\hfill]{sets the value of a variable, either directly or in
+       terms of arithmetic operations on other variables.}
+
+  \item[TYPE\hfill]{displays the value of a variable or any arithmetic
+       expression.}
+
+  \item[ASK\hfill]{asks for information to be entered at the terminal.}
+
+  \item[PRINTF\hfill]{formatted printing of variable values and character
+       strings.}
+
+  \item[STRING\hfill]{definition of string variables.}
+\end{itemize}
+
+\section{Arithmetic Expressions in VISTA}
+\begin{rawhtml}
+<!-- linkto functions.html -->
+\end{rawhtml}
+
+\index{Arithmetic!Expressions}
+\index{Functions!List of arithmetic functions}
+
+Here we review the syntax of mathematical expressions.  Any user who wishes
+to use VISTA effectively should review this section carefully.
+
+Arithmetic expressions come in four types:
+
+\begin{enumerate}
+  \item{An explicit numeric value.  Examples are: 3, 3.14159, -59.39, 2.32E-05}
+  \item{Variable names.  Variables are created and their values 
+    assigned with the SET command.  Variable names must be 
+    composed of alphanumeric characters.  There can be up to
+    seven characters in the name.  The first character of the
+    variable name should be an alphabetic character.}
+  \item{Data file references.  Data file references allow you to
+    use numeric values from a VMS ASCII text file.  Data file
+    references begin with the @ symbol followed by the file
+    name, a period (.), and then the column number.  The
+    column number can itself be either a numeric integer constant
+    or a variable name.  An example is given in the description
+    of the READ command.}
+  \item{Constants or variables connected with arithmetic operators
+    or using functions (general arithmetic expressions).}
+\end{enumerate}
+
+The following table lists arithmetic functions supported in VISTA, with
+examples of their use.  ('Binary' means relating two objects -- 'unary'
+means applying to one object.)
+
+\begin{center}
+\begin{tabular}{cllll}
+Symbol&Function&Examples&&\\
+\hline
++&binary addition&B+C&2+5\\
+-&binary subtraction&B-C&2-5\\
+*&binary multiplication &B*C&2*5\\
+/&binary division&B/C&2-5\\
+-&unary negation&-B&&\\
+\^{}&exponentiation&A\^0.5&10\^{}3\\
+=&equate&A=B&A=B=3\\
+\hline
+\end{tabular}
+\end{center}
+
+The following logical operators are also supported.
+
+\begin{center}
+\begin{tabular}{clll}
+Symbol&Function&Examples&\\
+\hline
+$>$&logical greater than&A$>$B&A$>$2.5\\
+$<$&logical less than&A$<$B&A$<$100\\
+==&logical equal to&A==B&A==10\\
+~=&logical not equal to&A~=B&A~=10\\
+$<$=&logical less than or equal to&A$<$=B&A$<$=5\\
+$>$=&logical greater than or equal to&A$>$=B&A$>$=3\\
+\hline
+\end{tabular}
+\end{center}
+
+Logical operators return a value of either 1 (true) or 0 (false).
+
+Expressions are evaluated in the same order as they are in FORTRAN.  You
+may change the order of evaluation using parentheses "()".  An example is
+\begin{itemize}
+  \item{(B+0.53)*10\^{ }(45.6/(A+5))}
+\end{itemize}
+
+VISTA supports a variety of \textit{functions}.  The argument to the
+function is contained in square brackets.  The following functions are
+currently supported:
+
+\textbf{Arithmetic Functions:}
+\begin{itemize}
+  \item[INT{[E]}\hfill]{nearest integer to the expression E}
+  \item[ABS{[E]}\hfill]{absolute value of E}
+  \item[MOD{[E,I]}\hfill]{E modulo I}
+  \item[IFIX{[E]}\hfill]{integer part of E (truncation)}
+  \item[MAX{[E,F]}\hfill]{the larger of E or F}
+  \item[MIN{[E,F]}\hfill]{the smaller of E of F}
+  \item[LOG10{[E]}\hfill]{log to the base 10 of E}
+  \item[LOGE{[E]}\hfill]{log to the base e of E}
+  \item[EXP{[E]}\hfill]{e raised to the power E (Use \^ 
+       for all other exponentiations)}
+  \item[SQRT{[E]}\hfill]{square root of absolute value of E}
+  \item[RAN{[A,B]}\hfill]{returns a random number between A and B}
+\end{itemize}
+
+\textbf{Trignonmetric Functions:}
+\begin{itemize}
+  \item[SIN{[E]}\hfill]{sine of E (E in radians)}
+  \item[SIND{[E]}\hfill]{sine of E (E in degrees)}
+  \item[COS{[E]}\hfill]{cosine of E (E in radians)}
+  \item[COSD{[E]}\hfill]{cosine of E (E in degrees)}
+  \item[ARCTAN{[E]}\hfill]{arctan of E, producing radians}
+  \item[ARCTAND{[E]}\hfill]{arctan of E, producing degrees}
+  \item[ARCCOS{[E]}\hfill]{arccos of E, producing radians}
+  \item[ARCCOSD{[E]}\hfill]{arccos of E, producing degrees}
+\end{itemize}
+
+\textbf{Image Parameters:}
+\begin{itemize}
+  \item[NR{[B]}\hfill]{number of rows of the object in buffer B.}
+  \item[NC{[B]}\hfill]{number of columns of ...}
+  \item[SR{[B]}\hfill]{start row ...}
+  \item[SC{[B]}\hfill]{start column ...}
+  \item[EXPOS{[B]}\hfill]{exposure time ...}
+  \item[RA{[B]}\hfill]{right ascension in sec of time of ...}
+  \item[DEC{[B]}\hfill]{declination in sec of arc ...}
+  \item[ZENITH{[B]}\hfill]{zenith distance in radians ...}
+  \item[UT{[B]}\hfill]{universal time of mid-exposure in hours ...}
+\end{itemize}
+
+\textbf{Examing/Editing Image Data:}
+\begin{itemize}
+  \item[GETVAL{[I,R,C]}\hfill]{returns the value of the pixel at row R and
+       column C in image I.}
+  \item[SETVAL{[I,R,C,V]}\hfill]{returns the value of the pixel at row R and
+       column C in image I, then sets the value of that pixel to V.}
+  \item[WL{[I,P]}\hfill]{returns the wavelength of pixel P in image I.}
+  \item[PIX{[I,W]}\hfill]{returns the pixel corresponding to
+       wavelength W in image I.}
+\end{itemize}
+
+Functions may be used as arguments of other functions.  Functions can
+contain expressions of arbitrary complexity (so long as the parentheses are
+balanced and there are no extraneous spaces!).
+
+\noindent{\textbf{IMPORTANT!}}
+
+Variable names or arithmetic expressions may be used ANYWHERE an explicit
+constant may be used in keyword-value expressions. Recall that such an
+expression has an 'option=value' construction. For example, if you wanted
+to plot row 200 of image 4 over columns X to X+50, (where X is some
+variable) you could say
+\begin{itemize}
+  \item{PLOT 4 R=200 XS=X XE=X+50}
+\end{itemize}
+Note that R, XS, and XE are keywords, not variables and the equal sign
+following them is not interpreted as an arithmetic operation.  However,
+since everything following the first = is an arithmetic expression, you
+could save the 'value' of, for instance, XE, by doing the following
+\begin{itemize}
+  \item{PLOT 4 R=200 XS=X XE=XLAST=X+50}
+\end{itemize}
+The variable XLAST takes on the value of X+50.
+
+\section{SET: Define a VISTA Variable and Assign it a Value}
+\begin{rawhtml}
+<!-- linkto set.html -->
+\end{rawhtml}
+
+\index{Variable!Setting value of}
+\begin{itemize}
+  \item[\textbf{Form: } SET var\_name=value {[var\_name=value]}\hfill]{}
+  \item[var\_name]{the name of the variable being defined.}
+  \item[value]{its value}
+\end{itemize}
+
+SET defines VISTA variables in terms of numerical constants, other
+variables, or the result of arithmetic operations between other
+variables. The name of a VISTA variable is any alphanumeric string.  The
+value of the variable is a floating point number. VISTA supports an
+internal variable table which holds variables defined by you or as the
+output of a program.  These variables can be used to pass the results of
+arithmetic calculations to keywords, to control the flow of a procedure in
+IF tests or DO loops, or to store convenient numbers in symbolic form.
+
+Each SET command can handle up to 15 definitions.  Each definition must
+include an '=' sign with the name of the new variable to its left, and a
+defining expression to its right.  The expression on the right may be any
+proper VISTA arithmetic expression (see the section MATH for rules on
+expressions).
+
+Examples:
+\begin{itemize}
+  \item[SET Q=6\hfill]{Sets Q to have the value 6}
+  \item[SET A=1 B=3 C=D=6\hfill]{Sets several variables at once}
+  \item[SET V=SIND{[45]}\hfill]{Functions may be used}
+  \item[SET B=3.1415926\^0.5+4\hfill]{Any arithmetic expression may be used.}
+  \item[SET C=LOG10{[@FILE.1]}\hfill]{References to data from files may be used.}
+\end{itemize}
+
+NOTE: All operations are done in double precision floating point.  There
+must be no spaces between the beginning of 'var\_name' and the end of
+'value'.
+
+\noindent{\textbf{IMPORTANT!}}
+
+The command SET may be left off when defining variables.  This saves lots
+of time.  Just use an arithmetic expression defining a variable.  Examples:
+\begin{itemize}
+  \item[A=5\hfill]{defines A to be 5}
+  \item[Q=SIND{[45]}\hfill]{defines A to be sine of 45 degrees.}
+\end{itemize}
+
+\section{TYPE: Evaluate/Print Arithmetic Expressions}
+\begin{rawhtml}
+<!-- linkto type.html -->
+\end{rawhtml}
+
+\index{Variable!Displaying value}
+\index{Arithmetic!Evaluating expressions}
+
+\begin{itemize}
+  \item[\textbf{Form: } TYPE expression {[expression]} {[expression]} ...\hfill]{}
+\end{itemize}
+
+This command can be used to print out arithmetic expressions.  Up to 15
+expressions can be printed out at one time.
+
+Examples:
+\begin{itemize}
+  \item[TYPE X\hfill]{Evaluates X (a variable) and shows
+the value of X on the screen.}
+  \item[TYPE X+0.5\^3.4\hfill]{Evaluates the expression shows and
+prints the value.}
+\end{itemize}
+
+NOTE: the expressions which TYPE will accept must have at least one
+non-numeric character in them.  This means that the expressions must
+contain at least one variable name OR at least one arithmetic operator.
+Thus, something like
+\begin{itemize}
+  \item{TYPE 6.3}
+\end{itemize}
+will not work.
+
+The command PRINTF allows you to print expressions in a designated format.
+
+\section{ASK: Prompt for Numerical Input at the Keyboard}
+\begin{rawhtml}
+<!-- linkto ask.html -->
+\end{rawhtml}
+
+\begin{itemize}
+  \item[\textbf{Form: } ASK {['An optional prompt in quotes']} var\_name {[DEFAULT=def]}\hfill]{}
+\end{itemize}
+
+This command can be used to request the input of variable values during the
+execution of a procedure.  When the ASK command is executed, the prompt
+will be displayed at the terminal until the requested value is typed in.
+If no prompt is given, the command will respond with 'ENTER var\_name:'.
+Only one value can be requested per ASK command. If you specify a default
+value using DEFAULT=def, then this value will be assigned to the variable
+if the user enters a carriage return at the prompt.
+
+Examples:
+\begin{itemize}
+  \item[ASK BCKGND\hfill]{will print 'ENTER BCKGND : on your screen.  When
+       you enter an expression and hit RETURN, the value of BCKGND will be
+       set to the number you specified.}
+
+  \item[ASK 'Enter an estimate for the background $>>$ ' BCKGND \hfill]
+       {will type the prompt 'Enter an estimate for the background $>>$ ' on
+       your terminal, and wait for you to enter an expression; the value of
+       BCKGND is the value of that expression.}
+
+  \item[ASK 'Enter your favorite number: ' FAVORITE DEFAULT=7\hfill]
+       { will type the prompt 'Enter you favorite number: ' and wait for
+       you to enter an expression; if you hit a single carriage return, the
+       value 7 will be assigned to the variable FAVORITE.}
+
+\end{itemize}
+
+Note that the reply to ASK can be any valid expression.
+
+\section{Using Variables to Specify Buffer Numbers}
+\begin{rawhtml}
+<!-- linkto numbers.html -->
+\end{rawhtml}
+\index{Variable!Specify buffer numbers with}
+
+Buffer numbers on a command line must be integers.  VISTA provides a way of
+using variables to denote buffer numbers.  Place the name of the variable
+on the command line in place of the buffer specification, with a \$
+character in front of the variable name.
+
+Examples:
+\begin{itemize}
+  \item[MN \$J\hfill]{mean of buffer J}
+  \item[ADD \$BUF CONST=5\hfill]{add 5 to buffer BUF}
+\end{itemize}
+
+\section{PRINTF: Formatted Display of Strings and Arithmetic Expressions}
+\begin{rawhtml}
+<!-- linkto printf.html -->
+\end{rawhtml}
+
+\index{Variable!Display value with format}
+\begin{itemize}
+  \item[\textbf{Form: } PRINTF 'Format string' {[expressions]} {[redirection]}\hfill]{}
+\end{itemize}
+This command displays character strings and variables in specified formats,
+thus producing tables of results.
+
+The simplest form of PRINTF is PRINTF 'string'.  This prints the specified
+string.  Examples are:
+\begin{itemize}
+  \item[PRINTF HELLO\hfill]{prints HELLO}
+  \item[PRINTF 'Hello, world'\hfill]{prints Hello, world}
+\end{itemize}
+
+You can print the values of expressions by specifying in the character
+string (1) that expression is to be evaluated and its value printed, and
+(2) the format for the printing of the variable.  The character \% in the
+string does the job. It tells that an expression is to be evaluated and
+printed where the \% appears. The rest of the word following the \% is used
+to specify the format of the string.  The format specifiers are the same as
+they are in FORTRAN.  ANY valid FORTRAN specifier appropriate for
+displaying numeric values may be used. You can specify multiple variables
+with the same format specification by putting the number of variables for
+which you wish to use the specifier for before the format specifier.
+
+For example, if you want to print a single floating point variable with a
+field width of 9 characters with 3 after the decimal point, use
+\%f9.3, and give one argument after the format specifier. If you have
+5 variables which you want all printed in this format, you can use
+either '\%f9.3 \%f9.3 \%f9.3 \%f9.3 \%f9.3', or '\%5f9.3'.
+
+For users familiar with C, you can also use the \%d specifier for an
+integer (as well as \%i); note, however, that the width/precision
+specification comes {\it after} the format specifier, not before it (e.g.,
+%d6, not %6d), since the leading numeral is used to specify the number of
+arguments to be printed with the desired format.
+
+\noindent{ Examples:}
+
+Suppose we have the variables A with value 1.0 and PI with value
+3.14159. Then
+\begin{itemize}
+  \item[PRINTF '\%F4.1 \%F9.4' A PI\hfill]{ prints ' 1.0    3.1416'}
+  \item[PRINTF '\%I6 and \%F9.5' A PI\hfill]{ prints '     1 and   3.14159'}
+  \item[PRINTF 'The value of pi is \%F9.7' A PI\hfill]{ prints 
+'The value of pi is 3.1415900'}
+\end{itemize}
+Note that spaces between \% specifiers are printed. The output of PRINTF
+can be redirected.
+
+To force a new line when printing, use the pattern \verb+\n+ in the format
+statement (the newline character).  An example is:
+\begin{itemize}
+  \item[A=5.1234\hfill]{}
+  \item[PRINTF 'The value of A is \\n    \%F9.3' A\hfill]{prints
+The value of A is}
+  \item{5.123}
+\end{itemize}
+
+See the section SUBSTITUTE (type 'HELP SUBSTITUTE' if you are on a
+terminal) for instructions on printing string variables.
+
+\section{STRING: Defining VISTA String Variables}
+\begin{rawhtml}
+<!-- linkto string.html -->
+\end{rawhtml}
+
+\index{Variables!Defining string variables}
+\begin{itemize}
+  \item[\textbf{Form: } STRING name {['format string']} {[expressions]}\hfill]{}
+  \item[\textbf{Form: } STRING name '?query']{}
+\end{itemize}
+
+STRING defines string variables.  String variables are names to which a
+character string is associated.
+
+STRING works like PRINTF (see that section of the help information), except
+that the name of the string variable being defined appears between the
+command STRING and the format string.  As in PRINTF, you can define strings
+directly, as in:
+\begin{itemize}
+  \item[STRING EXPR  'This is a string with seven words.'\hfill]{}
+  \item[STRING HELLO 'Hello, world'\hfill]{}
+\end{itemize}
+Remember that multiple words to be considered as one string must be
+enclosed in quotes.  If you wish to define a blank string, you must define
+it as a single blank in quotes, as in:
+\begin{itemize}
+  \item{STRING NAME ' '}
+\end{itemize}
+
+You may also define strings using expression evaluation as in:
+\begin{itemize}
+  \item{J=7}
+  \item{STRING NAME 'FILE\%I3.3' J}
+\end{itemize}
+which evaluates the numeric variable J, then substitutes its value into the
+string beginning FILE..., and loads the final string into the stack of
+string variables under the name J.  In this example, the value of the
+string variable NAME is FILE007.
+
+If the first character of the format string is a question mark, STRING will
+print the remainder of the format string as a prompt, then pause while you
+enter the string.  This allows the interactive definition of strings.  If
+the format string contains only a question mark, then the prompt will be
+'Enter' followed by the name of the string variable which is being defined.
+Examples:
+\begin{itemize}
+  \item[STRING FILE '?Enter a filename for this image. $>>$ '\hfill]{ will
+   print 'Enter a filename for this image. $>>$ ' then pause while you
+   enter a name.  Your reply will be loaded into the character string
+   FILE.}
+
+   \item[STRING HEADER ?\hfill]{ will print 'Enter HEADER ' then accept a
+        string.}
+\end{itemize}
+
+You CANNOT evaluate arithmetic expressions when defining strings
+interactively.  Thus
+\begin{itemize}
+  \item{STRING FILE '?Enter a file for image \%I2 ' J}
+\end{itemize}
+will NOT work. The newline character (\verb+\n+) will also not work.
+
+You can list all defined strings with the command PRINT STRINGS.
+
+A string variable can be substituted into a command line by enclosing the
+name of the string in braces.  See HELP SUBSTITUTE for more information,
+plus information about printing STRINGS.
+
+String variables are stored in a different stack from numeric variables.
+Thus it is possible to have a string variable and a numeric variable with
+the same name.
+
+\section{Substituting String Variables into the Command Line}
+\begin{rawhtml}
+<!-- linkto substitute.html -->
+\end{rawhtml}
+
+\index{Strings!Substituting string variables into command line}
+\index{Strings!Printing string variables}
+\index{Strings!Loading strings with FITS header cards..}
+\index{FITS header!Loading cards into strings}
+
+To substitute the value of a string into a command line, enclose the name
+of the string in braces.  As an example, the command RD reads a file from
+disk.  Its syntax is
+\begin{itemize}
+  \item{RD buf filename}
+\end{itemize}
+which reads a disk file 'filename' into buffer number 'buf'.  Suppose the
+string FNAME has been defined to be MYDIR/MYFILE.  Then
+\begin{itemize}
+  \item{RD 2 \{FNAME\}}
+\end{itemize}
+will execute the command
+\begin{itemize}
+  \item{RD 2 MYDIR/MYFILE}
+\end{itemize}
+
+To print string variables:
+\begin{enumerate}
+  \item{Use the command PRINT STRINGS to show all defined strings.}
+  \item{Use PRINTF and substitute the string as the format string.
+       Example:\newline
+       PRINTF '{STRING}'\newline
+       The { and } do the string substitution.  The quotes are needed
+       if the string has more than one word in it.}
+
+  \item{Use PRINTF with the \%A format specification.  (As in FORTRAN),
+       this may be followed by the number of characters to print.
+       Examples:\newline
+	PRINTF 'Writing file \%A' '{FNAME}'\newline
+	PRINTF 'Writing file \%A20 ' '{FNAME}'}
+\end{enumerate}
+
+The substitution mechanism can be used to copy the value of a FITS card
+into a string.  The syntax for this is:
+
+\begin{itemize}
+  \item{\{?BUFFER:CARDNAME\}}
+\end{itemize}
+
+where BUFFER is an arithmetic expression which evaluates to a buffer
+number, and CARDNAME is the name of a FITS card.
+
+The value of the FITS card is substituted into the command line where
+indicated by the \{?BUFFER:CARDNAME\} construction.  If the buffer number
+is incorrect, there is nothing in the listed buffer, or if the named card
+does not exist, an error message is printed and a blank string is
+loaded. Leading blanks and comments are stripped off. Use the STRING
+command to load a string with a FITS character card. Use a direct
+assignment to load a numerical FITS card into a VISTA variable.  For
+example:
+\begin{itemize}
+  \item[STRING OBJ '{?23:OBJECT}'\hfill]{Loads the name of the object
+       in buffer 23 into string {OBJ}.}
+  \item[A={?1:FOCUS}\hfill]{Gets the value of the FOCUS
+       card (a number) and loads the numerical value into A.}
+\end{itemize}
+
+\noindent{ ADVANCED EXAMPLES:}
+
+In the examples below, the string substitution is used as part of
+procedures.  See the section on procedures for more information.
+\begin{enumerate}
+  \item{In this procedure, the user is asked to give a filename.  The file
+       contains an image which is to be processed in some standard way.
+       The processed image is written out with the same name.
+  \begin{verbatim}
+    STRING FILE '?Enter the file to process. >> '  ! Get filename
+    RD 1 {FILE}                                    ! Read image
+    CALL PROCESS                                   ! Process it
+    WD 1 {FILE}                                    ! Write out
+    END
+  \end{verbatim}
+  As the procedure is run, the prompt 'Enter ... ' appears user's screen.
+  The reply is loaded into the string variable FILE.  Suppose the reply was
+  ./mydir/hd183143.  The next command, which reads an image from the disk,
+  uses the string substitution mechanism to insert the string FILE into the
+  command.  The actual command executed is
+  \begin{itemize}
+    \item{RD 1 ./mydir/hd183143}
+  \end{itemize}
+  Similarly, the last command in the procedure is
+  \begin{itemize}
+    \item{WD 1 ./mydir/hd183143}
+  \end{itemize}
+}
+
+  \item{The following loop defines the string NAME.  The value of NAME
+      is successively FILE001, FILE002, FILE003, FILE004, ... FILE100
+  \begin{verbatim}
+    DO INDEX=1,100
+       STRING NAME 'FILE%I3.3' INDEX
+    END_DO
+    END
+  \end{verbatim}
+  }
+
+  \item{The following procedure reads an image from tape, processes it in
+        some way, then writes it out to disk in a directory specified by
+        the user.  The filename is FILEnnn, where nnn is the number of the
+        image on tape.  Program stops when the user gives a number less
+        than or zero.
+  \begin{verbatim}
+     STRING DIR '?Which directory will hold the images? $>>$ ' 
+     LOOP:
+        PRINTF 'Enter a number <=0 to stop.'
+        ASK NUM 'Process which number on tape? >> '
+        IF NUM<=0
+           GOTO FINISH
+        END_IF
+        RT 1 $NUM
+        CALL PROCESS
+        STRING NAME 'FILE%I3.3' NUM
+        WD 1 {DIR}{NAME}
+     GOTO LOOP
+     FINISH:
+        PRINTF 'Done!'
+     END
+  \end{verbatim}
+  The string substitution mechanism, { and }, can also be used to
+  substitute text from an OPEN'ed file.  See the discussion for the OPEN
+  and READ commands for more details on using text files.  }
+\end{enumerate}
+
