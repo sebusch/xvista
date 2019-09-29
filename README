@@ -1,8 +1,9 @@
 INTRODUCTION
 
-This comprises the release of xvista, version 5.1; xvista has been previously
-distributed under the name vista or lickvista. The last release before this
-one was version 4.7.
+This comprises the release of a github version of xvista; it was made from 
+the version xvista7-12f.tar.gz as distributed at NMSU.
+
+xvista was previously (a long time ago!) distributed under the name vista or lickvista.
 
 Xvista is an image processing program designed to be used primarily with
 astronomical data. It contains routines for reading, displaying, basic
@@ -15,6 +16,14 @@ to be supplied by several different people. The current version is maintained
 and distributed by Jon Holtzman at the New Mexico State University.
 The code is written primarily in Fortran 77, although there are also some
 C routines.
+
+With all of the developments over the last 40 years, the xvista source is
+fairly out-of-date.  At the time it was developed, sophisticated parsing
+languages did not exist, so Vista implemented one. Much of the existing
+infrastructure could be avoided in a modern implementation. Nonetheless,
+there are a number of analysis routines, and a style for interfacing with
+images, that may still provide some value.
+
 
 CONTENTS OF THIS DISTRIBUTION
 
@@ -187,5 +196,5 @@ version of MONGO to compile or run. The plotting routines which have
 been incorporated into Vista are based on routines which originated in
 the MONGO package of John Tonry, but which were modified extensively
 by Lick personnel. If anyone desires to have a standalone version of
-MONGO, they should contact Tonry directly (jt@antares.mit.edu).
+MONGO, they should contact Tonry directly.
 
