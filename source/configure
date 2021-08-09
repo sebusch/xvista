@@ -225,7 +225,7 @@ if $TEST -f /vmlinux -o -f /zImage -o -f /vmlinuz -o -f /boot/vmlinuz -o `uname`
     MRM='$(RM) *.o' $*
 elif $TEST -f /usr/bin/uname && $TEST `uname` = Darwin ;  then
     # must be on a MAC OS box
-    CFLAGS="-O $DX11 -DFORT -DUNIX -I/usr/include/bsd -I/sw/include"
+    CFLAGS="-O $DX11 -DFORT -DUNIX -I/usr/include/bsd -I/sw/include -std=gnu89 -Wno-error=implicit-function-declaration"
     if $TEST -e /usr/bin/cpp ; then
       INCCPP=/usr/bin/cpp
       CPP=/usr/bin/cpp
@@ -235,7 +235,7 @@ elif $TEST -f /usr/bin/uname && $TEST `uname` = Darwin ;  then
     fi
     FPP=for    
     CPPFLAGS="$DX11 -traditional -P"    
-    FFLAGS="-O -ffixed-line-length-132 "
+    FFLAGS="-O -ffixed-line-length-132 -fallow-argument-mismatch "
     if $TEST -x `which gfortran | awk '{print $1}' `; then
       FC=gfortran
       LD=gfortran
@@ -954,7 +954,8 @@ echo "#   define SOH_DATA '\'" >>Vista.$MACHINE
 echo "#   define ETX_DATA '\'" >>Vista.$MACHINE
 echo "#   define TAB_DATA '\t'" >>Vista.$MACHINE
 echo "#   define FF__DATA '\'" >>Vista.$MACHINE
-echo "#   define CR__DATA '\'" >>Vista.$MACHINE
+echo "#   define CR__DATA '\
+'" >>Vista.$MACHINE
 echo "#   define DLE_DATA '\'" >>Vista.$MACHINE
 echo "#   define NAK_DATA '\'" >>Vista.$MACHINE
 echo "#   define CAN_DATA '\'" >>Vista.$MACHINE
