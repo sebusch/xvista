@@ -90,7 +90,7 @@ myxvista.$(MACHINE):vista.o $(VLD)/user.$(MACHINE).a
 # Here follows a bunch of targets used by the above lines
 #
 dosystem.$(MACHINE): dosystem.c
-	cc dosystem.c -o $(BINDIR)/dosystem.$(MACHINE)
+	cc -std=gnu89 -Wno-error=implicit-function-declaration dosystem.c -o $(BINDIR)/dosystem.$(MACHINE)
 $(MLIB): $(DOOBJS)
 	$(MAR)
 	$(MRM)
